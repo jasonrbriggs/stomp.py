@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """Stomp Protocol Connectivity
 
     This provides basic connectivity to a message broker supporting the 'stomp' protocol.
@@ -168,12 +170,13 @@ class Connection(threading.Thread):
         self.ss.send('DISCONNECT\n\n\x00\n')
         self.sendbuf.append('DISCONNECT\n\n\x00\n')
         
-    def send(self, dest, msg, transactionid=None):
+    def send(self, dest, msg, transactionid=None, custom_headers={}):
+        headers = { 'destination': dest }
+        headers.update(custom_headers)
         if transactionid:
-            transheader = 'transaction: %s' % transactionid
-        else:
-            transheader = ''
-        self.ss.send('SEND\ndestination: %s\n%s\n%s\x00\n' % (dest, transheader, msg))
+            headers['transaction'] = transactionid
+        headerstr = reduce(lambda accu, key: accu + ("%s: %s\n" % (key, headers[key])), headers.keys(), "")
+        self.ss.send('SEND\n%s\n%s\x00\n' % (headerstr, msg))
         
     def subscribe(self, dest, ack='auto'):
         self.sendbuf.append('SUBSCRIBE\ndestination: %s\nack: %s\n\n\x00\n' % (dest, ack))
