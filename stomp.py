@@ -32,10 +32,11 @@
     * uuid method courtesy of Carl Free Jr:
       http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/213761
     * patch from Andreas Schobel to fix newlines problem in ActiveMQ 4.1 (2007/03/31)
+    * patch from Julian Scheid to allow sending custom headers (2007/09/05)
 
     Updates
     -------
-    * get rid of import so that stomp.py will work in jython
+    * updated to get stomp.py working in Jython as well as Python
 """
 
 import md5
