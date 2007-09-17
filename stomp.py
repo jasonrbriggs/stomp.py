@@ -23,9 +23,9 @@
     ---------
     Author: Jason R Briggs
     License: http://www.apache.org/licenses/LICENSE-2.0
-    Version: $Revision: 1.3 $
+    Version: $Revision: 1.4$
     Start Date: 2005/12/01
-    Last Revision Date: $Date: 2007/08/15 21:35 $
+    Last Revision Date: $Date: 2007/09/05 21:54 $
     
     Notes/Attribution
     -----------------
@@ -37,9 +37,12 @@
     Updates
     -------
     * updated to get stomp.py working in Jython as well as Python
+    * change print statements to use logger
+    
 """
 
 import md5
+import logging
 import random
 import re
 import socket
@@ -47,8 +50,20 @@ import sys
 import threading
 import time
 
+#
 # retrieve a description from the headers of a message
+#
 _destination_re = re.compile(r'destination:\s*(.*)')
+
+#
+# reference to a logger
+#
+log = logging.getLogger('stomp.py')
+
+#
+# stomp.py version number
+#
+_version = 1.4
 
 def _uuid( *args ):
     """
@@ -87,9 +102,9 @@ class Connection(threading.Thread):
         
         connstr = 'CONNECT\nuser: %s\npasscode: %s\n\n\x00\n' % (user, passcode)
         self.ss.send(connstr)
-        print self.__read(self.ss)
+        log.info(self.__read(self.ss))
         self.rs.send(connstr)
-        print self.__read(self.rs)
+        log.info(self.__read(self.rs))
 
         threading.Thread.__init__(self)
         
@@ -129,7 +144,7 @@ class Connection(threading.Thread):
                 dest = mat.group(1)
                 for listener in self.listeners:
                     listener.receive(msg)
-        print 'connection message loop completed'
+        log.info('connection message loop completed')
         self.ss.close()
         self.rs.close()
         
@@ -271,6 +286,8 @@ if __name__ == '__main__':
             user = 'test'
             passcode = 'test'
         
+        print '\rstomp.py, version %s' % _version 
+            
         st = StompTester(host, port, user, passcode)
         while 1:
             print '\r> ',
