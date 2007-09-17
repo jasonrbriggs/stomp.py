@@ -23,9 +23,8 @@
     ---------
     Author: Jason R Briggs
     License: http://www.apache.org/licenses/LICENSE-2.0
-    Version: $Revision: 1.4$
     Start Date: 2005/12/01
-    Last Revision Date: $Date: 2007/09/05 21:54 $
+    Last Revision Date: $Date: 2007/09/17 19:26 $
     
     Notes/Attribution
     -----------------
