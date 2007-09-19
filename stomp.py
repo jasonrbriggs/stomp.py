@@ -3,8 +3,8 @@
 """Stomp Protocol Connectivity
 
     This provides basic connectivity to a message broker supporting the 'stomp' protocol.
-    At the moment ACK, SEND, SUBSCRIBE, UNSUBSCRIBE, BEGIN, ABORT, COMMIT and DISCONNECT operations
-    are supported.  CONNECT is implicit.
+    At the moment ACK, SEND, SUBSCRIBE, UNSUBSCRIBE, BEGIN, ABORT, COMMIT, CONNECT and DISCONNECT operations
+    are supported.
     
     This changes the previous version which required a listener per subscription -- now a listener object
     just calls the 'addlistener' method and will receive all messages sent in response to all/any subscriptions.
@@ -13,7 +13,7 @@
     
     Note that you must 'start' an instance of Connection to begin receiving messages.  For example:
     
-        conn = stomp.Connection('localhost', 62003, 'myuser', 'mypass')
+        conn = stomp.Connection([('localhost', 62003)], 'myuser', 'mypass')
         conn.start()
 
     Meta-Data
@@ -63,8 +63,8 @@ import types
 #
 # stomp.py version number
 #
-_version = 1.5
- 
+_version = 1.6
+
 
 def _uuid( *args ):
     """
@@ -85,7 +85,7 @@ def _uuid( *args ):
   
     return data
 
-    
+
 class DevNullLogger(object):
     """
     dummy logging class for environments without the logging module
@@ -137,6 +137,19 @@ class ConnectionListener(object):
     This class should be used as a base class for objects registered
     using Connection.add_listener().
     """
+    def on_connecting(self, host_and_port):
+        """
+        Called by the STOMP connection once a TCP/IP connection to the
+        STOMP server has been established or re-established. Note that
+        at this point, no connection has been established on the STOMP
+        protocol level. For this, you need to invoke the "connect"
+        method on the connection.
+
+        \param host_and_port a tuple containing the host name and port
+        number to which the connection has been established.
+        """
+        pass
+
     def on_connected(self, headers, body):
         """
         Called by the STOMP connection when a CONNECTED frame is
@@ -373,6 +386,9 @@ class Connection(object):
         
     def commit(self, headers={}, **keyword_headers):
         self.__send_frame_helper('COMMIT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
+
+    def connect(self, headers={}, **keyword_headers):
+        self.__send_frame_helper('CONNECT', '', self.__merge_headers([headers, keyword_headers]), [ ])
         
     def disconnect(self, headers={}, **keyword_headers):
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([headers, keyword_headers]), [ ])
@@ -444,7 +460,7 @@ class Connection(object):
                         found_alternative = True
                 if not found_alternative:
                     raise KeyError("Command %s requires one of the following headers: %s" % (command, str(required_header_key)))
-            if not required_header_key in headers.keys():
+            elif not required_header_key in headers.keys():
                 raise KeyError("Command %s requires header %r" % (command, required_header_key))
         self.__send_frame(command, headers, payload)
 
@@ -472,7 +488,8 @@ class Connection(object):
 
             try:
                 try:
-                    self.__send_frame('CONNECT', self.__connect_headers)
+                    for listener in self.__listeners:
+                        listener.on_connecting(self.__current_host_and_port)
 
                     while self.__running:
                         frames = self.__read()
@@ -500,7 +517,7 @@ class Connection(object):
                 log.error("Lost connection")
                 # Notify listeners
                 for listener in self.__listeners:
-                    listener.disconnected()
+                    listener.on_disconnected()
                 # Clear out any half-received messages after losing connection
                 self.__recvbuf = ''
                 continue
@@ -643,7 +660,7 @@ if __name__ == '__main__':
             self.c.start()
 
         def __print_async(self, frame_type, headers, body):
-            print "\r  \r"
+            print "\r  \r",
             print frame_type
             for header_key in headers.keys():
                 print '%s: %s' % (header_key, headers[header_key])
@@ -651,6 +668,12 @@ if __name__ == '__main__':
             print body
             print '> ',
             sys.stdout.flush()
+
+        def on_connecting(self, host_and_port):
+            self.c.connect()
+
+        def on_disconnected(self):
+            print "lost connection"
 
         def on_message(self, headers, body):
             self.__print_async("MESSAGE", headers, body)
@@ -745,16 +768,14 @@ if __name__ == '__main__':
             if not line or line.lstrip().rstrip() == '':
                 continue
             elif 'quit' in line or 'disconnect' in line:
-                st.disconnect(None)
                 break
-                
             split = line.split()
             command = split[0]
             if not command.startswith("on_") and hasattr(st, command):
                 getattr(st, command)(split)
             else:
                 print 'unrecognized command'
-    except KeyboardInterrupt:
+    finally:
         st.disconnect(None)
 
 
