@@ -102,6 +102,7 @@ class DevNullLogger(object):
     warning = log
     error = log
     critical = log
+    exception = log
         
     def isEnabledFor(self, lvl):
         return False
@@ -406,7 +407,8 @@ class Connection(object):
     def disconnect(self, headers={}, **keyword_headers):
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([headers, keyword_headers]), [ ])
         self.__running = False
-        self.__socket.shutdown(socket.SHUT_RDWR)
+        if hasattr(socket, 'SHUT_RDWR'):
+            self.__socket.shutdown(socket.SHUT_RDWR)
         self.__socket.close()
         self.__current_host_and_port = None
 
@@ -555,7 +557,10 @@ class Connection(object):
         Read the next frame(s) from the socket.
         """
         while self.__running:
-            c = self.__socket.recv(1024)
+            try:
+                c = self.__socket.recv(1024)
+            except:
+                c = ''
             if len(c) == 0:
                 raise ConnectionClosedException
             self.__recvbuf += c
