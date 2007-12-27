@@ -335,6 +335,7 @@ class Connection(object):
         """
         self.__running = True
         thread.start_new_thread(self.__receiver_loop, ())
+        self.__attempt_connection()
 
     def stop(self):
         """
@@ -490,7 +491,7 @@ class Connection(object):
             self.__socket.sendall(frame)
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
         else:
-            raise NotConnectedException()     
+            raise NotConnectedException()
 
     def __receiver_loop(self):
         """
@@ -508,7 +509,8 @@ class Connection(object):
                     try:
                         try:
                             for listener in self.__listeners:
-                                listener.on_connecting(self.__current_host_and_port)
+                                if hasattr(listener, 'on_connecting'):
+                                    listener.on_connecting(self.__current_host_and_port)
 
                             while self.__running:
                                 frames = self.__read()
@@ -522,7 +524,10 @@ class Connection(object):
                                                        'receipt', 
                                                        'error' ]:
                                         for listener in self.__listeners:
-                                            eval('listener.on_%s(headers, body)' % frame_type)
+                                            if hasattr(listener, 'on_%s' % frame_type):
+                                                eval('listener.on_%s(headers, body)' % frame_type)
+                                            else:
+                                                log.debug('listener %s has no such method on_%s' % (listener, frame_type)) 
                                     else:
                                         log.warning('Unknown response frame type: "%s" (frame length was %d)' % (frame_type, len(frame)))
                         finally:
@@ -627,8 +632,7 @@ class Connection(object):
 
     def __attempt_connection(self):
         """
-        Try connecting to the (host, port) tuples specified at
-        construction time.
+        Try connecting to the (host, port) tuples specified at construction time.
         """
         sleep_exp = 1
         while self.__running and self.__socket is None:
@@ -659,7 +663,6 @@ class Connection(object):
                     time.sleep(0.2)
 
                 sleep_exp += 1
-        
 
 #
 # command line testing
@@ -674,7 +677,7 @@ if __name__ == '__main__':
                          'send',  'ack', 
                          'begin', 'abort', 'commit', 
                          'connect', 'disconnect'
-                         ]
+                       ]
             for command in commands[state:]:
                 if command.startswith(text):
                     return "%s " % command
