@@ -29,6 +29,7 @@
       http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/213761
     * patch from Andreas Schobel
     * patches from Julian Scheid of Rising Sun Pictures (http://open.rsp.com.au)
+    * patch from Fernando
       
     Updates
     -------
@@ -48,6 +49,7 @@
        - added reconnection attempts and connection fail-over
        - changed defaults for "user" and "passcode" to None instead of empty string (fixed transmission of those values)
        - added readline support
+    * 2008/03/26 : (Fernando) added cStringIO for faster performance on large messages 
 """
 
 import math
@@ -60,6 +62,7 @@ import thread
 import threading
 import time
 import types
+from cStringIO import StringIO
 
 #
 # stomp.py version number
@@ -561,6 +564,7 @@ class Connection(object):
         """
         Read the next frame(s) from the socket.
         """
+        fastbuf = StringIO()
         while self.__running:
             try:
                 c = self.__socket.recv(1024)
@@ -568,9 +572,11 @@ class Connection(object):
                 c = ''
             if len(c) == 0:
                 raise ConnectionClosedException
-            self.__recvbuf += c
+            fastbuf.write(c)
             if '\x00' in c:
                 break
+        self.__recvbuf += fastbuf.getvalue()
+        fastbuf.close() 
         result = []
         if len(self.__recvbuf) > 0 and self.__running:
             while True:
