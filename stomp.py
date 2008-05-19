@@ -545,7 +545,8 @@ class Connection(object):
                             log.error("Lost connection")
                             # Notify listeners
                             for listener in self.__listeners:
-                                listener.on_disconnected()
+                                if hasattr(listener, 'on_disconnected'):
+                                    listener.on_disconnected()
                             # Clear out any half-received messages after losing connection
                             self.__recvbuf = ''
                             continue
@@ -640,35 +641,40 @@ class Connection(object):
         """
         Try connecting to the (host, port) tuples specified at construction time.
         """
-        sleep_exp = 1
-        while self.__running and self.__socket is None:
-            for host_and_port in self.__host_and_ports:
-                try:
-                    log.debug("Attempting connection to host %s, port %s" % host_and_port)
-                    self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.__socket.connect(host_and_port)
-                    self.__current_host_and_port = host_and_port
-                    log.info("Established connection to host %s, port %s" % host_and_port)
-                    break
-                except socket.error:
-                    self.__socket = None
-                    if type(sys.exc_info()[1]) == types.TupleType:
-                        exc = sys.exc_info()[1][1]
-                    else:
-                        exc = sys.exc_info()[1]
-                    log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
-
-            if self.__socket is None:
-                sleep_duration = (min(self.__reconnect_sleep_max, 
-                                      ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase)) 
-                                       * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
-                                  * (1.0 + random.random() * self.__reconnect_sleep_jitter))
-                sleep_end = time.time() + sleep_duration
-                log.debug("Sleeping for %.1f seconds before attempting reconnect" % sleep_duration)
-                while self.__running and time.time() < sleep_end:
-                    time.sleep(0.2)
-
-                sleep_exp += 1
+        lock = thread.allocate_lock()
+        lock.acquire(1)
+        try:
+            sleep_exp = 1
+            while self.__running and self.__socket is None:
+                for host_and_port in self.__host_and_ports:
+                    try:
+                        log.debug("Attempting connection to host %s, port %s" % host_and_port)
+                        self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        self.__socket.connect(host_and_port)
+                        self.__current_host_and_port = host_and_port
+                        log.info("Established connection to host %s, port %s" % host_and_port)
+                        break
+                    except socket.error:
+                        self.__socket = None
+                        if type(sys.exc_info()[1]) == types.TupleType:
+                            exc = sys.exc_info()[1][1]
+                        else:
+                            exc = sys.exc_info()[1]
+                        log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
+    
+                if self.__socket is None:
+                    sleep_duration = (min(self.__reconnect_sleep_max, 
+                                          ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase)) 
+                                           * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
+                                      * (1.0 + random.random() * self.__reconnect_sleep_jitter))
+                    sleep_end = time.time() + sleep_duration
+                    log.debug("Sleeping for %.1f seconds before attempting reconnect" % sleep_duration)
+                    while self.__running and time.time() < sleep_end:
+                        time.sleep(0.2)
+    
+                    sleep_exp += 1
+        finally:
+            lock.release()           
 
 #
 # command line testing
@@ -783,28 +789,28 @@ if __name__ == '__main__':
                 print 'unsubscribing from "%s"' % args[1]
                 self.c.unsubscribe(destination=args[1])
 
-    try:
-        if len(sys.argv) > 5:
-            print 'USAGE: stomp.py [host] [port] [user] [passcode]'
-            sys.exit(1)
+    if len(sys.argv) > 5:
+        print 'USAGE: stomp.py [host] [port] [user] [passcode]'
+        sys.exit(1)
 
-        if len(sys.argv) >= 2:
-            host = sys.argv[1]
-        else:
-            host = "localhost"
-        if len(sys.argv) >= 3:
-            port = int(sys.argv[2])
-        else:
-            port = 61613
-        
-        if len(sys.argv) >= 5:
-            user = sys.argv[3]
-            passcode = sys.argv[4]
-        else:
-            user = None
-            passcode = None
-        
-        st = StompTester(host, port, user, passcode)
+    if len(sys.argv) >= 2:
+        host = sys.argv[1]
+    else:
+        host = "localhost"
+    if len(sys.argv) >= 3:
+        port = int(sys.argv[2])
+    else:
+        port = 61613
+    
+    if len(sys.argv) >= 5:
+        user = sys.argv[3]
+        passcode = sys.argv[4]
+    else:
+        user = None
+        passcode = None
+    
+    st = StompTester(host, port, user, passcode)
+    try:
         while True:
             line = raw_input("\r> ")
             if not line or line.lstrip().rstrip() == '':
