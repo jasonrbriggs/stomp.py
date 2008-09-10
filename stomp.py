@@ -50,6 +50,7 @@
        - changed defaults for "user" and "passcode" to None instead of empty string (fixed transmission of those values)
        - added readline support
     * 2008/03/26 : (Fernando) added cStringIO for faster performance on large messages 
+    * 2008/09/10 : (Eugene) remove lower() on headers to support case-sensitive header names
 """
 
 import math
