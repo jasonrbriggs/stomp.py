@@ -10,7 +10,7 @@ class MyListener(object):
     def on_message(self, headers, message):
         print 'received a message %s' % message
 
-conn = stomp.Connection()
+conn = stomp.Connection([('localhost', 61613)])
 conn.add_listener(MyListener())
 conn.start()
 conn.connect()

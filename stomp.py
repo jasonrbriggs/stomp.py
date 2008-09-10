@@ -261,7 +261,7 @@ class Connection(object):
                  1.0 means wait twice as long, and 0.0 means keep
                  the delay constant.
 
-        \param reonnect_sleep_max
+        \param reconnect_sleep_max
 
                  maximum delay between connection attempts, regardless
                  of the reconnect_sleep_increase.
@@ -395,7 +395,8 @@ class Connection(object):
         
     def begin(self, headers={}, **keyword_headers):
         use_headers = self.__merge_headers([headers, keyword_headers])
-        if not 'transaction' in use_headers.keys(): use_headers['transaction'] = _uuid()
+        if not 'transaction' in use_headers.keys(): 
+            use_headers['transaction'] = _uuid()
         self.__send_frame_helper('BEGIN', '', use_headers, [ 'transaction' ])
         return use_headers['transaction']
 
@@ -449,7 +450,7 @@ class Connection(object):
         headers = {}
         for header_map in header_map_list:
             for header_key in header_map.keys():
-                headers[header_key.replace('_', '-').lower()] = header_map[header_key]
+                headers[header_key.replace('_', '-')] = header_map[header_key]
         return headers
 
     def __send_frame_helper(self, command, payload, headers, required_header_keys):
@@ -514,10 +515,10 @@ class Connection(object):
                             for listener in self.__listeners:
                                 if hasattr(listener, 'on_connecting'):
                                     listener.on_connecting(self.__current_host_and_port)
-
+                            
                             while self.__running:
                                 frames = self.__read()
-
+                                
                                 for frame in frames:
                                     (frame_type, headers, body) = self.__parse_frame(frame)
                                     log.debug("Received frame: result=%r, headers=%r, body=%r" % (frame_type, headers, body))
@@ -579,6 +580,7 @@ class Connection(object):
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close() 
         result = []
+        
         if len(self.__recvbuf) > 0 and self.__running:
             while True:
                 pos = self.__recvbuf.find('\x00')
