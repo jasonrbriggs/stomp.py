@@ -13,7 +13,7 @@ class MyListener(object):
 conn = stomp.Connection([('localhost', 61613)])
 conn.add_listener(MyListener())
 conn.start()
-conn.connect()
+conn.connect(wait=True)
 
 conn.subscribe(destination='/queue/test', ack='auto')
 

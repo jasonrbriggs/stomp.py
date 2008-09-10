@@ -362,6 +362,9 @@ class Connection(object):
         """
         return self.__current_host_and_port
         
+    def is_connected(self):
+        return self.__socket is not None and self.__socket.getsockname()[1] != 0
+        
     #
     # Manage objects listening to incoming frames
     #
@@ -408,6 +411,9 @@ class Connection(object):
         self.__send_frame_helper('COMMIT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
 
     def connect(self, headers={}, **keyword_headers):
+        if keyword_headers.has_key('wait') and keyword_headers['wait']:
+            while not self.is_connected(): time.sleep(0.1)
+            del keyword_headers['wait']
         self.__send_frame_helper('CONNECT', '', self.__merge_headers([headers, keyword_headers]), [ ])
         
     def disconnect(self, headers={}, **keyword_headers):
@@ -415,7 +421,8 @@ class Connection(object):
         self.__running = False
         if hasattr(socket, 'SHUT_RDWR'):
             self.__socket.shutdown(socket.SHUT_RDWR)
-        self.__socket.close()
+        if self.__socket:
+            self.__socket.close()
         self.__current_host_and_port = None
 
     # ========= PRIVATE MEMBERS =========
