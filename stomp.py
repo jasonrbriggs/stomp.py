@@ -414,7 +414,7 @@ class Connection(object):
         if keyword_headers.has_key('wait') and keyword_headers['wait']:
             while not self.is_connected(): time.sleep(0.1)
             del keyword_headers['wait']
-        self.__send_frame_helper('CONNECT', '', self.__merge_headers([headers, keyword_headers]), [ ])
+        self.__send_frame_helper('CONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         
     def disconnect(self, headers={}, **keyword_headers):
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
@@ -498,8 +498,8 @@ class Connection(object):
         """
         if self.__socket is not None:
             frame = '%s\n%s\n%s\x00' % (command,
-                                        reduce(lambda accu, key: accu + ('%s: %s\n' % (key, headers[key])), headers.keys(), ''),
-                                        payload)        
+                                        reduce(lambda accu, key: accu + ('%s:%s\n' % (key, headers[key])), headers.keys(), ''),
+                                        payload)  
             self.__socket.sendall(frame)
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
         else:
@@ -728,7 +728,7 @@ if __name__ == '__main__':
             sys.stdout.flush()
 
         def on_connecting(self, host_and_port):
-            self.c.connect()
+            self.c.connect(wait=True)
 
         def on_disconnected(self):
             print "lost connection"
