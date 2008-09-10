@@ -21,7 +21,7 @@
     Author: Jason R Briggs
     License: http://www.apache.org/licenses/LICENSE-2.0
     Start Date: 2005/12/01
-    Last Revision Date: $Date: 2007/09/19 14:33 $
+    Last Revision Date: $Date: 2008/09/11 00:16 $
     
     Notes/Attribution
     -----------------
@@ -51,6 +51,7 @@
        - added readline support
     * 2008/03/26 : (Fernando) added cStringIO for faster performance on large messages 
     * 2008/09/10 : (Eugene) remove lower() on headers to support case-sensitive header names
+    * 2008/09/11 : (JRB) fix incompatibilities with RabbitMQ, add wait for socket-connect
 """
 
 import math
@@ -68,7 +69,7 @@ from cStringIO import StringIO
 #
 # stomp.py version number
 #
-_version = 1.6
+_version = 1.7
 
 
 def _uuid( *args ):
