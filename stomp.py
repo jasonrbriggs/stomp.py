@@ -364,7 +364,10 @@ class Connection(object):
         return self.__current_host_and_port
         
     def is_connected(self):
-        return self.__socket is not None and self.__socket.getsockname()[1] != 0
+        try:
+            return self.__socket is not None and self.__socket.getsockname()[1] != 0
+        except socket.error:
+            return False
         
     #
     # Manage objects listening to incoming frames
