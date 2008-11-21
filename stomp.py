@@ -52,6 +52,7 @@
     * 2008/03/26 : (Fernando) added cStringIO for faster performance on large messages 
     * 2008/09/10 : (Eugene) remove lower() on headers to support case-sensitive header names
     * 2008/09/11 : (JRB) fix incompatibilities with RabbitMQ, add wait for socket-connect
+    * 2008/10/28 : (Eugene) add jms map (from stomp1.1 ideas)
 """
 
 import math
@@ -455,15 +456,28 @@ class Connection(object):
         """
         Helper function for combining multiple header maps into one.
 
-        Any underscores ('_') in header names (keys) will be replaced
-        by dashes ('-'), and header names will be converted to
-        all-lowercase.
+        Any underscores ('_') in header names (keys) will be replaced by dashes ('-').
         """
         headers = {}
         for header_map in header_map_list:
             for header_key in header_map.keys():
                 headers[header_key.replace('_', '-')] = header_map[header_key]
         return headers
+        
+    def __convert_dict(self, payload):
+        """
+        Encode python dictionary as <map>...</map> structure.
+        """
+
+        xmlStr = "<map>\n"
+        for key in payload:
+            xmlStr += "<entry>\n"
+            xmlStr += "<string>%s</string>" % key
+            xmlStr += "<string>%s</string>" % payload[key]
+            xmlStr += "</entry>\n"
+        xmlStr += "</map>"
+
+        return xmlStr
 
     def __send_frame_helper(self, command, payload, headers, required_header_keys):
         """
@@ -500,6 +514,10 @@ class Connection(object):
         """
         Send a STOMP frame.
         """
+        if type(payload) == dict:
+            headers["transformation"] = "jms-map-xml"
+            payload = self.__convert_dict(payload)        
+        
         if self.__socket is not None:
             frame = '%s\n%s\n%s\x00' % (command,
                                         reduce(lambda accu, key: accu + ('%s:%s\n' % (key, headers[key])), headers.keys(), ''),
@@ -508,6 +526,43 @@ class Connection(object):
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
         else:
             raise NotConnectedException()
+
+
+    def __transform(self, body, transType):
+        """
+        Perform body transformation. Currently, the only supported transformation is
+        'jms-map-xml', which converts a map into python dictionary. This can be extended
+        to support other transformation types.
+
+        The body has the following format: 
+        <map>
+            <entry>
+                <string>name</string>
+                <string>Dejan</string>
+            </entry>
+            <entry>
+                <string>city</string>
+                <string>Belgrade</string>
+            </entry>
+        </map>
+
+        (see http://docs.codehaus.org/display/STOMP/Stomp+v1.1+Ideas)
+        """
+
+        if transType != 'jms-map-xml':
+            return body
+
+        entries = {}
+        doc = xml.dom.minidom.parseString(body)
+        rootElem = doc.documentElement
+        for entryElem in rootElem.getElementsByTagName("entry"):
+            pair = []
+            for node in entryElem.childNodes:
+                if not isinstance(node, xml.dom.minidom.Element): continue
+                pair.append(node.firstChild.nodeValue)
+            assert len(pair) == 2
+            entries[pair[0]] = pair[1]
+        return entries
 
     def __receiver_loop(self):
         """
@@ -648,6 +703,9 @@ class Connection(object):
             header_match = Connection.__header_line_re.match(header_line)
             if header_match:
                 headers[header_match.group('key')] = header_match.group('value')
+
+        if 'transformation' in headers:
+            body = self.__transform(body, headers['transformation'])
 
         return (frame_type, headers, body)
 
