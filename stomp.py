@@ -30,6 +30,7 @@
     * patch from Andreas Schobel
     * patches from Julian Scheid of Rising Sun Pictures (http://open.rsp.com.au)
     * patch from Fernando
+    * patches from Eugene Strulyov
       
     Updates
     -------
@@ -53,6 +54,8 @@
     * 2008/09/10 : (Eugene) remove lower() on headers to support case-sensitive header names
     * 2008/09/11 : (JRB) fix incompatibilities with RabbitMQ, add wait for socket-connect
     * 2008/10/28 : (Eugene) add jms map (from stomp1.1 ideas)
+    * 2008/11/25 : (Eugene) remove superfluous (incorrect) locking code
+    
 """
 
 import math
@@ -71,7 +74,7 @@ from cStringIO import StringIO
 #
 # stomp.py version number
 #
-_version = 1.7
+_version = 1.8
 
 
 def _uuid( *args ):
