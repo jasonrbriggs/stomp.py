@@ -65,6 +65,7 @@ import thread
 import threading
 import time
 import types
+import xml.dom.minidom
 from cStringIO import StringIO
 
 #
@@ -340,8 +341,8 @@ class Connection(object):
         no frames will be received by the connection.
         """
         self.__running = True
-        thread.start_new_thread(self.__receiver_loop, ())
         self.__attempt_connection()
+        thread.start_new_thread(self.__receiver_loop, ())
 
     def stop(self):
         """
@@ -527,43 +528,6 @@ class Connection(object):
         else:
             raise NotConnectedException()
 
-
-    def __transform(self, body, transType):
-        """
-        Perform body transformation. Currently, the only supported transformation is
-        'jms-map-xml', which converts a map into python dictionary. This can be extended
-        to support other transformation types.
-
-        The body has the following format: 
-        <map>
-            <entry>
-                <string>name</string>
-                <string>Dejan</string>
-            </entry>
-            <entry>
-                <string>city</string>
-                <string>Belgrade</string>
-            </entry>
-        </map>
-
-        (see http://docs.codehaus.org/display/STOMP/Stomp+v1.1+Ideas)
-        """
-
-        if transType != 'jms-map-xml':
-            return body
-
-        entries = {}
-        doc = xml.dom.minidom.parseString(body)
-        rootElem = doc.documentElement
-        for entryElem in rootElem.getElementsByTagName("entry"):
-            pair = []
-            for node in entryElem.childNodes:
-                if not isinstance(node, xml.dom.minidom.Element): continue
-                pair.append(node.firstChild.nodeValue)
-            assert len(pair) == 2
-            entries[pair[0]] = pair[1]
-        return entries
-
     def __receiver_loop(self):
         """
         Main loop listening for incoming data.
@@ -572,7 +536,7 @@ class Connection(object):
             try:
                 threading.currentThread().setName("StompReceiver")
                 while self.__running:
-                    self.__attempt_connection()
+                    log.debug('starting receiver loop')
 
                     if self.__socket is None:
                         break
@@ -676,6 +640,48 @@ class Connection(object):
                 else:
                     break
         return result
+    
+
+    def __transform(self, body, transType):
+        """
+        Perform body transformation. Currently, the only supported transformation is
+        'jms-map-xml', which converts a map into python dictionary. This can be extended
+        to support other transformation types.
+
+        The body has the following format: 
+        <map>
+          <entry>
+            <string>name</string>
+            <string>Dejan</string>
+          </entry>
+          <entry>
+            <string>city</string>
+            <string>Belgrade</string>
+          </entry>
+        </map>
+
+        (see http://docs.codehaus.org/display/STOMP/Stomp+v1.1+Ideas)
+        """
+
+        if transType != 'jms-map-xml':
+            return body
+
+        try:
+            entries = {}
+            doc = xml.dom.minidom.parseString(body)
+            rootElem = doc.documentElement
+            for entryElem in rootElem.getElementsByTagName("entry"):
+                pair = []
+                for node in entryElem.childNodes:
+                    if not isinstance(node, xml.dom.minidom.Element): continue
+                    pair.append(node.firstChild.nodeValue)
+                assert len(pair) == 2
+                entries[pair[0]] = pair[1]
+            return entries
+        except Exception, ex:
+            # unable to parse message. return original
+            return body
+        
 
     def __parse_frame(self, frame):
         """
@@ -713,40 +719,36 @@ class Connection(object):
         """
         Try connecting to the (host, port) tuples specified at construction time.
         """
-        lock = thread.allocate_lock()
-        lock.acquire(1)
-        try:
-            sleep_exp = 1
-            while self.__running and self.__socket is None:
-                for host_and_port in self.__host_and_ports:
-                    try:
-                        log.debug("Attempting connection to host %s, port %s" % host_and_port)
-                        self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        self.__socket.connect(host_and_port)
-                        self.__current_host_and_port = host_and_port
-                        log.info("Established connection to host %s, port %s" % host_and_port)
-                        break
-                    except socket.error:
-                        self.__socket = None
-                        if type(sys.exc_info()[1]) == types.TupleType:
-                            exc = sys.exc_info()[1][1]
-                        else:
-                            exc = sys.exc_info()[1]
-                        log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
-    
-                if self.__socket is None:
-                    sleep_duration = (min(self.__reconnect_sleep_max, 
-                                          ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase)) 
-                                           * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
-                                      * (1.0 + random.random() * self.__reconnect_sleep_jitter))
-                    sleep_end = time.time() + sleep_duration
-                    log.debug("Sleeping for %.1f seconds before attempting reconnect" % sleep_duration)
-                    while self.__running and time.time() < sleep_end:
-                        time.sleep(0.2)
-    
-                    sleep_exp += 1
-        finally:
-            lock.release()           
+
+        sleep_exp = 1
+        while self.__running and self.__socket is None:
+            for host_and_port in self.__host_and_ports:
+                try:
+                    log.debug("Attempting connection to host %s, port %s" % host_and_port)
+                    self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.__socket.connect(host_and_port)
+                    self.__current_host_and_port = host_and_port
+                    log.info("Established connection to host %s, port %s" % host_and_port)
+                    break
+                except socket.error:
+                    self.__socket = None
+                    if type(sys.exc_info()[1]) == types.TupleType:
+                        exc = sys.exc_info()[1][1]
+                    else:
+                        exc = sys.exc_info()[1]
+                    log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
+
+            if self.__socket is None:
+                sleep_duration = (min(self.__reconnect_sleep_max, 
+                                      ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase)) 
+                                       * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
+                                  * (1.0 + random.random() * self.__reconnect_sleep_jitter))
+                sleep_end = time.time() + sleep_duration
+                log.debug("Sleeping for %.1f seconds before attempting reconnect" % sleep_duration)
+                while self.__running and time.time() < sleep_end:
+                    time.sleep(0.2)
+
+                sleep_exp += 1
 
 #
 # command line testing
