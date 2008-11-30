@@ -1,0 +1,26 @@
+
+# HG changeset patch
+# User Scott Parkerson <http://issues.rpath.com/>
+# Date 1222145410 14400
+# Node ID bf82e7bbf9e3b52d0c7d5a3a2f482f75d2728693
+# Parent 38a9e0b93a2a630ee4b3119f7abb391415693418
+fix scoping of is_local_host
+
+--- a/stomp.py	Mon Sep 22 17:14:32 2008 -0400
++++ b/stomp.py	Tue Sep 23 00:50:10 2008 -0400
+@@ -296,11 +296,12 @@
+         sorted_host_and_ports = []
+         sorted_host_and_ports.extend(host_and_ports)
+ 
++        def is_local_host(host):
++            return host in Connection.__localhost_names
++
+         # If localhost is preferred, make sure all (host, port) tuples
+         # that refer to the local host come first in the list
+         if prefer_localhost:
+-            def is_local_host(host):
+-                return host in Connection.__localhost_names
+ 
+             sorted_host_and_ports.sort(lambda x, y: (int(is_local_host(y[0])) 
+                                                      - int(is_local_host(x[0]))))
+

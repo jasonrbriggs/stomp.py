@@ -286,11 +286,12 @@ class Connection(object):
         sorted_host_and_ports = []
         sorted_host_and_ports.extend(host_and_ports)
 
+        def is_local_host(host):
+            return host in Connection.__localhost_names
+
         # If localhost is preferred, make sure all (host, port) tuples
         # that refer to the local host come first in the list
         if prefer_localhost:
-            def is_local_host(host):
-                return host in Connection.__localhost_names
 
             sorted_host_and_ports.sort(lambda x, y: (int(is_local_host(y[0])) 
                                                      - int(is_local_host(x[0]))))
