@@ -55,6 +55,7 @@
     * 2008/09/11 : (JRB) fix incompatibilities with RabbitMQ, add wait for socket-connect
     * 2008/10/28 : (Eugene) add jms map (from stomp1.1 ideas)
     * 2008/11/25 : (Eugene) remove superfluous (incorrect) locking code
+    * 2009/02/05 : (JRB) remove code to replace underscores with dashes in header names (causes a problem in rabbit-mq)
     
 """
 
@@ -465,7 +466,7 @@ class Connection(object):
         headers = {}
         for header_map in header_map_list:
             for header_key in header_map.keys():
-                headers[header_key.replace('_', '-')] = header_map[header_key]
+                headers[header_key] = header_map[header_key]
         return headers
         
     def __convert_dict(self, payload):
