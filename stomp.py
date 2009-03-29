@@ -56,6 +56,8 @@
     * 2008/10/28 : (Eugene) add jms map (from stomp1.1 ideas)
     * 2008/11/25 : (Eugene) remove superfluous (incorrect) locking code
     * 2009/02/05 : (JRB) remove code to replace underscores with dashes in header names (causes a problem in rabbit-mq)
+    * 2009/03/29 : (JRB) minor change to add logging config file
+                   (JRB) minor change to add socket timeout, suggested by Israel
     
 """
 
@@ -732,6 +734,7 @@ class Connection(object):
                 try:
                     log.debug("Attempting connection to host %s, port %s" % host_and_port)
                     self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.__socket.settimeout(None)
                     self.__socket.connect(host_and_port)
                     self.__current_host_and_port = host_and_port
                     log.info("Established connection to host %s, port %s" % host_and_port)
