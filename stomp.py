@@ -124,7 +124,9 @@ class DevNullLogger(object):
 #
 try:
     import logging
-    log = logging.getLogger('stomp.py')
+    import logging.config
+    logging.config.fileConfig("stomp.log.conf")
+    log = logging.getLogger('root')
 except ImportError:
     log = DevNullLogger()
 
