@@ -58,11 +58,12 @@
     * 2009/02/05 : (JRB) remove code to replace underscores with dashes in header names (causes a problem in rabbit-mq)
     * 2009/03/29 : (JRB) minor change to add logging config file
                    (JRB) minor change to add socket timeout, suggested by Israel
-    
+    * 2009/04/01 : (Gavin) patch to change md5 to hashlib (for 2.6 compatibility)
+
 """
 
+import hashlib
 import math
-import md5
 import random
 import re
 import socket
@@ -95,10 +96,11 @@ def _uuid( *args ):
         # if we can't get a network address, just imagine one
         a = random.random() * 100000000000000000L
     data = str(t) + ' ' + str(r) + ' ' + str(a) + ' ' + str(args)
-    data = md5.md5(data).hexdigest()
-  
+    md5 = hashlib.md5()
+    md5.update(data)
+    data = md5.hexdigest()
     return data
-
+    
 
 class DevNullLogger(object):
     """
