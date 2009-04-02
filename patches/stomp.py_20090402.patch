@@ -1,0 +1,20 @@
+--- a/stomp.py	Wed Apr 01 17:22:10 2009 +0100
++++ b/stomp.py	Thu Apr 02 14:55:51 2009 +0100
+@@ -59,6 +59,7 @@
+     * 2009/03/29 : (JRB) minor change to add logging config file
+                    (JRB) minor change to add socket timeout, suggested by Israel
+     * 2009/04/01 : (Gavin) patch to change md5 to hashlib (for 2.6 compatibility)
++    * 2009/04/02 : (Fernando Ciciliati) fix overflow bug when waiting too long to connect to the broker
+ 
+ """
+ 
+@@ -759,7 +760,8 @@
+                 while self.__running and time.time() < sleep_end:
+                     time.sleep(0.2)
+ 
+-                sleep_exp += 1
++                if sleep_duration < self.__reconnect_sleep_max:
++                    sleep_exp += 1
+ 
+ #
+ # command line testing
