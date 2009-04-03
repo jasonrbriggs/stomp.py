@@ -132,7 +132,7 @@ try:
     import logging.config
     logging.config.fileConfig("stomp.log.conf")
     log = logging.getLogger('root')
-except ImportError:
+except:
     log = DevNullLogger()
 
     
