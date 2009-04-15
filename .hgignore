@@ -5,3 +5,4 @@ syntax: glob
 *.tmproj
 .DS_Store
 MANIFEST
+nbproject
