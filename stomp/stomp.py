@@ -23,11 +23,15 @@ from utils import *
 try:
     import logging
     import logging.config
-    logging.config.fileConfig("stomp.log.conf")
-    log = logging.getLogger('root')
-except:
+    log = None
+except ImportError:
     log = DevNullLogger()
-
+ 
+if not log:
+    try:
+        logging.config.fileConfig('stomp.log.conf')
+    finally:
+        log = logging.getLogger('stomp.py')
 
 
 class Connection(object):
