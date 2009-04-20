@@ -1,0 +1,106 @@
+CHANGELOG
+=========
+
+20 Apr 2009
+-----------
+
+Jason - create new Python3 version of stomp.py (directory refactoring required as a consequence)
+      - add facility to allow for a specified logging config file or a default
+
+
+15 Apr 2009
+-----------
+
+Jason - refactor single file into multiple in a module dir (to tidy up)
+      - add help to command line interface
+      - add stats facility
+      - add initial unit test code
+
+
+2 Apr 2009
+----------
+
+Fernando Ciciliati - fix overflow bug when waiting too long to connect to the broker
+
+
+1 Apr 2009
+----------
+
+Gavin - Patch to change md5 to hashlib, for Python2.6 compatibility
+
+
+29 Mar 2009
+-----------
+
+Jason - minor change to add logging config file
+      - minor change to add socket timeout, suggested by Israel
+
+
+5 Feb 2009
+----------
+
+Jason - remove code to replace underscores with dashes in header names (causes a problem in RabbitMQ)
+
+
+25 Nov 2008
+-----------
+
+Eugene - remove superfluous (incorrect) locking code
+
+
+28 Oct 2008
+-----------
+
+Eugene - add jms map (from stomp1.1 ideas)
+
+
+11 Sep 2008
+-----------
+
+Jason - fix incompatibilities with RabbitMQ, add wait for socket-connect
+
+
+10 Sep 2008
+-----------
+
+Eugene - remove lower() on headers to support case-sensitive header names
+ 
+
+26 Mar 2008
+-----------
+
+Fernando - added cStringIO for faster performance on large messages
+
+
+18 Sep 2007
+-----------
+
+Jason - changed code to use logging instead of just print
+      - added logger for jython to work
+    
+Julian - change incoming message handling so that callbacks are invoked on the listener not only for MESSAGE,
+            but also for CONNECTED, RECEIPT and ERROR frames.
+    - callbacks now get not only the payload but any headers specified by the server
+    - all outgoing messages now sent via a single method
+    - only one connection used
+    - change to use thread instead of threading
+    - sends performed on the calling thread
+    - receiver loop now deals with multiple messages in one received chunk of data
+    - added reconnection attempts and connection fail-over
+    - changed defaults for "user" and "passcode" to None instead of empty string (fixed transmission of those values)
+    - added readline support
+
+
+
+Sep 2007
+--------
+
+Jason - updated to get stomp.py working in Jython as well as Python
+
+Julian - patch to allow sending custom headers
+
+
+Mar 2007
+--------
+
+Andreas Schobel - patch to fix newlines problem in ActiveMQ 4.1

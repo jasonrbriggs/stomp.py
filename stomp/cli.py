@@ -1,5 +1,6 @@
 import sys
 
+import internal
 from internal.connect import Connection
 from internal.listener import ConnectionListener, StatsListener
 
@@ -249,6 +250,9 @@ class StompCLI(ConnectionListener):
         else:
             print('There is no help for command "%s"' % args[1])
 
+    def version(self, args):
+        print('Stomp.py Version %s.%s' % internal.__version__)
+    ver = version
 
 
 def main():
