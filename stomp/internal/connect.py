@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 
+import functools
 import math
 import random
 import re
 import socket
 import sys
-import thread
 import threading
 import time
 import types
 import xml.dom.minidom
-from cStringIO import StringIO
+from io import StringIO
 
-from exception import *
-from listener import *
-from utils import *
+from . import exception
+from . import listener
+from . import utils
 
 
 #
@@ -23,11 +23,15 @@ from utils import *
 try:
     import logging
     import logging.config
-    logging.config.fileConfig("stomp.log.conf")
-    log = logging.getLogger('root')
-except:
+    log = None
+except ImportError:
     log = DevNullLogger()
-
+ 
+if not log:
+    try:
+        logging.config.fileConfig('stomp.log.conf')
+    finally:
+        log = logging.getLogger('stomp.py')
 
 
 class Connection(object):
@@ -117,11 +121,7 @@ class Connection(object):
         # If localhost is preferred, make sure all (host, port) tuples
         # that refer to the local host come first in the list
         if prefer_localhost:
-            def is_local_host(host):
-                return host in Connection.__localhost_names
-
-            sorted_host_and_ports.sort(lambda x, y: (int(is_local_host(y[0])) 
-                                                     - int(is_local_host(x[0]))))
+            sorted_host_and_ports.sort(key = self.is_localhost)
 
         # If the user wishes to attempt connecting to local ports
         # using the loopback interface, for each (host, port) tuple
@@ -130,7 +130,7 @@ class Connection(object):
         loopback_host_and_ports = []
         if try_loopback_connect:
             for host_and_port in sorted_host_and_ports:
-                if is_local_host(host_and_port[0]):
+                if self.is_localhost(host_and_port):
                     port = host_and_port[1]
                     if (not ("127.0.0.1", port) in sorted_host_and_ports 
                         and not ("localhost", port) in sorted_host_and_ports):
@@ -161,6 +161,13 @@ class Connection(object):
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
 
+    def is_localhost(self, host_and_port):
+        (host, port) = host_and_port
+        if host in Connection.__localhost_names:
+            return 1
+        else:
+            return 2
+
     #
     # Manage the connection
     #
@@ -173,7 +180,8 @@ class Connection(object):
         """
         self.__running = True
         self.__attempt_connection()
-        thread.start_new_thread(self.__receiver_loop, ())
+        thread = threading.Thread(None, self.__receiver_loop)
+        thread.start()
 
     def stop(self):
         """
@@ -213,7 +221,7 @@ class Connection(object):
         del self.__listeners[name]
 
     def get_listener(self, name):
-        if self.__listeners.has_key(name):
+        if name in self.__listeners:
             return self.__listeners[name]
         else:
             return None
@@ -255,7 +263,7 @@ class Connection(object):
         self.__send_frame_helper('COMMIT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
 
     def connect(self, headers={}, **keyword_headers):
-        if keyword_headers.has_key('wait') and keyword_headers['wait']:
+        if 'wait' in keyword_headers and keyword_headers['wait']:
             while not self.is_connected(): time.sleep(0.1)
             del keyword_headers['wait']
         self.__send_frame_helper('CONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
@@ -336,13 +344,21 @@ class Connection(object):
             payload = self.__convert_dict(payload)        
         
         if self.__socket is not None:
-            frame = '%s\n%s\n%s\x00' % (command,
-                                        reduce(lambda accu, key: accu + ('%s:%s\n' % (key, headers[key])), headers.keys(), ''),
-                                        payload)  
-            self.__socket.sendall(frame)
+            try:
+                frame = [ command + '\n' ]
+                for key, val in headers.items():
+                    frame.append('%s:%s\n' % (key, val))
+                frame.append('\n')
+                if payload:
+                    frame.append(payload)
+                frame.append('\x00')
+                frame = ''.join(frame)
+                self.__socket.sendall(frame.encode())
+            except Exception as e:
+                print(e)
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
         else:
-            raise NotConnectedException()
+            raise exception.NotConnectedException()
 
     def __notify(self, frame_type, headers=None, body=None):
         for listener in self.__listeners.values():
@@ -355,7 +371,7 @@ class Connection(object):
                 continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
-            params = len(notify_func.func_code.co_varnames)
+            params = len(notify_func.__code__.co_varnames)
             if params >= 2:
                 notify_func(headers, body)
             elif params == 1:
@@ -387,7 +403,6 @@ class Connection(object):
                                     (frame_type, headers, body) = self.__parse_frame(frame)
                                     log.debug("Received frame: result=%r, headers=%r, body=%r" % (frame_type, headers, body))
                                     frame_type = frame_type.lower()
-                                    
                                     if frame_type in [ 'connected', 'message', 'receipt', 'error' ]:
                                         self.__notify(frame_type, headers, body)
                                     else:
@@ -399,7 +414,7 @@ class Connection(object):
                                 pass # ignore errors when attempting to close socket
                             self.__socket = None
                             self.__current_host_and_port = None
-                    except ConnectionClosedException:
+                    except exception.ConnectionClosedException:
                         if self.__running:
                             log.error("Lost connection")
                             self.__notify('disconnected')
@@ -425,10 +440,11 @@ class Connection(object):
         while self.__running:
             try:
                 c = self.__socket.recv(1024)
-            except:
+                c = c.decode()
+            except Exception as e:
                 c = ''
             if len(c) == 0:
-                raise ConnectionClosedException
+                raise exception.ConnectionClosedException
             fastbuf.write(c)
             if '\x00' in c:
                 break
@@ -439,6 +455,7 @@ class Connection(object):
         if len(self.__recvbuf) > 0 and self.__running:
             while True:
                 pos = self.__recvbuf.find('\x00')
+
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
                     preamble_end = frame.find('\n\n')
@@ -502,7 +519,7 @@ class Connection(object):
                 assert len(pair) == 2
                 entries[pair[0]] = pair[1]
             return entries
-        except Exception, ex:
+        except Exception as ex:
             # unable to parse message. return original
             return body
         
@@ -557,10 +574,11 @@ class Connection(object):
                     break
                 except socket.error:
                     self.__socket = None
-                    if type(sys.exc_info()[1]) == types.TupleType:
+                    if isinstance(sys.exc_info()[1], tuple):
                         exc = sys.exc_info()[1][1]
                     else:
                         exc = sys.exc_info()[1]
+                    print(exc)
                     log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
 
             if self.__socket is None:
@@ -575,11 +593,3 @@ class Connection(object):
 
                 if sleep_duration < self.__reconnect_sleep_max:
                     sleep_exp += 1
-
-
-#
-# command line testing
-#
-if __name__ == '__main__':
-    import cli
-    cli.main()

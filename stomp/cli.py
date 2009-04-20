@@ -1,7 +1,16 @@
 import sys
 
-from exception import *
-from stomp import Connection, ConnectionListener, StatsListener
+from internal.connect import Connection
+from internal.listener import ConnectionListener, StatsListener
+
+def get_commands():
+    commands = [ ]
+    for f in dir(StompCLI):
+        if f.startswith('_') or f.startswith('on_') or f == 'c':
+            continue
+        else:
+            commands.append(f)
+    return commands
 
 
 class StompCLI(ConnectionListener):
@@ -9,22 +18,23 @@ class StompCLI(ConnectionListener):
         self.c = Connection([(host, port)], user, passcode)
         self.c.set_listener('', self)
         self.c.start()
+        self.__commands = get_commands()
 
     def __print_async(self, frame_type, headers, body):
-        print "\r  \r",
-        print frame_type
+        print("\r  \r", end='')
+        print(frame_type)
         for header_key in headers.keys():
-            print '%s: %s' % (header_key, headers[header_key])
-        print
-        print body
-        print '> ',
+            print('%s: %s' % (header_key, headers[header_key]))
+        print('')
+        print(body)
+        print('> ', end='')
         sys.stdout.flush()
 
     def on_connecting(self, host_and_port):
         self.c.connect(wait=True)
 
     def on_disconnected(self):
-        print "lost connection"
+        print("lost connection")
 
     def on_message(self, headers, body):
         self.__print_async("MESSAGE", headers, body)
@@ -36,7 +46,6 @@ class StompCLI(ConnectionListener):
         self.__print_async("RECEIPT", headers, body)
 
     def on_connected(self, headers, body):
-        print 'connected'
         self.__print_async("CONNECTED", headers, body)
 
     def ack(self, args):
@@ -84,7 +93,7 @@ class StompCLI(ConnectionListener):
             any messages sent or acknowledged during a transaction will be handled atomically based on the
             transaction.
         '''
-        print 'transaction id: %s' % self.c.begin()
+        print('transaction id: %s' % self.c.begin())
 
     def commit(self, args):
         '''
@@ -98,9 +107,9 @@ class StompCLI(ConnectionListener):
             Commit a transaction in progress.
         '''
         if len(args) < 2:
-            print 'expecting: commit <transid>'
+            print('expecting: commit <transid>')
         else:
-            print 'committing %s' % args[1]
+            print('committing %s' % args[1])
             self.c.commit(transaction=args[1])
 
     def disconnect(self, args):
@@ -129,7 +138,7 @@ class StompCLI(ConnectionListener):
             Sends a message to a destination in the messaging system.
         '''
         if len(args) < 3:
-            print 'expecting: send <destination> <message>'
+            print('expecting: send <destination> <message>')
         else:
             self.c.send(destination=args[1], message=' '.join(args[2:]))
 
@@ -147,7 +156,7 @@ class StompCLI(ConnectionListener):
             Sends a message to a destination in the message system, using a specified transaction.
         '''
         if len(args) < 3:
-            print 'expecting: sendtrans <destination> <transaction-id> <message>'
+            print('expecting: sendtrans <destination> <transaction-id> <message>')
         else:
             self.c.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), transaction=args[2])
 
@@ -168,12 +177,12 @@ class StompCLI(ConnectionListener):
             auto.
         '''
         if len(args) < 2:
-            print 'expecting: subscribe <destination> [ack]'
+            print('expecting: subscribe <destination> [ack]')
         elif len(args) > 2:
-            print 'subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2])
+            print('subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2]))
             self.c.subscribe(destination=args[1], ack=args[2])
         else:
-            print 'subscribing to "%s" with auto acknowledge' % args[1]
+            print('subscribing to "%s" with auto acknowledge' % args[1])
             self.c.subscribe(destination=args[1], ack='auto')
 
     def unsubscribe(self, args):
@@ -188,9 +197,9 @@ class StompCLI(ConnectionListener):
             Remove an existing subscription - so that the client no longer receive messages from that destination.
         '''
         if len(args) < 2:
-            print 'expecting: unsubscribe <destination>'
+            print('expecting: unsubscribe <destination>')
         else:
-            print 'unsubscribing from "%s"' % args[1]
+            print('unsubscribing from "%s"' % args[1])
             self.c.unsubscribe(destination=args[1])
 
     def stats(self, args):
@@ -205,15 +214,15 @@ class StompCLI(ConnectionListener):
         if len(args) < 2:
             stats = self.c.get_listener('stats')
             if stats:
-                print stats
+                print(stats)
             else:
-                print 'No stats available'
+                print('No stats available')
         elif args[1] == 'on':
             self.c.set_listener('stats', StatsListener())
         elif args[1] == 'off':
             self.c.remove_listener('stats')
         else:
-            print 'expecting: stats [on|off]'
+            print('expecting: stats [on|off]')
 
     def help(self, args):
         '''
@@ -224,24 +233,21 @@ class StompCLI(ConnectionListener):
             Display info on a specified command, or a list of available commands
         '''
         if len(args) == 1:
-            print 'Usage: help <command>, where command is one of the following:'
-            print '    '
-            for f in dir(self):
-                if f.startswith('_') or f.startswith('on_') or f == 'c':
-                    continue
-                else:
-                    print '%s ' % f,
-            print ''
+            print('Usage: help <command>, where command is one of the following:')
+            print('    ')
+            for f in self.__commands:
+                print('%s ' % f, end='')
+            print('')
             return
         elif not hasattr(self, args[1]):
-            print 'There is no command "%s"' % args[1]
+            print('There is no command "%s"' % args[1])
             return
 
         func = getattr(self, args[1])
         if hasattr(func, '__doc__') and getattr(func, '__doc__') is not None:
-            print func.__doc__
+            print(func.__doc__)
         else:
-            print 'There is no help for command "%s"' % args[1]
+            print('There is no help for command "%s"' % args[1])
 
 
 
@@ -250,11 +256,7 @@ def main():
     try:
         import readline
         def stomp_completer(text, state):
-            commands = [ 'subscribe', 'unsubscribe',
-                         'send',  'ack',
-                         'begin', 'abort', 'commit',
-                         'connect', 'disconnect'
-                       ]
+            commands = get_commands()
             for command in commands[state:]:
                 if command.startswith(text):
                     return "%s " % command
@@ -267,7 +269,7 @@ def main():
         pass # ignore unavailable readline module
 
     if len(sys.argv) > 5:
-        print 'USAGE: stomp.py [host] [port] [user] [passcode]'
+        print('USAGE: stomp.py [host] [port] [user] [passcode]')
         sys.exit(1)
 
     if len(sys.argv) >= 2:
@@ -290,7 +292,7 @@ def main():
     st = StompCLI(host, port, user, passcode)
     try:
         while True:
-            line = raw_input("\r> ")
+            line = input("\r> ")
             if not line or line.lstrip().rstrip() == '':
                 continue
             line = line.lstrip().rstrip()
@@ -301,7 +303,7 @@ def main():
             if not command.startswith("on_") and hasattr(st, command):
                 getattr(st, command)(split)
             else:
-                print 'unrecognized command'
+                print('unrecognized command')
     finally:
         st.disconnect(None)
 

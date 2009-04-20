@@ -3,7 +3,7 @@ import unittest
 
 import stomp
 
-from testlistener import TestListener
+from . import testlistener
 
 
 class TestRabbitMQSend(unittest.TestCase):
@@ -13,12 +13,10 @@ class TestRabbitMQSend(unittest.TestCase):
 
     def testbasic(self):
         conn = stomp.Connection([('0.0.0.0', 61613), ('127.0.0.1', 61613)], 'guest', 'guest')
-
-        listener = TestListener()
+        listener = testlistener.TestListener()
         conn.set_listener('', listener)
         conn.start()
         conn.connect(wait=True)
-
         conn.subscribe(destination='/queue/test', ack='auto')
 
         conn.send('this is a test', destination='/queue/test')

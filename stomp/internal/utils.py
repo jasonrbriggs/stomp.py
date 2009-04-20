@@ -8,14 +8,14 @@ def _uuid( *args ):
     (http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/213761)
     """
 
-    t = long( time.time() * 1000 )
-    r = long( random.random() * 100000000000000000L )
+    t = int(time.time() * 1000)
+    r = int(random.random() * 100000000000000000)
 
     try:
         a = socket.gethostbyname( socket.gethostname() )
     except:
         # if we can't get a network address, just imagine one
-        a = random.random() * 100000000000000000L
+        a = random.random() * 100000000000000000
     data = str(t) + ' ' + str(r) + ' ' + str(a) + ' ' + str(args)
     md5 = hashlib.md5()
     md5.update(data)
@@ -28,7 +28,7 @@ class DevNullLogger(object):
     dummy logging class for environments without the logging module
     """
     def log(self, msg):
-        print msg
+        print(msg)
 
     def devnull(self, msg):
         pass

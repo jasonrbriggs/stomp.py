@@ -62,12 +62,9 @@
 """
 
 __version__ = 2.0
-__all__ = [ 'stomp' ]
 
-import stomp
-import cli
-import listener
+from stomp.internal import connect, listener, exception
 
-Connection = stomp.Connection
+Connection = connect.Connection
 ConnectionListener = listener.ConnectionListener
 StatsListener = listener.StatsListener
