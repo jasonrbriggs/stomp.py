@@ -1,4 +1,7 @@
+import base64
+import os
 import sys
+import time
 
 import internal
 from internal.connect import Connection
@@ -20,6 +23,7 @@ class StompCLI(ConnectionListener):
         self.c.set_listener('', self)
         self.c.start()
         self.__commands = get_commands()
+        self.transaction_id = None
 
     def __print_async(self, frame_type, headers, body):
         print("\r  \r", end='')
@@ -38,7 +42,18 @@ class StompCLI(ConnectionListener):
         print("lost connection")
 
     def on_message(self, headers, body):
-        self.__print_async("MESSAGE", headers, body)
+        if 'filename' in headers:
+            content = base64.b64decode(body.encode())
+            if os.path.exists(headers['filename']):
+                fname = '%s.%s' % (headers['filename'], int(time.time()))
+            else:
+                fname = headers['filename']
+            f = open(fname, 'wb')
+            f.write(content)
+            f.close()
+            self.__print_async("MESSAGE", headers, "Saved file: %s" % fname)
+        else:
+            self.__print_async("MESSAGE", headers, body)
 
     def on_error(self, headers, body):
         self.__print_async("ERROR", headers, body)
@@ -52,13 +67,10 @@ class StompCLI(ConnectionListener):
     def ack(self, args):
         '''
         Usage:
-            ack <message-id> [transaction-id]
+            ack <message-id>
 
         Required Parameters:
             message-id - the id of the message being acknowledged
-
-        Optional Parameters:
-            transaction-id - the acknowledgement should be a part of the named transaction
 
         Description:
             The command 'ack' is used to acknowledge consumption of a message from a subscription using client
@@ -66,23 +78,24 @@ class StompCLI(ConnectionListener):
             received from that destination will not be considered to have been consumed (by the server) until
             the message has been acknowledged.
         '''
-        if len(args) < 3:
-            self.c.ack(message_id=args[1])
+        if not self.transaction_id:
+            self.c.ack(headers = { 'message-id' : args[1] })
         else:
-            self.c.ack(message_id=args[1], transaction=args[2])
+            self.c.ack(headers = { 'message-id' : args[1] }, transaction=self.transaction_id)
 
     def abort(self, args):
         '''
         Usage:
-            abort <transaction-id>
-
-        Required Parameters:
-            transaction-id - the transaction to abort
+            abort
 
         Description:
             Roll back a transaction in progress.
         '''
-        self.c.abort(transaction=args[1])
+        if not self.transaction_id:
+            print("Not currently in a transaction")
+        else:
+            self.c.abort(transaction = self.transaction_id)
+            self.transaction_id = None
 
     def begin(self, args):
         '''
@@ -94,24 +107,26 @@ class StompCLI(ConnectionListener):
             any messages sent or acknowledged during a transaction will be handled atomically based on the
             transaction.
         '''
-        print('transaction id: %s' % self.c.begin())
+        if self.transaction_id:
+            print("Currently in a transaction (%s)" % self.transaction_id)
+        else:
+            self.transaction_id = self.c.begin()
+            print('Transaction id: %s' % self.transaction_id)
 
     def commit(self, args):
         '''
         Usage:
-            commit <transaction-id>
-
-        Required Parameters:
-            transaction-id - the transaction to commit
+            commit
 
         Description:
             Commit a transaction in progress.
         '''
-        if len(args) < 2:
-            print('expecting: commit <transid>')
+        if not self.transaction_id:
+            print("Not currently in a transaction")
         else:
-            print('committing %s' % args[1])
-            self.c.commit(transaction=args[1])
+            print('Committing %s' % self.transaction_id)
+            self.c.commit(transaction=self.transaction_id)
+            self.transaction_id = None
 
     def disconnect(self, args):
         '''
@@ -139,28 +154,36 @@ class StompCLI(ConnectionListener):
             Sends a message to a destination in the messaging system.
         '''
         if len(args) < 3:
-            print('expecting: send <destination> <message>')
-        else:
+            print('Expecting: send <destination> <message>')
+        elif not self.transaction_id:
             self.c.send(destination=args[1], message=' '.join(args[2:]))
+        else:
+            self.c.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
 
-    def sendtrans(self, args):
+    def sendfile(self, args):
         '''
         Usage:
-            sendtrans <destination> <transaction-id> <message>
+            sendfile <destination> <filename>
 
         Required Parameters:
             destination - where to send the message
-            transaction-id - the id of the transaction in which to enlist this message
-            message - the content to send
+            filename - the file to send
 
         Description:
-            Sends a message to a destination in the message system, using a specified transaction.
+            Sends a file to a destination in the messaging system.
         '''
         if len(args) < 3:
-            print('expecting: sendtrans <destination> <transaction-id> <message>')
+            print('Expecting: sendfile <destination> <filename>')
+        elif not os.path.exists(args[2]):
+            print('File %s does not exist' % args[2])
         else:
-            self.c.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), transaction=args[2])
-
+            s = open(args[2], mode='rb').read()
+            msg = base64.b64encode(s).decode()
+            if not self.transaction_id:
+                self.c.send(destination=args[1], message=msg, filename=args[2])
+            else:
+                self.c.send(destination=args[1], message=msg, filename=args[2], transaction=self.transaction_id)
+            
     def subscribe(self, args):
         '''
         Usage:
@@ -178,12 +201,12 @@ class StompCLI(ConnectionListener):
             auto.
         '''
         if len(args) < 2:
-            print('expecting: subscribe <destination> [ack]')
+            print('Expecting: subscribe <destination> [ack]')
         elif len(args) > 2:
-            print('subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2]))
+            print('Subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2]))
             self.c.subscribe(destination=args[1], ack=args[2])
         else:
-            print('subscribing to "%s" with auto acknowledge' % args[1])
+            print('Subscribing to "%s" with auto acknowledge' % args[1])
             self.c.subscribe(destination=args[1], ack='auto')
 
     def unsubscribe(self, args):
@@ -198,9 +221,9 @@ class StompCLI(ConnectionListener):
             Remove an existing subscription - so that the client no longer receive messages from that destination.
         '''
         if len(args) < 2:
-            print('expecting: unsubscribe <destination>')
+            print('Expecting: unsubscribe <destination>')
         else:
-            print('unsubscribing from "%s"' % args[1])
+            print('Unsubscribing from "%s"' % args[1])
             self.c.unsubscribe(destination=args[1])
 
     def stats(self, args):
@@ -223,7 +246,7 @@ class StompCLI(ConnectionListener):
         elif args[1] == 'off':
             self.c.remove_listener('stats')
         else:
-            print('expecting: stats [on|off]')
+            print('Expecting: stats [on|off]')
 
     def help(self, args):
         '''
@@ -308,6 +331,10 @@ def main():
                 getattr(st, command)(split)
             else:
                 print('unrecognized command')
+    except EOFError:
+        pass
+    except KeyboardInterrupt:
+        pass
     finally:
         st.disconnect(None)
 

@@ -21,7 +21,7 @@ class TestBasicSend(unittest.TestCase):
 
         conn.send('this is a test', destination='/queue/test')
 
-        time.sleep(2)
+        time.sleep(3)
         conn.disconnect()
 
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')

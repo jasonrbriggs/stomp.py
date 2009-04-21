@@ -18,7 +18,7 @@ def _uuid( *args ):
         a = random.random() * 100000000000000000
     data = str(t) + ' ' + str(r) + ' ' + str(a) + ' ' + str(args)
     md5 = hashlib.md5()
-    md5.update(data)
+    md5.update(data.encode())
     data = md5.hexdigest()
     return data
 

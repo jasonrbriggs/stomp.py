@@ -16,22 +16,13 @@ from . import exception
 from . import listener
 from . import utils
 
-
-#
-# add logging if available
-#
+import logging
+import logging.config
 try:
-    import logging
-    import logging.config
-    log = None
-except ImportError:
-    log = DevNullLogger()
- 
-if not log:
-    try:
-        logging.config.fileConfig('stomp.log.conf')
-    finally:
-        log = logging.getLogger('stomp.py')
+    logging.config.fileConfig('stomp.log.conf')
+except:
+    pass      
+log = logging.getLogger('stomp.py')
 
 
 class Connection(object):
@@ -252,7 +243,7 @@ class Connection(object):
     def begin(self, headers={}, **keyword_headers):
         use_headers = self.__merge_headers([headers, keyword_headers])
         if not 'transaction' in use_headers.keys(): 
-            use_headers['transaction'] = _uuid()
+            use_headers['transaction'] = utils._uuid()
         self.__send_frame_helper('BEGIN', '', use_headers, [ 'transaction' ])
         return use_headers['transaction']
 
@@ -271,9 +262,9 @@ class Connection(object):
     def disconnect(self, headers={}, **keyword_headers):
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
-        if hasattr(socket, 'SHUT_RDWR'):
-            self.__socket.shutdown(socket.SHUT_RDWR)
         if self.__socket:
+            if hasattr(socket, 'SHUT_RDWR'):
+                self.__socket.shutdown(socket.SHUT_RDWR)
             self.__socket.close()
         self.__current_host_and_port = None
 
@@ -372,9 +363,9 @@ class Connection(object):
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
             params = len(notify_func.__code__.co_varnames)
-            if params >= 2:
+            if params >= 3:
                 notify_func(headers, body)
-            elif params == 1:
+            elif params == 2:
                 notify_func(headers)
             else:
                 notify_func()

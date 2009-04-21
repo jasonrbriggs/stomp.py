@@ -15,13 +15,13 @@ class TestCommand(Command):
 
 setup(
     name = 'stomp.py',
-    version = stomp.__version__,
+    version = "%s.%s" % stomp.__version__,
     description = 'Stomp ',
     license = 'Apache',
     url = 'http://www.briggs.net.nz/log/projects/stomp.py',
     author = 'Jason R Briggs',
     author_email =  'jasonrbriggs@gmail.com',
     platforms = ['any'],
-    packages = ['test'],
+    packages = ['stomp', 'stomp/internal', 'test'],
     cmdclass = { 'test' : TestCommand }
 )

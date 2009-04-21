@@ -101,8 +101,7 @@ class StatsListener(ConnectionListener):
         self.messages_sent += 1
         
     def __str__(self):
-        return '''
-Connections: %s
+        return '''Connections: %s
 Messages sent: %s
 Messages received: %s
 Errors: %s''' % (self.connections, self.messages_sent, self.messages_recd, self.errors)

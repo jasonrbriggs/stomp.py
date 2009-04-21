@@ -1,11 +1,19 @@
 CHANGELOG
 =========
 
+21 Apr 2009
+-----------
+
+Jason - tidy up log config file for Py3k version
+      - 
+      
+
 20 Apr 2009
 -----------
 
 Jason - create new Python3 version of stomp.py (directory refactoring required as a consequence)
       - add facility to allow for a specified logging config file or a default
+      - add version command to CLI
 
 
 15 Apr 2009
