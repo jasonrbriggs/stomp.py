@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import functools
 import math
 import random
@@ -78,13 +76,11 @@ class Connection(object):
                  (127.0.0.1)
 
         \param reconnect_sleep_initial 
-
                  initial delay in seconds to wait before reattempting
                  to establish a connection if connection to any of the
                  hosts fails.
 
         \param reconnect_sleep_increase 
-
                  factor by which the sleep delay is increased after
                  each connection attempt. For example, 0.5 means
                  to wait 50% longer than before the previous attempt,
@@ -92,12 +88,10 @@ class Connection(object):
                  the delay constant.
 
         \param reconnect_sleep_max
-
                  maximum delay between connection attempts, regardless
                  of the reconnect_sleep_increase.
 
         \param reconnect_sleep_jitter
-
                  random additional time to wait (as a percentage of
                  the time determined using the previous parameters)
                  between connection attempts in order to avoid
