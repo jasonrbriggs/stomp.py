@@ -78,7 +78,9 @@ class StompCLI(ConnectionListener):
             received from that destination will not be considered to have been consumed (by the server) until
             the message has been acknowledged.
         '''
-        if not self.transaction_id:
+        if len(args) < 2:
+            print("Expecting: ack <message-id>")
+        elif not self.transaction_id:
             self.c.ack(headers = { 'message-id' : args[1] })
         else:
             self.c.ack(headers = { 'message-id' : args[1] }, transaction=self.transaction_id)
@@ -272,6 +274,7 @@ class StompCLI(ConnectionListener):
             print(func.__doc__)
         else:
             print('There is no help for command "%s"' % args[1])
+    man = help
 
     def version(self, args):
         print('Stomp.py Version %s.%s' % internal.__version__)
@@ -279,11 +282,12 @@ class StompCLI(ConnectionListener):
 
 
 def main():
+    commands = get_commands()
+    
     # If the readline module is available, make command input easier
     try:
         import readline
         def stomp_completer(text, state):
-            commands = get_commands()
             for command in commands[state:]:
                 if command.startswith(text):
                     return "%s " % command
@@ -327,10 +331,10 @@ def main():
                 break
             split = line.split()
             command = split[0]
-            if not command.startswith("on_") and hasattr(st, command):
+            if command in commands:
                 getattr(st, command)(split)
             else:
-                print('unrecognized command')
+                print('Unrecognized command')
     except EOFError:
         pass
     except KeyboardInterrupt:
