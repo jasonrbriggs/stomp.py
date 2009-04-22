@@ -25,12 +25,18 @@ def _uuid( *args ):
 
 class DevNullLogger(object):
     """
-    dummy logging class for environments without the logging module
+    Dummy logging class for environments without the logging module
     """
     def log(self, msg):
+        """
+        Log a message (print to console)
+        """
         print(msg)
 
     def devnull(self, msg):
+        """
+        Dump a message (i.e. send to /dev/null)
+        """
         pass
 
     debug = devnull
@@ -41,4 +47,7 @@ class DevNullLogger(object):
     exception = log
 
     def isEnabledFor(self, lvl):
+        """
+        Always return False
+        """
         return False

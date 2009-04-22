@@ -34,6 +34,10 @@ class StompCLI(ConnectionListener):
         self.transaction_id = None
 
     def __print_async(self, frame_type, headers, body):
+        """
+        Utility function to print a message and setup the command prompt
+        for the next input
+        """
         print("\r  \r", end='')
         print(frame_type)
         for header_key in headers.keys():
@@ -44,12 +48,24 @@ class StompCLI(ConnectionListener):
         sys.stdout.flush()
 
     def on_connecting(self, host_and_port):
+        """
+        \see ConnectionListener::on_connecting
+        """
         self.conn.connect(wait=True)
 
     def on_disconnected(self):
+        """
+        \see ConnectionListener::on_disconnected
+        """
         print("lost connection")
 
     def on_message(self, headers, body):
+        """
+        \see ConnectionListener::on_message
+        
+        Special case: if the header 'filename' is present, the content is written out
+        as a file
+        """
         if 'filename' in headers:
             content = base64.b64decode(body.encode())
             if os.path.exists(headers['filename']):
@@ -64,12 +80,21 @@ class StompCLI(ConnectionListener):
             self.__print_async("MESSAGE", headers, body)
 
     def on_error(self, headers, body):
+        """
+        \see ConnectionListener::on_error
+        """
         self.__print_async("ERROR", headers, body)
 
     def on_receipt(self, headers, body):
+        """
+        \see ConnectionListener::on_receipt
+        """
         self.__print_async("RECEIPT", headers, body)
 
     def on_connected(self, headers, body):
+        """
+        \see ConnectionListener::on_connected
+        """
         self.__print_async("CONNECTED", headers, body)
 
     def ack(self, args):

@@ -147,6 +147,9 @@ class Connection(object):
         self.__receiver_thread_exited = False
 
     def is_localhost(self, host_and_port):
+        """
+        Return true if the specified host+port is a member of the 'localhost' list of hosts
+        """
         (host, port) = host_and_port
         if host in Connection.__localhost_names:
             return 1
@@ -190,6 +193,9 @@ class Connection(object):
         return self.__current_host_and_port
         
     def is_connected(self):
+        """
+        Return true if the socket managed by this connection is connected
+        """
         try:
             return self.__socket is not None and self.__socket.getsockname()[1] != 0
         except socket.error:
@@ -200,12 +206,30 @@ class Connection(object):
     #
 
     def set_listener(self, name, listener):
+        """
+        Set a named listener on this connection
+        
+        \see listener::ConnectionListener
+        
+        \param name the name of the listener
+        \param listener the listener object
+        """
         self.__listeners[name] = listener
         
     def remove_listener(self, name):
+        """
+        Remove a listener according to the specified name
+        
+        \param name the name of the listener to remove
+        """
         del self.__listeners[name]
 
     def get_listener(self, name):
+        """
+        Return a named listener
+        
+        \param name the listener to return
+        """
         if name in self.__listeners:
             return self.__listeners[name]
         else:
@@ -216,12 +240,21 @@ class Connection(object):
     #
 
     def subscribe(self, headers={}, **keyword_headers):
+        """
+        Send a SUBSCRIBE frame to subscribe to a queue
+        """
         self.__send_frame_helper('SUBSCRIBE', '', self.__merge_headers([headers, keyword_headers]), [ 'destination' ])
 
     def unsubscribe(self, headers={}, **keyword_headers):
+        """
+        Send an UNSUBSCRIBE frame to unsubscribe from a queue
+        """
         self.__send_frame_helper('UNSUBSCRIBE', '', self.__merge_headers([headers, keyword_headers]), [ ('destination', 'id') ])
         
     def send(self, message='', headers={}, **keyword_headers):
+        """
+        Send a message (SEND) frame
+        """
         if '\x00' in message:
             content_length_headers = {'content-length': len(message)}
         else:
@@ -232,9 +265,15 @@ class Connection(object):
         self.__notify('send', headers, message)
     
     def ack(self, headers={}, **keyword_headers):
+        """
+        Send an ACK frame, to acknowledge receipt of a message
+        """
         self.__send_frame_helper('ACK', '', self.__merge_headers([headers, keyword_headers]), [ 'message-id' ])
         
     def begin(self, headers={}, **keyword_headers):
+        """
+        Send a BEGIN frame to start a transaction
+        """
         use_headers = self.__merge_headers([headers, keyword_headers])
         if not 'transaction' in use_headers.keys(): 
             use_headers['transaction'] = utils._uuid()
@@ -242,18 +281,30 @@ class Connection(object):
         return use_headers['transaction']
 
     def abort(self, headers={}, **keyword_headers):
+        """
+        Send an ABORT frame to rollback a transaction
+        """
         self.__send_frame_helper('ABORT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
         
     def commit(self, headers={}, **keyword_headers):
+        """
+        Send a COMMIT frame to commit a transaction (send pending messages)
+        """
         self.__send_frame_helper('COMMIT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
 
     def connect(self, headers={}, **keyword_headers):
+        """
+        Send a CONNECT frame to start a connection
+        """
         if 'wait' in keyword_headers and keyword_headers['wait']:
             while not self.is_connected(): time.sleep(0.1)
             del keyword_headers['wait']
         self.__send_frame_helper('CONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         
     def disconnect(self, headers={}, **keyword_headers):
+        """
+        Send a DISCONNECT frame to finish a connection
+        """
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
         if self.__socket:
@@ -276,9 +327,8 @@ class Connection(object):
         
     def __convert_dict(self, payload):
         """
-        Encode python dictionary as <map>...</map> structure.
+        Encode a python dictionary as a <map>...</map> structure.
         """
-
         xmlStr = "<map>\n"
         for key in payload:
             xmlStr += "<entry>\n"
@@ -323,6 +373,12 @@ class Connection(object):
     def __send_frame(self, command, headers={}, payload=''):
         """
         Send a STOMP frame.
+        
+        \param command the frame command
+        
+        \param headers a map of headers (key-val pairs)
+        
+        \param payload the message payload
         """
         if type(payload) == dict:
             headers["transformation"] = "jms-map-xml"
@@ -346,6 +402,15 @@ class Connection(object):
             raise exception.NotConnectedException()
 
     def __notify(self, frame_type, headers=None, body=None):
+        """
+        Utility function for notifying listeners of incoming and outgoing messages
+        
+        \param frame_type the type of message
+        
+        \param headers the map of headers associated with the message
+        
+        \param body the content of the message
+        """
         for listener in self.__listeners.values():
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug('listener %s has no method on_%s' % (listener, frame_type))
@@ -468,7 +533,7 @@ class Connection(object):
         return result
     
 
-    def __transform(self, body, transType):
+    def __transform(self, body, trans_type):
         """
         Perform body transformation. Currently, the only supported transformation is
         'jms-map-xml', which converts a map into python dictionary. This can be extended
@@ -487,9 +552,13 @@ class Connection(object):
         </map>
 
         (see http://docs.codehaus.org/display/STOMP/Stomp+v1.1+Ideas)
+        
+        \param body the content of a message
+        
+        \param trans_type the type transformation
         """
 
-        if transType != 'jms-map-xml':
+        if trans_type != 'jms-map-xml':
             return body
 
         try:
@@ -545,7 +614,6 @@ class Connection(object):
         """
         Try connecting to the (host, port) tuples specified at construction time.
         """
-
         sleep_exp = 1
         while self.__running and self.__socket is None:
             for host_and_port in self.__host_and_ports:
