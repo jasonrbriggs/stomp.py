@@ -17,21 +17,13 @@ from listener import *
 from utils import *
 
 
-#
-# add logging if available
-#
+import logging
+import logging.config
 try:
-    import logging
-    import logging.config
-    log = None
-except ImportError:
-    log = DevNullLogger()
- 
-if not log:
-    try:
-        logging.config.fileConfig('stomp.log.conf')
-    finally:
-        log = logging.getLogger('stomp.py')
+    logging.config.fileConfig('stomp.log.conf')
+except:
+    pass      
+log = logging.getLogger('stomp.py')
 
 
 class Connection(object):
