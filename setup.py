@@ -1,4 +1,6 @@
+import os
 from distutils.core import setup, Command
+
 import stomp
 
 class TestCommand(Command):
@@ -13,6 +15,18 @@ class TestCommand(Command):
     def run(self):
         exec('import test.%s' % self.test)
 
+class DoxygenCommand(Command):
+    user_options = [ ]
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        os.system('doxygen config.dox')
+
 setup(
     name = 'stomp.py',
     version = "%s.%s" % stomp.__version__,
@@ -23,5 +37,5 @@ setup(
     author_email =  'jasonrbriggs@gmail.com',
     platforms = ['any'],
     packages = ['stomp', 'stomp/internal', 'test'],
-    cmdclass = { 'test' : TestCommand }
+    cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand }
 )

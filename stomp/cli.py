@@ -8,6 +8,10 @@ from internal.connect import Connection
 from internal.listener import ConnectionListener, StatsListener
 
 def get_commands():
+    """
+    Return a list of commands available on a \link StompCLI \endlink (the command line interface
+    to stomp.py)
+    """
     commands = [ ]
     for f in dir(StompCLI):
         if f.startswith('_') or f.startswith('on_') or f == 'c':
@@ -18,10 +22,14 @@ def get_commands():
 
 
 class StompCLI(ConnectionListener):
+    """
+    A command line interface to the stomp.py client.  See \link stomp::internal::connect::Connection \endlink
+    for more information on establishing a connection to a stomp server.
+    """
     def __init__(self, host='localhost', port=61613, user='', passcode=''):
-        self.c = Connection([(host, port)], user, passcode)
-        self.c.set_listener('', self)
-        self.c.start()
+        self.conn = Connection([(host, port)], user, passcode)
+        self.conn.set_listener('', self)
+        self.conn.start()
         self.__commands = get_commands()
         self.transaction_id = None
 
@@ -36,7 +44,7 @@ class StompCLI(ConnectionListener):
         sys.stdout.flush()
 
     def on_connecting(self, host_and_port):
-        self.c.connect(wait=True)
+        self.conn.connect(wait=True)
 
     def on_disconnected(self):
         print("lost connection")
@@ -81,9 +89,9 @@ class StompCLI(ConnectionListener):
         if len(args) < 2:
             print("Expecting: ack <message-id>")
         elif not self.transaction_id:
-            self.c.ack(headers = { 'message-id' : args[1] })
+            self.conn.ack(headers = { 'message-id' : args[1] })
         else:
-            self.c.ack(headers = { 'message-id' : args[1] }, transaction=self.transaction_id)
+            self.conn.ack(headers = { 'message-id' : args[1] }, transaction=self.transaction_id)
 
     def abort(self, args):
         '''
@@ -96,7 +104,7 @@ class StompCLI(ConnectionListener):
         if not self.transaction_id:
             print("Not currently in a transaction")
         else:
-            self.c.abort(transaction = self.transaction_id)
+            self.conn.abort(transaction = self.transaction_id)
             self.transaction_id = None
 
     def begin(self, args):
@@ -112,7 +120,7 @@ class StompCLI(ConnectionListener):
         if self.transaction_id:
             print("Currently in a transaction (%s)" % self.transaction_id)
         else:
-            self.transaction_id = self.c.begin()
+            self.transaction_id = self.conn.begin()
             print('Transaction id: %s' % self.transaction_id)
 
     def commit(self, args):
@@ -127,7 +135,7 @@ class StompCLI(ConnectionListener):
             print("Not currently in a transaction")
         else:
             print('Committing %s' % self.transaction_id)
-            self.c.commit(transaction=self.transaction_id)
+            self.conn.commit(transaction=self.transaction_id)
             self.transaction_id = None
 
     def disconnect(self, args):
@@ -139,7 +147,7 @@ class StompCLI(ConnectionListener):
             Gracefully disconnect from the server.
         '''
         try:
-            self.c.disconnect()
+            self.conn.disconnect()
         except NotConnectedException:
             pass # ignore if no longer connected
 
@@ -158,9 +166,9 @@ class StompCLI(ConnectionListener):
         if len(args) < 3:
             print('Expecting: send <destination> <message>')
         elif not self.transaction_id:
-            self.c.send(destination=args[1], message=' '.join(args[2:]))
+            self.conn.send(destination=args[1], message=' '.join(args[2:]))
         else:
-            self.c.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
+            self.conn.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
 
     def sendfile(self, args):
         '''
@@ -182,9 +190,9 @@ class StompCLI(ConnectionListener):
             s = open(args[2], mode='rb').read()
             msg = base64.b64encode(s).decode()
             if not self.transaction_id:
-                self.c.send(destination=args[1], message=msg, filename=args[2])
+                self.conn.send(destination=args[1], message=msg, filename=args[2])
             else:
-                self.c.send(destination=args[1], message=msg, filename=args[2], transaction=self.transaction_id)
+                self.conn.send(destination=args[1], message=msg, filename=args[2], transaction=self.transaction_id)
             
     def subscribe(self, args):
         '''
@@ -206,10 +214,10 @@ class StompCLI(ConnectionListener):
             print('Expecting: subscribe <destination> [ack]')
         elif len(args) > 2:
             print('Subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2]))
-            self.c.subscribe(destination=args[1], ack=args[2])
+            self.conn.subscribe(destination=args[1], ack=args[2])
         else:
             print('Subscribing to "%s" with auto acknowledge' % args[1])
-            self.c.subscribe(destination=args[1], ack='auto')
+            self.conn.subscribe(destination=args[1], ack='auto')
 
     def unsubscribe(self, args):
         '''
@@ -226,7 +234,7 @@ class StompCLI(ConnectionListener):
             print('Expecting: unsubscribe <destination>')
         else:
             print('Unsubscribing from "%s"' % args[1])
-            self.c.unsubscribe(destination=args[1])
+            self.conn.unsubscribe(destination=args[1])
 
     def stats(self, args):
         '''
@@ -238,15 +246,15 @@ class StompCLI(ConnectionListener):
             dump the current statistics.
         '''
         if len(args) < 2:
-            stats = self.c.get_listener('stats')
+            stats = self.conn.get_listener('stats')
             if stats:
                 print(stats)
             else:
                 print('No stats available')
         elif args[1] == 'on':
-            self.c.set_listener('stats', StatsListener())
+            self.conn.set_listener('stats', StatsListener())
         elif args[1] == 'off':
-            self.c.remove_listener('stats')
+            self.conn.remove_listener('stats')
         else:
             print('Expecting: stats [on|off]')
 

@@ -1,12 +1,13 @@
 CHANGELOG
 =========
 
-21 Apr 2009
+22 Apr 2009
 -----------
 
 Jason - tidy up log config file for Py3k version
-      - 
-      
+      - tidy up logging (both Py3K and original version)
+      - add Doxygen config and generation for Py3K version
+
 
 20 Apr 2009
 -----------

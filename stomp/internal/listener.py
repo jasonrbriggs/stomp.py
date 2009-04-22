@@ -78,10 +78,20 @@ class ConnectionListener(object):
         pass
 
     def on_send(self, headers, body):
+        """
+        Called by the STOMP connection when it is in the process of sending a message
+        
+        \param headers a dictionary containing the headers that will be sent with this message
+        
+        \param body the message payload
+        """
         pass
 
 
 class StatsListener(ConnectionListener):
+    """
+    A connection listener for recording statistics on messages sent and received.
+    """
     def __init__(self):
         self.errors = 0
         self.connections = 0
@@ -89,18 +99,34 @@ class StatsListener(ConnectionListener):
         self.messages_sent = 0
 
     def on_error(self, headers, message):
+        """
+        \see ConnectionListener::on_error
+        """
         self.errors += 1
 
     def on_connecting(self, host_and_port):
+        """
+        \see ConnectionListener::on_connecting
+        """
         self.connections += 1
 
     def on_message(self, headers, message):
+        """
+        \see ConnectionListener::on_message
+        """
         self.messages_recd += 1
         
     def on_send(self, headers, message):
+        """
+        \see ConnectionListener::on_send
+        """
         self.messages_sent += 1
         
     def __str__(self):
+        """
+        Return a string containing the current statistics (messages sent and received,
+        errors, etc)
+        """
         return '''Connections: %s
 Messages sent: %s
 Messages received: %s
