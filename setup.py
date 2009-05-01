@@ -22,6 +22,6 @@ setup(
     author = 'Jason R Briggs',
     author_email =  'jasonrbriggs@gmail.com',
     platforms = ['any'],
-    packages = ['test'],
+    packages = ['test','stomp'],
     cmdclass = { 'test' : TestCommand }
 )
