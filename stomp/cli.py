@@ -3,9 +3,13 @@ import os
 import sys
 import time
 
+from optparse import OptionParser
+
 import internal
 from internal.connect import Connection
 from internal.listener import ConnectionListener, StatsListener
+from internal.exception import NotConnectedException
+
 
 def get_commands():
     """
@@ -282,6 +286,30 @@ class StompCLI(ConnectionListener):
             self.conn.remove_listener('stats')
         else:
             print('Expecting: stats [on|off]')
+            
+    def run(self, args):
+        '''
+        Usage:
+            run <filename>
+            
+        Description:
+            Execute commands in a specified file
+        '''
+        if len(args) == 1:
+            print("Expecting: run <filename>")
+        elif not os.path.exists(args[1]):
+            print("File %s was not found" % args[1])
+        else:
+            filecommands = open(args[1]).read().split('\n')
+            for x in range(len(filecommands)):
+                split = filecommands[x].split()
+                if len(split) < 1:
+                    continue
+                elif split[0] in self.__commands:
+                    getattr(self, split[0])(split)
+                else:
+                    print('Unrecognized command "%s" at line %s' % (split[0], x))
+                    break
 
     def help(self, args):
         '''
@@ -312,62 +340,63 @@ class StompCLI(ConnectionListener):
     def version(self, args):
         print('Stomp.py Version %s.%s' % internal.__version__)
     ver = version
+    
+    def quit(self, args):
+        pass
+    exit = quit
 
 
 def main():
     commands = get_commands()
     
-    # If the readline module is available, make command input easier
+    parser = OptionParser()
+    
+    parser.add_option('-H', '--host', type = 'string', dest = 'host', default = 'localhost',
+                      help = 'Hostname or IP to connect to. Defaults to localhost if not specified.')
+    parser.add_option('-P', '--port', type = int, dest = 'port', default = 61613,
+                      help = 'Port providing stomp protocol connections. Defaults to 61613 if not specified.')
+    parser.add_option('-U', '--user', type = 'string', dest = 'user', default = None,
+                      help = 'Username for the connection')
+    parser.add_option('-W', '--password', type = 'string', dest = 'password', default = None,
+                      help = 'Password for the connection')
+    parser.add_option('-F', '--file', type = 'string', dest = 'filename',
+                      help = 'File containing commands to be executed, instead of prompting from the command prompt.')
+                      
+    (options, args) = parser.parse_args()
+
+    st = StompCLI(options.host, options.port, options.user, options.password)
     try:
-        import readline
-        def stomp_completer(text, state):
-            for command in commands[state:]:
-                if command.startswith(text):
-                    return "%s " % command
-            return None
+        if not options.filename:
+            # If the readline module is available, make command input easier
+            try:
+                import readline
+                def stomp_completer(text, state):
+                    for command in commands[state:]:
+                        if command.startswith(text):
+                            return "%s " % command
+                    return None
 
-        readline.parse_and_bind("tab: complete")
-        readline.set_completer(stomp_completer)
-        readline.set_completer_delims("")
-    except ImportError:
-        pass # ignore unavailable readline module
-
-    if len(sys.argv) > 5:
-        print('USAGE: stomp.py [host] [port] [user] [passcode]')
-        sys.exit(1)
-
-    if len(sys.argv) >= 2:
-        host = sys.argv[1]
-    else:
-        host = "localhost"
-
-    if len(sys.argv) >= 3:
-        port = int(sys.argv[2])
-    else:
-        port = 61613
-
-    if len(sys.argv) >= 5:
-        user = sys.argv[3]
-        passcode = sys.argv[4]
-    else:
-        user = None
-        passcode = None
-
-    st = StompCLI(host, port, user, passcode)
-    try:
-        while True:
-            line = input("\r> ")
-            if not line or line.lstrip().rstrip() == '':
-                continue
-            line = line.lstrip().rstrip()
-            if line.startswith('quit') or line.startswith('disconnect'):
-                break
-            split = line.split()
-            command = split[0]
-            if command in commands:
-                getattr(st, command)(split)
-            else:
-                print('Unrecognized command')
+                readline.parse_and_bind("tab: complete")
+                readline.set_completer(stomp_completer)
+                readline.set_completer_delims("")
+            except ImportError:
+                pass # ignore unavailable readline module
+            
+            while True:
+                line = input("\r> ")
+                if not line or line.lstrip().rstrip() == '':
+                    continue
+                line = line.lstrip().rstrip()
+                if line.startswith('quit') or line.startswith('exit') or line.startswith('disconnect'):
+                    break
+                split = line.split()
+                command = split[0]
+                if command in commands:
+                    getattr(st, command)(split)
+                else:
+                    print('Unrecognized command')
+        else:
+            st.run(['run', options.filename])
     except EOFError:
         pass
     except KeyboardInterrupt:

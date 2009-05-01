@@ -310,6 +310,8 @@ class Connection(object):
         if self.__socket:
             if hasattr(socket, 'SHUT_RDWR'):
                 self.__socket.shutdown(socket.SHUT_RDWR)
+        # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
+        if self.__socket:
             self.__socket.close()
         self.__current_host_and_port = None
 
