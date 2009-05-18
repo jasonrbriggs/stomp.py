@@ -268,8 +268,6 @@ class Connection(object):
     def __merge_headers(self, header_map_list):
         """
         Helper function for combining multiple header maps into one.
-
-        Any underscores ('_') in header names (keys) will be replaced by dashes ('-').
         """
         headers = {}
         for header_map in header_map_list:
@@ -281,7 +279,6 @@ class Connection(object):
         """
         Encode python dictionary as <map>...</map> structure.
         """
-
         xmlStr = "<map>\n"
         for key in payload:
             xmlStr += "<entry>\n"
