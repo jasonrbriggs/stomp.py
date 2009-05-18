@@ -318,8 +318,6 @@ class Connection(object):
     def __merge_headers(self, header_map_list):
         """
         Helper function for combining multiple header maps into one.
-
-        Any underscores ('_') in header names (keys) will be replaced by dashes ('-').
         """
         headers = {}
         for header_map in header_map_list:
@@ -338,7 +336,6 @@ class Connection(object):
             xmlStr += "<string>%s</string>" % payload[key]
             xmlStr += "</entry>\n"
         xmlStr += "</map>"
-
         return xmlStr
 
     def __send_frame_helper(self, command, payload, headers, required_header_keys):
