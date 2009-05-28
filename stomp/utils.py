@@ -1,4 +1,7 @@
-import hashlib
+try:
+    from hashlib import md5
+except ImportError:
+    from md5 import new as md5
 import time
 import random
 
@@ -17,7 +20,7 @@ def _uuid( *args ):
         # if we can't get a network address, just imagine one
         a = random.random() * 100000000000000000L
     data = str(t) + ' ' + str(r) + ' ' + str(a) + ' ' + str(args)
-    md5 = hashlib.md5()
+    md5 = md5()
     md5.update(data)
     data = md5.hexdigest()
     return data
