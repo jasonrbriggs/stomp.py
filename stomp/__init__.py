@@ -58,10 +58,11 @@
                    (JRB) minor change to add socket timeout, suggested by Israel
     * 2009/04/01 : (Gavin) patch to change md5 to hashlib (for 2.6 compatibility)
     * 2009/04/02 : (Fernando Ciciliati) fix overflow bug when waiting too long to connect to the broker
+    * 2009/05/28 : (Martin Pieuchot) patch to support version of Python pre 2.5
 
 """
 
-__version__ = '2.0'
+__version__ = '2.0.1'
 __all__ = [ 'stomp' ]
 
 import stomp
