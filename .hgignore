@@ -5,3 +5,6 @@ syntax: glob
 *.tmproj
 .DS_Store
 MANIFEST
+nbproject
+docs
+dist

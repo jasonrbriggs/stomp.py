@@ -1,0 +1,2 @@
+include **/changelog.txt
+include **/*.conf
