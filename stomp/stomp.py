@@ -313,13 +313,14 @@ class Connection(object):
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
         
-        if self.__ssl:
-            # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
-            self.__socket = self.__socket.unwrap()
-        elif hasattr(socket, 'SHUT_RDWR'):
-                self.__socket.shutdown(socket.SHUT_RDWR)
-        if self.__socket:
-            self.__socket.close()
+        if self.__socket is not None:
+            if self.__ssl:
+                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
+                self.__socket = self.__socket.unwrap()
+            elif hasattr(self.__socket, 'SHUT_RDWR'):
+                    self.__socket.shutdown(socket.SHUT_RDWR)
+            if self.__socket is not None:
+                self.__socket.close()
         self.__current_host_and_port = None
 
     def __merge_headers(self, header_map_list):
