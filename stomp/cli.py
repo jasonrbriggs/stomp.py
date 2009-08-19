@@ -132,7 +132,25 @@ class StompCLI(ConnectionListener):
             print 'expecting: send <destination> <message>'
         else:
             self.c.send(destination=args[1], message=' '.join(args[2:]))
+            
+    def sendreply(self, args):
+        '''
+        Usage:
+            sendreply <destination> <correlation-id> <message>
 
+        Required Parameters:
+            destination - where to send the message
+            correlation-id - the correlating identifier to send with the response
+            message - the content to send
+
+        Description:
+            Sends a reply message to a destination in the messaging system.
+        '''
+        if len(args) < 4:
+            print 'expecting: sendreply <destination> <correlation-id> <message>'
+        else:
+            self.c.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), headers={'correlation-id': args[2]})
+    
     def sendtrans(self, args):
         '''
         Usage:
