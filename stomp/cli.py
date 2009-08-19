@@ -199,6 +199,24 @@ class StompCLI(ConnectionListener):
         else:
             self.conn.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
 
+    def sendreply(self, args):
+        '''
+        Usage:
+            sendreply <destination> <correlation-id> <message>
+
+        Required Parameters:
+            destination - where to send the message
+            correlation-id - the correlating identifier to send with the response
+            message - the content to send
+
+        Description:
+            Sends a reply message to a destination in the messaging system.
+        '''
+        if len(args) < 4:
+            print('expecting: sendreply <destination> <correlation-id> <message>')
+        else:
+            self.conn.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), headers={'correlation-id': args[2]})
+
     def sendfile(self, args):
         '''
         Usage:
@@ -411,3 +429,4 @@ def main():
 #
 if __name__ == '__main__':
     main()
+
