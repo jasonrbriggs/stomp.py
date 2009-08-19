@@ -307,11 +307,11 @@ class Connection(object):
         """
         self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
-        if self.__socket:
+        if self.__socket is not None:
             if hasattr(socket, 'SHUT_RDWR'):
                 self.__socket.shutdown(socket.SHUT_RDWR)
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
-        if self.__socket:
+        if self.__socket is not None:
             self.__socket.close()
         self.__current_host_and_port = None
 
