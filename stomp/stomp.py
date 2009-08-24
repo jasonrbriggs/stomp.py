@@ -14,8 +14,11 @@ from cStringIO import StringIO
 
 try:
     import ssl
+    from ssl import SSLError
 except ImportError: # python version < 2.6 without the backported ssl module
     ssl = None
+    class SSLError:
+        pass
     
 from exception import *
 from listener import *
@@ -618,11 +621,11 @@ class Connection(object):
                         cert = self.__socket.getpeercert()
                         (ok, errmsg) = apply(self.__ssl_cert_validator, (cert, host_and_port[0]))
                         if not ok:
-                            raise ssl.SSLError("Server certificate validation failed: %s"%errmsg)
+                            raise SSLError("Server certificate validation failed: %s"%errmsg)
                     self.__current_host_and_port = host_and_port
                     log.info("Established connection to host %s, port %s" % host_and_port)
                     break
-                except ssl.SSLError, s:
+                except SSLError:
                     raise
                 except socket.error:
                     self.__socket = None
