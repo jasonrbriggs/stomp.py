@@ -199,6 +199,7 @@ class Connection(object):
             self.__connect_headers['passcode'] = passcode
 
         self.__socket = None
+        self.__socket_semaphore = threading.BoundedSemaphore(1)
         self.__current_host_and_port = None
 
         self.__receiver_thread_exit_condition = threading.Condition()
@@ -393,7 +394,11 @@ class Connection(object):
             frame = '%s\n%s\n%s\x00' % (command,
                                         reduce(lambda accu, key: accu + ('%s:%s\n' % (key, headers[key])), headers.keys(), ''),
                                         payload)  
-            self.__socket.sendall(frame)
+            self.__socket_semaphore.acquire()
+            try:
+                self.__socket.sendall(frame)
+            finally:
+                self.__socket_semaphore.release()
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
         else:
             raise NotConnectedException()
