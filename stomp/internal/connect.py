@@ -141,6 +141,7 @@ class Connection(object):
             self.__connect_headers['passcode'] = passcode
 
         self.__socket = None
+        self.__socket_semaphore = threading.BoundedSemaphore(1)
         self.__current_host_and_port = None
 
         self.__receiver_thread_exit_condition = threading.Condition()
@@ -393,7 +394,11 @@ class Connection(object):
                     frame.append(payload)
                 frame.append('\x00')
                 frame = ''.join(frame)
-                self.__socket.sendall(frame.encode())
+                self.__socket_semaphore.acquire()
+                try:
+                    self.__socket.sendall(frame.encode())
+                finally:
+                    self.__socket_semaphore.release()
             except Exception as e:
                 print(e)
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
