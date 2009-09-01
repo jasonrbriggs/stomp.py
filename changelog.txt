@@ -1,6 +1,45 @@
 CHANGELOG
 =========
 
+01 Sep 2009
+-----------
+
+Jeff C    - fix problem with thread safety
+
+
+24 Aug 2009
+-----------
+
+James C   - more fixes for SSL support
+
+
+19 Aug 2009
+-----------
+
+Marascio  - add send reply functionality
+James C   - add SSL support
+Myrtactle - Fix null error
+
+
+28 May 2009
+-----------
+
+Martin P - support for pre-2.5 versions of Python
+
+
+16 May 2009
+-----------
+
+Jason - change version to a string as per bug report by Nic R
+
+
+01 May 2009
+-----------
+
+Jason - add optparse for command line arguments
+      - add facility for running a file of commands
+      
+
 22 Apr 2009
 -----------
 
