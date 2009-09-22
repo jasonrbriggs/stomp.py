@@ -44,11 +44,23 @@ class Connection(object):
     # addresses) that refer to the local host (both loopback interface
     # and external interfaces).  This is used for determining
     # preferred targets.
-    __localhost_names = [ "localhost",
-                          "127.0.0.1",
-                          socket.gethostbyname(socket.gethostname()),
-                          socket.gethostname(),
-                          socket.getfqdn(socket.gethostname()) ]
+    __localhost_names = [ "localhost", "127.0.0.1" ]
+    
+    try:
+        __localhost_names.append(socket.gethostbyname(socket.gethostname()))
+    except:
+        pass
+        
+    try:
+        __localhost_names.append(socket.gethostname())
+    except:
+        pass
+        
+    try:
+        __localhost_names.append(socket.getfqdn(socket.gethostname()))
+    except:
+        pass
+
     #
     # Used to parse STOMP header lines in the format "key:value",
     #
