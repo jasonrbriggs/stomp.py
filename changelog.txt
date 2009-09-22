@@ -5,6 +5,7 @@ CHANGELOG
 -----------
 
 JRB       - fix for installs with no hosts file (issue #7 - http://code.google.com/p/stomppy/issues/detail?id=7)
+JRB       - fix for issue #8 (null log)
 
 
 01 Sep 2009
