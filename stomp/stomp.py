@@ -31,6 +31,8 @@ try:
 except:
     pass      
 log = logging.getLogger('stomp.py')
+if not log:
+    log = DevNullLogger()
 
 
 class Connection(object):
