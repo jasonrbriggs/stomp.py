@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+22 Sep 2009
+-----------
+
+JRB       - fix for installs with no hosts file (issue #7 - http://code.google.com/p/stomppy/issues/detail?id=7)
+
+
 01 Sep 2009
 -----------
 
