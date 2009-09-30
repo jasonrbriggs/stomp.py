@@ -1,2 +1,3 @@
 include **/changelog.txt
 include **/*.conf
+include LICENSE
