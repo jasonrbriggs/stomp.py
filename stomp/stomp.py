@@ -426,10 +426,10 @@ class Connection(object):
                 continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
-            params = len(notify_func.func_code.co_varnames)
-            if params >= 2:
+            params = notify_func.func_code.co_argcount
+            if params >= 3:
                 notify_func(headers, body)
-            elif params == 1:
+            elif params == 2:
                 notify_func(headers)
             else:
                 notify_func()
