@@ -238,7 +238,7 @@ class Connection(object):
         """
         self.__running = True
         self.__attempt_connection()
-        thread.start_new_thread(self.__receiver_loop, ())
+        threading.Thread(target = self.__receiver_loop, args = ()).start()
 
     def stop(self):
         """
