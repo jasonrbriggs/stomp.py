@@ -79,45 +79,49 @@ class Connection(object):
                  reconnect_sleep_initial = 0.1,
                  reconnect_sleep_increase = 0.5,
                  reconnect_sleep_jitter = 0.1,
-                 reconnect_sleep_max = 60.0):
+                 reconnect_sleep_max = 60.0,
+                 reconnect_attempts_max = 3):
         """
         Initialize and start this connection.
 
         \param host_and_ports            
-                 a list of (host, port) tuples.
+                a list of (host, port) tuples.
 
         \param prefer_localhost
-                 if True and the local host is mentioned in the (host,
-                 port) tuples, try to connect to this first
+                if True and the local host is mentioned in the (host,
+                port) tuples, try to connect to this first
 
         \param try_loopback_connect    
-                 if True and the local host is found in the host
-                 tuples, try connecting to it using loopback interface
-                 (127.0.0.1)
+                if True and the local host is found in the host
+                tuples, try connecting to it using loopback interface
+                (127.0.0.1)
 
         \param reconnect_sleep_initial 
-                 initial delay in seconds to wait before reattempting
-                 to establish a connection if connection to any of the
-                 hosts fails.
+                initial delay in seconds to wait before reattempting
+                to establish a connection if connection to any of the
+                hosts fails.
 
         \param reconnect_sleep_increase 
-                 factor by which the sleep delay is increased after
-                 each connection attempt. For example, 0.5 means
-                 to wait 50% longer than before the previous attempt,
-                 1.0 means wait twice as long, and 0.0 means keep
-                 the delay constant.
+                factor by which the sleep delay is increased after
+                each connection attempt. For example, 0.5 means
+                to wait 50% longer than before the previous attempt,
+                1.0 means wait twice as long, and 0.0 means keep
+                the delay constant.
 
         \param reconnect_sleep_max
-                 maximum delay between connection attempts, regardless
-                 of the reconnect_sleep_increase.
+                maximum delay between connection attempts, regardless
+                of the reconnect_sleep_increase.
 
         \param reconnect_sleep_jitter
-                 random additional time to wait (as a percentage of
-                 the time determined using the previous parameters)
-                 between connection attempts in order to avoid
-                 stampeding. For example, a value of 0.1 means to wait
-                 an extra 0%-10% (randomly determined) of the delay
-                 calculated using the previous three parameters.
+                random additional time to wait (as a percentage of
+                the time determined using the previous parameters)
+                between connection attempts in order to avoid
+                stampeding. For example, a value of 0.1 means to wait
+                an extra 0%-10% (randomly determined) of the delay
+                calculated using the previous three parameters.
+                 
+        \param reconnect_attempts_max
+                maximum attempts to reconnect
         """
 
         sorted_host_and_ports = []
@@ -154,6 +158,7 @@ class Connection(object):
         self.__reconnect_sleep_increase = reconnect_sleep_increase
         self.__reconnect_sleep_jitter = reconnect_sleep_jitter
         self.__reconnect_sleep_max = reconnect_sleep_max
+        self.__reconnect_attempts_max = reconnect_attempts_max
         
         self.__connect_headers = {}
         if user is not None and passcode is not None:
@@ -166,6 +171,8 @@ class Connection(object):
 
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
+        
+        self.blocking = None
 
     def is_localhost(self, host_and_port):
         """
@@ -553,12 +560,15 @@ class Connection(object):
         Try connecting to the (host, port) tuples specified at construction time.
         """
         sleep_exp = 1
-        while self.__running and self.__socket is None:
+        connect_count = 0
+        while self.__running and self.__socket is None and connect_count < self.__reconnect_attempts_max:
             for host_and_port in self.__host_and_ports:
                 try:
                     log.debug("Attempting connection to host %s, port %s" % host_and_port)
                     self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.__socket.settimeout(None)
+                    if self.blocking is not None:
+                        self.__socket.setblocking(self.blocking)
                     self.__socket.connect(host_and_port)
                     self.__current_host_and_port = host_and_port
                     log.info("Established connection to host %s, port %s" % host_and_port)
@@ -569,6 +579,7 @@ class Connection(object):
                         exc = sys.exc_info()[1][1]
                     else:
                         exc = sys.exc_info()[1]
+                    connect_count += 1
                     print(exc)
                     log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
 
@@ -584,3 +595,6 @@ class Connection(object):
 
                 if sleep_duration < self.__reconnect_sleep_max:
                     sleep_exp += 1
+
+        if not self.__socket:
+            raise exception.ReconnectFailedException
