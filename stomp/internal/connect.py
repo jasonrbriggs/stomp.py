@@ -7,12 +7,18 @@ import sys
 import threading
 import time
 import types
+import uuid
 import xml.dom.minidom
-from io import StringIO
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from . import exception
 from . import listener
 from . import utils
+from . import backward
 
 import logging
 import logging.config
@@ -258,13 +264,13 @@ class Connection(object):
         """
         Send a SUBSCRIBE frame to subscribe to a queue
         """
-        self.__send_frame_helper('SUBSCRIBE', '', self.__merge_headers([headers, keyword_headers]), [ 'destination' ])
+        self.__send_frame_helper('SUBSCRIBE', '', utils.merge_headers([headers, keyword_headers]), [ 'destination' ])
 
     def unsubscribe(self, headers={}, **keyword_headers):
         """
         Send an UNSUBSCRIBE frame to unsubscribe from a queue
         """
-        self.__send_frame_helper('UNSUBSCRIBE', '', self.__merge_headers([headers, keyword_headers]), [ ('destination', 'id') ])
+        self.__send_frame_helper('UNSUBSCRIBE', '', utils.merge_headers([headers, keyword_headers]), [ ('destination', 'id') ])
         
     def send(self, message='', headers={}, **keyword_headers):
         """
@@ -274,7 +280,7 @@ class Connection(object):
             content_length_headers = {'content-length': len(message)}
         else:
             content_length_headers = {}
-        self.__send_frame_helper('SEND', message, self.__merge_headers([headers, 
+        self.__send_frame_helper('SEND', message, utils.merge_headers([headers, 
                                                                         keyword_headers,
                                                                         content_length_headers]), [ 'destination' ])
         self.__notify('send', headers, message)
@@ -283,15 +289,15 @@ class Connection(object):
         """
         Send an ACK frame, to acknowledge receipt of a message
         """
-        self.__send_frame_helper('ACK', '', self.__merge_headers([headers, keyword_headers]), [ 'message-id' ])
+        self.__send_frame_helper('ACK', '', utils.merge_headers([headers, keyword_headers]), [ 'message-id' ])
         
     def begin(self, headers={}, **keyword_headers):
         """
         Send a BEGIN frame to start a transaction
         """
-        use_headers = self.__merge_headers([headers, keyword_headers])
+        use_headers = utils.merge_headers([headers, keyword_headers])
         if not 'transaction' in use_headers.keys(): 
-            use_headers['transaction'] = utils._uuid()
+            use_headers['transaction'] = str(uuid.uuid4())
         self.__send_frame_helper('BEGIN', '', use_headers, [ 'transaction' ])
         return use_headers['transaction']
 
@@ -299,13 +305,13 @@ class Connection(object):
         """
         Send an ABORT frame to rollback a transaction
         """
-        self.__send_frame_helper('ABORT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
+        self.__send_frame_helper('ABORT', '', utils.merge_headers([headers, keyword_headers]), [ 'transaction' ])
         
     def commit(self, headers={}, **keyword_headers):
         """
         Send a COMMIT frame to commit a transaction (send pending messages)
         """
-        self.__send_frame_helper('COMMIT', '', self.__merge_headers([headers, keyword_headers]), [ 'transaction' ])
+        self.__send_frame_helper('COMMIT', '', utils.merge_headers([headers, keyword_headers]), [ 'transaction' ])
 
     def connect(self, headers={}, **keyword_headers):
         """
@@ -314,13 +320,13 @@ class Connection(object):
         if 'wait' in keyword_headers and keyword_headers['wait']:
             while not self.is_connected(): time.sleep(0.1)
             del keyword_headers['wait']
-        self.__send_frame_helper('CONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+        self.__send_frame_helper('CONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         
     def disconnect(self, headers={}, **keyword_headers):
         """
         Send a DISCONNECT frame to finish a connection
         """
-        self.__send_frame_helper('DISCONNECT', '', self.__merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+        self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
         if self.__socket is not None:
             if hasattr(socket, 'SHUT_RDWR'):
@@ -330,16 +336,6 @@ class Connection(object):
             self.__socket.close()
         self.__current_host_and_port = None
 
-    def __merge_headers(self, header_map_list):
-        """
-        Helper function for combining multiple header maps into one.
-        """
-        headers = {}
-        for header_map in header_map_list:
-            for header_key in header_map.keys():
-                headers[header_key] = header_map[header_key]
-        return headers
-        
     def __convert_dict(self, payload):
         """
         Encode a python dictionary as a <map>...</map> structure.
@@ -413,7 +409,8 @@ class Connection(object):
                     self.__socket.sendall(frame.encode())
                 finally:
                     self.__socket_semaphore.release()
-            except Exception as e:
+            except Exception:
+                _, e, _ = sys.exc_info()
                 print(e)
             log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
         else:
@@ -439,7 +436,7 @@ class Connection(object):
                 continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
-            params = notify_func.__code__.co_argcount
+            params = backward.get_func_argcount(notify_func)
             if params >= 3:
                 notify_func(headers, body)
             elif params == 2:
@@ -468,7 +465,7 @@ class Connection(object):
                                 frames = self.__read()
                                 
                                 for frame in frames:
-                                    (frame_type, headers, body) = self.__parse_frame(frame)
+                                    (frame_type, headers, body) = utils.parse_frame(frame)
                                     log.debug("Received frame: result=%r, headers=%r, body=%r" % (frame_type, headers, body))
                                     frame_type = frame_type.lower()
                                     if frame_type in [ 'connected', 'message', 'receipt', 'error' ]:
@@ -509,7 +506,8 @@ class Connection(object):
             try:
                 c = self.__socket.recv(1024)
                 c = c.decode()
-            except Exception as e:
+            except Exception:
+                _, e, _ = sys.exc_info()
                 c = ''
             if len(c) == 0:
                 raise exception.ConnectionClosedException
@@ -550,84 +548,6 @@ class Connection(object):
                     break
         return result
     
-
-    def __transform(self, body, trans_type):
-        """
-        Perform body transformation. Currently, the only supported transformation is
-        'jms-map-xml', which converts a map into python dictionary. This can be extended
-        to support other transformation types.
-
-        The body has the following format: 
-        <map>
-          <entry>
-            <string>name</string>
-            <string>Dejan</string>
-          </entry>
-          <entry>
-            <string>city</string>
-            <string>Belgrade</string>
-          </entry>
-        </map>
-
-        (see http://docs.codehaus.org/display/STOMP/Stomp+v1.1+Ideas)
-        
-        \param body the content of a message
-        
-        \param trans_type the type transformation
-        """
-
-        if trans_type != 'jms-map-xml':
-            return body
-
-        try:
-            entries = {}
-            doc = xml.dom.minidom.parseString(body)
-            rootElem = doc.documentElement
-            for entryElem in rootElem.getElementsByTagName("entry"):
-                pair = []
-                for node in entryElem.childNodes:
-                    if not isinstance(node, xml.dom.minidom.Element): continue
-                    pair.append(node.firstChild.nodeValue)
-                assert len(pair) == 2
-                entries[pair[0]] = pair[1]
-            return entries
-        except Exception as ex:
-            # unable to parse message. return original
-            return body
-        
-
-    def __parse_frame(self, frame):
-        """
-        Parse a STOMP frame into a (frame_type, headers, body) tuple,
-        where frame_type is the frame type as a string (e.g. MESSAGE),
-        headers is a map containing all header key/value pairs, and
-        body is a string containing the frame's payload.
-        """
-        preamble_end = frame.find('\n\n')
-        preamble = frame[0:preamble_end]
-        preamble_lines = preamble.split('\n')
-        body = frame[preamble_end+2:]
-
-        # Skip any leading newlines
-        first_line = 0
-        while first_line < len(preamble_lines) and len(preamble_lines[first_line]) == 0:
-            first_line += 1
-
-        # Extract frame type
-        frame_type = preamble_lines[first_line]
-
-        # Put headers into a key/value map
-        headers = {}
-        for header_line in preamble_lines[first_line+1:]:
-            header_match = Connection.__header_line_re.match(header_line)
-            if header_match:
-                headers[header_match.group('key')] = header_match.group('value')
-
-        if 'transformation' in headers:
-            body = self.__transform(body, headers['transformation'])
-
-        return (frame_type, headers, body)
-
     def __attempt_connection(self):
         """
         Try connecting to the (host, port) tuples specified at construction time.

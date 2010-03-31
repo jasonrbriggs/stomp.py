@@ -9,7 +9,10 @@ import internal
 from internal.connect import Connection
 from internal.listener import ConnectionListener, StatsListener
 from internal.exception import NotConnectedException
+from internal.backward import input_prompt
 
+def sysout(msg, end='\n'):
+    sys.stdout.write(str(msg) + end)
 
 def get_commands():
     """
@@ -42,13 +45,13 @@ class StompCLI(ConnectionListener):
         Utility function to print a message and setup the command prompt
         for the next input
         """
-        print("\r  \r", end='')
-        print(frame_type)
+        sysout("\r  \r", end='')
+        sysout(frame_type)
         for header_key in headers.keys():
-            print('%s: %s' % (header_key, headers[header_key]))
-        print('')
-        print(body)
-        print('> ', end='')
+            sysout('%s: %s' % (header_key, headers[header_key]))
+        sysout('')
+        sysout(body)
+        sysout('> ', end='')
         sys.stdout.flush()
 
     def on_connecting(self, host_and_port):
@@ -61,7 +64,7 @@ class StompCLI(ConnectionListener):
         """
         \see ConnectionListener::on_disconnected
         """
-        print("lost connection")
+        sysout("lost connection")
 
     def on_message(self, headers, body):
         """
@@ -116,7 +119,7 @@ class StompCLI(ConnectionListener):
             the message has been acknowledged.
         '''
         if len(args) < 2:
-            print("Expecting: ack <message-id>")
+            sysout("Expecting: ack <message-id>")
         elif not self.transaction_id:
             self.conn.ack(headers = { 'message-id' : args[1] })
         else:
@@ -131,7 +134,7 @@ class StompCLI(ConnectionListener):
             Roll back a transaction in progress.
         '''
         if not self.transaction_id:
-            print("Not currently in a transaction")
+            sysout("Not currently in a transaction")
         else:
             self.conn.abort(transaction = self.transaction_id)
             self.transaction_id = None
@@ -147,10 +150,10 @@ class StompCLI(ConnectionListener):
             transaction.
         '''
         if self.transaction_id:
-            print("Currently in a transaction (%s)" % self.transaction_id)
+            sysout("Currently in a transaction (%s)" % self.transaction_id)
         else:
             self.transaction_id = self.conn.begin()
-            print('Transaction id: %s' % self.transaction_id)
+            sysout('Transaction id: %s' % self.transaction_id)
 
     def commit(self, args):
         '''
@@ -161,9 +164,9 @@ class StompCLI(ConnectionListener):
             Commit a transaction in progress.
         '''
         if not self.transaction_id:
-            print("Not currently in a transaction")
+            sysout("Not currently in a transaction")
         else:
-            print('Committing %s' % self.transaction_id)
+            sysout('Committing %s' % self.transaction_id)
             self.conn.commit(transaction=self.transaction_id)
             self.transaction_id = None
 
@@ -193,7 +196,7 @@ class StompCLI(ConnectionListener):
             Sends a message to a destination in the messaging system.
         '''
         if len(args) < 3:
-            print('Expecting: send <destination> <message>')
+            sysout('Expecting: send <destination> <message>')
         elif not self.transaction_id:
             self.conn.send(destination=args[1], message=' '.join(args[2:]))
         else:
@@ -213,7 +216,7 @@ class StompCLI(ConnectionListener):
             Sends a reply message to a destination in the messaging system.
         '''
         if len(args) < 4:
-            print('expecting: sendreply <destination> <correlation-id> <message>')
+            sysout('expecting: sendreply <destination> <correlation-id> <message>')
         else:
             self.conn.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), headers={'correlation-id': args[2]})
 
@@ -230,9 +233,9 @@ class StompCLI(ConnectionListener):
             Sends a file to a destination in the messaging system.
         '''
         if len(args) < 3:
-            print('Expecting: sendfile <destination> <filename>')
+            sysout('Expecting: sendfile <destination> <filename>')
         elif not os.path.exists(args[2]):
-            print('File %s does not exist' % args[2])
+            sysout('File %s does not exist' % args[2])
         else:
             s = open(args[2], mode='rb').read()
             msg = base64.b64encode(s).decode()
@@ -258,12 +261,12 @@ class StompCLI(ConnectionListener):
             auto.
         '''
         if len(args) < 2:
-            print('Expecting: subscribe <destination> [ack]')
+            sysout('Expecting: subscribe <destination> [ack]')
         elif len(args) > 2:
-            print('Subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2]))
+            sysout('Subscribing to "%s" with acknowledge set to "%s"' % (args[1], args[2]))
             self.conn.subscribe(destination=args[1], ack=args[2])
         else:
-            print('Subscribing to "%s" with auto acknowledge' % args[1])
+            sysout('Subscribing to "%s" with auto acknowledge' % args[1])
             self.conn.subscribe(destination=args[1], ack='auto')
 
     def unsubscribe(self, args):
@@ -278,9 +281,9 @@ class StompCLI(ConnectionListener):
             Remove an existing subscription - so that the client no longer receive messages from that destination.
         '''
         if len(args) < 2:
-            print('Expecting: unsubscribe <destination>')
+            sysout('Expecting: unsubscribe <destination>')
         else:
-            print('Unsubscribing from "%s"' % args[1])
+            sysout('Unsubscribing from "%s"' % args[1])
             self.conn.unsubscribe(destination=args[1])
 
     def stats(self, args):
@@ -295,15 +298,15 @@ class StompCLI(ConnectionListener):
         if len(args) < 2:
             stats = self.conn.get_listener('stats')
             if stats:
-                print(stats)
+                sysout(stats)
             else:
-                print('No stats available')
+                sysout('No stats available')
         elif args[1] == 'on':
             self.conn.set_listener('stats', StatsListener())
         elif args[1] == 'off':
             self.conn.remove_listener('stats')
         else:
-            print('Expecting: stats [on|off]')
+            sysout('Expecting: stats [on|off]')
             
     def run(self, args):
         '''
@@ -314,9 +317,9 @@ class StompCLI(ConnectionListener):
             Execute commands in a specified file
         '''
         if len(args) == 1:
-            print("Expecting: run <filename>")
+            sysout("Expecting: run <filename>")
         elif not os.path.exists(args[1]):
-            print("File %s was not found" % args[1])
+            sysout("File %s was not found" % args[1])
         else:
             filecommands = open(args[1]).read().split('\n')
             for x in range(len(filecommands)):
@@ -326,7 +329,7 @@ class StompCLI(ConnectionListener):
                 elif split[0] in self.__commands:
                     getattr(self, split[0])(split)
                 else:
-                    print('Unrecognized command "%s" at line %s' % (split[0], x))
+                    sysout('Unrecognized command "%s" at line %s' % (split[0], x))
                     break
 
     def help(self, args):
@@ -338,25 +341,25 @@ class StompCLI(ConnectionListener):
             Display info on a specified command, or a list of available commands
         '''
         if len(args) == 1:
-            print('Usage: help <command>, where command is one of the following:')
-            print('    ')
+            sysout('Usage: help <command>, where command is one of the following:')
+            sysout('    ')
             for f in self.__commands:
-                print('%s ' % f, end='')
-            print('')
+                sysout('%s ' % f, end='')
+            sysout('')
             return
         elif not hasattr(self, args[1]):
-            print('There is no command "%s"' % args[1])
+            sysout('There is no command "%s"' % args[1])
             return
 
         func = getattr(self, args[1])
         if hasattr(func, '__doc__') and getattr(func, '__doc__') is not None:
-            print(func.__doc__)
+            sysout(func.__doc__)
         else:
-            print('There is no help for command "%s"' % args[1])
+            sysout('There is no help for command "%s"' % args[1])
     man = help
 
     def version(self, args):
-        print('Stomp.py Version %s.%s' % internal.__version__)
+        sysout('Stomp.py Version %s.%s' % internal.__version__)
     ver = version
     
     def quit(self, args):
@@ -401,7 +404,7 @@ def main():
                 pass # ignore unavailable readline module
             
             while True:
-                line = input("\r> ")
+                line = input_prompt("\r> ")
                 if not line or line.lstrip().rstrip() == '':
                     continue
                 line = line.lstrip().rstrip()
@@ -412,7 +415,7 @@ def main():
                 if command in commands:
                     getattr(st, command)(split)
                 else:
-                    print('Unrecognized command')
+                    sysout('Unrecognized command')
         else:
             st.run(['run', options.filename])
     except EOFError:
