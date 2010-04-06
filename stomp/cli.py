@@ -5,11 +5,10 @@ import time
 
 from optparse import OptionParser
 
-import internal
-from internal.connect import Connection
-from internal.listener import ConnectionListener, StatsListener
-from internal.exception import NotConnectedException
-from internal.backward import input_prompt
+from connect import Connection
+from listener import ConnectionListener, StatsListener
+from exception import NotConnectedException
+from backward import input_prompt
 
 def sysout(msg, end='\n'):
     sys.stdout.write(str(msg) + end)
@@ -105,7 +104,7 @@ class StompCLI(ConnectionListener):
         self.__print_async("CONNECTED", headers, body)
 
     def ack(self, args):
-        '''
+        """
         Usage:
             ack <message-id>
 
@@ -117,7 +116,7 @@ class StompCLI(ConnectionListener):
             acknowledgment. When a client has issued a 'subscribe' with the ack flag set to client, any messages
             received from that destination will not be considered to have been consumed (by the server) until
             the message has been acknowledged.
-        '''
+        """
         if len(args) < 2:
             sysout("Expecting: ack <message-id>")
         elif not self.transaction_id:
@@ -126,13 +125,13 @@ class StompCLI(ConnectionListener):
             self.conn.ack(headers = { 'message-id' : args[1] }, transaction=self.transaction_id)
 
     def abort(self, args):
-        '''
+        """
         Usage:
             abort
 
         Description:
             Roll back a transaction in progress.
-        '''
+        """
         if not self.transaction_id:
             sysout("Not currently in a transaction")
         else:
@@ -140,7 +139,7 @@ class StompCLI(ConnectionListener):
             self.transaction_id = None
 
     def begin(self, args):
-        '''
+        """
         Usage:
             begin
 
@@ -148,7 +147,7 @@ class StompCLI(ConnectionListener):
             Start a transaction. Transactions in this case apply to sending and acknowledging -
             any messages sent or acknowledged during a transaction will be handled atomically based on the
             transaction.
-        '''
+        """
         if self.transaction_id:
             sysout("Currently in a transaction (%s)" % self.transaction_id)
         else:
@@ -156,13 +155,13 @@ class StompCLI(ConnectionListener):
             sysout('Transaction id: %s' % self.transaction_id)
 
     def commit(self, args):
-        '''
+        """
         Usage:
             commit
 
         Description:
             Commit a transaction in progress.
-        '''
+        """
         if not self.transaction_id:
             sysout("Not currently in a transaction")
         else:
@@ -171,20 +170,20 @@ class StompCLI(ConnectionListener):
             self.transaction_id = None
 
     def disconnect(self, args):
-        '''
+        """
         Usage:
             disconnect
 
         Description:
             Gracefully disconnect from the server.
-        '''
+        """
         try:
             self.conn.disconnect()
         except NotConnectedException:
             pass # ignore if no longer connected
 
     def send(self, args):
-        '''
+        """
         Usage:
             send <destination> <message>
 
@@ -194,7 +193,7 @@ class StompCLI(ConnectionListener):
 
         Description:
             Sends a message to a destination in the messaging system.
-        '''
+        """
         if len(args) < 3:
             sysout('Expecting: send <destination> <message>')
         elif not self.transaction_id:
@@ -203,7 +202,7 @@ class StompCLI(ConnectionListener):
             self.conn.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
 
     def sendreply(self, args):
-        '''
+        """
         Usage:
             sendreply <destination> <correlation-id> <message>
 
@@ -214,14 +213,14 @@ class StompCLI(ConnectionListener):
 
         Description:
             Sends a reply message to a destination in the messaging system.
-        '''
+        """
         if len(args) < 4:
             sysout('expecting: sendreply <destination> <correlation-id> <message>')
         else:
             self.conn.send(destination=args[1], message="%s\n" % ' '.join(args[3:]), headers={'correlation-id': args[2]})
 
     def sendfile(self, args):
-        '''
+        """
         Usage:
             sendfile <destination> <filename>
 
@@ -231,7 +230,7 @@ class StompCLI(ConnectionListener):
 
         Description:
             Sends a file to a destination in the messaging system.
-        '''
+        """
         if len(args) < 3:
             sysout('Expecting: sendfile <destination> <filename>')
         elif not os.path.exists(args[2]):
@@ -245,7 +244,7 @@ class StompCLI(ConnectionListener):
                 self.conn.send(destination=args[1], message=msg, filename=args[2], transaction=self.transaction_id)
             
     def subscribe(self, args):
-        '''
+        """
         Usage:
             subscribe <destination> [ack]
 
@@ -259,7 +258,7 @@ class StompCLI(ConnectionListener):
             Register to listen to a given destination. Like send, the subscribe command requires a destination
             header indicating which destination to subscribe to. The ack parameter is optional, and defaults to
             auto.
-        '''
+        """
         if len(args) < 2:
             sysout('Expecting: subscribe <destination> [ack]')
         elif len(args) > 2:
@@ -270,7 +269,7 @@ class StompCLI(ConnectionListener):
             self.conn.subscribe(destination=args[1], ack='auto')
 
     def unsubscribe(self, args):
-        '''
+        """
         Usage:
             unsubscribe <destination>
 
@@ -279,7 +278,7 @@ class StompCLI(ConnectionListener):
 
         Description:
             Remove an existing subscription - so that the client no longer receive messages from that destination.
-        '''
+        """
         if len(args) < 2:
             sysout('Expecting: unsubscribe <destination>')
         else:
@@ -287,14 +286,14 @@ class StompCLI(ConnectionListener):
             self.conn.unsubscribe(destination=args[1])
 
     def stats(self, args):
-        '''
+        """
         Usage:
             stats [on|off]
             
         Description:
             Record statistics on messages sent, received, errors, etc. If no argument (on|off) is specified,
             dump the current statistics.
-        '''
+        """
         if len(args) < 2:
             stats = self.conn.get_listener('stats')
             if stats:
@@ -309,13 +308,13 @@ class StompCLI(ConnectionListener):
             sysout('Expecting: stats [on|off]')
             
     def run(self, args):
-        '''
+        """
         Usage:
             run <filename>
             
         Description:
             Execute commands in a specified file
-        '''
+        """
         if len(args) == 1:
             sysout("Expecting: run <filename>")
         elif not os.path.exists(args[1]):
@@ -333,13 +332,13 @@ class StompCLI(ConnectionListener):
                     break
 
     def help(self, args):
-        '''
+        """
         Usage:
             help [command]
 
         Description:
             Display info on a specified command, or a list of available commands
-        '''
+        """
         if len(args) == 1:
             sysout('Usage: help <command>, where command is one of the following:')
             sysout('    ')

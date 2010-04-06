@@ -15,10 +15,18 @@ try:
 except ImportError:
     from io import StringIO
 
-from . import exception
-from . import listener
-from . import utils
-from . import backward
+try:
+    import ssl
+    from ssl import SSLError
+except ImportError: # python version < 2.6 without the backported ssl module
+    ssl = None
+    class SSLError:
+        pass
+    
+import exception
+import listener
+import utils
+import backward
 
 import logging
 import logging.config
@@ -60,11 +68,6 @@ class Connection(object):
         pass
     
     #
-    # Used to parse STOMP header lines in the format "key:value",
-    #
-    __header_line_re = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
-
-    #
     # Used to parse the STOMP "content-length" header lines,
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
@@ -80,62 +83,97 @@ class Connection(object):
                  reconnect_sleep_increase = 0.5,
                  reconnect_sleep_jitter = 0.1,
                  reconnect_sleep_max = 60.0,
-                 reconnect_attempts_max = 3):
+                 reconnect_attempts_max = 3,
+                 use_ssl = False,
+                 ssl_key_file = None,
+                 ssl_cert_file = None,
+                 ssl_ca_certs = None,
+                 ssl_cert_validator = None):
         """
         Initialize and start this connection.
 
         \param host_and_ports            
-                a list of (host, port) tuples.
+            a list of (host, port) tuples.
 
         \param prefer_localhost
-                if True and the local host is mentioned in the (host,
-                port) tuples, try to connect to this first
+            if True and the local host is mentioned in the (host,
+            port) tuples, try to connect to this first
 
         \param try_loopback_connect    
-                if True and the local host is found in the host
-                tuples, try connecting to it using loopback interface
-                (127.0.0.1)
+            if True and the local host is found in the host
+            tuples, try connecting to it using loopback interface
+            (127.0.0.1)
 
         \param reconnect_sleep_initial 
-                initial delay in seconds to wait before reattempting
-                to establish a connection if connection to any of the
-                hosts fails.
+            initial delay in seconds to wait before reattempting
+            to establish a connection if connection to any of the
+            hosts fails.
 
         \param reconnect_sleep_increase 
-                factor by which the sleep delay is increased after
-                each connection attempt. For example, 0.5 means
-                to wait 50% longer than before the previous attempt,
-                1.0 means wait twice as long, and 0.0 means keep
-                the delay constant.
+            factor by which the sleep delay is increased after
+            each connection attempt. For example, 0.5 means
+            to wait 50% longer than before the previous attempt,
+            1.0 means wait twice as long, and 0.0 means keep
+            the delay constant.
 
         \param reconnect_sleep_max
-                maximum delay between connection attempts, regardless
-                of the reconnect_sleep_increase.
+            maximum delay between connection attempts, regardless
+            of the reconnect_sleep_increase.
 
         \param reconnect_sleep_jitter
-                random additional time to wait (as a percentage of
-                the time determined using the previous parameters)
-                between connection attempts in order to avoid
-                stampeding. For example, a value of 0.1 means to wait
-                an extra 0%-10% (randomly determined) of the delay
-                calculated using the previous three parameters.
+            random additional time to wait (as a percentage of
+            the time determined using the previous parameters)
+            between connection attempts in order to avoid
+            stampeding. For example, a value of 0.1 means to wait
+            an extra 0%-10% (randomly determined) of the delay
+            calculated using the previous three parameters.
                  
         \param reconnect_attempts_max
-                maximum attempts to reconnect
+            maximum attempts to reconnect
+                
+        \param use_ssl
+            connect using SSL to the socket.  This wraps the 
+            socket in a SSL connection.  The constructor will 
+            raise an exception if you ask for SSL, but it can't
+            find the SSL module.
+
+        \param ssl_cert_file
+            the path to a X509 certificate 
+
+        \param ssl_key_file
+            the path to a X509 key file
+
+        \param ssl_ca_certs
+            the path to the a file containing CA certificates
+            to validate the server against.  If this is not set,
+            server side certificate validation is not done. 
+
+        \param ssl_cert_validator
+            function which performs extra validation on the client
+            certificate, for example checking the returned
+            certificate has a commonName attribute equal to the
+            hostname (to avoid man in the middle attacks)
+
+            The signature is:
+                (OK, err_msg) = validation_function(cert, hostname)
+
+            where OK is a boolean, and cert is a certificate structure
+            as returned by ssl.SSLSocket.getpeercert()
         """
 
         sorted_host_and_ports = []
         sorted_host_and_ports.extend(host_and_ports)
 
-        # If localhost is preferred, make sure all (host, port) tuples
-        # that refer to the local host come first in the list
+        #
+        # If localhost is preferred, make sure all (host, port) tuples that refer to the local host come first in the list
+        #
         if prefer_localhost:
             sorted_host_and_ports.sort(key = self.is_localhost)
 
-        # If the user wishes to attempt connecting to local ports
-        # using the loopback interface, for each (host, port) tuple
-        # referring to a local host, add an entry with the host name
-        # replaced by 127.0.0.1 if it doesn't exist already
+        #
+        # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port) tuple
+        # referring to a local host, add an entry with the host name replaced by 127.0.0.1 if it doesn't exist already
+        #
         loopback_host_and_ports = []
         if try_loopback_connect:
             for host_and_port in sorted_host_and_ports:
@@ -145,7 +183,9 @@ class Connection(object):
                         and not ("localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
+        #
         # Assemble the final, possibly sorted list of (host, port) tuples
+        #
         self.__host_and_ports = []
         self.__host_and_ports.extend(loopback_host_and_ports)
         self.__host_and_ports.extend(sorted_host_and_ports)
@@ -173,6 +213,14 @@ class Connection(object):
         self.__receiver_thread_exited = False
         
         self.blocking = None
+        
+        if use_ssl and not ssl:
+            raise Exception("SSL connection requested, but SSL library not found.")
+        self.__ssl = use_ssl
+        self.__ssl_cert_file = ssl_cert_file
+        self.__ssl_key_file = ssl_key_file
+        self.__ssl_ca_certs = ssl_ca_certs
+        self.__ssl_cert_validator = ssl_cert_validator
 
     def is_localhost(self, host_and_port):
         """
@@ -336,9 +384,23 @@ class Connection(object):
         self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
         if self.__socket is not None:
-            if hasattr(socket, 'SHUT_RDWR'):
+            if self.__ssl:
+                #
+                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
+                #
+                try:
+                    self.__socket = self.__socket.unwrap()
+                except Exception:
+                    #
+                    # unwrap seems flaky on Win with the backported ssl mod, so catch any exception and log it
+                    #
+                    _, e, _ = sys.exc_info()
+                    log.warn(e)
+            elif hasattr(socket, 'SHUT_RDWR'):
                 self.__socket.shutdown(socket.SHUT_RDWR)
+        #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
+        #
         if self.__socket is not None:
             self.__socket.close()
         self.__current_host_and_port = None
@@ -490,7 +552,9 @@ class Connection(object):
                         if self.__running:
                             log.error("Lost connection")
                             self.__notify('disconnected')
+                            #
                             # Clear out any half-received messages after losing connection
+                            #
                             self.__recvbuf = ''
                             continue
                         else:
@@ -539,15 +603,16 @@ class Connection(object):
                             content_offset = preamble_end + 2
                             frame_size = content_offset + content_length
                             if frame_size > len(frame):
-                                # Frame contains NUL bytes, need to
-                                # read more
+                                #
+                                # Frame contains NUL bytes, need to read more
+                                #
                                 if frame_size < len(self.__recvbuf):
                                     pos = frame_size
                                     frame = self.__recvbuf[0:pos]
                                 else:
-                                    # Haven't read enough data yet,
-                                    # exit loop and wait for more to
-                                    # arrive
+                                    #
+                                    # Haven't read enough data yet, exit loop and wait for more to arrive
+                                    #
                                     break
                     result.append(frame)
                     self.__recvbuf = self.__recvbuf[pos+1:]
@@ -566,10 +631,28 @@ class Connection(object):
                 try:
                     log.debug("Attempting connection to host %s, port %s" % host_and_port)
                     self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    if self.__ssl: # wrap socket
+                        if self.__ssl_ca_certs:
+                            cert_validation = ssl.CERT_REQUIRED
+                        else:
+                            cert_validation = ssl.CERT_NONE
+                        self.__socket = ssl.wrap_socket(self.__socket, keyfile = self.__ssl_key_file,
+                                certfile = self.__ssl_cert_file, cert_reqs = cert_validation, 
+                                ca_certs=self.__ssl_ca_certs, ssl_version = ssl.PROTOCOL_SSLv3)
                     self.__socket.settimeout(None)
                     if self.blocking is not None:
                         self.__socket.setblocking(self.blocking)
                     self.__socket.connect(host_and_port)
+                    
+                    #
+                    # Validate server cert
+                    #
+                    if self.__ssl and self.__ssl_cert_validator: 
+                        cert = self.__socket.getpeercert()
+                        (ok, errmsg) = apply(self.__ssl_cert_validator, (cert, host_and_port[0]))
+                        if not ok:
+                            raise SSLError("Server certificate validation failed: %s" % errmsg)
+
                     self.__current_host_and_port = host_and_port
                     log.info("Established connection to host %s, port %s" % host_and_port)
                     break

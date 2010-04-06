@@ -1,11 +1,15 @@
-from queue import Queue, Empty, Full
+try:
+    from queue import Queue, Empty, Full
+except ImportError:
+    from Queue import Queue, Empty, Full
 import threading
+import sys
 import time
 import unittest
 
 import stomp
 
-from . import testlistener
+import testlistener
 
 class MQ(object):
     def __init__(self):
@@ -82,7 +86,7 @@ class TestThreading(unittest.TestCase):
                 while 1:
                     # print "%s sending %s" % (i, counter)
                     try:
-                        mq.send('test.client.wedge',
+                        mq.send('testclientwedge',
                                 'Message %s:%s' % (i, counter))
                     except:
                         Error.put(sys.exc_info())
@@ -113,7 +117,7 @@ class TestThreading(unittest.TestCase):
                 self.Q.put(1, False)
                 time.sleep(1.0)
             except Full:
-                assert False, "Failed: 'request' queue got full"
+                assert False, "Failed: 'request' queue filled up"
                 print("passed")
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestThreading)

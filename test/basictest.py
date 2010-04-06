@@ -3,7 +3,7 @@ import unittest
 
 import stomp
 
-from . import testlistener
+import testlistener
 
 
 class TestBasicSend(unittest.TestCase):

@@ -23,13 +23,13 @@ Notes/Attribution
  * patches from Eugene Strulyov
 """
 
-import stomp.internal
-from stomp.internal import connect, listener, exception
+import os
+import sys
+sys.path.insert(0, os.path.split(__file__)[0])
 
-#
-# alias internals for module access
-#
-__version__ = stomp.internal.__version__
+import connect, listener, exception
+
+__version__ = __version__ = (3, 0)
 Connection = connect.Connection
 ConnectionListener = listener.ConnectionListener
 StatsListener = listener.StatsListener

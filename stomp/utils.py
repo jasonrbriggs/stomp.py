@@ -72,7 +72,7 @@ def parse_frame(frame):
     headers = parse_headers(preamble_lines, first_line + 1)
 
     if 'transformation' in headers:
-        body = self.__transform(body, headers['transformation'])
+        body = transform(body, headers['transformation'])
 
     return (frame_type, headers, body)
     
@@ -100,7 +100,6 @@ def transform(body, trans_type):
     
     \param trans_type the type transformation
     """
-
     if trans_type != 'jms-map-xml':
         return body
 
@@ -118,7 +117,9 @@ def transform(body, trans_type):
         return entries
     except Exception:
         _, e, _ = sys.exc_info()
+        #
         # unable to parse message. return original
+        #
         return body
     
 def merge_headers(header_map_list):
