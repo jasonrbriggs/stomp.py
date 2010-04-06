@@ -1,4 +1,4 @@
-include **/changelog.txt
-include **/*.conf
 include LICENSE
+include CHANGELOG
 include docs/html/**
+include *.conf
