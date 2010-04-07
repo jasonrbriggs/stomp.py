@@ -13,7 +13,7 @@ class TestCommand(Command):
         pass
 
     def run(self):
-        exec('import test.%s' % self.test)
+        exec('import stomp.test.%s' % self.test)
 
 class DoxygenCommand(Command):
     user_options = [ ]
@@ -42,6 +42,6 @@ setup(
     author = 'Jason R Briggs',
     author_email =  'jasonrbriggs@gmail.com',
     platforms = ['any'],
-    packages = ['stomp', 'test'],
+    packages = ['stomp'],
     cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand }
 )
