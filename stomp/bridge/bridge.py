@@ -6,7 +6,7 @@ import uuid
 
 sys.path.append(os.getcwd())
 
-from stomp import utils
+from stomp import utils, backward
 
 class StompServer(threading.Thread):
     def __init__(self, listen_host_and_port, connection_class):
@@ -63,19 +63,20 @@ class StompConnection(threading.Thread):
     def send(self, msg):
         if not msg.endswith('\x00'):
             msg = msg + '\x00'
-        self.conn.send(msg)
+        backward.socksend(self.conn, msg)
         
     def run(self):
         try:
             data = []
             while self.running:
                 c = self.conn.recv(1)
-                if c == '':
+                if c == '' or len(c) == 0:
                     break
                 data.append(c)
-                if c == '\x00':
-                    print(''.join(data))
-                    (frame_type, headers, body) = utils.parse_frame(''.join(data))
+                if ord(c) == 0:
+                    frame = backward.join(data)
+                    print(frame)
+                    (frame_type, headers, body) = utils.parse_frame(frame)
                     method = 'handle_%s' % frame_type
                     print('Method = %s' % method)
                     if hasattr(self, method):
@@ -83,7 +84,11 @@ class StompConnection(threading.Thread):
                     else:
                         self.send_error('invalid command %s' % frame_type)
                     data = []
-        except Exception, e:
+        except Exception:
+            _, e, tb = sys.exc_info()
+            print(e)
+            import traceback
+            traceback.print_tb(tb)
             self.server.remove_connection(self)
         self.shutdown()
 

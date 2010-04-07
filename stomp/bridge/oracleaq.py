@@ -4,13 +4,19 @@ import cx_Oracle
 from optparse import OptionParser
 import re
 import sys
-from SocketServer import ThreadingMixIn, ThreadingTCPServer, BaseRequestHandler
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+try:
+    from SocketServer import ThreadingMixIn, ThreadingTCPServer, BaseRequestHandler
+except ImportError:
+    from socketserver import ThreadingMixIn, ThreadingTCPServer, BaseRequestHandler
+try:
+    from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+except ImportError:
+    from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
 
 from bridge import StompServer, StompConnection
 
-from stomp import utils
+from stomp import utils, backward
 
 global QUEUE_TABLE
 QUEUE_TABLE = 'STOMP_MSG_QUEUE'
@@ -60,20 +66,23 @@ class NotificationHandler(BaseHTTPRequestHandler):
     '''
     def do_POST(self):
         try:
-            length = self.headers.getheader('Content-Length')
+            length = backward.getheader(self.headers, 'Content-Length')
             s = self.rfile.read(int(length))
+            s = s.decode('UTF-8')
             queue = DEST_RE.search(s).group(1)
-            msg_id = MSGID_RE.search(s).group(1)
+            msg_id = MSGID_RE.search(s).group(1).lstrip().rstrip()
             self.send_response(200)
             self.end_headers()
-            self.wfile.write("OK")
+            self.wfile.write("OK".encode())
             if msg_id not in self.server.msg_ids:
                 self.server.notify(queue, msg_id)
                 self.server.msg_ids.append(msg_id)
                 if len(self.server.msg_ids) > 100:
                     del self.server.msg_ids[0]
-        except:
-            pass
+        except Exception:
+            _, e, tb = sys.exc_info()
+            import traceback
+            traceback.print_tb(tb)
 
 class NotificationListener(ThreadingMixIn, HTTPServer, threading.Thread):
     def __init__(self, notify, host_and_port):
@@ -99,7 +108,9 @@ class OracleStompConnection(StompConnection):
     def __init__(self, server, conn, addr):
         StompConnection.__init__(self, server, conn, addr)
         self.dbconn = cx_Oracle.connect('%s/%s@//%s:%s/%s' % (server.username, server.passwd, server.oracle_host_and_port[0], server.oracle_host_and_port[1], server.db))
+        print("Connected to Oracle")
         self.client_id = self.__get_client_id()
+        print("Client Id %s" % self.client_id)
         self.queues = {}
         self.transactions = {}
         self.semaphore = threading.BoundedSemaphore(1)
@@ -123,7 +134,7 @@ class OracleStompConnection(StompConnection):
         cursor.callproc('DBMS_AQADM.START_QUEUE', [], { 'queue_name' : destination })
         
     def __sanitise(self, headers):
-        if headers.has_key('destination'):
+        if 'destination' in headers:
             dest = headers['destination'].replace('/', '_')
             if dest.startswith('_'):
                 dest = dest[1:]
@@ -167,10 +178,13 @@ class OracleStompConnection(StompConnection):
                 headers['message-id'] = msg_id
                 hdr = [ ]
                 for key, val in headers.items():
-                    hdr.append('%s:%s\n' % (key, val))
-                self.send('MESSAGE\n%s\n%s' % (''.join(hdr), row[0]))
+                    hdr.append('%s:%s' % (key, val))
+                msg = row[0].read().decode('UTF-8')
+                self.send('MESSAGE\n%s\n\n%s' % ('\n'.join(hdr), msg))
             except Exception:
-                _, e, _ = sys.exc_info()
+                _, e, tb = sys.exc_info()
+                import traceback
+                traceback.print_tb(tb)
                 print(e)
             finally:
                 cursor.close()
@@ -204,6 +218,9 @@ class OracleStompConnection(StompConnection):
         
     def handle_CONNECT(self, headers, body):
         self.send('CONNECTED\nsession: %s\n\n' % self.id)
+        
+    def handle_DISCONNECT(self, headers, body):
+        self.shutdown()
     
     def handle_SUBSCRIBE(self, headers, body):
         self.semaphore.acquire()
@@ -228,7 +245,10 @@ class OracleStompConnection(StompConnection):
         cursor = self.dbconn.cursor()
         try:
             self.__sanitise(headers)
-            cursor.callproc('stomp_unsub', [headers['destination'], self.client_id, self.__get_notification_address()])
+            try:
+                cursor.callproc('stomp_unsub', [headers['destination'], self.client_id, self.__get_notification_address()])
+            except:
+                pass
             if headers['destination'] in self.queues.keys():
                 del self.queues[headers['destination']]
         finally:
@@ -251,7 +271,9 @@ class OracleStompConnection(StompConnection):
                 cursor.callproc('stomp_enq', [headers['destination'], body.rstrip(), ''.join(hdr)])
                 self.dbconn.commit()
             except Exception:
-                _, e, _ = sys.exc_info()
+                _, e, tb = sys.exc_info()
+                import traceback
+                traceback.print_tb(tb)
                 print(e)
             finally:
                 cursor.close()
@@ -259,9 +281,9 @@ class OracleStompConnection(StompConnection):
 
     def shutdown(self):
         self.running = False
-        for queue in self.queues.keys():
-            self.handle_UNSUBSCRIBE({'destination' : queue}, '')
         self.semaphore.acquire()
+        for queue in list(self.queues.keys()):
+            self.handle_UNSUBSCRIBE({'destination' : queue}, '')
         self.dbconn.close()
         self.semaphore.release()
         StompConnection.shutdown(self)

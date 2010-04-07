@@ -26,10 +26,16 @@ class DoxygenCommand(Command):
 
     def run(self):
         os.system('doxygen config.dox')
+        
+def version():
+    s = []
+    for num in stomp.__version__:
+        s.append(str(num))
+    return '.'.join(s)
 
 setup(
     name = 'stomp.py',
-    version = "%s.%s" % stomp.__version__,
+    version = version(),
     description = 'Stomp ',
     license = 'Apache',
     url = 'http://code.google.com/p/stomppy',
