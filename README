@@ -1,4 +1,5 @@
 README
+======
 
 This distribution contains the "stomp.py" client library for
 connecting Python to a message broker via the STOMP protocol.
@@ -25,11 +26,11 @@ What's In This Release
 ----------------------
 This release contains the following:
 
-README		            This file
-LICENSE 		        Software license
-docs/html/index.html	Automatically generated API documentation (doxygen)
-stomp/                  The stomp.py client library code
-test/                   Test code for the library
-bridge/                 Bridges for message brokers which don't support STOMP
-bridge/README-oracle    Info on the Oracle AQ bridge
+README		                    This file
+LICENSE 		                Software license
+docs/html/index.html	        Automatically generated API documentation (doxygen)
+stomp/                          The stomp.py client library code
+stomp/test/                     Test code for the library
+stomp/bridge/                   Bridges for message brokers which don't support STOMP
+stomp/bridge/README-oracle      Info on the Oracle AQ bridge
 
