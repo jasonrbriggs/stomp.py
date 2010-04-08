@@ -1,0 +1,6 @@
+stomp.py (3.0.1) beta; urgency=low
+
+  * Fixes for Oracle AQ bridge for Python3
+  * Change to debian style changelog
+
+ -- Jason R Briggs <jasonrbriggs@gmail.com>  Wed, 07 Apr 2010 23:15:00 +0000
