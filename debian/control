@@ -1,0 +1,14 @@
+Source: stomp.py
+Section: python
+Priority: optional
+Maintainer: Jason R Briggs
+Build-Depends: debhelper (>=7.0.0), python-support (>= 0.6), cdbs (>= 0.4.49)
+Standards-Version: 3.8.3.0
+
+Package: stomp.py
+Architecture: all
+Homepage: http://code.google.com/p/stomppy
+XB-Python-Version: ${python:Versions}
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Stomp client support for Python
+ Stomp client support for Python
