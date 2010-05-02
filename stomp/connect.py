@@ -177,7 +177,7 @@ class Connection(object):
         loopback_host_and_ports = []
         if try_loopback_connect:
             for host_and_port in sorted_host_and_ports:
-                if self.is_localhost(host_and_port):
+                if self.is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
                     if (not ("127.0.0.1", port) in sorted_host_and_ports 
                         and not ("localhost", port) in sorted_host_and_ports):
