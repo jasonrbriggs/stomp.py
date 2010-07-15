@@ -15,8 +15,6 @@ Project Page: http://www.briggs.net.nz/log/projects/stomp.py
 
 Notes/Attribution
 -----------------
- * uuid method courtesy of Carl Free Jr:
-   http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/213761
  * patch from Andreas Schobel
  * patches from Julian Scheid of Rising Sun Pictures (http://open.rsp.com.au)
  * patch from Fernando
