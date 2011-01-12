@@ -386,41 +386,40 @@ def main():
 
     st = StompCLI(options.host, options.port, options.user, options.password)
     try:
-        if not options.filename:
-            # If the readline module is available, make command input easier
-            try:
-                import readline
-                def stomp_completer(text, state):
-                    for command in commands[state:]:
-                        if command.startswith(text):
-                            return "%s " % command
-                    return None
+        try:
+            if not options.filename:
+                # If the readline module is available, make command input easier
+                try:
+                    import readline
+                    def stomp_completer(text, state):
+                        for command in commands[state:]:
+                            if command.startswith(text):
+                                return "%s " % command
+                        return None
 
-                readline.parse_and_bind("tab: complete")
-                readline.set_completer(stomp_completer)
-                readline.set_completer_delims("")
-            except ImportError:
-                pass # ignore unavailable readline module
+                    readline.parse_and_bind("tab: complete")
+                    readline.set_completer(stomp_completer)
+                    readline.set_completer_delims("")
+                except ImportError:
+                    pass # ignore unavailable readline module
             
-            while True:
-                line = input_prompt("\r> ")
-                if not line or line.lstrip().rstrip() == '':
-                    continue
-                line = line.lstrip().rstrip()
-                if line.startswith('quit') or line.startswith('exit') or line.startswith('disconnect'):
-                    break
-                split = line.split()
-                command = split[0]
-                if command in commands:
-                    getattr(st, command)(split)
-                else:
-                    sysout('Unrecognized command')
-        else:
-            st.run(['run', options.filename])
-    except EOFError:
-        pass
-    except KeyboardInterrupt:
-        pass
+                while True:
+                    line = input_prompt("\r> ")
+                    if not line or line.lstrip().rstrip() == '':
+                        continue
+                    line = line.lstrip().rstrip()
+                    if line.startswith('quit') or line.startswith('exit') or line.startswith('disconnect'):
+                        break
+                    split = line.split()
+                    command = split[0]
+                    if command in commands:
+                        getattr(st, command)(split)
+                    else:
+                        sysout('Unrecognized command')
+            else:
+                st.run(['run', options.filename])
+        except RuntimeError:
+            pass
     finally:
         st.disconnect(None)
 

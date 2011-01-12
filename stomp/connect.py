@@ -1,4 +1,3 @@
-import functools
 import math
 import random
 import re
@@ -7,7 +6,6 @@ import sys
 import threading
 import time
 import types
-import uuid
 import xml.dom.minidom
 
 try:
@@ -27,6 +25,11 @@ import exception
 import listener
 import utils
 import backward
+
+try:
+    import uuid    
+except ImportError:
+    from utils import uuid
 
 import logging
 import logging.config
