@@ -2,11 +2,16 @@ import os
 import socket
 import sys
 import threading
-import uuid
 
 sys.path.append(os.getcwd())
 
 from stomp import utils, backward
+
+try:
+    import uuid
+except ImportError:
+    from backward import uuid
+
 
 class StompServer(threading.Thread):
     def __init__(self, listen_host_and_port, connection_class):

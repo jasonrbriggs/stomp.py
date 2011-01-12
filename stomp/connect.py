@@ -29,7 +29,7 @@ import backward
 try:
     import uuid    
 except ImportError:
-    from utils import uuid
+    from backward import uuid
 
 import logging
 import logging.config
