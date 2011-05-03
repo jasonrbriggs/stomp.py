@@ -10,6 +10,11 @@ from listener import ConnectionListener, StatsListener
 from exception import NotConnectedException
 from backward import input_prompt
 
+try:
+    import uuid    
+except ImportError:
+    from backward import uuid
+
 def sysout(msg, end='\n'):
     sys.stdout.write(str(msg) + end)
 
@@ -33,7 +38,7 @@ class StompCLI(ConnectionListener):
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host='localhost', port=61613, user='', passcode=''):
-        self.conn = Connection([(host, port)], user, passcode)
+        self.conn = Connection([(host, port)], user, passcode, wait_on_receipt=True)
         self.conn.set_listener('', self)
         self.conn.start()
         self.__commands = get_commands()
@@ -200,6 +205,26 @@ class StompCLI(ConnectionListener):
             self.conn.send(destination=args[1], message=' '.join(args[2:]))
         else:
             self.conn.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id)
+
+    def sendrec(self, args):
+        """
+        Usage:
+            sendrec <destination> <message>
+
+        Required Parameters:
+            destination - where to send the message
+            message - the content to send
+
+        Description:
+            Sends a message to a destination in the messaging system and blocks for receipt of the message.
+        """
+        receipt_id = str(uuid.uuid4())
+        if len(args) < 3:
+            sysout('Expecting: sendrec <destination> <message>')
+        elif not self.transaction_id:
+            self.conn.send(destination=args[1], message=' '.join(args[2:]), receipt=receipt_id)
+        else:
+            self.conn.send(destination=args[1], message=' '.join(args[2:]), transaction=self.transaction_id, receipt=receipt_id)
 
     def sendreply(self, args):
         """

@@ -91,7 +91,8 @@ class Connection(object):
                  ssl_key_file = None,
                  ssl_cert_file = None,
                  ssl_ca_certs = None,
-                 ssl_cert_validator = None):
+                 ssl_cert_validator = None,
+                 wait_on_receipt = False):
         """
         Initialize and start this connection.
 
@@ -155,13 +156,16 @@ class Connection(object):
             function which performs extra validation on the client
             certificate, for example checking the returned
             certificate has a commonName attribute equal to the
-            hostname (to avoid man in the middle attacks)
-
+            hostname (to avoid man in the middle attacks).
             The signature is:
                 (OK, err_msg) = validation_function(cert, hostname)
-
             where OK is a boolean, and cert is a certificate structure
             as returned by ssl.SSLSocket.getpeercert()
+            
+        \param wait_on_receipt
+            if a receipt is specified, then the send method should wait
+            (block) for the server to respond with that receipt-id
+            before continuing
         """
 
         sorted_host_and_ports = []
@@ -214,6 +218,7 @@ class Connection(object):
 
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
+        self.__send_wait_condition = threading.Condition()
         
         self.blocking = None
         
@@ -224,6 +229,9 @@ class Connection(object):
         self.__ssl_key_file = ssl_key_file
         self.__ssl_ca_certs = ssl_ca_certs
         self.__ssl_cert_validator = ssl_cert_validator
+        
+        self.__receipts = {}
+        self.__wait_on_receipt = wait_on_receipt
 
     def is_localhost(self, host_and_port):
         """
@@ -338,10 +346,22 @@ class Connection(object):
             content_length_headers = {'content-length': len(message)}
         else:
             content_length_headers = {}
-        self.__send_frame_helper('SEND', message, utils.merge_headers([headers, 
-                                                                        keyword_headers,
-                                                                        content_length_headers]), [ 'destination' ])
+            
+        merged_headers = utils.merge_headers([headers, keyword_headers, content_length_headers])
+        
+        if self.__wait_on_receipt and 'receipt' in merged_headers.keys():
+            self.__send_wait_condition.acquire()
+            
+        self.__send_frame_helper('SEND', message, merged_headers, [ 'destination' ])
         self.__notify('send', headers, message)
+        
+        # if we need to wait-on-receipt, then block until the receipt frame arrives 
+        if self.__wait_on_receipt and 'receipt' in merged_headers.keys():
+            receipt = merged_headers['receipt']
+            while receipt not in self.__receipts:
+                self.__send_wait_condition.wait()
+            del self.__receipts[receipt]
+            self.__send_wait_condition.release()
     
     def ack(self, headers={}, **keyword_headers):
         """
@@ -498,6 +518,13 @@ class Connection(object):
         
         \param body the content of the message
         """
+        if frame_type == 'receipt':
+            # logic for wait-on-receipt notification
+            self.__send_wait_condition.acquire()
+            self.__receipts[headers['receipt-id']] = None
+            self.__send_wait_condition.notify()
+            self.__send_wait_condition.release()
+
         for listener in self.__listeners.values():
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug('listener %s has no method on_%s' % (listener, frame_type))

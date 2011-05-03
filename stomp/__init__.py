@@ -10,7 +10,7 @@ Meta-Data
 Author: Jason R Briggs
 License: http://www.apache.org/licenses/LICENSE-2.0
 Start Date: 2005/12/01
-Last Revision Date: $Date: 2011/01/12 22:45 $
+Last Revision Date: $Date: 2011/05/02 23:18 $
 Project Page: http://www.briggs.net.nz/log/projects/stomp.py
 
 Notes/Attribution
@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.split(__file__)[0])
 
 import connect, listener, exception
 
-__version__ = __version__ = (3, 0, 3)
+__version__ = __version__ = (3, 0, 4)
 Connection = connect.Connection
 ConnectionListener = listener.ConnectionListener
 StatsListener = listener.StatsListener
