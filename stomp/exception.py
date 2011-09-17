@@ -14,7 +14,7 @@ class NotConnectedException(Exception):
     pass
 
 
-class ReconnectFailedException(Exception):
+class ConnectFailedException(Exception):
     """
     Raised by Connection.__attempt_connection when reconnection attempts
     have exceeded Connection.__reconnect_attempts_max.

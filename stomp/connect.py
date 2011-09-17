@@ -95,7 +95,8 @@ class Connection(object):
                  ssl_ca_certs = None,
                  ssl_cert_validator = None,
                  wait_on_receipt = False,
-                 ssl_version = default_ssl_version):
+                 ssl_version = default_ssl_version,
+                 timeout = None):
         """
         Initialize and start this connection.
 
@@ -173,7 +174,10 @@ class Connection(object):
         \param ssl_version
             SSL protocol to use for the connection. This should be
             one of the PROTOCOL_x constants provided by the ssl module.
-            The default is ssl.PROTOCOL_SSLv3.
+            The default is ssl.PROTOCOL_SSLv3
+            
+        \param timeout
+            the timeout value to use when connecting the stomp socket
         """
 
         sorted_host_and_ports = []
@@ -214,6 +218,7 @@ class Connection(object):
         self.__reconnect_sleep_jitter = reconnect_sleep_jitter
         self.__reconnect_sleep_max = reconnect_sleep_max
         self.__reconnect_attempts_max = reconnect_attempts_max
+        self.__timeout = timeout
         
         self.__connect_headers = {}
         if user is not None and passcode is not None:
@@ -680,7 +685,7 @@ class Connection(object):
                         self.__socket = ssl.wrap_socket(self.__socket, keyfile = self.__ssl_key_file,
                                 certfile = self.__ssl_cert_file, cert_reqs = cert_validation, 
                                 ca_certs = self.__ssl_ca_certs, ssl_version = __ssl_version)
-                    self.__socket.settimeout(None)
+                    self.__socket.settimeout(self.__timeout)
                     if self.blocking is not None:
                         self.__socket.setblocking(self.blocking)
                     self.__socket.connect(host_and_port)
@@ -720,4 +725,4 @@ class Connection(object):
                     sleep_exp += 1
 
         if not self.__socket:
-            raise exception.ReconnectFailedException
+            raise exception.ConnectFailedException
