@@ -9,6 +9,7 @@ from connect import Connection
 from listener import ConnectionListener, StatsListener
 from exception import NotConnectedException
 from backward import input_prompt
+from __init__ import __version__
 
 try:
     import uuid    
@@ -383,7 +384,7 @@ class StompCLI(ConnectionListener):
     man = help
 
     def version(self, args):
-        sysout('Stomp.py Version %s.%s' % internal.__version__)
+        sysout('Stomp.py Version %s.%s.%s' % __version__)
     ver = version
     
     def quit(self, args):
