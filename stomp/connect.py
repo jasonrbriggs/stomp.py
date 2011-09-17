@@ -415,13 +415,15 @@ class Connection(object):
             del keyword_headers['wait']
         self.__send_frame_helper('CONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         
-    def disconnect(self, headers={}, **keyword_headers):
+    def disconnect(self, send_disconnect=True, headers={}, **keyword_headers):
         """
         Send a DISCONNECT frame to finish a connection
         """
-        self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         self.__running = False
         if self.__socket is not None:
+            if send_disconnect:
+                self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+
             if self.__ssl:
                 #
                 # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
