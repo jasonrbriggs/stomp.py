@@ -16,10 +16,12 @@ except ImportError:
 try:
     import ssl
     from ssl import SSLError
+    default_ssl_version = ssl.PROTOCOL_SSLv3
 except ImportError: # python version < 2.6 without the backported ssl module
     ssl = None
     class SSLError:
         pass
+    default_ssl_version = None
     
 import exception
 import listener
@@ -92,7 +94,8 @@ class Connection(object):
                  ssl_cert_file = None,
                  ssl_ca_certs = None,
                  ssl_cert_validator = None,
-                 wait_on_receipt = False):
+                 wait_on_receipt = False,
+                 ssl_version = default_ssl_version):
         """
         Initialize and start this connection.
 
@@ -166,6 +169,11 @@ class Connection(object):
             if a receipt is specified, then the send method should wait
             (block) for the server to respond with that receipt-id
             before continuing
+            
+        \param ssl_version
+            SSL protocol to use for the connection. This should be
+            one of the PROTOCOL_x constants provided by the ssl module.
+            The default is ssl.PROTOCOL_SSLv3.
         """
 
         sorted_host_and_ports = []
@@ -229,6 +237,7 @@ class Connection(object):
         self.__ssl_key_file = ssl_key_file
         self.__ssl_ca_certs = ssl_ca_certs
         self.__ssl_cert_validator = ssl_cert_validator
+        self.__ssl_version = ssl_version
         
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
@@ -256,6 +265,7 @@ class Connection(object):
         self.__running = True
         self.__attempt_connection()
         thread = threading.Thread(None, self.__receiver_loop)
+        thread.daemon = True  # Don't let receiver thread prevent termination
         thread.start()
 
     def stop(self):
@@ -499,12 +509,13 @@ class Connection(object):
                 self.__socket_semaphore.acquire()
                 try:
                     self.__socket.sendall(frame.encode())
+                    log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
                 finally:
                     self.__socket_semaphore.release()
             except Exception:
                 _, e, _ = sys.exc_info()
-                print(e)
-            log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
+                log.error("Error sending frame: %s" % e)
+            
         else:
             raise exception.NotConnectedException()
 
@@ -668,7 +679,7 @@ class Connection(object):
                             cert_validation = ssl.CERT_NONE
                         self.__socket = ssl.wrap_socket(self.__socket, keyfile = self.__ssl_key_file,
                                 certfile = self.__ssl_cert_file, cert_reqs = cert_validation, 
-                                ca_certs=self.__ssl_ca_certs, ssl_version = ssl.PROTOCOL_SSLv3)
+                                ca_certs = self.__ssl_ca_certs, ssl_version = __ssl_version)
                     self.__socket.settimeout(None)
                     if self.blocking is not None:
                         self.__socket.setblocking(self.blocking)
@@ -693,7 +704,6 @@ class Connection(object):
                     else:
                         exc = sys.exc_info()[1]
                     connect_count += 1
-                    print(exc)
                     log.warning("Could not connect to host %s, port %s: %s" % (host_and_port[0], host_and_port[1], exc))
 
             if self.__socket is None:
