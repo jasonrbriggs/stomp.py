@@ -28,7 +28,8 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(listener.messages == 1, 'should have received 1 message')
         self.assert_(listener.errors == 0, 'should not have received any errors')
-        
+    
+    '''    
     def testtimeout(self):
         conn = stomp.Connection([('127.0.0.2', 60000)], timeout=5, reconnect_attempts_max=1)
         listener = testlistener.TestListener()
@@ -42,6 +43,7 @@ class TestBasicSend(unittest.TestCase):
             pass # success!
             ms = time.time() - ms
             self.assert_(ms > 5.0, 'connection timeout should have been at least 5 seconds')
-
+    '''
+    
 suite = unittest.TestLoader().loadTestsFromTestCase(TestBasicSend)
 unittest.TextTestRunner(verbosity=2).run(suite)

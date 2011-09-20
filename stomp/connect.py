@@ -96,7 +96,8 @@ class Connection(object):
                  ssl_cert_validator = None,
                  wait_on_receipt = False,
                  ssl_version = default_ssl_version,
-                 timeout = None):
+                 timeout = None,
+                 version = 1.0):
         """
         Initialize and start this connection.
 
@@ -178,6 +179,9 @@ class Connection(object):
             
         \param timeout
             the timeout value to use when connecting the stomp socket
+            
+        \param version
+            protocol version (1.0 or 1.1)
         """
 
         sorted_host_and_ports = []
@@ -246,6 +250,7 @@ class Connection(object):
         
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
+        self.__version = version
 
     def is_localhost(self, host_and_port):
         """
@@ -345,13 +350,18 @@ class Connection(object):
         """
         Send a SUBSCRIBE frame to subscribe to a queue
         """
-        self.__send_frame_helper('SUBSCRIBE', '', utils.merge_headers([headers, keyword_headers]), [ 'destination' ])
+        merged_headers = utils.merge_headers([headers, keyword_headers])
+        required_headers = [ 'destination' ]
+        if self.__version >= 1.1:
+            required_headers.append('id')
+        self.__send_frame_helper('SUBSCRIBE', '', merged_headers, required_headers)
 
     def unsubscribe(self, headers={}, **keyword_headers):
         """
         Send an UNSUBSCRIBE frame to unsubscribe from a queue
         """
-        self.__send_frame_helper('UNSUBSCRIBE', '', utils.merge_headers([headers, keyword_headers]), [ ('destination', 'id') ])
+        merged_headers = utils.merge_headers([headers, keyword_headers])
+        self.__send_frame_helper('UNSUBSCRIBE', '', merged_headers, [ ('destination', 'id') ])
         
     def send(self, message='', headers={}, **keyword_headers):
         """
@@ -384,6 +394,14 @@ class Connection(object):
         """
         self.__send_frame_helper('ACK', '', utils.merge_headers([headers, keyword_headers]), [ 'message-id' ])
         
+    def nack(self, headers={}, **keyword_headers):
+            """
+            Send an NACK frame, to acknowledge a message was not successfully processed
+            """
+            if self.__version < 1.1:
+                raise RuntimeError('NACK is not supported with 1.0 connections')
+            self.__send_frame_helper('NACK', '', utils.merge_headers([headers, keyword_headers]), [ 'message-id' ])
+        
     def begin(self, headers={}, **keyword_headers):
         """
         Send a BEGIN frame to start a transaction
@@ -413,7 +431,14 @@ class Connection(object):
         if 'wait' in keyword_headers and keyword_headers['wait']:
             while not self.is_connected(): time.sleep(0.1)
             del keyword_headers['wait']
-        self.__send_frame_helper('CONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+            
+        if self.__version >= 1.1:
+            cmd = 'CONNECT'
+            headers['accept-version'] = self.__version
+        else:
+            cmd = 'CONNECT'
+            
+        self.__send_frame_helper(cmd, '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         
     def disconnect(self, send_disconnect=True, headers={}, **keyword_headers):
         """
@@ -542,7 +567,12 @@ class Connection(object):
             self.__receipts[headers['receipt-id']] = None
             self.__send_wait_condition.notify()
             self.__send_wait_condition.release()
-
+            
+        if frame_type == 'connected' and 'version' not in headers.keys():
+            if self.__version >= 1.1:
+                log.warn('Downgraded STOMP protocol version to 1.0')
+            self.__version = 1.0
+            
         for listener in self.__listeners.values():
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug('listener %s has no method on_%s' % (listener, frame_type))
