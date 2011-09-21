@@ -251,6 +251,8 @@ class Connection(object):
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
         self.__version = version
+        
+        self.__disconnect_receipt = None
 
     def is_localhost(self, host_and_port):
         """
@@ -385,8 +387,8 @@ class Connection(object):
             receipt = merged_headers['receipt']
             while receipt not in self.__receipts:
                 self.__send_wait_condition.wait()
-            del self.__receipts[receipt]
             self.__send_wait_condition.release()
+            del self.__receipts[receipt]
     
     def ack(self, headers={}, **keyword_headers):
         """
@@ -440,15 +442,9 @@ class Connection(object):
             
         self.__send_frame_helper(cmd, '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         
-    def disconnect(self, send_disconnect=True, headers={}, **keyword_headers):
-        """
-        Send a DISCONNECT frame to finish a connection
-        """
+    def disconnect_socket(self):
         self.__running = False
         if self.__socket is not None:
-            if send_disconnect:
-                self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
-
             if self.__ssl:
                 #
                 # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
@@ -463,12 +459,23 @@ class Connection(object):
                     log.warn(e)
             elif hasattr(socket, 'SHUT_RDWR'):
                 self.__socket.shutdown(socket.SHUT_RDWR)
+
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
         #
         if self.__socket is not None:
             self.__socket.close()
         self.__current_host_and_port = None
+        
+    def disconnect(self, send_disconnect=True, headers={}, **keyword_headers):
+        """
+        Send a DISCONNECT frame to finish a connection
+        """
+        self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+        if self.__version >= 1.1 and 'receipt' in headers:
+            self.__disconnect_receipt = headers['receipt']
+        else:
+            self.disconnect_socket()
 
     def __convert_dict(self, payload):
         """
@@ -564,9 +571,15 @@ class Connection(object):
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
             self.__send_wait_condition.acquire()
-            self.__receipts[headers['receipt-id']] = None
             self.__send_wait_condition.notify()
             self.__send_wait_condition.release()
+            
+            receipt = headers['receipt-id']
+            self.__receipts[receipt] = None
+
+            # received a stomp 1.1 disconnect receipt
+            if receipt == self.__disconnect_receipt:
+                self.disconnect_socket()
             
         if frame_type == 'connected' and 'version' not in headers.keys():
             if self.__version >= 1.1:

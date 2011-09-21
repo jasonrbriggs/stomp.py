@@ -1,3 +1,5 @@
+import threading
+
 class ConnectionListener(object):
     """
     This class should be used as a base class for objects registered
@@ -86,6 +88,29 @@ class ConnectionListener(object):
         \param body the message payload
         """
         pass
+
+
+class WaitingListener(ConnectionListener):
+    """
+    A listener which waits for a specific receipt to arrive
+    """
+    def __init__(self, receipt):
+        self.condition = threading.Condition()
+        self.receipt = receipt
+        self.received = False
+        
+    def on_receipt(self, headers, body):
+        if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
+            self.condition.acquire()
+            self.received = True
+            self.condition.notify()
+            self.condition.release()
+        
+    def wait_on_receipt(self):
+        self.condition.acquire()
+        while not self.received:
+            self.condition.wait()
+        self.condition.release()
 
 
 class StatsListener(ConnectionListener):

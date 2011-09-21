@@ -13,7 +13,7 @@ class TestBasicSend(unittest.TestCase):
         pass
 
     def testbasic(self):
-        conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)])
+        conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)], 'admin', 'password')
         listener = testlistener.TestListener()
         conn.set_listener('', listener)
         conn.start()
