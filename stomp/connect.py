@@ -250,7 +250,7 @@ class Connection(object):
         
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
-        self.__version = version
+        self.version = version
         
         self.__disconnect_receipt = None
 
@@ -354,7 +354,7 @@ class Connection(object):
         """
         merged_headers = utils.merge_headers([headers, keyword_headers])
         required_headers = [ 'destination' ]
-        if self.__version >= 1.1:
+        if self.version >= 1.1:
             required_headers.append('id')
         self.__send_frame_helper('SUBSCRIBE', '', merged_headers, required_headers)
 
@@ -397,12 +397,12 @@ class Connection(object):
         self.__send_frame_helper('ACK', '', utils.merge_headers([headers, keyword_headers]), [ 'message-id' ])
         
     def nack(self, headers={}, **keyword_headers):
-            """
-            Send an NACK frame, to acknowledge a message was not successfully processed
-            """
-            if self.__version < 1.1:
-                raise RuntimeError('NACK is not supported with 1.0 connections')
-            self.__send_frame_helper('NACK', '', utils.merge_headers([headers, keyword_headers]), [ 'message-id' ])
+        """
+        Send an NACK frame, to acknowledge a message was not successfully processed
+        """
+        if self.version < 1.1:
+            raise RuntimeError('NACK is not supported with 1.0 connections')
+        self.__send_frame_helper('NACK', '', utils.merge_headers([headers, keyword_headers]), [ 'message-id' ])
         
     def begin(self, headers={}, **keyword_headers):
         """
@@ -434,9 +434,9 @@ class Connection(object):
             while not self.is_connected(): time.sleep(0.1)
             del keyword_headers['wait']
             
-        if self.__version >= 1.1:
-            cmd = 'CONNECT'
-            headers['accept-version'] = self.__version
+        if self.version >= 1.1:
+            cmd = 'STOMP'
+            headers['accept-version'] = self.version
         else:
             cmd = 'CONNECT'
             
@@ -472,7 +472,7 @@ class Connection(object):
         Send a DISCONNECT frame to finish a connection
         """
         self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
-        if self.__version >= 1.1 and 'receipt' in headers:
+        if self.version >= 1.1 and 'receipt' in headers:
             self.__disconnect_receipt = headers['receipt']
         else:
             self.disconnect_socket()
@@ -582,9 +582,9 @@ class Connection(object):
                 self.disconnect_socket()
             
         if frame_type == 'connected' and 'version' not in headers.keys():
-            if self.__version >= 1.1:
+            if self.version >= 1.1:
                 log.warn('Downgraded STOMP protocol version to 1.0')
-            self.__version = 1.0
+            self.version = 1.0
             
         for listener in self.__listeners.values():
             if not hasattr(listener, 'on_%s' % frame_type):

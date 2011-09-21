@@ -286,7 +286,7 @@ class StompCLI(Cmd):
                 [ 'destination - where to send the message', 'filename - the file to send' ])
 
     def do_version(self, args):
-        sysout(colors.BOLD + stomppy_version + colors.NO_COLOR)
+        sysout('%s%s [Protocol version %s]%s' % (colors.BOLD, stomppy_version, self.conn.version, colors.NO_COLOR))
     do_ver = do_version
     
     def help_version(self):
@@ -296,10 +296,10 @@ class StompCLI(Cmd):
     def check_ack_nack(self, cmd, args):
         if self.version >= 1.1 and len(args) < 2:
             error("Expecting: %s <message-id> <subscription-id>" % cmd)
-            return
+            return None
         elif len(args) < 1:
             error("Expecting: %s <message-id>" % cmd)
-            return
+            return None
             
         hdrs = { 'message-id' : args[0] }
             
@@ -314,6 +314,8 @@ class StompCLI(Cmd):
     def do_ack(self, args):
         args = args.split()
         hdrs = self.check_ack_nack('ack', args)
+        if hdrs is None:
+            return
             
         if not self.transaction_id:
             self.conn.ack(headers = hdrs)
@@ -329,6 +331,8 @@ class StompCLI(Cmd):
     def do_nack(self, args):
         args = args.split()
         hdrs = self.check_ack_nack('nack', args)
+        if hdrs is None:
+            return
             
         if not self.transaction_id:
             self.conn.nack(headers = hdrs)

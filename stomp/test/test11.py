@@ -33,9 +33,14 @@ class Test11Send(unittest.TestCase):
         wl = listener.WaitingListener('DISCONNECT1')
         conn.set_listener('waiting', wl)
         
+        # stomp1.1 disconnect with receipt
         conn.disconnect(headers={'receipt' : 'DISCONNECT1'})
         
+        # wait for the receipt
         wl.wait_on_receipt()
+        
+        # unnecessary... but anyway
+        self.assert_(wl.received == True)
         
 suite = unittest.TestLoader().loadTestsFromTestCase(Test11Send)
 unittest.TextTestRunner(verbosity=2).run(suite)
