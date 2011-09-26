@@ -13,7 +13,7 @@ import testlistener
 
 class MQ(object):
     def __init__(self):
-        self.connection = stomp.Connection([('localhost', 61613)])
+        self.connection = stomp.Connection([('localhost', 61613)], 'admin', 'password')
         self.connection.set_listener('', None)
         self.connection.start()
         self.connection.connect(wait=True)
