@@ -12,7 +12,7 @@ class TestSSLSend(unittest.TestCase):
         pass
 
     def testsslbasic(self):
-        conn = stomp.Connection([('127.0.0.1', 61612), ('localhost', 61612)], use_ssl = True)
+        conn = stomp.Connection([('127.0.0.1', 61614), ('localhost', 61614)], 'admin', 'password', use_ssl = True)
         listener = testlistener.TestListener()
         conn.set_listener('', listener)
         conn.start()

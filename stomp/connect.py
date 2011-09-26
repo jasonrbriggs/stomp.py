@@ -253,6 +253,8 @@ class Connection(object):
         self.version = version
         
         self.__disconnect_receipt = None
+        
+        self.create_thread_fc = default_create_thread
 
     def is_localhost(self, host_and_port):
         """
@@ -263,6 +265,14 @@ class Connection(object):
             return 1
         else:
             return 2
+            
+    def override_threading(create_thread_fc):
+        """
+        Override for thread creation. Use an alternate threading library by
+        setting this to a function with a single argument (which is the receiver loop callback).
+        The thread which is returned should be started (ready to run)
+        """
+        self.create_thread_fc = create_thread_fc
 
     #
     # Manage the connection
@@ -276,9 +286,7 @@ class Connection(object):
         """
         self.__running = True
         self.__attempt_connection()
-        thread = threading.Thread(None, self.__receiver_loop)
-        thread.daemon = True  # Don't let receiver thread prevent termination
-        thread.start()
+        thread = self.create_thread_fc(self.__receiver_loop)
 
     def stop(self):
         """
@@ -729,7 +737,7 @@ class Connection(object):
                             cert_validation = ssl.CERT_NONE
                         self.__socket = ssl.wrap_socket(self.__socket, keyfile = self.__ssl_key_file,
                                 certfile = self.__ssl_cert_file, cert_reqs = cert_validation, 
-                                ca_certs = self.__ssl_ca_certs, ssl_version = __ssl_version)
+                                ca_certs = self.__ssl_ca_certs, ssl_version = self.__ssl_version)
                     self.__socket.settimeout(self.__timeout)
                     if self.blocking is not None:
                         self.__socket.setblocking(self.blocking)
@@ -771,3 +779,13 @@ class Connection(object):
 
         if not self.__socket:
             raise exception.ConnectFailedException
+
+
+def default_create_thread(callback):
+    """
+    Default thread creation
+    """
+    thread = threading.Thread(None, callback)
+    thread.daemon = True  # Don't let receiver thread prevent termination
+    thread.start()
+    return thread

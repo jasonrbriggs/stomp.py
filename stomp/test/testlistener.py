@@ -7,7 +7,7 @@ class TestListener(ConnectionListener):
         self.messages = 0
 
     def on_error(self, headers, message):
-        print('received an error %s' % message)
+        print('received an error %s [%s]' % (message, headers))
         self.errors = self.errors + 1
 
     def on_connecting(self, host_and_port):

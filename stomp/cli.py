@@ -12,21 +12,16 @@ from listener import ConnectionListener, StatsListener
 from exception import NotConnectedException
 from backward import input_prompt
 import colors
-from __init__ import __version__
+sys.path.append('.')
+import stomp
 
-stomppy_version = 'Stomp.py Version %s.%s.%s' % __version__
+stomppy_version = 'Stomp.py Version %s.%s.%s' % stomp.__version__
 
 try:
     import uuid    
 except ImportError:
     from backward import uuid
 
-def sysout(msg, end='\n'):
-    sys.stdout.write(str(msg) + end)
-    
-def error(msg, end='\n'):
-    sys.stdout.write(colors.BOLD + colors.RED + str(msg) + colors.NO_COLOR + end)
-    
 class SubscriptionInfo:
     def __init__(self, id, ack):
         self.id = id
@@ -37,8 +32,8 @@ class StompCLI(Cmd):
     A command line interface to the stomp.py client.  See \link stomp::internal::connect::Connection \endlink
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.0):
-        Cmd.__init__(self, 'Tab')
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.0, stdin=sys.stdin, stdout=sys.stdout):
+        Cmd.__init__(self, 'Tab', stdin, stdout)
         self.conn = Connection([(host, port)], user, passcode, wait_on_receipt=True, version=ver)
         self.conn.set_listener('', self)
         self.conn.start()
@@ -53,14 +48,20 @@ class StompCLI(Cmd):
         Utility function to print a message and setup the command prompt
         for the next input
         """
-        sysout("\r  \r", end='')
-        sysout(frame_type)
+        self.__sysout("\r  \r", end='')
+        self.__sysout(frame_type)
         for header_key in headers.keys():
-            sysout('%s: %s' % (header_key, headers[header_key]))
-        sysout('')
-        sysout(body)
-        sysout('> ', end='')
-        sys.stdout.flush()
+            self.__sysout('%s: %s' % (header_key, headers[header_key]))
+        self.__sysout('')
+        self.__sysout(body)
+        self.__sysout('> ', end='')
+        self.stdout.flush()
+        
+    def __sysout(self, msg, end="\n"):
+        self.stdout.write(str(msg) + end)
+        
+    def __error(self, msg, end="\n"):
+        self.stdout.write(colors.BOLD + colors.RED + str(msg) + colors.NO_COLOR + end)
 
     def on_connecting(self, host_and_port):
         """
@@ -72,7 +73,7 @@ class StompCLI(Cmd):
         """
         \see ConnectionListener::on_disconnected
         """
-        error("lost connection")
+        self.__error("lost connection")
 
     def on_message(self, headers, body):
         """
@@ -113,10 +114,10 @@ class StompCLI(Cmd):
         self.__print_async("CONNECTED", headers, body)
         
     def help_help(self):
-        sysout('Quick help on commands')
+        self.__sysout('Quick help on commands')
         
     def default(self, line):
-        error('Unknown command: %s' % line.split()[0])
+        self.__error('Unknown command: %s' % line.split()[0])
         
     def emptyline(self):
         pass
@@ -145,7 +146,7 @@ class StompCLI(Cmd):
             oparams = '''%(hl)sOptional Parameters:%(nc)s%(optional)s\n\n''' % m
             m['optional'] = oparams
         
-        sysout('''%(hl)sUsage:%(nc)s
+        self.__sysout('''%(hl)sUsage:%(nc)s
 \t%(usage)s
 
 %(required)s%(optional)s%(hl)sDescription:%(nc)s
@@ -153,6 +154,7 @@ class StompCLI(Cmd):
         ''' % m)
      
     def do_quit(self, args):
+        self.conn.stop()
         sys.exit(0)
     do_exit = do_quit
     do_EOF = do_quit
@@ -162,17 +164,17 @@ class StompCLI(Cmd):
     help_exit = help_quit
     
     def help_EOF(self):
-        sysout('')
+        self.__sysout('')
         
     def do_subscribe(self, args):
         args = args.split()
         if len(args) < 1:
-            error('Expecting: subscribe <destination> [ack]')
+            self.__error('Expecting: subscribe <destination> [ack]')
             return
         
         name = args[0]
         if name in self.__subscriptions:
-            error('Already subscribed to %s' % name)
+            self.__error('Already subscribed to %s' % name)
             return
         
         ack_mode = 'auto'
@@ -182,7 +184,7 @@ class StompCLI(Cmd):
         sid = self.__subscription_id
         self.__subscription_id += 1
 
-        sysout('Subscribing to "%s" with acknowledge set to "%s", id set to "%s"' % (name, ack_mode, sid))
+        self.__sysout('Subscribing to "%s" with acknowledge set to "%s", id set to "%s"' % (name, ack_mode, sid))
         self.conn.subscribe(destination=name, ack=ack_mode, id=sid)            
         self.__subscriptions[name] = SubscriptionInfo(sid, ack_mode)
             
@@ -195,14 +197,14 @@ class StompCLI(Cmd):
     def do_unsubscribe(self, args):
         args = args.split()
         if len(args) < 1:
-            error('Expecting: unsubscribe <destination>')
+            self.__error('Expecting: unsubscribe <destination>')
             return
     
         if args[0] not in self.__subscriptions.keys():
-            sysout('Subscription %s not found' % args[0])
+            self.__sysout('Subscription %s not found' % args[0])
             return
         
-        sysout('Unsubscribing from "%s"' % args[0])
+        self.__sysout('Unsubscribing from "%s"' % args[0])
         self.conn.unsubscribe(destination=args[0], id=self.__subscriptions[args[0]].id)
         del self.__subscriptions[args[0]]
 
@@ -212,7 +214,7 @@ class StompCLI(Cmd):
 
     def do_disconnect(self, args):
         try:
-            sysout("")
+            self.__sysout("")
             self.conn.disconnect()
         except NotConnectedException:
             pass # ignore if no longer connected
@@ -223,7 +225,7 @@ class StompCLI(Cmd):
     def do_send(self, args):
         args = args.split()
         if len(args) < 2:
-            error('Expecting: send <destination> <message>')
+            self.__error('Expecting: send <destination> <message>')
         elif not self.transaction_id:
             self.conn.send(destination=args[0], message=' '.join(args[1:]))
         else:
@@ -246,7 +248,7 @@ class StompCLI(Cmd):
         args = args.split()
         receipt_id = str(uuid.uuid4())
         if len(args) < 2:
-            error('Expecting: sendrec <destination> <message>')
+            self.__error('Expecting: sendrec <destination> <message>')
         elif not self.transaction_id:
             self.conn.send(destination=args[0], message=' '.join(args[1:]), receipt=receipt_id)
         else:
@@ -259,7 +261,7 @@ class StompCLI(Cmd):
     def do_sendreply(self, args):
         args = args.split()
         if len(args) < 3:
-            error('Expecting: sendreply <destination> <correlation-id> <message>')
+            self.__error('Expecting: sendreply <destination> <correlation-id> <message>')
         else:
             self.conn.send(destination=args[0], message="%s\n" % ' '.join(args[2:]), headers={'correlation-id': args[1]})
 
@@ -270,9 +272,9 @@ class StompCLI(Cmd):
     def do_sendfile(self, args):
         args = args.split()
         if len(args) < 2:
-            error('Expecting: sendfile <destination> <filename>')
+            self.__error('Expecting: sendfile <destination> <filename>')
         elif not os.path.exists(args[1]):
-            error('File %s does not exist' % args[1])
+            self.__error('File %s does not exist' % args[1])
         else:
             s = open(args[1], mode='rb').read()
             msg = base64.b64encode(s).decode()
@@ -286,7 +288,7 @@ class StompCLI(Cmd):
                 [ 'destination - where to send the message', 'filename - the file to send' ])
 
     def do_version(self, args):
-        sysout('%s%s [Protocol version %s]%s' % (colors.BOLD, stomppy_version, self.conn.version, colors.NO_COLOR))
+        self.__sysout('%s%s [Protocol version %s]%s' % (colors.BOLD, stomppy_version, self.conn.version, colors.NO_COLOR))
     do_ver = do_version
     
     def help_version(self):
@@ -295,17 +297,17 @@ class StompCLI(Cmd):
     
     def check_ack_nack(self, cmd, args):
         if self.version >= 1.1 and len(args) < 2:
-            error("Expecting: %s <message-id> <subscription-id>" % cmd)
+            self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
             return None
         elif len(args) < 1:
-            error("Expecting: %s <message-id>" % cmd)
+            self.__error("Expecting: %s <message-id>" % cmd)
             return None
             
         hdrs = { 'message-id' : args[0] }
             
         if self.version >= 1.1:
             if len(args) < 2:
-                error("Expecting: %s <message-id> <subscription-id>" % cmd)
+                self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
                 return
             hdrs['subscription'] = args[1]
             
@@ -347,7 +349,7 @@ class StompCLI(Cmd):
 
     def do_abort(self, args):
         if not self.transaction_id:
-            error("Not currently in a transaction")
+            self.__error("Not currently in a transaction")
         else:
             self.conn.abort(transaction = self.transaction_id)
             self.transaction_id = None
@@ -359,10 +361,10 @@ class StompCLI(Cmd):
 
     def do_begin(self, args):
         if self.transaction_id:
-            error("Currently in a transaction (%s)" % self.transaction_id)
+            self.__error("Currently in a transaction (%s)" % self.transaction_id)
         else:
             self.transaction_id = self.conn.begin()
-            sysout('Transaction id: %s' % self.transaction_id)
+            self.__sysout('Transaction id: %s' % self.transaction_id)
             
     def help_begin(self):
         self.help('begin', '''Start a transaction. Transactions in this case apply to sending and acknowledging -
@@ -371,9 +373,9 @@ class StompCLI(Cmd):
 
     def do_commit(self, args):
         if not self.transaction_id:
-            error("Not currently in a transaction")
+            self.__error("Not currently in a transaction")
         else:
-            sysout('Committing %s' % self.transaction_id)
+            self.__sysout('Committing %s' % self.transaction_id)
             self.conn.commit(transaction=self.transaction_id)
             self.transaction_id = None
             
@@ -385,15 +387,15 @@ class StompCLI(Cmd):
         if len(args) < 1:
             stats = self.conn.get_listener('stats')
             if stats:
-                sysout(stats)
+                self.__sysout(stats)
             else:
-                error('No stats available')
+                self.__error('No stats available')
         elif args[0] == 'on':
             self.conn.set_listener('stats', StatsListener())
         elif args[0] == 'off':
             self.conn.remove_listener('stats')
         else:
-            error('Expecting: stats [on|off]')
+            self.__error('Expecting: stats [on|off]')
             
     def help_stats(self):
         self.help('stats [on|off]', '''Record statistics on messages sent, received, errors, etc. If no argument (on|off) is specified,
@@ -402,9 +404,9 @@ class StompCLI(Cmd):
     def do_run(self, args):
         args = args.split()
         if len(args) == 0:
-            error("Expecting: run <filename>")
+            self.__error("Expecting: run <filename>")
         elif not os.path.exists(args[0]):
-            error("File %s was not found" % args[0])
+            self.__error("File %s was not found" % args[0])
         else:
             lines = open(args[0]).read().split('\n')
             for line in lines:
