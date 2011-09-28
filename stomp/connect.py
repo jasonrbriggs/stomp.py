@@ -602,15 +602,12 @@ class Connection(object):
             if frame_type == 'connecting':
                 listener.on_connecting(self.__current_host_and_port)
                 continue
+            elif frame_type == 'disconnected':
+                listener.on_disconnected()
+                continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
-            params = backward.get_func_argcount(notify_func)
-            if params >= 3:
-                notify_func(headers, body)
-            elif params == 2:
-                notify_func(headers)
-            else:
-                notify_func()
+            notify_func(headers, body)
 
     def __receiver_loop(self):
         """
