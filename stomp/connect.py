@@ -97,7 +97,8 @@ class Connection(object):
                  wait_on_receipt = False,
                  ssl_version = default_ssl_version,
                  timeout = None,
-                 version = 1.0):
+                 version = 1.0,
+                 keepalive=None):
         """
         Initialize and start this connection.
 
@@ -182,6 +183,14 @@ class Connection(object):
             
         \param version
             protocol version (1.0 or 1.1)
+
+        \param keepalive
+            some operating systems support sending the occasional heart
+            beat packets to detect when a connection fails.  This
+            parameter can either be set set to a boolean to turn on the
+            default keepalive options for your OS, or as a tuple of
+            values, which also enables keepalive packets, but specifies
+            options specific to your OS implementation
         """
 
         sorted_host_and_ports = []
@@ -255,6 +264,8 @@ class Connection(object):
         self.__disconnect_receipt = None
         
         self.create_thread_fc = default_create_thread
+
+        self.__keepalive = keepalive
 
     def is_localhost(self, host_and_port):
         """
@@ -718,7 +729,41 @@ class Connection(object):
                 else:
                     break
         return result
-    
+
+    def __enable_keepalive(self):
+        def try_setsockopt(sock, name, fam, opt, val):
+            if val is None:
+                return True # no value to set always works
+            try:
+                sock.setsockopt(fam, opt, val)
+                log.debug('keepalive: set %r option to %r on socket' % (name, val))
+            except:
+                log.error('keepalive: unable to set %r option to %r on socket' % (name,val))
+                return False
+            return True
+
+        ka = self.__keepalive
+
+        if not ka:
+            return
+
+        if ka == True:
+            ka_sig = 'auto'
+            ka_args = ()
+        else:
+            try:
+                ka_sig = ka[0]
+                ka_args = ka[1:]
+            except Exception:
+                log.error('keepalive: bad specification %r' % (ka,))
+                return
+
+        if ka_sig == 'auto':
+            log.error('keepalive: unable to detect any implementation, DISABLED!')
+            return
+
+        log.error('keepalive: implementation %r not recognized or not supported' % ka_sig)
+
     def __attempt_connection(self):
         """
         Try connecting to the (host, port) tuples specified at construction time.
@@ -730,6 +775,8 @@ class Connection(object):
                 try:
                     log.debug("Attempting connection to host %s, port %s" % host_and_port)
                     self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.__enable_keepalive()
+
                     if self.__ssl: # wrap socket
                         if self.__ssl_ca_certs:
                             cert_validation = ssl.CERT_REQUIRED
