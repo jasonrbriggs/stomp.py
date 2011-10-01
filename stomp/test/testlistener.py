@@ -5,6 +5,7 @@ class TestListener(ConnectionListener):
         self.errors = 0
         self.connections = 0
         self.messages = 0
+        self.heartbeats = 0
 
     def on_error(self, headers, message):
         print('received an error %s [%s]' % (message, headers))
@@ -17,3 +18,7 @@ class TestListener(ConnectionListener):
     def on_message(self, headers, message):
         print('received a message %s' % message)
         self.messages = self.messages + 1
+
+    def on_heartbeat(self):
+        print('received a heartbeat')
+        self.heartbeats = self.heartbeats + 1

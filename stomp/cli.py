@@ -27,13 +27,14 @@ class SubscriptionInfo:
         self.id = id
         self.ack = ack
     
-class StompCLI(Cmd):
+class StompCLI(Cmd, ConnectionListener):
     """
     A command line interface to the stomp.py client.  See \link stomp::internal::connect::Connection \endlink
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.0, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
+        ConnectionListener.__init__(self)
         self.conn = Connection([(host, port)], user, passcode, wait_on_receipt=True, version=ver)
         self.conn.set_listener('', self)
         self.conn.start()

@@ -9,6 +9,9 @@ header_re = re.compile(r'[^:]+:.*')
 
 import testlistener
 
+username = 'admin'
+password = 'password'
+
 class TestStdin:
     pass
     
@@ -49,9 +52,9 @@ class TestCLI(unittest.TestCase):
     def testsubscribe(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-        
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
         
         time.sleep(3)
         
@@ -77,9 +80,10 @@ class TestCLI(unittest.TestCase):
     def testsendrec(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-
+        
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
 
         time.sleep(3)
 
@@ -99,9 +103,9 @@ class TestCLI(unittest.TestCase):
     def testsendfile(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
 
         time.sleep(3)
 
@@ -120,9 +124,9 @@ class TestCLI(unittest.TestCase):
     def testabort(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
 
         time.sleep(3)
 
@@ -149,9 +153,9 @@ class TestCLI(unittest.TestCase):
     def testcommit(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
 
         time.sleep(3)
 
@@ -182,9 +186,9 @@ class TestCLI(unittest.TestCase):
     def teststats(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
 
         time.sleep(3)
 
@@ -220,9 +224,9 @@ class TestCLI(unittest.TestCase):
     def testrun(self):
         stdin = TestStdin()
         stdout = TestStdout(self)
-        cli = StompCLI('127.0.0.1', 61613, 'admin', 'password', 1.0, stdin, stdout)
-
         stdout.expect('CONNECTED')
+        
+        cli = StompCLI('127.0.0.1', 61613, username, password, 1.0, stdin, stdout)
 
         time.sleep(3)
         
@@ -239,5 +243,6 @@ class TestCLI(unittest.TestCase):
             self.fail()
         except SystemExit:
             pass
+
 suite = unittest.TestLoader().loadTestsFromTestCase(TestCLI)
 unittest.TextTestRunner(verbosity=2).run(suite)

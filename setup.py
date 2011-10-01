@@ -1,6 +1,12 @@
 import os
 from distutils.core import setup, Command
 
+import logging.config
+try:
+    logging.config.fileConfig('stomp.log.conf')
+except:
+    pass
+
 import stomp
 
 class TestCommand(Command):
