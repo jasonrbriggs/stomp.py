@@ -15,36 +15,6 @@ except ImportError:
 HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
 
 
-class DevNullLogger(object):
-    """
-    Dummy logging class for environments without the logging module
-    """
-    def log(self, msg):
-        """
-        Log a message (print to console)
-        """
-        print(msg)
-
-    def devnull(self, msg):
-        """
-        Dump a message (i.e. send to /dev/null)
-        """
-        pass
-
-    debug = devnull
-    info = devnull
-    warning = log
-    error = log
-    critical = log
-    exception = log
-
-    def isEnabledFor(self, lvl):
-        """
-        Always return False
-        """
-        return False
-
-
 def parse_headers(lines, offset=0):
     headers = {}
     for header_line in lines[offset:]:

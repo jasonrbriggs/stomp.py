@@ -16,12 +16,12 @@ except ImportError:
 try:
     import ssl
     from ssl import SSLError
-    default_ssl_version = ssl.PROTOCOL_SSLv3
+    DEFAULT_SSL_VERSION = ssl.PROTOCOL_SSLv3
 except ImportError: # python version < 2.6 without the backported ssl module
     ssl = None
     class SSLError:
         pass
-    default_ssl_version = None
+    DEFAULT_SSL_VERSION = None
 
 try:
     from socket import SOL_SOCKET, SO_KEEPALIVE
@@ -42,9 +42,6 @@ except ImportError:
 
 import logging
 log = logging.getLogger('stomp.py')
-if not log:
-    log = utils.DevNullLogger()
-
 
 class Connection(object):
     """
@@ -97,7 +94,7 @@ class Connection(object):
                  ssl_ca_certs = None,
                  ssl_cert_validator = None,
                  wait_on_receipt = False,
-                 ssl_version = default_ssl_version,
+                 ssl_version = DEFAULT_SSL_VERSION,
                  timeout = None,
                  version = 1.0,
                  heartbeats = (0, 0),
