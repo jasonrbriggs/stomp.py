@@ -60,10 +60,15 @@ def parse_frame(frame):
     headers is a map containing all header key/value pairs, and
     body is a string containing the frame's payload.
     """
+    if frame == '\x0a':
+        return ('heartbeat', {}, None)
+        
     preamble_end = frame.find('\n\n')
+    if preamble_end == -1:
+        preamble_end = len(frame)
     preamble = frame[0:preamble_end]
     preamble_lines = preamble.split('\n')
-    body = frame[preamble_end+2:]
+    body = frame[preamble_end + 2:]
 
     # Skip any leading newlines
     first_line = 0
@@ -136,3 +141,18 @@ def merge_headers(header_map_list):
         for header_key in header_map.keys():
             headers[header_key] = header_map[header_key]
     return headers
+    
+def calculate_heartbeats(shb, chb):
+    """
+    Given a heartbeat string from the server, and a heartbeat tuple from the client,
+    calculate what the actual heartbeat settings should be.
+    """
+    (sx, sy) = shb
+    (cx, cy) = chb
+    x = 0
+    y = 0
+    if cx != 0 and sy != '0':
+        x = max(cx, int(sy))
+    if cy != 0 and sx != '0':
+        y = max(cy, int(sx))
+    return (x, y)

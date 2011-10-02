@@ -34,11 +34,6 @@ except ImportError:
     from backward import uuid
 
 import logging
-import logging.config
-try:
-    logging.config.fileConfig('stomp.log.conf')
-except:
-    pass      
 log = logging.getLogger('stomp.py')
 if not log:
     log = utils.DevNullLogger()
@@ -98,7 +93,9 @@ class Connection(object):
                  ssl_version = default_ssl_version,
                  timeout = None,
                  version = 1.0,
-                 keepalive=None):
+                 heartbeats = (0, 0),
+                 keepalive=None
+                 ):
         """
         Initialize and start this connection.
 
@@ -183,6 +180,10 @@ class Connection(object):
             
         \param version
             protocol version (1.0 or 1.1)
+            
+        \param heartbeats
+            a tuple containing the heartbeat send and receive time in millis. (0,0)
+            if no heartbeats 
 
         \param keepalive
             some operating systems support sending the occasional heart
@@ -245,9 +246,12 @@ class Connection(object):
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
         self.__send_wait_condition = threading.Condition()
+        self.__connect_wait_condition = threading.Condition()
         
         self.blocking = None
+        self.connected = False
         
+        # setup SSL
         if use_ssl and not ssl:
             raise Exception("SSL connection requested, but SSL library not found.")
         self.__ssl = use_ssl
@@ -259,10 +263,22 @@ class Connection(object):
         
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
-        self.version = version
         
+        # protocol version
+        self.version = version
+
+        # setup heartbeating
+        if version < 1.1 and heartbeats != (0, 0):
+            raise exception.ProtocolException('Heartbeats can only be set on a 1.1+ connection')            
+        self.heartbeats = heartbeats
+        
+        # used for 1.1 heartbeat messages (set to true every time a heartbeat message arrives)
+        self.__received_heartbeat = False
+        
+        # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
         
+        # function for creating threads used by the connection
         self.create_thread_fc = default_create_thread
 
         self.__keepalive = keepalive
@@ -298,6 +314,7 @@ class Connection(object):
         self.__running = True
         self.__attempt_connection()
         thread = self.create_thread_fc(self.__receiver_loop)
+        self.__notify('connecting')
 
     def stop(self):
         """
@@ -325,7 +342,7 @@ class Connection(object):
         Return true if the socket managed by this connection is connected
         """
         try:
-            return self.__socket is not None and self.__socket.getsockname()[1] != 0
+            return self.__socket is not None and self.__socket.getsockname()[1] != 0 and self.connected
         except socket.error:
             return False
         
@@ -449,17 +466,23 @@ class Connection(object):
         """
         Send a CONNECT frame to start a connection
         """
+        wait = False
         if 'wait' in keyword_headers and keyword_headers['wait']:
-            while not self.is_connected(): time.sleep(0.1)
+            wait = True
             del keyword_headers['wait']
             
         if self.version >= 1.1:
             cmd = 'STOMP'
             headers['accept-version'] = self.version
+            headers['heart-beat'] = '%s,%s' % self.heartbeats
         else:
             cmd = 'CONNECT'
-            
         self.__send_frame_helper(cmd, '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+        if wait:
+            self.__connect_wait_condition.acquire()
+            while not self.is_connected(): 
+                self.__connect_wait_condition.wait()
+            self.__connect_wait_condition.release()
         
     def disconnect_socket(self):
         self.__running = False
@@ -556,13 +579,21 @@ class Connection(object):
         
         if self.__socket is not None:
             try:
-                frame = [ command + '\n' ]
+                frame = [ ]                
+                if command is not None:
+                    frame.append(command + '\n')
+                    
                 for key, val in headers.items():
                     frame.append('%s:%s\n' % (key, val))
+                        
                 frame.append('\n')
+                    
                 if payload:
                     frame.append(payload)
-                frame.append('\x00')
+                    
+                if command is not None:
+                    # only send the terminator if we're sending a command (heartbeats have no term)
+                    frame.append('\x00')
                 frame = ''.join(frame)
                 self.__socket_semaphore.acquire()
                 try:
@@ -599,12 +630,21 @@ class Connection(object):
             # received a stomp 1.1 disconnect receipt
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
-            
-        if frame_type == 'connected' and 'version' not in headers.keys():
-            if self.version >= 1.1:
-                log.warn('Downgraded STOMP protocol version to 1.0')
-            self.version = 1.0
-            
+
+        if frame_type == 'connected': 
+            self.connected = True
+            self.__connect_wait_condition.acquire()
+            self.__connect_wait_condition.notify()
+            self.__connect_wait_condition.release()
+            if 'version' not in headers.keys():
+                if self.version >= 1.1:
+                    log.warn('Downgraded STOMP protocol version to 1.0')
+                self.version = 1.0
+            if 'heart-beat' in headers.keys():
+                self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
+                if self.heartbeats != (0,0):
+                    default_create_thread(self.__heartbeat_loop)
+
         for listener in self.__listeners.values():
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug('listener %s has no method on_%s' % (listener, frame_type))
@@ -613,15 +653,17 @@ class Connection(object):
             if frame_type == 'connecting':
                 listener.on_connecting(self.__current_host_and_port)
                 continue
+            elif frame_type == 'disconnected':
+                self.connected = False
+                listener.on_disconnected()
+                continue
+            elif frame_type == 'heartbeat':
+                self.__received_heartbeat = True
+                listener.on_heartbeat()
+                continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
-            params = backward.get_func_argcount(notify_func)
-            if params >= 3:
-                notify_func(headers, body)
-            elif params == 2:
-                notify_func(headers)
-            else:
-                notify_func()
+            notify_func(headers, body)
 
     def __receiver_loop(self):
         """
@@ -629,25 +671,21 @@ class Connection(object):
         """
         try:
             try:
-                threading.currentThread().setName("StompReceiver")
+                #threading.currentThread().setName("StompReceiver")
                 while self.__running:
-                    log.debug('starting receiver loop')
-
                     if self.__socket is None:
                         break
 
                     try:
                         try:
-                            self.__notify('connecting')
-                            
                             while self.__running:
                                 frames = self.__read()
                                 
                                 for frame in frames:
                                     (frame_type, headers, body) = utils.parse_frame(frame)
-                                    log.debug("Received frame: result=%r, headers=%r, body=%r" % (frame_type, headers, body))
+                                    log.debug("Received frame: %r, headers=%r, body=%r" % (frame_type, headers, body))
                                     frame_type = frame_type.lower()
-                                    if frame_type in [ 'connected', 'message', 'receipt', 'error' ]:
+                                    if frame_type in [ 'connected', 'message', 'receipt', 'error', 'heartbeat' ]:
                                         self.__notify(frame_type, headers, body)
                                     else:
                                         log.warning('Unknown response frame type: "%s" (frame length was %d)' % (frame_type, len(frame)))
@@ -677,6 +715,41 @@ class Connection(object):
             self.__receiver_thread_exited = True
             self.__receiver_thread_exit_condition.notifyAll()
             self.__receiver_thread_exit_condition.release()
+            
+    def __heartbeat_loop(self):
+        """
+        Loop for sending (and monitoring received) heartbeats
+        """
+        send_sleep = self.heartbeats[0] / 1000
+        
+        # receive gets a threshold of 3 additional seconds
+        receive_sleep = (self.heartbeats[1] / 1000) + 3
+        
+        if send_sleep == 0:
+            sleep_time = receive_sleep
+        elif receive_sleep == 0:
+            sleep_time = send_sleep
+        else:
+            sleep_time = min(send_sleep, receive_sleep)
+            
+        send_time = time.time()
+        receive_time = time.time()
+            
+        while self.__running:
+            log.debug('Heartbeat loop: sleep for %s' % (sleep_time))
+            time.sleep(sleep_time)
+            
+            if time.time() - send_time > send_sleep:
+                send_time = time.time()
+                log.debug('Sending a heartbeat')
+                self.__send_frame(None)
+            
+            if time.time() - receive_time > receive_sleep:
+                receive_time = time.time()
+                if self.__received_heartbeat:
+                    self.__received_heartbeat = False
+                else:
+                    pass
 
     def __read(self):
         """
@@ -695,6 +768,9 @@ class Connection(object):
             fastbuf.write(c)
             if '\x00' in c:
                 break
+            elif c == '\x0a':
+                # heartbeat (special case)
+                return c
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close() 
         result = []

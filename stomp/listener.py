@@ -39,6 +39,20 @@ class ConnectionListener(object):
         the connection until it has been reestablished.
         """
         pass
+        
+    def on_heartbeat(self):
+        """
+        Called by the STOMP connection when a heartbeat message has been
+        received from the server.
+        """
+        pass
+        
+    def on_heartbeat_timeout(self):
+        """
+        Called by the STOMP connection when a heartbeat message has not been
+        received beyond the specified period.
+        """
+        pass
 
     def on_message(self, headers, body):
         """
