@@ -22,7 +22,14 @@ except ImportError: # python version < 2.6 without the backported ssl module
     class SSLError:
         pass
     default_ssl_version = None
-    
+
+try:
+    from socket import SOL_SOCKET, SO_KEEPALIVE
+    from socket import SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
+    LINUX_KEEPALIVE_AVAIL=True
+except ImportError:
+    LINUX_KEEPALIVE_AVAIL=False
+   
 import exception
 import listener
 import utils
@@ -835,10 +842,26 @@ class Connection(object):
                 return
 
         if ka_sig == 'auto':
-            log.error('keepalive: unable to detect any implementation, DISABLED!')
-            return
+            if LINUX_KEEPALIVE_AVAIL:
+                ka_sig = 'linux'
+                ka_args = None
+                log.debug('keepalive: autodetected linux-style support')
+            else:
+                log.error('keepalive: unable to detect any implementation, DISABLED!')
+                return
 
-        log.error('keepalive: implementation %r not recognized or not supported' % ka_sig)
+        if ka_sig == 'linux':
+            log.debug('keepalive: activating linux-style support')
+            if ka_args is None:
+                log.debug('keepalive: using system defaults')
+                ka_args = (None, None, None)
+            lka_idle, lka_intvl, lka_cnt = ka_args
+            if try_setsockopt(self.__socket, 'enable', SOL_SOCKET, SO_KEEPALIVE, 1):
+                try_setsockopt(self.__socket, 'idle time', SOL_TCP, TCP_KEEPIDLE, lka_idle)
+                try_setsockopt(self.__socket, 'interval', SOL_TCP, TCP_KEEPINTVL, lka_intvl)
+                try_setsockopt(self.__socket, 'count', SOL_TCP, TCP_KEEPCNT, lka_cnt)
+        else:
+            log.error('keepalive: implementation %r not recognized or not supported' % ka_sig)
 
     def __attempt_connection(self):
         """
