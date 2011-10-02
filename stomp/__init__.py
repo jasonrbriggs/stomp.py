@@ -11,7 +11,7 @@ Author: Jason R Briggs
 License: http://www.apache.org/licenses/LICENSE-2.0
 Start Date: 2005/12/01
 Last Revision Date: 2011/09/17
-Project Page: http://www.briggs.net.nz/log/projects/stomp.py
+Project Page: http://code.google.com/p/stomppy
 
 Notes/Attribution
 -----------------
