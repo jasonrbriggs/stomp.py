@@ -96,7 +96,6 @@ def transform(body, trans_type):
             entries[pair[0]] = pair[1]
         return entries
     except Exception:
-        _, e, _ = sys.exc_info()
         #
         # unable to parse message. return original
         #
