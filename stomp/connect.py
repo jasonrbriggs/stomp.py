@@ -29,7 +29,7 @@ try:
     LINUX_KEEPALIVE_AVAIL=True
 except ImportError:
     LINUX_KEEPALIVE_AVAIL=False
-   
+
 import exception
 import listener
 import utils
@@ -39,6 +39,11 @@ try:
     import uuid    
 except ImportError:
     from backward import uuid
+
+try:
+    from fractions import gcd
+except ImportError:
+    from backward import gcd
 
 import logging
 log = logging.getLogger('stomp.py')
@@ -622,6 +627,9 @@ class Connection(object):
         
         \param body the content of the message
         """
+        # reset the heartbeat for any received message
+        self.__received_heartbeat = True
+        
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
             self.__send_wait_condition.acquire()
@@ -662,7 +670,6 @@ class Connection(object):
                 listener.on_disconnected()
                 continue
             elif frame_type == 'heartbeat':
-                self.__received_heartbeat = True
                 listener.on_heartbeat()
                 continue
 
@@ -734,18 +741,18 @@ class Connection(object):
         elif receive_sleep == 0:
             sleep_time = send_sleep
         else:
-            sleep_time = min(send_sleep, receive_sleep)
+            # sleep is the GCD of the send and receive times
+            sleep_time = gcd(send_sleep, receive_sleep) / 2
             
         send_time = time.time()
         receive_time = time.time()
             
         while self.__running:
-            log.debug('Heartbeat loop: sleep for %s' % (sleep_time))
             time.sleep(sleep_time)
             
             if time.time() - send_time > send_sleep:
                 send_time = time.time()
-                log.debug('Sending a heartbeat')
+                log.debug('Sending a heartbeat message')
                 self.__send_frame(None)
             
             if time.time() - receive_time > receive_sleep:
@@ -753,7 +760,10 @@ class Connection(object):
                 if self.__received_heartbeat:
                     self.__received_heartbeat = False
                 else:
-                    pass
+                    for listener in self.__listeners.values():
+                        listener.on_heartbeat_timeout()
+                    self.self.disconnect_socket()
+                    self.connected = False
 
     def __read(self):
         """

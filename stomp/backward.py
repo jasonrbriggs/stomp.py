@@ -62,3 +62,16 @@ class uuid(object):
         md5.update(data.encode())
         data = md5.hexdigest()
         return data
+        
+def gcd(a, b):
+    """Calculate the Greatest Common Divisor of a and b.
+
+    Unless b==0, the result will have the same sign as b (so that when
+    b is divided by it, the result comes out positive).
+    
+    Copied from the Python2.6 source
+    Copyright © 2001-2011 Python Software Foundation; All Rights Reserved
+    """
+    while b:
+        a, b = b, a%b
+    return a
