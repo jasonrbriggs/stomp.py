@@ -282,7 +282,7 @@ class Connection(object):
         self.heartbeats = heartbeats
         
         # used for 1.1 heartbeat messages (set to true every time a heartbeat message arrives)
-        self.__received_heartbeat = False
+        self.__received_heartbeat = time.time()
         
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
@@ -627,9 +627,6 @@ class Connection(object):
         
         \param body the content of the message
         """
-        # reset the heartbeat for any received message
-        self.__received_heartbeat = True
-        
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
             self.__send_wait_condition.acquire()
@@ -669,9 +666,6 @@ class Connection(object):
                 self.connected = False
                 listener.on_disconnected()
                 continue
-            elif frame_type == 'heartbeat':
-                listener.on_heartbeat()
-                continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
             notify_func(headers, body)
@@ -682,7 +676,6 @@ class Connection(object):
         """
         try:
             try:
-                #threading.currentThread().setName("StompReceiver")
                 while self.__running:
                     if self.__socket is None:
                         break
@@ -696,8 +689,11 @@ class Connection(object):
                                     (frame_type, headers, body) = utils.parse_frame(frame)
                                     log.debug("Received frame: %r, headers=%r, body=%r" % (frame_type, headers, body))
                                     frame_type = frame_type.lower()
-                                    if frame_type in [ 'connected', 'message', 'receipt', 'error', 'heartbeat' ]:
+                                    if frame_type in [ 'connected', 'message', 'receipt', 'error' ]:
                                         self.__notify(frame_type, headers, body)
+                                    elif frame_type == 'heartbeat':
+                                        # no notifications needed
+                                        pass
                                     else:
                                         log.warning('Unknown response frame type: "%s" (frame length was %d)' % (frame_type, len(frame)))
                         finally:
@@ -733,7 +729,7 @@ class Connection(object):
         """
         send_sleep = self.heartbeats[0] / 1000
         
-        # receive gets a threshold of 3 additional seconds
+        # receive gets an additional threshold of 3 additional seconds
         receive_sleep = (self.heartbeats[1] / 1000) + 3
         
         if send_sleep == 0:
@@ -756,10 +752,9 @@ class Connection(object):
                 self.__send_frame(None)
             
             if time.time() - receive_time > receive_sleep:
-                receive_time = time.time()
-                if self.__received_heartbeat:
-                    self.__received_heartbeat = False
-                else:
+                if time.time() - self.__received_heartbeat > receive_sleep:
+                    log.debug('Heartbeat timeout')
+                    # heartbeat timeout
                     for listener in self.__listeners.values():
                         listener.on_heartbeat_timeout()
                     self.disconnect_socket()
@@ -774,6 +769,9 @@ class Connection(object):
             try:
                 c = self.__socket.recv(1024)
                 c = c.decode()
+                
+                # reset the heartbeat for any received message
+                self.__received_heartbeat = time.time()
             except Exception:
                 _, e, _ = sys.exc_info()
                 c = ''

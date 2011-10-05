@@ -40,13 +40,6 @@ class ConnectionListener(object):
         """
         pass
         
-    def on_heartbeat(self):
-        """
-        Called by the STOMP connection when a heartbeat message has been
-        received from the server.
-        """
-        pass
-        
     def on_heartbeat_timeout(self):
         """
         Called by the STOMP connection when a heartbeat message has not been
