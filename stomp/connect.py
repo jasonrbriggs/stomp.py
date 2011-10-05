@@ -762,7 +762,7 @@ class Connection(object):
                 else:
                     for listener in self.__listeners.values():
                         listener.on_heartbeat_timeout()
-                    self.self.disconnect_socket()
+                    self.disconnect_socket()
                     self.connected = False
 
     def __read(self):
