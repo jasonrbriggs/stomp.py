@@ -655,6 +655,7 @@ class Connection(object):
                     default_create_thread(self.__heartbeat_loop)
 
         for listener in self.__listeners.values():
+            if not listener: continue
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug('listener %s has no method on_%s' % (listener, frame_type))
                 continue

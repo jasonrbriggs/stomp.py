@@ -37,12 +37,12 @@ def version():
     s = []
     for num in stomp.__version__:
         s.append(str(num))
-    return '.'.join(s)
+    return '.'.join(s) + '-beta-4'
 
 setup(
     name = 'stomp.py',
     version = version(),
-    description = 'Stomp ',
+    description = 'Python STOMP client, supporting versions 1.0 and 1.1 of the protocol',
     license = 'Apache',
     url = 'http://code.google.com/p/stomppy',
     author = 'Jason R Briggs',
