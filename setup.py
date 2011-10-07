@@ -37,7 +37,7 @@ def version():
     s = []
     for num in stomp.__version__:
         s.append(str(num))
-    return '.'.join(s) + '-beta-4'
+    return '.'.join(s) + '-beta'
 
 setup(
     name = 'stomp.py',

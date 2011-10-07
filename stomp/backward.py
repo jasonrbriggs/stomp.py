@@ -70,7 +70,7 @@ def gcd(a, b):
     b is divided by it, the result comes out positive).
     
     Copied from the Python2.6 source
-    Copyright © 2001-2011 Python Software Foundation; All Rights Reserved
+    Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved
     """
     while b:
         a, b = b, a%b
