@@ -102,8 +102,9 @@ class Connection(object):
                  ssl_version = DEFAULT_SSL_VERSION,
                  timeout = None,
                  version = 1.0,
+                 strict = True,
                  heartbeats = (0, 0),
-                 keepalive=None
+                 keepalive = None
                  ):
         """
         Initialize and start this connection.
@@ -188,7 +189,11 @@ class Connection(object):
             the timeout value to use when connecting the stomp socket
             
         \param version
-            protocol version (1.0 or 1.1)
+            STOMP protocol version (1.0 or 1.1)
+            
+        \param strict
+            if true, use the strict version of the protocol. For STOMP 1.1, this means
+            it will use the STOMP connect header, rather than CONNECT.
             
         \param heartbeats
             a tuple containing the heartbeat send and receive time in millis. (0,0)
@@ -275,6 +280,7 @@ class Connection(object):
         
         # protocol version
         self.version = version
+        self.__strict = strict
 
         # setup heartbeating
         if version < 1.1 and heartbeats != (0, 0):
@@ -481,7 +487,10 @@ class Connection(object):
             del keyword_headers['wait']
             
         if self.version >= 1.1:
-            cmd = 'STOMP'
+            if self.__strict:
+                cmd = 'STOMP'
+            else:
+                cmd = 'CONNECT'
             headers['accept-version'] = self.version
             headers['heart-beat'] = '%s,%s' % self.heartbeats
         else:
@@ -509,7 +518,11 @@ class Connection(object):
                     _, e, _ = sys.exc_info()
                     log.warn(e)
             elif hasattr(socket, 'SHUT_RDWR'):
-                self.__socket.shutdown(socket.SHUT_RDWR)
+                try:
+                    self.__socket.shutdown(socket.SHUT_RDWR)
+                except socket.error:
+                    _, e, _ = sys.exc_info()
+                    log.warn('Unable to issue SHUT_RDWR on socket because of error "%s"' % e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
@@ -522,7 +535,11 @@ class Connection(object):
         """
         Send a DISCONNECT frame to finish a connection
         """
-        self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+        try:
+            self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
+        except NotConnectedException(nce):
+            self.disconnect_socket()
+            raise nce
         if self.version >= 1.1 and 'receipt' in headers:
             self.__disconnect_receipt = headers['receipt']
         else:
@@ -585,7 +602,7 @@ class Connection(object):
         if type(payload) == dict:
             headers["transformation"] = "jms-map-xml"
             payload = self.__convert_dict(payload)        
-        
+
         if self.__socket is not None:
             try:
                 frame = [ ]                
@@ -640,7 +657,7 @@ class Connection(object):
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
 
-        if frame_type == 'connected': 
+        if frame_type == 'connected':
             self.connected = True
             self.__connect_wait_condition.acquire()
             self.__connect_wait_condition.notify()
@@ -675,6 +692,7 @@ class Connection(object):
         """
         Main loop listening for incoming data.
         """
+        log.debug("Starting receiver loop")
         try:
             try:
                 while self.__running:
@@ -723,6 +741,7 @@ class Connection(object):
             self.__receiver_thread_exited = True
             self.__receiver_thread_exit_condition.notifyAll()
             self.__receiver_thread_exit_condition.release()
+            log.debug("Receiver loop ended")
             
     def __heartbeat_loop(self):
         """

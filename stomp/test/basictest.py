@@ -4,14 +4,14 @@ import unittest
 import stomp
 from stomp import exception
 
-import testlistener
+from testutils import TestListener, TestStompServer
 
 
 class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)], 'admin', 'password')
-        listener = testlistener.TestListener()
+        listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
         conn.connect(wait=True)
@@ -21,7 +21,7 @@ class TestBasicSend(unittest.TestCase):
     def tearDown(self):
         if self.conn:
             self.conn.disconnect()
-        
+       
     def testbasic(self):
         self.conn.subscribe(destination='/queue/test', ack='auto')
 

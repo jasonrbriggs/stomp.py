@@ -7,7 +7,7 @@ from ..cli import StompCLI
 
 header_re = re.compile(r'[^:]+:.*')
 
-import testlistener
+from testutils import TestListener
 
 username = 'admin'
 password = 'password'
