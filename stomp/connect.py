@@ -528,7 +528,11 @@ class Connection(object):
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
         #
         if self.__socket is not None:
-            self.__socket.close()
+            try:
+                self.__socket.close()
+            except socket.error:
+                _, e, _ = sys.exc_info()
+                log.warn('Unable to close socket because of error "%s"' % e)
         self.__current_host_and_port = None
         
     def disconnect(self, send_disconnect=True, headers={}, **keyword_headers):
