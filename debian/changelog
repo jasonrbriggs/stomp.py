@@ -1,0 +1,13 @@
+stomp.py (3.0.2) beta; urgency=low
+
+  * Fix for localhost connection problem (issue #17)
+  
+ -- Jason R Briggs <jasonrbriggs@gmail.com>  Wed, 02 Jun 2010 21:48:00 +0000
+
+
+stomp.py (3.0.1) beta; urgency=low
+
+  * Fixes for Oracle AQ bridge for Python3
+  * Change to debian style changelog
+
+ -- Jason R Briggs <jasonrbriggs@gmail.com>  Wed, 07 Apr 2010 23:15:00 +0000

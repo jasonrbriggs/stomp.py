@@ -1,0 +1,69 @@
+Version 3.1.0 (beta 4)
+
+ * Heartbeat functionality completed
+ * General tidy up of unit tests
+
+
+Version 3.1.0 (beta 3)
+
+  * Stop loading logging configuration in module itself (so stomp.py works better as an add-on library)
+  * Fix for connection wait (so that it now actually waits)
+  * Add initial heartbeat functionality
+  * Add Linux TCP-Keepalive functionality, provided by Jaysun Vantuyl
+
+
+
+Version 3.1.0 (beta 2)
+
+  * Various bug fixes in 1.1 code
+  * Fixed bug in ssl support
+  * Added facility to override threading library
+  * Updated unit test code for Apache Apollo
+
+
+
+Version 3.1.0 (beta 1)
+
+  * Initial support for STOMP Protocol 1.1
+  * New version of CLI
+  * Added disconnect receipt functionality
+
+
+
+Version 3.0.4
+
+  * Added wait-for-receipt functionality
+  * Fixed bug in CLI version command
+  * SSL protocol patch
+  * Added connection timeout
+  * Added facility to not send disconnect frame on disconnect (argument to disconnect function)
+
+
+
+Version 3.0.3
+
+  * Fixes for python 2.4
+  * Added config.dox to distribution
+
+
+
+Version 3.0.2 beta
+
+  * Fix for localhost connection problem (issue #17)
+
+
+
+Version 3.0.1 beta
+
+  * Fixes for Oracle AQ bridge for Python3
+  * Change to debian style changelog
+
+
+
+NOTES/ATTRIBUTION
+  * patch from Andreas Schobel
+  * patches from Julian Scheid of Rising Sun Pictures (http://open.rsp.com.au)
+  * patch from Fernando
+  * patches from Eugene Strulyov
+  * patch for SSL protocol from 'jmgdaniec'
+  * patches for Linux TCP Keepalive, provided by Jayson Vantuyl

@@ -8,3 +8,5 @@ MANIFEST
 nbproject
 docs
 dist
+build
+.idea/**

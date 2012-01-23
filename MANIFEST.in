@@ -1,2 +1,6 @@
-include **/changelog.txt
-include **/*.conf
+include LICENSE
+include CHANGELOG
+include *.conf
+include stomp/**/*
+include *.dox
+exclude **/*.pyc

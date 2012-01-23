@@ -1,0 +1,3 @@
+subscribe /queue/testfile
+send /queue/testfile this is a test
+unsubscribe /queue/testfile
