@@ -80,7 +80,6 @@ class Connection(object):
     # Used to parse the STOMP "content-length" header lines,
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
-    
 
     def __init__(self, 
                  host_and_ports = [ ('localhost', 61613) ], 
@@ -541,9 +540,10 @@ class Connection(object):
         """
         try:
             self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
-        except NotConnectedException(nce):
+        except exception.NotConnectedException:
+            _, e, _ = sys.exc_info()
             self.disconnect_socket()
-            raise nce
+            raise e
         if self.version >= 1.1 and 'receipt' in headers:
             self.__disconnect_receipt = headers['receipt']
         else:
@@ -800,7 +800,7 @@ class Connection(object):
                 _, e, _ = sys.exc_info()
                 c = ''
             if len(c) == 0:
-                raise exception.ConnectionClosedException
+                raise exception.ConnectionClosedException()
             fastbuf.write(c)
             if '\x00' in c:
                 break
@@ -953,7 +953,7 @@ class Connection(object):
                     sleep_exp += 1
 
         if not self.__socket:
-            raise exception.ConnectFailedException
+            raise exception.ConnectFailedException()
 
 
 def default_create_thread(callback):

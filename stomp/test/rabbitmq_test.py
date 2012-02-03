@@ -28,5 +28,3 @@ class TestRabbitMQSend(unittest.TestCase):
         self.assert_(listener.errors == 0, 'should not have received any errors')
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestRabbitMQSend)
-unittest.TextTestRunner(verbosity=2).run(suite)

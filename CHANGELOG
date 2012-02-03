@@ -1,10 +1,10 @@
-Version 3.1.0 (beta 4)
+Version 3.1.0 (beta 4) - Oct 2011
 
  * Heartbeat functionality completed
  * General tidy up of unit tests
 
 
-Version 3.1.0 (beta 3)
+Version 3.1.0 (beta 3) - Oct 2011
 
   * Stop loading logging configuration in module itself (so stomp.py works better as an add-on library)
   * Fix for connection wait (so that it now actually waits)
@@ -13,7 +13,7 @@ Version 3.1.0 (beta 3)
 
 
 
-Version 3.1.0 (beta 2)
+Version 3.1.0 (beta 2) - Sep 2011
 
   * Various bug fixes in 1.1 code
   * Fixed bug in ssl support
@@ -22,7 +22,7 @@ Version 3.1.0 (beta 2)
 
 
 
-Version 3.1.0 (beta 1)
+Version 3.1.0 (beta 1) - Sep 2011
 
   * Initial support for STOMP Protocol 1.1
   * New version of CLI
@@ -30,7 +30,7 @@ Version 3.1.0 (beta 1)
 
 
 
-Version 3.0.4
+Version 3.0.4 - Sep 2011
 
   * Added wait-for-receipt functionality
   * Fixed bug in CLI version command
@@ -40,20 +40,20 @@ Version 3.0.4
 
 
 
-Version 3.0.3
+Version 3.0.3 - Jan 2011
 
   * Fixes for python 2.4
   * Added config.dox to distribution
 
 
 
-Version 3.0.2 beta
+Version 3.0.2 beta - Jun 2010
 
   * Fix for localhost connection problem (issue #17)
 
 
 
-Version 3.0.1 beta
+Version 3.0.1 beta - Apr 2010
 
   * Fixes for Oracle AQ bridge for Python3
   * Change to debian style changelog

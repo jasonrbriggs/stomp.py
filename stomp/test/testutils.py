@@ -53,13 +53,17 @@ class TestStompServer(object):
         self.stopped = False
         
     def stop(self):
-        self.conn.close()
-        try:
-            self.s.shutdown(socket.SHUT_WR)
-        except Exception:
-            log.debug('error shutting down socket')
-        self.s.close()
+        if self.conn:
+            self.conn.close()
+        if self.s:
+            try:
+                self.s.shutdown(socket.SHUT_WR)
+            except Exception:
+                log.debug('error shutting down socket')
+            self.s.close()
         self.running = False
+        self.conn = None
+        self.s = None
         log.debug('Connection stopped')
         
     def get_next_frame(self):

@@ -442,7 +442,10 @@ def main():
         st.do_run(options.filename)
     else:
         try:
-            st.cmdloop()
+            try:
+                st.cmdloop()
+            except KeyboardInterrupt:
+                pass
         finally:
             st.onecmd('disconnect')
 

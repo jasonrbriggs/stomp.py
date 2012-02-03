@@ -101,6 +101,4 @@ class TestBasicSend(unittest.TestCase):
             self.assert_(self.listener.errors == 0, 'should not have received any errors')
         except:
             pass
-    
-suite = unittest.TestLoader().loadTestsFromTestCase(TestBasicSend)
-unittest.TextTestRunner(verbosity=2).run(suite)
+

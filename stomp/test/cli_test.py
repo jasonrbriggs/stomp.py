@@ -1,9 +1,8 @@
 import re
-import sys
 import time
 import unittest
 
-from ..cli import StompCLI
+from cli import StompCLI
 
 header_re = re.compile(r'[^:]+:.*')
 
@@ -244,5 +243,3 @@ class TestCLI(unittest.TestCase):
         except SystemExit:
             pass
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestCLI)
-unittest.TextTestRunner(verbosity=2).run(suite)

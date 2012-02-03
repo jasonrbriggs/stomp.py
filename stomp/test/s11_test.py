@@ -1,11 +1,7 @@
-import socket    
-import sys
 import time
-import threading
 import unittest
 
 import stomp
-from stomp import exception
 from stomp import listener
 
 from testutils import TestListener, TestStompServer
@@ -67,24 +63,28 @@ class Test11Send(unittest.TestCase):
     def testheartbeat_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)
         server.start()
+        try:
         
-        server.add_frame('''CONNECTED
+            server.add_frame('''CONNECTED
 version: 1.1
 session: 1
 server: test
 heart-beat: 1000,1000\x00''')
         
-        conn = stomp.Connection([('127.0.0.1', 60000)], version = 1.1, heartbeats = (1000, 1000))
-        listener = TestListener()
-        conn.set_listener('', listener)
-        conn.start()
-        conn.connect()
-        
-        time.sleep(5)
-        
-        server.running = False
-        
-        self.assert_(listener.heartbeat_timeouts >= 1, 'should have received a heartbeat timeout')
+            conn = stomp.Connection([('127.0.0.1', 60000)], version = 1.1, heartbeats = (1000, 1000))
+            listener = TestListener()
+            conn.set_listener('', listener)
+            conn.start()
+            conn.connect()
+
+            time.sleep(5)
+
+            server.running = False
+
+            self.assert_(listener.heartbeat_timeouts >= 1, 'should have received a heartbeat timeout')
+        finally:
+            server.stop()
+
         
     def testnonstrict(self):
         conn = stomp.Connection([('127.0.0.1', 61613), ('localhost', 61613)], 'admin', 'password', version = 1.1, strict = False)
@@ -102,5 +102,3 @@ heart-beat: 1000,1000\x00''')
         self.assert_(listener.messages == 1, 'should have received 1 message')
         self.assert_(listener.errors == 0, 'should not have received any errors')
         
-suite = unittest.TestLoader().loadTestsFromTestCase(Test11Send)
-unittest.TextTestRunner(verbosity=2).run(suite)

@@ -120,5 +120,3 @@ class TestThreading(unittest.TestCase):
                 assert False, "Failed: 'request' queue filled up"
                 print("passed")
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestThreading)
-unittest.TextTestRunner(verbosity=2).run(suite)

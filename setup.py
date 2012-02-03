@@ -1,6 +1,8 @@
 import os
 from distutils.core import setup, Command
 
+import unittest
+
 import logging.config
 try:
     logging.config.fileConfig('stomp.log.conf')
@@ -13,13 +15,20 @@ class TestCommand(Command):
     user_options = [ ('test=', 't', 'specific test to run') ]
 
     def initialize_options(self):
-        self.test = 'basictest'
+        self.test = '*'
 
     def finalize_options(self):
         pass
 
     def run(self):
-        exec('import stomp.test.%s' % self.test)
+        suite = unittest.TestSuite()
+        if self.test == '*':
+            import test
+            for tst in test.__all__:
+                suite.addTests(unittest.TestLoader().loadTestsFromName('test.%s' % tst))
+        else:
+            suite = unittest.TestLoader().loadTestsFromName('test.%s' % self.test)
+        unittest.TextTestRunner(verbosity=2).run(suite)
 
 class DoxygenCommand(Command):
     user_options = [ ]
