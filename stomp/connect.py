@@ -634,7 +634,7 @@ class Connection(object):
             except Exception:
                 _, e, _ = sys.exc_info()
                 log.error("Error sending frame: %s" % e)
-            
+                raise e
         else:
             raise exception.NotConnectedException()
 

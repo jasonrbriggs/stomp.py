@@ -1,7 +1,4 @@
-import time
-import random
 import re
-import time
 import xml.dom
 
 try:

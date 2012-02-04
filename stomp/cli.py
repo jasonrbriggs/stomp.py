@@ -3,7 +3,6 @@ import os
 import sys
 import time
 
-import readline
 from cmd import Cmd
 from optparse import OptionParser
 
