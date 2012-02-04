@@ -1,7 +1,11 @@
 # -*- coding: UTF-8 -*-
 
+
+
 import time
 import unittest
+
+import base64
 
 import stomp
 
@@ -23,13 +27,19 @@ class TestNonAsciiSend(unittest.TestCase):
             self.conn.disconnect()
        
     def test_send_nonascii(self):
-        self.conn.subscribe(destination='/queue/test', ack='auto')
+        self.conn.subscribe(destination='/queue/test', ack='auto', id="1")
 
-        self.conn.send(u'марко'.encode('utf-8'), destination='/queue/test')
+        txt = u'марко'.encode('utf-8')
+        self.conn.send(base64.b64encode(txt), destination='/queue/test')
 
         time.sleep(3)
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
+
+        msg = self.listener.message_list[0]
+        msg = base64.b64decode(msg)
+
+        self.assertEquals(txt, msg)
         

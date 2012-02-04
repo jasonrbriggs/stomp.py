@@ -12,6 +12,7 @@ class TestListener(ConnectionListener):
         self.disconnects = 0
         self.messages = 0
         self.heartbeat_timeouts = 0
+        self.message_list = []
 
     def on_error(self, headers, message):
         log.debug('received an error %s [%s]' % (message, headers))
@@ -28,6 +29,7 @@ class TestListener(ConnectionListener):
     def on_message(self, headers, message):
         log.debug('received a message %s' % message)
         self.messages = self.messages + 1
+        self.message_list.append(message)
 
     def on_heartbeat_timeout(self):
         log.debug('received heartbeat timeout')

@@ -7,7 +7,7 @@ import hashlib
 #
 # Functions for backwards compatibility
 #
-        
+
 def input_prompt(prompt):
     """
     Get user input
@@ -16,7 +16,6 @@ def input_prompt(prompt):
         return input(prompt)
     else:
         return raw_input(prompt)
-
 
 def join(chars):
     if sys.hexversion >= 0x03000000:
@@ -38,14 +37,12 @@ def getheader(headers, key):
     else:
         return headers.getheader(key)
 
-
 def wrap_stringio(sio):
     if sys.hexversion >= 0x03000000:
         return sio
     else:
         import codecs
         return codecs.getwriter("utf8")(sio)        
-
 
 class uuid(object):
     def uuid4(*args):
@@ -66,7 +63,6 @@ class uuid(object):
         md5.update(data.encode())
         data = md5.hexdigest()
         return data
-
 
 def gcd(a, b):
     """Calculate the Greatest Common Divisor of a and b.
