@@ -642,11 +642,14 @@ class Connection(object):
         """
         Utility function for notifying listeners of incoming and outgoing messages
         
-        \param frame_type the type of message
+        \param frame_type
+            the type of message
         
-        \param headers the map of headers associated with the message
+        \param headers
+            the map of headers associated with the message
         
-        \param body the content of the message
+        \param body
+            the content of the message
         """
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
