@@ -32,8 +32,12 @@ heart-beat: 1000,1000\x00''')
 
             server.stop()
 
-            while not server.stopped:
+            for count in range(100):
+                if server.stopped:
+                    break
                 time.sleep(0.1)
+            else:
+                assert False, 'server never disconnected'
 
             try:
                 conn.send('test disconnect', destination='/test/disconnectqueue')
