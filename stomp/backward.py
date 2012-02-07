@@ -36,9 +36,9 @@ if sys.hexversion >= 0x03000000: # Python 3
 
     def pack(pieces):
         encoded_pieces = (encode(piece) for piece in pieces)
-        return sum(encoded_pieces, b'')
+        return sum(encoded_pieces, bytes())
 
-    NULL = b'\x00'
+    NULL = bytes([0]) 
 
 else: # Python 2
 
