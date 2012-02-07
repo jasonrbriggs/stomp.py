@@ -419,16 +419,11 @@ class Connection(object):
         """
         Send a message (SEND) frame
         """
-        if '\x00' in message:
-            content_length_headers = {'content-length': len(message)}
-        else:
-            content_length_headers = {}
-            
-        merged_headers = utils.merge_headers([headers, keyword_headers, content_length_headers])
+        merged_headers = utils.merge_headers([headers, keyword_headers])
         
         if self.__wait_on_receipt and 'receipt' in merged_headers.keys():
             self.__send_wait_condition.acquire()
-            
+         
         self.__send_frame_helper('SEND', message, merged_headers, [ 'destination' ])
         self.__notify('send', headers, message)
         
@@ -605,8 +600,14 @@ class Connection(object):
         """
         if type(payload) == dict:
             headers["transformation"] = "jms-map-xml"
-            payload = self.__convert_dict(payload)        
+            payload = self.__convert_dict(payload)  
 
+        if payload:
+            payload = backward.encode(payload)
+
+            if '\x00' in payload:
+                headers.update({'content-length': len(payload)})
+            
         if self.__socket is not None:
             try:
                 frame = [ ]                
@@ -627,7 +628,7 @@ class Connection(object):
                 frame = ''.join(frame)
                 self.__socket_semaphore.acquire()
                 try:
-                    self.__socket.sendall(frame.encode())
+                    self.__socket.sendall(frame)
                     log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
                 finally:
                     self.__socket_semaphore.release()
@@ -795,7 +796,7 @@ class Connection(object):
         while self.__running:
             try:
                 c = self.__socket.recv(1024)
-                c = c.decode()
+                c = backward.decode(c)
                 
                 # reset the heartbeat for any received message
                 self.__received_heartbeat = time.time()

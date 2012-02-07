@@ -17,12 +17,35 @@ def input_prompt(prompt):
     else:
         return raw_input(prompt)
 
+if sys.hexversion >= 0x03000000: # Python 3
+
+    def decode(byte_data):
+        return byte_data.decode('utf-8')
+
+    def encode(char_data):
+        if type(char_data) is str:
+            return char_data.encode()
+        elif type(char_data) is bytes:
+            return char_data
+        else:
+            raise TypeError('message should be a string or bytes')
+
+else: # Python 2
+
+    def decode(byte_data):
+        return byte_data # no way to know if it's unicode or not, so just pass through unmolested
+
+    def encode(char_data):
+        if type(char_data) is unicode:
+            return char_data.encode('utf-8')
+        else:
+            return char_data
+
 def join(chars):
     if sys.hexversion >= 0x03000000:
         return bytes('', 'UTF-8').join(chars).decode('UTF-8')
     else:
         return ''.join(chars)
-
 
 def socksend(conn, msg):
     if sys.hexversion >= 0x03000000:
