@@ -29,8 +29,8 @@ class TestNonAsciiSend(unittest.TestCase):
     def test_send_nonascii(self):
         self.conn.subscribe(destination='/queue/test', ack='auto', id="1")
 
-        txt = u'марко'.encode('utf-8')
-        self.conn.send(base64.b64encode(txt), destination='/queue/test')
+        txt = u'марко'
+        self.conn.send(txt, destination='/queue/test')
 
         time.sleep(3)
 
@@ -39,7 +39,5 @@ class TestNonAsciiSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
         msg = self.listener.message_list[0]
-        msg = base64.b64decode(msg)
-
-        self.assertEquals(txt, msg)
+        self.assertEquals(txt, msg.decode('utf-8'))
         
