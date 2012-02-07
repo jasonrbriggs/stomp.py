@@ -9,7 +9,7 @@ Version 3.1.0 (beta 3) - Oct 2011
   * Stop loading logging configuration in module itself (so stomp.py works better as an add-on library)
   * Fix for connection wait (so that it now actually waits)
   * Add initial heartbeat functionality
-  * Add Linux TCP-Keepalive functionality, provided by Jaysun Vantuyl
+  * Add Linux TCP-Keepalive functionality, provided by Jayson Vantuyl
 
 
 
