@@ -33,7 +33,7 @@ except ImportError:
 import exception
 import listener
 import utils
-import backward
+from backward import decode, encode, hasbyte, pack, socksend, NULL
 
 try:
     import uuid    
@@ -603,9 +603,9 @@ class Connection(object):
             payload = self.__convert_dict(payload)  
 
         if payload:
-            payload = backward.encode(payload)
+            payload = encode(payload)
 
-            if '\x00' in payload:
+            if hasbyte(0, payload):
                 headers.update({'content-length': len(payload)})
             
         if self.__socket is not None:
@@ -624,11 +624,11 @@ class Connection(object):
                     
                 if command is not None:
                     # only send the terminator if we're sending a command (heartbeats have no term)
-                    frame.append('\x00')
-                frame = ''.join(frame)
+                    frame.append(NULL)
+                frame = pack(frame)
                 self.__socket_semaphore.acquire()
                 try:
-                    self.__socket.sendall(frame)
+                    socksend(self.__socket, frame)
                     log.debug("Sent frame: type=%s, headers=%r, body=%r" % (command, headers, payload))
                 finally:
                     self.__socket_semaphore.release()
@@ -796,7 +796,7 @@ class Connection(object):
         while self.__running:
             try:
                 c = self.__socket.recv(1024)
-                c = backward.decode(c)
+                c = decode(c)
                 
                 # reset the heartbeat for any received message
                 self.__received_heartbeat = time.time()
