@@ -1,4 +1,4 @@
-stomp.py (3.1.1); urgency=low
+stomp.py (3.1.1) stable; urgency=low
 
   * Fix for encoding problems (issue #34) [Jayson Vantuyl]
   * Possible fix for reconnection problems (issue #32)
