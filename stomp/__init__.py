@@ -1,6 +1,6 @@
 """
 This provides connectivity to a message broker supporting the STOMP protocol. Both protocol
-version 1.0 and 1.1 are supported.
+versions 1.0 and 1.1 are supported.
 
 See the project page for more information.
 

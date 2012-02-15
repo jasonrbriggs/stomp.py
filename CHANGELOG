@@ -1,3 +1,11 @@
+Version 3.1.1 - Feb 2012
+
+ * Fix for encoding problems (issue #34) [Jayson Vantuyl]
+ * Possible fix for reconnection problems (issue #32)
+ * Fix for broken pipe (error not passed to client - issue #33)
+ * Various tidying up of the codebase
+
+
 Version 3.1.0 (beta 4) - Oct 2011
 
  * Heartbeat functionality completed
