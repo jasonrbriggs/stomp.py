@@ -562,19 +562,21 @@ class Connection(object):
         Helper function for sending a frame after verifying that a
         given set of headers are present.
 
-        \param command the command to send
+        \param command
+            the command to send
 
-        \param payload the frame's payload
+        \param payload
+            the frame's payload
 
-        \param headers a dictionary containing the frame's headers
+        \param headers
+            a dictionary containing the frame's headers
 
-        \param required_header_keys a sequence enumerating all
-        required header keys. If an element in this sequence is itself
-        a tuple, that tuple is taken as a list of alternatives, one of
-        which must be present.
+        \param required_header_keys
+            a sequence enumerating all required header keys. If an element in this sequence is itself
+            a tuple, that tuple is taken as a list of alternatives, one of which must be present.
 
-        \throws ArgumentError if one of the required header keys is
-        not present in the header map.
+        \throws ArgumentError
+            if one of the required header keys is not present in the header map.
         """
         for required_header_key in required_header_keys:
             if type(required_header_key) == tuple:
@@ -592,11 +594,14 @@ class Connection(object):
         """
         Send a STOMP frame.
         
-        \param command the frame command
+        \param command
+            the frame command
         
-        \param headers a map of headers (key-val pairs)
+        \param headers
+            a map of headers (key-val pairs)
         
-        \param payload the message payload
+        \param payload
+            the message payload
         """
         if type(payload) == dict:
             headers["transformation"] = "jms-map-xml"
@@ -738,9 +743,8 @@ class Connection(object):
                             # Clear out any half-received messages after losing connection
                             #
                             self.__recvbuf = ''
-                            continue
-                        else:
-                            break
+                            self.__running = False
+                        break
             except:
                 log.exception("An unhandled exception was encountered in the stomp receiver loop")
 
