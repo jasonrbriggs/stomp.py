@@ -307,7 +307,7 @@ class Connection(object):
         else:
             return 2
             
-    def override_threading(create_thread_fc):
+    def override_threading(self, create_thread_fc):
         """
         Override for thread creation. Use an alternate threading library by
         setting this to a function with a single argument (which is the receiver loop callback).
