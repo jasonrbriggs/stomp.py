@@ -1,3 +1,10 @@
+Version 3.1.2 - May 2012
+
+ * Fix signature on override_threading method
+ * Fix for duplicate header handling
+ * Minor fix for version var
+
+
 Version 3.1.1 - Feb 2012
 
  * Fix for encoding problems (issue #34) [Jayson Vantuyl]
