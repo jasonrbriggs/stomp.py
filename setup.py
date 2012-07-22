@@ -23,6 +23,7 @@ class TestCommand(Command):
     def run(self):
         suite = unittest.TestSuite()
         if self.test == '*':
+            print('Running all tests')
             import test
             for tst in test.__all__:
                 suite.addTests(unittest.TestLoader().loadTestsFromName('test.%s' % tst))

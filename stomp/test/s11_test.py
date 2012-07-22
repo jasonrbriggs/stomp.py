@@ -60,6 +60,7 @@ class Test11Send(unittest.TestCase):
         self.assert_(listener.errors == 0, 'should not have received any errors')
         self.assert_(listener.heartbeat_timeouts == 0, 'should not have received a heartbeat timeout')
 
+
     def testheartbeat_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)
         server.start()
