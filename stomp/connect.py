@@ -772,7 +772,7 @@ class Connection(object):
             sleep_time = send_sleep
         else:
             # sleep is the GCD of the send and receive times
-            sleep_time = gcd(send_sleep, receive_sleep) / 2
+            sleep_time = gcd(send_sleep, receive_sleep) / 2.0
             
         send_time = time.time()
         receive_time = time.time()
