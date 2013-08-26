@@ -1,3 +1,9 @@
+Version 3.1.5 - Aug 2013
+
+ * Fix for gcd division error (http://code.google.com/p/stomppy/issues/detail?id=44)
+ * Fix bytes incompatibility issue in Python 3.3 (http://code.google.com/p/stomppy/issues/detail?id=51)
+
+
 Version 3.1.4 - Jul 2012
 
  * Add receipt header to disconnect frame if not already present on a 1.1 connection
