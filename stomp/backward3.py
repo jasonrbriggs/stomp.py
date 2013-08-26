@@ -25,7 +25,7 @@ def hasbyte(byte, byte_data):
 
 def pack(pieces):
     encoded_pieces = (encode(piece) for piece in pieces)
-    return sum(encoded_pieces, b'')
+    return b''.join(encoded_pieces)
 
 NULL = b'\x00'
 
