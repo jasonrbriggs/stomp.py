@@ -9,11 +9,11 @@ import unittest
 
 import stomp
 
-from testutils import TestListener
+from testutils import *
 
 class MQ(object):
     def __init__(self):
-        self.connection = stomp.Connection([('localhost', 61613)], 'admin', 'password')
+        self.connection = stomp.Connection(get_standard_host(), 'admin', 'password')
         self.connection.set_listener('', None)
         self.connection.start()
         self.connection.connect(wait=True)

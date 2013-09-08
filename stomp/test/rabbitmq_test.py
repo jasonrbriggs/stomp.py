@@ -3,7 +3,7 @@ import unittest
 
 import stomp
 
-from testutils import TestListener
+from testutils import *
 
 class TestRabbitMQSend(unittest.TestCase):
 
@@ -11,7 +11,7 @@ class TestRabbitMQSend(unittest.TestCase):
         pass
 
     def testbasic(self):
-        conn = stomp.Connection([('0.0.0.0', 61613), ('127.0.0.1', 61613)], 'guest', 'guest')
+        conn = stomp.Connection(get_rabbitmq_host(), 'guest', 'guest')
         listener = TestListener()
         conn.set_listener('', listener)
         conn.start()

@@ -1,9 +1,23 @@
-from stomp import ConnectionListener
+import os
 import socket
 import threading
-
 import logging
 log = logging.getLogger('testutils.py')
+
+from stomp import ConnectionListener
+
+
+def get_standard_host():
+    return [(os.environ['STD_HOST'], int(os.environ['STD_PORT']))]
+
+    
+def get_standard_ssl_host():
+    return [(os.environ['STD_HOST'], int(os.environ['STD_SSL_PORT']))]
+
+
+def get_rabbitmq_host():
+    return [(os.environ['RABBITMQ_HOST'], int(os.environ['RABBITMQ_PORT']))]
+    
 
 class TestListener(ConnectionListener):
     def __init__(self):
