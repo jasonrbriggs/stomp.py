@@ -19,6 +19,10 @@ def get_rabbitmq_host():
     return [(os.environ['RABBITMQ_HOST'], int(os.environ['RABBITMQ_PORT']))]
     
 
+def get_stompserver_host():
+    return [(os.environ['STOMPSERVER_HOST'], int(os.environ['STOMPSERVER_PORT']))]
+    
+
 class TestListener(ConnectionListener):
     def __init__(self):
         self.errors = 0

@@ -16,6 +16,9 @@ os.environ['STD_PORT'] = '62613'
 os.environ['STD_SSL_PORT'] = '62614'
 os.environ['RABBITMQ_HOST'] = '192.168.1.92'
 os.environ['RABBITMQ_PORT'] = '61613'
+os.environ['STOMPSERVER_HOST'] = '192.168.1.92'
+os.environ['STOMPSERVER_PORT'] = '63613'
+
 
 class TestCommand(Command):
     user_options = [ ('test=', 't', 'specific test to run') ]
