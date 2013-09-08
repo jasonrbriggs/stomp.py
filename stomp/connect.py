@@ -420,20 +420,22 @@ class Connection(object):
         Send a message (SEND) frame
         """
         merged_headers = utils.merge_headers([headers, keyword_headers])
-        
-        if self.__wait_on_receipt and 'receipt' in merged_headers.keys():
+        wait_on_receipt = self.__wait_on_receipt and 'receipt' in merged_headers.keys()
+        if wait_on_receipt:
             self.__send_wait_condition.acquire()
-         
-        self.__send_frame_helper('SEND', message, merged_headers, [ 'destination' ])
-        self.__notify('send', headers, message)
-        
-        # if we need to wait-on-receipt, then block until the receipt frame arrives 
-        if self.__wait_on_receipt and 'receipt' in merged_headers.keys():
-            receipt = merged_headers['receipt']
-            while receipt not in self.__receipts:
-                self.__send_wait_condition.wait()
-            self.__send_wait_condition.release()
-            del self.__receipts[receipt]
+        try: 
+            self.__send_frame_helper('SEND', message, merged_headers, [ 'destination' ])
+            self.__notify('send', headers, message)
+
+            # if we need to wait-on-receipt, then block until the receipt frame arrives 
+            if wait_on_receipt:
+                receipt = merged_headers['receipt']
+                while receipt not in self.__receipts:
+                    self.__send_wait_condition.wait()
+                del self.__receipts[receipt]
+        finally:
+            if wait_on_receipt:
+                self.__send_wait_condition.release()
     
     def ack(self, headers={}, **keyword_headers):
         """
@@ -661,20 +663,22 @@ class Connection(object):
         """
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
-            self.__send_wait_condition.acquire()
-            self.__send_wait_condition.notify()
-            self.__send_wait_condition.release()
-            
             receipt = headers['receipt-id']
-            self.__receipts[receipt] = None
+            self.__send_wait_condition.acquire()
+            try:
+                self.__receipts[receipt] = None
+                self.__send_wait_condition.notify()
+            finally:
+                self.__send_wait_condition.release()
+            
 
             # received a stomp 1.1 disconnect receipt
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
 
         if frame_type == 'connected':
-            self.connected = True
             self.__connect_wait_condition.acquire()
+            self.connected = True
             self.__connect_wait_condition.notify()
             self.__connect_wait_condition.release()
             if 'version' not in headers.keys():
@@ -685,6 +689,10 @@ class Connection(object):
                 self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
                 if self.heartbeats != (0,0):
                     default_create_thread(self.__heartbeat_loop)
+        elif frame_type == 'disconnected':
+            self.__connect_wait_condition.acquire()
+            self.connected = False
+            self.__connect_wait_condition.release()
 
         for listener in self.__listeners.values():
             if not listener: continue
@@ -696,7 +704,6 @@ class Connection(object):
                 listener.on_connecting(self.__current_host_and_port)
                 continue
             elif frame_type == 'disconnected':
-                self.connected = False
                 listener.on_disconnected()
                 continue
 
@@ -792,7 +799,9 @@ class Connection(object):
                     for listener in self.__listeners.values():
                         listener.on_heartbeat_timeout()
                     self.disconnect_socket()
+                    self.__connect_wait_condition.acquire()
                     self.connected = False
+                    self.__connect_wait_condition.release()
 
     def __read(self):
         """
