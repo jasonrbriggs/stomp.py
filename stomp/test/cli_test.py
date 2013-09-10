@@ -3,7 +3,7 @@ import re
 import time
 import unittest
 
-from cli import StompCLI
+from stomp.__main__ import StompCLI
 
 header_re = re.compile(r'[^:]+:.*')
 

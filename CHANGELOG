@@ -1,7 +1,8 @@
 Version 3.1.6 - Sep 2013
 
  * Fix for threading primitives issue (http://code.google.com/p/stomppy/issues/detail?id=53&can=1)
- * Add vhost constructor arg
+ * Add vhost constructor arg 
+ * Change cli to __main__ (so you can run `python stomp` rather than `python stomp/cli.py`)
 
 
 Version 3.1.5 - Aug 2013

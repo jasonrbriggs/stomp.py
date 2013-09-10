@@ -71,7 +71,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
         
     def testtimeout(self):
-        conn = stomp.Connection([('127.0.0.2', 60000)], timeout=5, reconnect_attempts_max=1)
+        conn = stomp.Connection([('203.0.113.100', 60000)], timeout=5, reconnect_attempts_max=1)
         conn.set_listener('', self.listener)
         
         try:
