@@ -103,7 +103,8 @@ class Connection(object):
                  version = 1.0,
                  strict = True,
                  heartbeats = (0, 0),
-                 keepalive = None
+                 keepalive = None,
+                 vhost = None
                  ):
         """
         Initialize and start this connection.
@@ -205,6 +206,8 @@ class Connection(object):
             default keepalive options for your OS, or as a tuple of
             values, which also enables keepalive packets, but specifies
             options specific to your OS implementation
+        \param vhost
+            specify a virtual hostname to provide in the 'host' header of the connection
         """
 
         sorted_host_and_ports = []
@@ -296,6 +299,7 @@ class Connection(object):
         self.create_thread_fc = default_create_thread
 
         self.__keepalive = keepalive
+        self.vhost = vhost
 
     def is_localhost(self, host_and_port):
         """
@@ -487,6 +491,8 @@ class Connection(object):
                 cmd = 'STOMP'
             else:
                 cmd = 'CONNECT'
+            if self.vhost is not None:
+                headers['host'] = self.vhost
             headers['accept-version'] = self.version
             headers['heart-beat'] = '%s,%s' % self.heartbeats
         else:

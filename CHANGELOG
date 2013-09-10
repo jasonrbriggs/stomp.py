@@ -1,3 +1,9 @@
+Version 3.1.6 - Sep 2013
+
+ * Fix for threading primitives issue (http://code.google.com/p/stomppy/issues/detail?id=53&can=1)
+ * Add vhost constructor arg
+
+
 Version 3.1.5 - Aug 2013
 
  * Fix for gcd division error (http://code.google.com/p/stomppy/issues/detail?id=44)

@@ -54,6 +54,23 @@ class TestListener(ConnectionListener):
         self.heartbeat_timeouts = self.heartbeat_timeouts + 1
 
 
+class PrintingListener(ConnectionListener):
+    def on_error(self, headers, message):
+        print('received an error: %s [%s]' % (message, headers))
+
+    def on_connecting(self, host_and_port):
+        print('connecting: %s %s' % (host_and_port[0], host_and_port[1]))
+
+    def on_disconnected(self):
+        print('disconnected')
+
+    def on_message(self, headers, message):
+        print('received a message: %s [%s]' % (message, headers))
+
+    def on_heartbeat_timeout(self):
+        log.debug('received heartbeat timeout')
+
+
 class TestStompServer(object):
     def __init__(self, host, port):
         self.host = host
