@@ -21,7 +21,7 @@ class TestBasicSend(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.stop()
        
     def testbasic(self):
         self.conn.subscribe(destination='/queue/test', ack='auto')

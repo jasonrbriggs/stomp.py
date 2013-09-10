@@ -343,7 +343,7 @@ class Connection(object):
         self.disconnect()
 
         self.__receiver_thread_exit_condition.acquire()
-        if not self.__receiver_thread_exited:
+        while not self.__receiver_thread_exited:
             self.__receiver_thread_exit_condition.wait()
         self.__receiver_thread_exit_condition.release()
 
