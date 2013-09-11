@@ -23,15 +23,15 @@ stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org
 
 CONTRIBUTORS
 
-Julian Scheid ([Rising Sun Pictures](http://open.rsp.com.au/))
-Andreas Schobel
-Fernando Ciciliati
-Eugene Strulyov
-Gavin M. Roy
-Martin Pieuchot
-Joe Gdaniec
-Jayson Vantuyl
-Tatiana Al-Chueyr Martins
+Julian Scheid ([Rising Sun Pictures](http://open.rsp.com.au/))  
+Andreas Schobel  
+Fernando Ciciliati  
+Eugene Strulyov  
+Gavin M. Roy  
+Martin Pieuchot  
+Joe Gdaniec  
+Jayson Vantuyl  
+Tatiana Al-Chueyr Martins  
 
 
 What's In This Release
@@ -39,10 +39,10 @@ What's In This Release
 
 This release contains the following:
 
-README.md	                    This file
-LICENSE 		                Software license
-stomp/                          The stomp.py client library code
-stomp/test/                     Test code for the library
-stomp/bridge/                   Bridges for message brokers which don't support STOMP
-stomp/bridge/README-oracle      Info on the Oracle AQ bridge
+README.md	                    This file  
+LICENSE 		                Software license  
+stomp/                          The stomp.py client library code  
+stomp/test/                     Test code for the library  
+stomp/bridge/                   Bridges for message brokers which don't support STOMP  
+stomp/bridge/README-oracle      Info on the Oracle AQ bridge  
 
