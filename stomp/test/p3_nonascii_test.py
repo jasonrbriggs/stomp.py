@@ -20,7 +20,7 @@ class TestNonAsciiSend(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.stop()
        
     def test_send_nonascii(self):
         self.conn.subscribe(destination='/queue/test', ack='auto', id='1')
@@ -30,8 +30,8 @@ class TestNonAsciiSend(unittest.TestCase):
 
         time.sleep(3)
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
+        self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assert_(self.listener.messages >= 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
         
         msg = self.listener.message_list[0]

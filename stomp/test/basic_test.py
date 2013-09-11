@@ -1,4 +1,5 @@
 import os
+import signal
 import time
 import unittest
 
@@ -102,3 +103,31 @@ class TestBasicSend(unittest.TestCase):
             self.assert_(self.listener.errors == 0, 'should not have received any errors')
         except:
             pass
+
+    def testchildinterrupt(self):
+        def childhandler(signum, frame):
+            print("received child signal")
+ 
+        oldhandler = signal.signal(signal.SIGCHLD, childhandler)
+ 
+        self.conn.subscribe(destination='/queue/test', ack='auto')
+ 
+        time.sleep(3)
+ 
+        self.conn.send('this is an interrupt test 1', destination='/queue/test')
+ 
+        print("causing signal by starting child process")
+        os.system("sleep 1")
+ 
+        time.sleep(1)
+ 
+        signal.signal(signal.SIGCHLD, oldhandler)
+        print("completed signal section")
+ 
+        self.conn.send('this is an interrupt test 2', destination='/queue/test')
+ 
+        time.sleep(3)
+ 
+        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
+        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assert_(self.conn.is_connected(), 'should still be connected to STOMP provider')

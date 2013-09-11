@@ -7,6 +7,7 @@ import threading
 import time
 import types
 import xml.dom.minidom
+import errno
 
 try:
     from cStringIO import StringIO
@@ -816,9 +817,16 @@ class Connection(object):
         fastbuf = StringIO()
         while self.__running:
             try:
-                c = self.__socket.recv(1024)
+                try:
+                    c = self.__socket.recv(1024)
+                except socket.error:
+                    _, e, _ = sys.exc_info()
+                    if e.args[0] in (errno.EAGAIN, errno.EINTR):
+                        log.debug("socket read interrupted, restarting")
+                        continue
+                    raise
                 c = decode(c)
-                
+
                 # reset the heartbeat for any received message
                 self.__received_heartbeat = time.time()
             except Exception:
@@ -833,9 +841,9 @@ class Connection(object):
                 # heartbeat (special case)
                 return c
         self.__recvbuf += fastbuf.getvalue()
-        fastbuf.close() 
+        fastbuf.close()
         result = []
-        
+
         if len(self.__recvbuf) > 0 and self.__running:
             while True:
                 pos = self.__recvbuf.find('\x00')

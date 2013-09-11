@@ -22,7 +22,7 @@ class TestNonAsciiSend(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.stop()
        
     def test_send_nonascii(self):
         self.conn.subscribe(destination='/queue/test', ack='auto', id="1")
