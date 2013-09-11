@@ -1,24 +1,37 @@
 README
 ======
 
-This distribution contains the "stomp.py" client library for connecting Python to a message broker (such as ActiveMQ, Apollo, or RabbitMQ) via the STOMP protocol. It can also be run as a standalone, command-line client for testing.
-
-This file has two sections:
-
-- Quick Start
-- What's In This Release
+"stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ, Apollo or RabbitMQ) using the [STOMP protocol](http://stomp.github.io) (versions 1.0 and 1.1). It can also be run as a standalone, command-line client for testing.
 
 
 Quick Start
 -----------
 
-Please read the License (LICENSE) before using this library.
+A basic example of using stomp.py can be found [here](https://github.com/kwoli/stomp.py/wiki/Simple-Example). Testing via the command-line interface is described [here](https://github.com/kwoli/stomp.py/wiki/Command-Line-Access).
 
-Please visit the Stomp Project page at:
+Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).
 
-    https://github.com/kwoli/stomp.py
+Please note that stomp.py was available as a single file (stomp.py), but as of version 2 was split into multiple files in a module directory (click [this link](http://stomppy.googlecode.com/files/stomp.py) if you still want access to this older version).
 
-That's where you'll find info on using the library, wiki docs, downloads and the bug tracker.
+Select:
+
+- Version 3.0+ for both Python2.x and Python3.x
+- Version 2.0.x for Python2.x, or
+- Version 2.2+ for Python3.x
+
+stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). There is a bridge for [Oracle AQ](http://en.wikipedia.org/wiki/Oracle_AQ) (see the bridge directory in the 3.x distribution for more information).
+
+CONTRIBUTORS
+
+Julian Scheid ([Rising Sun Pictures](http://open.rsp.com.au/))
+Andreas Schobel
+Fernando Ciciliati
+Eugene Strulyov
+Gavin M. Roy
+Martin Pieuchot
+Joe Gdaniec
+Jayson Vantuyl
+Tatiana Al-Chueyr Martins
 
 
 What's In This Release
@@ -26,9 +39,8 @@ What's In This Release
 
 This release contains the following:
 
-README		                    This file
+README.md	                    This file
 LICENSE 		                Software license
-docs/html/index.html	        Automatically generated API documentation (doxygen)
 stomp/                          The stomp.py client library code
 stomp/test/                     Test code for the library
 stomp/bridge/                   Bridges for message brokers which don't support STOMP
