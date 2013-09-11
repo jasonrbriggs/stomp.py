@@ -1,8 +1,7 @@
 README
 ======
 
-This distribution contains the "stomp.py" client library for
-connecting Python to a message broker via the STOMP protocol.
+This distribution contains the "stomp.py" client library for connecting Python to a message broker (such as ActiveMQ, Apollo, or RabbitMQ) via the STOMP protocol. It can also be run as a standalone, command-line client for testing.
 
 This file has two sections:
 
@@ -12,18 +11,19 @@ This file has two sections:
 
 Quick Start
 -----------
+
 Please read the License (LICENSE) before using this library.
 
 Please visit the Stomp Project page at:
 
-    http://code.google.com/p/stomppy
+    https://github.com/kwoli/stomp.py
 
-That's where you'll find info on using the library, wiki docs, 
-downloads and the bug tracker.
+That's where you'll find info on using the library, wiki docs, downloads and the bug tracker.
 
 
 What's In This Release
 ----------------------
+
 This release contains the following:
 
 README		                    This file
