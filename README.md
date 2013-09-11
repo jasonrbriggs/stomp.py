@@ -21,7 +21,9 @@ Select:
 
 stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). There is a bridge for [Oracle AQ](http://en.wikipedia.org/wiki/Oracle_AQ) (see the bridge directory in the 3.x distribution for more information).
 
-CONTRIBUTORS
+
+Contributors
+------------
 
 Julian Scheid ([Rising Sun Pictures](http://open.rsp.com.au/))  
 Andreas Schobel  
