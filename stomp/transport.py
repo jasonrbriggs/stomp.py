@@ -71,7 +71,6 @@ class Transport(object):
                  wait_on_receipt = False,
                  ssl_version = DEFAULT_SSL_VERSION,
                  timeout = None,
-                 version = 1.0,
                  keepalive = None,
                  vhost = None
                  ):
@@ -155,9 +154,6 @@ class Transport(object):
         \param timeout
             the timeout value to use when connecting the stomp socket
             
-        \param version
-            STOMP protocol version (1.0 or 1.1)
-            
         \param keepalive
             some operating systems support sending the occasional heart
             beat packets to detect when a connection fails.  This
@@ -233,9 +229,6 @@ class Transport(object):
         
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
-        
-        # protocol version
-        self.version = version
         
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
@@ -371,21 +364,6 @@ class Transport(object):
                 log.warn('Unable to close socket because of error "%s"' % e)
         self.__current_host_and_port = None
 
-    '''
-    def __convert_dict(self, payload):
-        """
-        Encode a python dictionary as a <map>...</map> structure.
-        """
-        xmlStr = "<map>\n"
-        for key in payload:
-            xmlStr += "<entry>\n"
-            xmlStr += "<string>%s</string>" % key
-            xmlStr += "<string>%s</string>" % payload[key]
-            xmlStr += "</entry>\n"
-        xmlStr += "</map>"
-        return xmlStr
-    '''
-
     def send_frame(self, frame):
         if not self.__socket:
             self.start()
@@ -395,13 +373,6 @@ class Transport(object):
             if not hasattr(listener, 'on_send'):
                 continue
             listener.on_send(frame)
-
-        body = frame.body
-        if body:
-            body = encode(body)
-
-            if hasbyte(0, body):
-                frame.headers.update({'content-length': len(body)})
 
         lines = [ ]
         if frame.cmd:
@@ -413,14 +384,14 @@ class Transport(object):
             for val in vals:
                 lines.append('%s:%s\n' % (key, val))
         lines.append('\n')
-        if body:
-            lines.append(body)
+        if frame.body:
+            lines.append(frame.body)
 
         if frame.cmd:
             lines.append(b'\x00')
 
         packed_frame = pack(lines)
-        
+
         log.info("Sending frame %s" % lines)
 
         if self.__socket is not None:
@@ -428,8 +399,6 @@ class Transport(object):
                 self.__socket_semaphore.acquire()
                 try:
                     self.__socket.sendall(encode(packed_frame))
-
-                    #print("Sent frame: type=%s, headers=%r, body=%r" % (frame.cmd, frame.headers, frame.body))
                 finally:
                     self.__socket_semaphore.release()
             except Exception:
@@ -462,17 +431,12 @@ class Transport(object):
             finally:
                 self.__send_wait_condition.release()
             
-
             # received a stomp 1.1 disconnect receipt
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
 
         elif frame_type == 'connected':
             self.set_connected(True)
-            if 'version' not in headers.keys():
-                if self.version >= 1.1:
-                    log.warn('Downgraded STOMP protocol version to 1.0')
-                self.version = 1.0
 
         elif frame_type == 'disconnected':
             self.set_connected(False)
@@ -483,13 +447,14 @@ class Transport(object):
                 log.debug('listener %s has no method on_%s' % (listener, frame_type))
                 continue
                 
-            print('>>>>>>>>>> GOT HERE listener=%s, frame_type = %s' % (listener, frame_type))
-
             if frame_type == 'connecting':
                 listener.on_connecting(self.__current_host_and_port)
                 continue
             elif frame_type == 'disconnected':
                 listener.on_disconnected()
+                continue
+            elif frame_type == 'heartbeat':
+                listener.on_heartbeat()
                 continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
