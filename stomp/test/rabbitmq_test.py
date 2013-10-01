@@ -16,12 +16,12 @@ class TestRabbitMQSend(unittest.TestCase):
         conn.set_listener('', listener)
         conn.start()
         conn.connect(wait=True)
-        conn.subscribe(destination='/queue/test', ack='auto')
+        conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        conn.send('this is a test', destination='/queue/test')
+        conn.send(body='this is a test', destination='/queue/test')
 
         time.sleep(2)
-        conn.stop()
+        conn.disconnect()
 
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(listener.messages == 1, 'should have received 1 message')

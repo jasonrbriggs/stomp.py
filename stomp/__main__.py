@@ -6,7 +6,7 @@ import time
 from cmd import Cmd
 from optparse import OptionParser
 
-from connect import Connection
+from connect import StompConnection12
 from listener import ConnectionListener, StatsListener
 from exception import NotConnectedException
 from backward import input_prompt
@@ -34,7 +34,9 @@ class StompCLI(Cmd, ConnectionListener):
     def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.0, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
-        self.conn = Connection([(host, port)], user, passcode, wait_on_receipt=True, version=ver)
+        self.user = user
+        self.passcode = passcode
+        self.conn = StompConnection12([(host, port)], wait_on_receipt=True, version=ver)
         self.conn.set_listener('', self)
         self.conn.start()
         self.transaction_id = None
@@ -67,7 +69,7 @@ class StompCLI(Cmd, ConnectionListener):
         """
         \see ConnectionListener::on_connecting
         """
-        self.conn.connect(wait=True)
+        self.conn.connect(self.user, self.passcode, wait=True)
 
     def on_disconnected(self):
         """
@@ -155,10 +157,10 @@ class StompCLI(Cmd, ConnectionListener):
      
     def do_quit(self, args):
         try:
-            self.conn.stop()
+            self.conn.disconnect()
         except:
             pass
-        sys.exit(0)
+        return True
     do_exit = do_quit
     do_EOF = do_quit
     
@@ -230,9 +232,9 @@ class StompCLI(Cmd, ConnectionListener):
         if len(args) < 2:
             self.__error('Expecting: send <destination> <message>')
         elif not self.transaction_id:
-            self.conn.send(destination=args[0], message=' '.join(args[1:]))
+            self.conn.send(args[0], ' '.join(args[1:]))
         else:
-            self.conn.send(destination=args[0], message=' '.join(args[1:]), transaction=self.transaction_id)
+            self.conn.send(args[0], ' '.join(args[1:]), transaction=self.transaction_id)
             
     def complete_send(self, text, line, begidx, endidx):
         mline = line.split(' ')[1] 
@@ -253,9 +255,9 @@ class StompCLI(Cmd, ConnectionListener):
         if len(args) < 2:
             self.__error('Expecting: sendrec <destination> <message>')
         elif not self.transaction_id:
-            self.conn.send(destination=args[0], message=' '.join(args[1:]), receipt=receipt_id)
+            self.conn.send(args[0], ' '.join(args[1:]), receipt=receipt_id)
         else:
-            self.conn.send(destination=args[0], message=' '.join(args[1:]), transaction=self.transaction_id, receipt=receipt_id)
+            self.conn.send(args[0], ' '.join(args[1:]), transaction=self.transaction_id, receipt=receipt_id)
 
     def help_sendrec(self):
         self.help('sendrec <destination> <message>', 'Sends a message to a destination in the messaging system and blocks for receipt of the message.',
@@ -266,7 +268,7 @@ class StompCLI(Cmd, ConnectionListener):
         if len(args) < 3:
             self.__error('Expecting: sendreply <destination> <correlation-id> <message>')
         else:
-            self.conn.send(destination=args[0], message="%s\n" % ' '.join(args[2:]), headers={'correlation-id': args[1]})
+            self.conn.send(args[0], "%s\n" % ' '.join(args[2:]), headers={'correlation-id': args[1]})
 
     def help_sendreply(self):
         self.help('sendreply <destination> <correlation-id> <message>', 'Sends a reply message to a destination in the messaging system.',
@@ -282,9 +284,9 @@ class StompCLI(Cmd, ConnectionListener):
             s = open(args[1], mode='rb').read()
             msg = base64.b64encode(s).decode()
             if not self.transaction_id:
-                self.conn.send(destination=args[0], message=msg, filename=args[1])
+                self.conn.send(args[0], msg, filename=args[1])
             else:
-                self.conn.send(destination=args[0], message=msg, filename=args[1], transaction=self.transaction_id)
+                self.conn.send(args[0], msg, filename=args[1], transaction=self.transaction_id)
 
     def help_sendfile(self):
         self.help('sendfile <destination> <filename>', 'Sends a file to a destination in the messaging system.',

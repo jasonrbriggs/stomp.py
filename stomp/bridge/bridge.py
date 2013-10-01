@@ -81,11 +81,12 @@ class StompConnection(threading.Thread):
                 if ord(c) == 0:
                     frame = backward.join(data)
                     print(frame)
-                    (frame_type, headers, body) = utils.parse_frame(frame)
+                    f = utils.parse_frame(frame)
+                    frame_type = f.cmd.lower()
                     method = 'handle_%s' % frame_type
                     print('Method = %s' % method)
                     if hasattr(self, method):
-                        getattr(self, method)(headers, body)
+                        getattr(self, method)(f.headers, f.body)
                     else:
                         self.send_error('invalid command %s' % frame_type)
                     data = []

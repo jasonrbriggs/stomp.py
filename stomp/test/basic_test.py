@@ -12,35 +12,37 @@ from testutils import *
 class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host(), 'admin', 'password')
+        conn = stomp.Connection(get_standard_host())
         listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
-        conn.connect(wait=True)
+        conn.connect('admin', 'password', wait=True)
         self.conn = conn
         self.listener = listener
         
     def tearDown(self):
         if self.conn:
-            self.conn.stop()
+            self.conn.disconnect()
        
     def testbasic(self):
-        self.conn.subscribe(destination='/queue/test', ack='auto')
+        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        self.conn.send('this is a test', destination='/queue/test')
+        self.conn.send(body='this is a test', destination='/queue/test')
 
         time.sleep(3)
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        
+        self.conn.disconnect()
     
     def testcommit(self):
-        self.conn.subscribe(destination='/queue/test', ack='auto')
+        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
         trans_id = self.conn.begin()
-        self.conn.send('this is a test1', destination='/queue/test', transaction=trans_id)
-        self.conn.send('this is a test2', destination='/queue/test', transaction=trans_id)
-        self.conn.send('this is a test3', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test1', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test2', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test3', destination='/queue/test', transaction=trans_id)
 
         time.sleep(3)
 
@@ -54,11 +56,11 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
     def testabort(self):
-        self.conn.subscribe(destination='/queue/test', ack='auto')
+        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
         trans_id = self.conn.begin()
-        self.conn.send('this is a test1', destination='/queue/test', transaction=trans_id)
-        self.conn.send('this is a test2', destination='/queue/test', transaction=trans_id)
-        self.conn.send('this is a test3', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test1', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test2', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test3', destination='/queue/test', transaction=trans_id)
 
         time.sleep(3)
 
@@ -70,7 +72,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
-        
+      
     def testtimeout(self):
         conn = stomp.Connection([('203.0.113.100', 60000)], timeout=5, reconnect_attempts_max=1)
         conn.set_listener('', self.listener)
@@ -87,13 +89,13 @@ class TestBasicSend(unittest.TestCase):
     def testssl(self):
         try:
             import ssl
-            conn = stomp.Connection(get_standard_ssl_host(), 'admin', 'password', use_ssl = True)
+            conn = stomp.Connection(get_standard_ssl_host(), use_ssl = True)
             conn.set_listener('', self.listener)
             conn.start()
-            conn.connect(wait=True)
-            conn.subscribe(destination='/queue/test', ack='auto')
+            conn.connect('admin', 'password', wait=True)
+            conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-            conn.send('this is a test', destination='/queue/test')
+            conn.send(body='this is a test', destination='/queue/test')
 
             time.sleep(3)
             conn.disconnect()
@@ -110,11 +112,11 @@ class TestBasicSend(unittest.TestCase):
  
         oldhandler = signal.signal(signal.SIGCHLD, childhandler)
  
-        self.conn.subscribe(destination='/queue/test', ack='auto')
+        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
  
         time.sleep(3)
  
-        self.conn.send('this is an interrupt test 1', destination='/queue/test')
+        self.conn.send(body='this is an interrupt test 1', destination='/queue/test')
  
         print("causing signal by starting child process")
         os.system("sleep 1")
@@ -124,7 +126,7 @@ class TestBasicSend(unittest.TestCase):
         signal.signal(signal.SIGCHLD, oldhandler)
         print("completed signal section")
  
-        self.conn.send('this is an interrupt test 2', destination='/queue/test')
+        self.conn.send(body='this is an interrupt test 2', destination='/queue/test')
  
         time.sleep(3)
  

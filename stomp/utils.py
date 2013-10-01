@@ -1,4 +1,5 @@
 import re
+import threading
 import xml.dom
 
 try:
@@ -6,10 +7,53 @@ try:
 except ImportError:
     import md5 as hashlib
 
+
+# List of all host names (unqualified, fully-qualified, and IP
+# addresses) that refer to the local host (both loopback interface
+# and external interfaces).  This is used for determining
+# preferred targets.
+LOCALHOST_NAMES = [ "localhost", "127.0.0.1" ]
+
+try:
+    LOCALHOST_NAMES.append(socket.gethostbyname(socket.gethostname()))
+except:
+    pass
+    
+try:
+    LOCALHOST_NAMES.append(socket.gethostname())
+except:
+    pass
+    
+try:
+    LOCALHOST_NAMES.append(socket.getfqdn(socket.gethostname()))
+except:
+    pass
+
 #
 # Used to parse STOMP header lines in the format "key:value",
 #
 HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
+
+
+def default_create_thread(callback):
+    """
+    Default thread creation
+    """
+    thread = threading.Thread(None, callback)
+    thread.daemon = True  # Don't let receiver thread prevent termination
+    thread.start()
+    return thread
+
+
+def is_localhost(host_and_port):
+    """
+    Return true if the specified host+port is a member of the 'localhost' list of hosts
+    """
+    (host, port) = host_and_port
+    if host in LOCALHOST_NAMES:
+        return 1
+    else:
+        return 2
 
 
 def parse_headers(lines, offset=0):
@@ -22,6 +66,7 @@ def parse_headers(lines, offset=0):
                 headers[key] = header_match.group('value')
     return headers
 
+
 def parse_frame(frame):
     """
     Parse a STOMP frame into a (frame_type, headers, body) tuple,
@@ -29,31 +74,34 @@ def parse_frame(frame):
     headers is a map containing all header key/value pairs, and
     body is a string containing the frame's payload.
     """
+    f = Frame()
     if frame == '\x0a':
-        return ('heartbeat', {}, None)
+        f.cmd = 'heartbeat'
+        return f
         
     preamble_end = frame.find('\n\n')
     if preamble_end == -1:
         preamble_end = len(frame)
     preamble = frame[0:preamble_end]
     preamble_lines = preamble.split('\n')
-    body = frame[preamble_end + 2:]
+    f.body = frame[preamble_end + 2:]
 
     # Skip any leading newlines
     first_line = 0
     while first_line < len(preamble_lines) and len(preamble_lines[first_line]) == 0:
         first_line += 1
 
-    # Extract frame type
-    frame_type = preamble_lines[first_line]
+    # Extract frame type/command
+    f.cmd = preamble_lines[first_line]
 
     # Put headers into a key/value map
-    headers = parse_headers(preamble_lines, first_line + 1)
+    f.headers = parse_headers(preamble_lines, first_line + 1)
 
-    if 'transformation' in headers:
-        body = transform(body, headers['transformation'])
+    #if 'transformation' in headers:
+    #    body = transform(body, headers['transformation'])
 
-    return (frame_type, headers, body)
+    return f
+
     
 def transform(body, trans_type):
     """
@@ -99,6 +147,7 @@ def transform(body, trans_type):
         # unable to parse message. return original
         #
         return body
+
     
 def merge_headers(header_map_list):
     """
@@ -109,6 +158,7 @@ def merge_headers(header_map_list):
         for header_key in header_map.keys():
             headers[header_key] = header_map[header_key]
     return headers
+
     
 def calculate_heartbeats(shb, chb):
     """
@@ -124,3 +174,10 @@ def calculate_heartbeats(shb, chb):
     if cy != 0 and sx != '0':
         y = max(cy, int(sx))
     return (x, y)
+
+    
+class Frame:
+    def __init__(self, cmd = None, headers = {}, body = None):
+        self.cmd = cmd
+        self.headers = headers
+        self.body = body

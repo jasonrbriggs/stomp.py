@@ -1,4 +1,16 @@
 import threading
+import time
+
+import utils
+from constants import *
+
+try:
+    from fractions import gcd
+except ImportError:
+    from backward import gcd
+    
+import logging
+log = logging.getLogger('stomp.py')
 
 class ConnectionListener(object):
     """
@@ -46,6 +58,9 @@ class ConnectionListener(object):
         received beyond the specified period.
         """
         pass
+        
+    def on_before_message(self, headers, body):
+        pass
 
     def on_message(self, headers, body):
         """
@@ -86,15 +101,83 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_send(self, headers, body):
+    def on_send(self, frame):
         """
         Called by the STOMP connection when it is in the process of sending a message
         
-        \param headers a dictionary containing the headers that will be sent with this message
-        
-        \param body the message payload
+        \param frame the frame to be sent
         """
         pass
+
+    def on_heartbeat(self, heartbeat, *args):
+        """
+        Called on receipt of a heartbeat.
+        """
+        pass
+
+
+class HeartbeatListener(ConnectionListener):
+    def __init__(self, heartbeats):
+        self.connected = False
+        self.running = False
+        self.heartbeats = heartbeats
+        self.__received_heartbeat = time.time()
+        print('>>>>>>>>>>>>> HEARTBEAT LISTENER')
+    
+    def on_connected(self, headers, body):
+        if 'heart-beat' in headers.keys():
+            self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
+            if self.heartbeats != (0,0):
+                utils.default_create_thread(self.__heartbeat_loop)
+                
+    def on_message(self, headers, body):
+        # reset the heartbeat for any received message
+        print('>>>>>>>>>>>>>>>>>> RESET HEARTBEATS')
+        self.__received_heartbeat = time.time()
+        
+    def on_send(self, frame):
+        if frame.cmd == 'CONNECT' or frame.cmd == 'STOMP':
+            print('>>>>>>>>>>>>>>> ON SEND -- connect')
+            if self.heartbeats != (0, 0):
+                frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
+     
+    def __heartbeat_loop(self):
+        """
+        Loop for sending (and monitoring received) heartbeats
+        """
+        send_sleep = self.heartbeats[0] / 1000
+
+        # receive gets an additional threshold of 3 additional seconds
+        receive_sleep = (self.heartbeats[1] / 1000) + 3
+
+        if send_sleep == 0:
+            sleep_time = receive_sleep
+        elif receive_sleep == 0:
+            sleep_time = send_sleep
+        else:
+            # sleep is the GCD of the send and receive times
+            sleep_time = gcd(send_sleep, receive_sleep) / 2.0
+
+        send_time = time.time()
+        receive_time = time.time()
+
+        while self.running:
+            time.sleep(sleep_time)
+
+            if time.time() - send_time > send_sleep:
+                send_time = time.time()
+                log.debug('Sending a heartbeat message')
+                self.send_frame(utils.Frame(None, {}, None))
+
+            if time.time() - receive_time > receive_sleep:
+                if time.time() - self.__received_heartbeat > receive_sleep:
+                    log.debug('Heartbeat timeout')
+                    # heartbeat timeout
+                    for listener in self.listeners.values():
+                        listener.on_heartbeat_timeout()
+                    self.disconnect_socket()
+                    self.set_connected(False)
+
 
 
 class WaitingListener(ConnectionListener):
@@ -142,13 +225,13 @@ class StatsListener(ConnectionListener):
         """
         self.connections += 1
 
-    def on_message(self, headers, message):
+    def on_message(self, headers, body):
         """
         \see ConnectionListener::on_message
         """
         self.messages_recd += 1
         
-    def on_send(self, headers, message):
+    def on_send(self, frame):
         """
         \see ConnectionListener::on_send
         """
