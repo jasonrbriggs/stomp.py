@@ -109,7 +109,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_heartbeat(self, heartbeat, *args):
+    def on_heartbeat(self):
         """
         Called on receipt of a heartbeat.
         """
@@ -122,7 +122,6 @@ class HeartbeatListener(ConnectionListener):
         self.running = False
         self.heartbeats = heartbeats
         self.__received_heartbeat = time.time()
-        print('>>>>>>>>>>>>> HEARTBEAT LISTENER')
     
     def on_connected(self, headers, body):
         if 'heart-beat' in headers.keys():
@@ -132,12 +131,13 @@ class HeartbeatListener(ConnectionListener):
                 
     def on_message(self, headers, body):
         # reset the heartbeat for any received message
-        print('>>>>>>>>>>>>>>>>>> RESET HEARTBEATS')
+        self.__received_heartbeat = time.time()
+        
+    def on_heartbeat(self):
         self.__received_heartbeat = time.time()
         
     def on_send(self, frame):
         if frame.cmd == 'CONNECT' or frame.cmd == 'STOMP':
-            print('>>>>>>>>>>>>>>> ON SEND -- connect')
             if self.heartbeats != (0, 0):
                 frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
      
@@ -164,14 +164,18 @@ class HeartbeatListener(ConnectionListener):
         while self.running:
             time.sleep(sleep_time)
 
-            if time.time() - send_time > send_sleep:
-                send_time = time.time()
-                log.debug('Sending a heartbeat message')
+            now = time.time()
+
+            if now - send_time > send_sleep:
+                send_time = now
+                log.debug('Sending a heartbeat message at %s' % now)
                 self.send_frame(utils.Frame(None, {}, None))
 
-            if time.time() - receive_time > receive_sleep:
-                if time.time() - self.__received_heartbeat > receive_sleep:
-                    log.debug('Heartbeat timeout')
+            diff_receive = now - receive_time
+            if diff_receive > receive_sleep:
+                diff_heartbeat = now - self.__received_heartbeat
+                if diff_heartbeat > receive_sleep:
+                    log.debug('Heartbeat timeout: diff_receive=%s, diff_heartbeat=%s, time=%s, lastrec=%s' % (diff_receive, diff_heartbeat, now, self.__received_heartbeat))
                     # heartbeat timeout
                     for listener in self.listeners.values():
                         listener.on_heartbeat_timeout()
