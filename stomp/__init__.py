@@ -16,6 +16,9 @@ sys.path.insert(0, os.path.split(__file__)[0])
 import connect, listener, exception, transport, protocol
 
 __version__ = (4, 0, 0)
+Connection10 = connect.StompConnection10
+Connection11 = connect.StompConnection11
+Connection12 = connect.StompConnection12
 Connection = connect.StompConnection11
 ConnectionListener = listener.ConnectionListener
 StatsListener = listener.StatsListener
