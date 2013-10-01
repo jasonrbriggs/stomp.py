@@ -6,7 +6,7 @@ import time
 from cmd import Cmd
 from optparse import OptionParser
 
-from connect import StompConnection12
+from connect import StompConnection10,StompConnection11,StompConnection12
 from listener import ConnectionListener, StatsListener
 from exception import NotConnectedException
 from backward import input_prompt
@@ -31,14 +31,20 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See \link stomp::internal::connect::Connection \endlink
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.0, stdin=sys.stdin, stdout=sys.stdout):
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.1, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
         self.user = user
         self.passcode = passcode
-        self.conn = StompConnection12([(host, port)], wait_on_receipt=True, version=ver)
+        if ver == 1.0:
+            self.conn = StompConnection10([(host, port)], wait_on_receipt=True)
+        elif ver == 1.1:
+            self.conn = StompConnection11([(host, port)], wait_on_receipt=True)
+        elif ver == 1.2:
+            self.conn = StompConnection12([(host, port)], wait_on_receipt=True)
         self.conn.set_listener('', self)
         self.conn.start()
+        self.conn.connect(self.user, self.passcode, wait=True)
         self.transaction_id = None
         self.version = ver
         self.__subscriptions = {}
@@ -69,7 +75,6 @@ class StompCLI(Cmd, ConnectionListener):
         """
         \see ConnectionListener::on_connecting
         """
-        self.conn.connect(self.user, self.passcode, wait=True)
 
     def on_disconnected(self):
         """
@@ -434,7 +439,7 @@ def main():
                       help = 'Password for the connection')
     parser.add_option('-F', '--file', type = 'string', dest = 'filename',
                       help = 'File containing commands to be executed, instead of prompting from the command prompt.')
-    parser.add_option('-S', '--stomp', type = 'float', dest = 'stomp', default = 1.0,
+    parser.add_option('-S', '--stomp', type = 'float', dest = 'stomp', default = 1.1,
                       help = 'Set the STOMP protocol version.')
                       
     parser.set_defaults()

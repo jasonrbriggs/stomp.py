@@ -41,7 +41,6 @@ heart-beat: 1000,1000\x00''')
 
             try:
                 conn.send(body='test disconnect', destination='/test/disconnectqueue')
-                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
                 self.fail('Should not have successfully sent a message at this point')
             except Exception:
                 _, e, _ = sys.exc_info()
