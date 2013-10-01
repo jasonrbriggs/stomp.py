@@ -22,7 +22,7 @@ session: 1
 server: test
 heart-beat: 1000,1000\x00''')
         
-            conn = stomp.Connection([('127.0.0.1', 60000)], version = 1.0)
+            conn = stomp.Connection([('127.0.0.1', 60000)])
             listener = TestListener()
             conn.set_listener('', listener)
             conn.start()
@@ -40,14 +40,15 @@ heart-beat: 1000,1000\x00''')
                 assert False, 'server never disconnected'
 
             try:
-                conn.send('test disconnect', destination='/test/disconnectqueue')
+                conn.send(body='test disconnect', destination='/test/disconnectqueue')
+                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
                 self.fail('Should not have successfully sent a message at this point')
             except Exception:
                 _, e, _ = sys.exc_info()
                 log.debug('stopping conn after expected exception %s' % e)
                 # lost connection, now restart the server
                 try:
-                    conn.stop()
+                    conn.disconnect()
                 except:
                     pass
 
