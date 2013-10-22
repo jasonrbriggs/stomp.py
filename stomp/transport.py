@@ -34,7 +34,7 @@ except ImportError:
 import exception
 import listener
 import utils
-from backward import decode, encode, hasbyte, pack, socksend, NULL
+from backward import decode, encode, pack, socksend, NULL
 
 try:
     import uuid    
@@ -365,8 +365,8 @@ class Transport(object):
         self.__current_host_and_port = None
 
     def send_frame(self, frame):
-        if not self.__socket:
-            self.start()
+        #if not self.__socket:
+        #    self.start()
 
         for listener in self.listeners.values():
             if not listener: continue
@@ -388,7 +388,7 @@ class Transport(object):
             lines.append(frame.body)
 
         if frame.cmd:
-            lines.append(b'\x00')
+            lines.append(NULL)
 
         packed_frame = pack(lines)
 
