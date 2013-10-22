@@ -1,6 +1,7 @@
 import threading
 import time
 
+import exception
 import utils
 from constants import *
 
@@ -169,7 +170,10 @@ class HeartbeatListener(ConnectionListener):
             if now - send_time > send_sleep:
                 send_time = now
                 log.debug('Sending a heartbeat message at %s' % now)
-                self.send_frame(utils.Frame(None, {}, None))
+                try:
+                    self.send_frame(utils.Frame(None, {}, None))
+                except exception.NotConnectedException:
+                    log.debug('Lost connection, unable to send heartbeat')
 
             diff_receive = now - receive_time
             if diff_receive > receive_sleep:
