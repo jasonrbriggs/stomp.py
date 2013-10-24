@@ -80,7 +80,7 @@ class StompCLI(Cmd, ConnectionListener):
         """
         \see ConnectionListener::on_disconnected
         """
-        self.__error("lost connection")
+        #self.__error("lost connection")
 
     def on_message(self, headers, body):
         """
@@ -161,10 +161,6 @@ class StompCLI(Cmd, ConnectionListener):
         ''' % m)
      
     def do_quit(self, args):
-        try:
-            self.conn.disconnect()
-        except:
-            pass
         return True
     do_exit = do_quit
     do_EOF = do_quit
@@ -221,16 +217,6 @@ class StompCLI(Cmd, ConnectionListener):
     def help_unsubscribe(self):
         self.help('unsubscribe <destination>', 'Remove an existing subscription - so that the client no longer receive messages from that destination.',
                 [ 'destination - the name to unsubscribe from' ], [ 'ack - how to handle acknowledgements for a message; either automatically (auto) or manually (client)' ])
-
-    def do_disconnect(self, args):
-        try:
-            self.__sysout("")
-            self.conn.disconnect()
-        except NotConnectedException:
-            pass # ignore if no longer connected
-
-    def help_disconnect(self):
-        self.help('disconnect <destination>', 'Gracefully disconnect from the server.')
 
     def do_send(self, args):
         args = args.split()
@@ -362,6 +348,7 @@ class StompCLI(Cmd, ConnectionListener):
             self.__error("Not currently in a transaction")
         else:
             self.conn.abort(transaction = self.transaction_id)
+            self.__sysout('Aborted transaction: %s' % self.transaction_id)
             self.transaction_id = None
     do_rollback = do_abort
 
@@ -456,7 +443,7 @@ def main():
             except KeyboardInterrupt:
                 pass
         finally:
-            st.onecmd('disconnect')
+            st.conn.disconnect()
 
 
 #
