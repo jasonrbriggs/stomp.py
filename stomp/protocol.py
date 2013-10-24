@@ -74,8 +74,8 @@ class Protocol10(ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if HDR_CONTENT_LENGTH not in headers:
-            headers[HDR_CONTENT_LENGTH] = len(body)
+        #if HDR_CONTENT_LENGTH not in headers:
+        #    headers[HDR_CONTENT_LENGTH] = len(body)
         self.__send_frame(CMD_SEND, headers, body)
 
     def subscribe(self, destination, id=None, ack = 'auto', headers = {}, **keyword_headers):
@@ -176,7 +176,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if HDR_CONTENT_LENGTH not in headers:
+        if HDR_CONTENT_LENGTH not in headers and hasbyte(0, body):
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.__send_frame(CMD_SEND, headers, body)
 
