@@ -13,13 +13,13 @@ from testutils import *
 
 class MQ(object):
     def __init__(self):
-        self.connection = stomp.Connection(get_standard_host(), 'admin', 'password')
+        self.connection = stomp.Connection(get_standard_host())
         self.connection.set_listener('', None)
         self.connection.start()
-        self.connection.connect(wait=True)
+        self.connection.connect('admin', 'password', wait=True)
 
     def send(self, topic, msg, persistent='true', retry=False):
-        self.connection.send(destination="/topic/%s" % topic, message=msg,
+        self.connection.send(destination="/topic/%s" % topic, body=msg,
                              persistent=persistent)
 mq = MQ()
 

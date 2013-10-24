@@ -1,10 +1,12 @@
 import os
 import socket
+import sys
 import threading
 import logging
 log = logging.getLogger('testutils.py')
 
 from stomp import ConnectionListener
+from stomp.backward import *
 
 
 def get_standard_host():
@@ -91,16 +93,17 @@ class TestStompServer(object):
         
     def stop(self):
         if self.conn:
+            try:
+                self.conn.shutdown(socket.SHUT_WR)
+            except Exception:
+                pass
             self.conn.close()
         if self.s:
-            try:
-                self.s.shutdown(socket.SHUT_WR)
-            except Exception:
-                log.debug('error shutting down socket')
             self.s.close()
         self.running = False
         self.conn = None
         self.s = None
+        self.stopped = True
         log.debug('Connection stopped')
         
     def get_next_frame(self):
@@ -120,9 +123,13 @@ class TestStompServer(object):
             try:
                 data = self.conn.recv(1024)
                 frame = self.get_next_frame()
+                if self.conn is None:
+                    break
                 if frame is not None:
-                    self.conn.send(bytes(frame, 'ascii'))
-            except:
+                    self.conn.send(encode(frame))
+            except Exception:
+                _, e, _ = sys.exc_info()
+                log.debug(e)
                 break
         try:
             self.conn.close()

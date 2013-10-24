@@ -1,3 +1,7 @@
+try:
+    from exceptions import AssertionError
+except ImportError:
+    pass
 import sys
 import time
 import unittest
@@ -44,6 +48,8 @@ heart-beat: 1000,1000\x00''')
                 self.fail('Should not have successfully sent a message at this point')
             except Exception:
                 _, e, _ = sys.exc_info()
+                if e.__class__ == AssertionError:
+                    self.fail(str(e))
                 log.debug('stopping conn after expected exception %s' % e)
                 # lost connection, now restart the server
                 try:
@@ -54,10 +60,10 @@ heart-beat: 1000,1000\x00''')
                 time.sleep(2)
 
                 server.add_frame('''CONNECTED
-    version: 1.1
-    session: 1
-    server: test
-    heart-beat: 1000,1000\x00''')
+version: 1.1
+session: 1
+server: test
+heart-beat: 1000,1000\x00''')
 
                 server.start()
 

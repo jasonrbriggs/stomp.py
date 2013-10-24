@@ -34,8 +34,6 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
-        
-        self.conn.disconnect()
     
     def testcommit(self):
         self.conn.subscribe(destination='/queue/test', id=1, ack='auto')

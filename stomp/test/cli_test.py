@@ -72,13 +72,7 @@ class TestCLI(unittest.TestCase):
         stdout.expect('Unsubscribing from "/queue/testsubscribe"')
         cli.onecmd('unsubscribe /queue/testsubscribe')
         
-        try:
-            cli.onecmd('quit')
-            
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
 
     def testsendrec(self):
         stdin = TestStdin()
@@ -95,13 +89,7 @@ class TestCLI(unittest.TestCase):
 
         time.sleep(3)
 
-        try:
-            cli.onecmd('quit')
-
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
             
     def testsendfile(self):
         stdin = TestStdin()
@@ -116,13 +104,7 @@ class TestCLI(unittest.TestCase):
 
         time.sleep(3)
 
-        try:
-            cli.onecmd('quit')
-
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
 
     def testabort(self):
         stdin = TestStdin()
@@ -145,13 +127,7 @@ class TestCLI(unittest.TestCase):
         stdout.expect('Unsubscribing from "/queue/testabort"')
         cli.onecmd('unsubscribe /queue/testabort')
 
-        try:
-            cli.onecmd('quit')
-
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
             
     def testcommit(self):
         stdin = TestStdin()
@@ -178,13 +154,7 @@ class TestCLI(unittest.TestCase):
         stdout.expect('Unsubscribing from "/queue/testcommit"')
         cli.onecmd('unsubscribe /queue/testcommit')
 
-        try:
-            cli.onecmd('quit')
-
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
 
     def teststats(self):
         stdin = TestStdin()
@@ -216,13 +186,7 @@ class TestCLI(unittest.TestCase):
         stdout.expect('Unsubscribing from "/queue/teststats"')
         cli.onecmd('unsubscribe /queue/teststats')
 
-        try:
-            cli.onecmd('quit')
-
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
             
     def testrun(self):
         stdin = TestStdin()
@@ -239,11 +203,5 @@ class TestCLI(unittest.TestCase):
         stdout.expect('Unsubscribing from "/queue/testfile"')
         cli.onecmd('run stomp/test/test.txt')
         
-        try:
-            cli.onecmd('quit')
-
-            # fail if it doesn't exit
-            self.fail()
-        except SystemExit:
-            pass
+        cli.onecmd('quit')
 

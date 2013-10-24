@@ -12,23 +12,23 @@ from testutils import *
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host(), 'admin', 'password')
+        conn = stomp.Connection(get_standard_host())
         listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
-        conn.connect(wait=True)
+        conn.connect('admin', 'password', wait=True)
         self.conn = conn
         self.listener = listener
         
     def tearDown(self):
         if self.conn:
-            self.conn.stop()
+            self.conn.disconnect()
        
     def test_send_nonascii(self):
         self.conn.subscribe(destination='/queue/test', ack='auto', id="1")
 
         txt = u'марко'
-        self.conn.send(txt, destination='/queue/test')
+        self.conn.send(body=txt, destination='/queue/test')
 
         time.sleep(3)
 

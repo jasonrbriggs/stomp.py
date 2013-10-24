@@ -28,7 +28,7 @@ class TestNonAsciiSend(unittest.TestCase):
         txt = 'марко'
         self.conn.send(body=txt, destination='/queue/test')
 
-        time.sleep(3)
+        time.sleep(5)
 
         self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages >= 1, 'should have received 1 message')
