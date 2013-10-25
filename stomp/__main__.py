@@ -80,7 +80,7 @@ class StompCLI(Cmd, ConnectionListener):
         """
         \see ConnectionListener::on_disconnected
         """
-        #self.__error("lost connection")
+        self.__error("lost connection")
 
     def on_message(self, headers, body):
         """

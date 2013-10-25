@@ -2,11 +2,11 @@
 This provides connectivity to a message broker supporting the STOMP protocol. Both protocol
 versions 1.0 and 1.1 are supported.
 
-See the project page for more information.
+See the GITHUB project page for more information.
 
 Author: Jason R Briggs
 License: http://www.apache.org/licenses/LICENSE-2.0
-Project Page: http://code.google.com/p/stomppy
+Project Page: https://github.com/jasonrbriggs/stomp.py
 """
 
 import os
