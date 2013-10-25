@@ -11,19 +11,22 @@ A basic example of using stomp.py can be found [here](https://github.com/kwoli/s
 
 Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).
 
-Please note that stomp.py was available as a single file (stomp.py), but as of version 2 was split into multiple files in a module directory (click [this link](http://stomppy.googlecode.com/files/stomp.py) if you still want access to this older version).
+Please note that stomp.py was available as a single file (stomp.py), but as of version 2 was split into multiple files in a module directory (click [this link](https://code.google.com/p/stomppy/downloads/detail?name=stomp.py&can=1&q=) if you still want access to this older version).
 
 Select:
 
+- Version 4.0+ for both Python2.x and Python3.x (note this version separates transport from protocol)
 - Version 3.0+ for both Python2.x and Python3.x
 - Version 2.0.x for Python2.x, or
 - Version 2.2+ for Python3.x
 
-stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). There is a bridge for [Oracle AQ](http://en.wikipedia.org/wiki/Oracle_AQ) (see the bridge directory in the 3.x distribution for more information).
+stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer(s).
 
 
 Contributors
 ------------
+
+_(If you've contributed code to stomp.py and your name is missing from this list, let me know)_
 
 Julian Scheid ([Rising Sun Pictures](http://open.rsp.com.au/))  
 Andreas Schobel  
