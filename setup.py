@@ -76,7 +76,7 @@ setup(
     packages = ['stomp'],
     cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand },
     classifiers = [
-         'Development Status :: 5 - Production/Stable'
+         'Development Status :: 5 - Production/Stable',
          'Intended Audience :: Developers',
          'License :: OSI Approved :: Apache Software License',
          'Programming Language :: Python :: 2',
