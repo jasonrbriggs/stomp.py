@@ -1,9 +1,14 @@
+Version 4.0.2 - TBC
+
+ *
+
+
 Version 4.0.1 - Oct 2013
  
  * Remove the 'transform' method/functionality, as this never went into the official spec. Clients who still want this should implement     themselves, using a listener (see https://github.com/jasonrbriggs/stomp.py/blob/master/stomp/test/misc_test.py for an example)
  * Add support for STOMP 1.2 line endings
  * Enforce "host" header on 1.2 connect requests (note: should be enforced on 1.1 connections, but it seems rabbitmq connections
-   fail)
+   fail if host is set)
 
 
 Version 4.0.0 - Oct 2013
