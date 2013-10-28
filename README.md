@@ -20,7 +20,7 @@ Select:
 - Version 2.0.x for Python2.x, or
 - Version 2.2+ for Python3.x
 
-stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer(s).
+stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/apollo/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer(s).
 
 
 Contributors
@@ -49,5 +49,5 @@ LICENSE 		                - Software license
 stomp/                          - The stomp.py client library code  
 stomp/test/                     - Test code for the library  
 stomp/bridge/                   - Bridges for message brokers which don't support STOMP  
-stomp/bridge/README-oracle      - Info on the Oracle AQ bridge  
+stomp/bridge/README-oracle      - Info on the Oracle AQ bridge (no longer supported) 
 

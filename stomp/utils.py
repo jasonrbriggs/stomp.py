@@ -34,6 +34,12 @@ except:
 #
 HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
 
+#
+# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed.
+#
+PREAMBLE_END_RE = re.compile('\n\n|\r\n\r\n')
+LINE_END_RE     = re.compile('\n|\r\n')
+
 
 def default_create_thread(callback):
     """
@@ -79,11 +85,14 @@ def parse_frame(frame):
         f.cmd = 'heartbeat'
         return f
         
-    preamble_end = frame.find('\n\n')
+    mat = PREAMBLE_END_RE.search(frame)
+    preamble_end = -1
+    if mat:
+        preamble_end = mat.start()
     if preamble_end == -1:
         preamble_end = len(frame)
     preamble = frame[0:preamble_end]
-    preamble_lines = preamble.split('\n')
+    preamble_lines = LINE_END_RE.split(preamble)
     f.body = frame[preamble_end + 2:]
 
     # Skip any leading newlines
@@ -97,56 +106,7 @@ def parse_frame(frame):
     # Put headers into a key/value map
     f.headers = parse_headers(preamble_lines, first_line + 1)
 
-    #if 'transformation' in headers:
-    #    body = transform(body, headers['transformation'])
-
     return f
-
-    
-def transform(body, trans_type):
-    """
-    Perform body transformation. Currently, the only supported transformation is
-    'jms-map-xml', which converts a map into python dictionary. This can be extended
-    to support other transformation types.
-
-    The body has the following format: 
-    <map>
-      <entry>
-        <string>name</string>
-        <string>Dejan</string>
-      </entry>
-      <entry>
-        <string>city</string>
-        <string>Belgrade</string>
-      </entry>
-    </map>
-
-    (see http://docs.codehaus.org/display/STOMP/Stomp+v1.1+Ideas)
-    
-    \param body the content of a message
-    
-    \param trans_type the type transformation
-    """
-    if trans_type != 'jms-map-xml':
-        return body
-
-    try:
-        entries = {}
-        doc = xml.dom.minidom.parseString(body)
-        rootElem = doc.documentElement
-        for entryElem in rootElem.getElementsByTagName("entry"):
-            pair = []
-            for node in entryElem.childNodes:
-                if not isinstance(node, xml.dom.minidom.Element): continue
-                pair.append(node.firstChild.nodeValue)
-            assert len(pair) == 2
-            entries[pair[0]] = pair[1]
-        return entries
-    except Exception:
-        #
-        # unable to parse message. return original
-        #
-        return body
 
     
 def merge_headers(header_map_list):

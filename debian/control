@@ -7,7 +7,7 @@ Standards-Version: 3.8.3.0
 
 Package: stomp.py
 Architecture: all
-Homepage: http://code.google.com/p/stomppy
+Homepage: https://github.com/jasonrbriggs/stomp.py
 XB-Python-Version: ${python:Versions}
 Depends: ${misc:Depends}, ${python:Depends}
 Description: Stomp client support for Python

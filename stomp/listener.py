@@ -61,7 +61,7 @@ class ConnectionListener(object):
         pass
         
     def on_before_message(self, headers, body):
-        pass
+        return (headers, body)
 
     def on_message(self, headers, body):
         """

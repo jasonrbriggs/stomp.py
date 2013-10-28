@@ -161,6 +161,7 @@ class Transport(object):
             default keepalive options for your OS, or as a tuple of
             values, which also enables keepalive packets, but specifies
             options specific to your OS implementation
+
         \param vhost
             specify a virtual hostname to provide in the 'host' header of the connection
         """
@@ -207,7 +208,7 @@ class Transport(object):
         
         self.__socket = None
         self.__socket_semaphore = threading.BoundedSemaphore(1)
-        self.__current_host_and_port = None
+        self.current_host_and_port = None
 
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
@@ -272,14 +273,6 @@ class Transport(object):
         while not self.__receiver_thread_exited:
             self.__receiver_thread_exit_condition.wait()
         self.__receiver_thread_exit_condition.release()
-
-    def get_host_and_port(self):
-        """
-        Return a (host, port) tuple indicating which STOMP host and
-        port is currently connected, or None if there is currently no
-        connection.
-        """
-        return self.__current_host_and_port
         
     def is_connected(self):
         """
@@ -362,12 +355,9 @@ class Transport(object):
             except socket.error:
                 _, e, _ = sys.exc_info()
                 log.warn('Unable to close socket because of error "%s"' % e)
-        self.__current_host_and_port = None
+        self.current_host_and_port = None
 
     def send_frame(self, frame):
-        #if not self.__socket:
-        #    self.start()
-
         for listener in self.listeners.values():
             if not listener: continue
             if not hasattr(listener, 'on_send'):
@@ -448,7 +438,7 @@ class Transport(object):
                 continue
                 
             if frame_type == 'connecting':
-                listener.on_connecting(self.__current_host_and_port)
+                listener.on_connecting(self.current_host_and_port)
                 continue
             elif frame_type == 'disconnected':
                 listener.on_disconnected()
@@ -458,7 +448,9 @@ class Transport(object):
                 continue
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
-            notify_func(headers, body)
+            rtn = notify_func(headers, body)
+            if rtn:
+                return rtn
 
     def __receiver_loop(self):
         """
@@ -481,6 +473,8 @@ class Transport(object):
                                     log.debug("Received frame: %r, headers=%r, body=%r" % (f.cmd, f.headers, f.body))
                                     frame_type = f.cmd.lower()
                                     if frame_type in [ 'connected', 'message', 'receipt', 'error', 'heartbeat' ]:
+                                        if frame_type == 'message':
+                                            (f.headers, f.body) = self.__notify('before_message', f.headers, f.body)
                                         self.__notify(frame_type, f.headers, f.body)
                                     else:
                                         log.warning('Unknown response frame type: "%s" (frame length was %d)' % (frame_type, len(frame)))
@@ -490,7 +484,7 @@ class Transport(object):
                             except:
                                 pass # ignore errors when attempting to close socket
                             self.__socket = None
-                            self.__current_host_and_port = None
+                            self.current_host_and_port = None
                     except exception.ConnectionClosedException:
                         if self.running:
                             log.error("Lost connection")
@@ -658,7 +652,7 @@ class Transport(object):
                         if not ok:
                             raise SSLError("Server certificate validation failed: %s" % errmsg)
 
-                    self.__current_host_and_port = host_and_port
+                    self.current_host_and_port = host_and_port
                     log.info("Established connection to host %s, port %s" % host_and_port)
                     break
                 except socket.error:

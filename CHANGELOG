@@ -1,3 +1,23 @@
+Version 4.0.1 - Oct 2013
+ 
+ * Remove the 'transform' method/functionality, as this never went into the official spec. Clients who still want this should implement     themselves, using a listener (see https://github.com/jasonrbriggs/stomp.py/blob/master/stomp/test/misc_test.py for an example)
+ * Add support for STOMP 1.2 line endings
+ * Enforce "host" header on 1.2 connect requests (note: should be enforced on 1.1 connections, but it seems rabbitmq connections
+   fail)
+
+
+Version 4.0.0 - Oct 2013
+
+ * Separate protocol from transport mechanism, to improve the ability to support multiple protocol versions. Note: constructor
+   args are changing accordingly.
+ * Add initial support for STOMP 1.2
+ * Moved username and passcode params out of constructor and into the connect method. The basic connection process is therefore now:
+ 
+     > conn = stomp.Connection([('localhost', 61613)])
+     > conn.start()
+     > conn.connect('admin', 'password', wait=True)
+
+
 Version 3.1.6 - Sep 2013
 
  * Integrate fix for threading primitives issue (http://code.google.com/p/stomppy/issues/detail?id=53)
@@ -6,7 +26,6 @@ Version 3.1.6 - Sep 2013
  * Integrate interrupt patch (http://code.google.com/p/stomppy/issues/detail?id=48)
  * Change test hosts and ports so that they're provided from the setup.py file
  
-
 
 Version 3.1.5 - Aug 2013
 

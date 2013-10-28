@@ -200,3 +200,24 @@ class Protocol12(Protocol11):
     def __init__(self, transport, heartbeats = (0, 0)):
         Protocol11.__init__(self, transport, heatbeats = (0, 0))
         self.version = 1.2
+        
+    def connect(self, username=None, passcode=None, wait=False):
+        cmd = CMD_STOMP
+        headers = {
+            HDR_ACCEPT_VERSION : self.version,
+            HDR_HOST : self.transport.current_host_and_port[0]
+        }
+        
+        if self.transport.vhost:
+            headers[HDR_HOST] = self.transport.vhost
+
+        if username is not None:
+            headers[HDR_LOGIN] = username
+
+        if passcode is not None:
+            headers[HDR_PASSCODE] = passcode
+
+        self.__send_frame(cmd, headers)
+        
+        if wait:
+            self.transport.wait_for_connection()

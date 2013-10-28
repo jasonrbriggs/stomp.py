@@ -69,7 +69,7 @@ setup(
     version = version(),
     description = 'Python STOMP client, supporting versions 1.0 and 1.1 of the protocol',
     license = 'Apache',
-    url = 'http://code.google.com/p/stomppy',
+    url = 'https://github.com/jasonrbriggs/stomp.py',
     author = 'Jason R Briggs',
     author_email =  'jasonrbriggs@gmail.com',
     platforms = ['any'],
