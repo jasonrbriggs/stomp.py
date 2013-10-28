@@ -89,7 +89,7 @@ class StompConnection12(Transport, Protocol12):
             use_ssl, ssl_key_file, ssl_cert_file, ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
             keepalive, vhost)
         Protocol12.__init__(self, self, heartbeats)
-        
+
     def disconnect(self):
         Protocol12.disconnect(self)
         Transport.stop(self)

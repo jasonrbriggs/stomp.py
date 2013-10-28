@@ -70,8 +70,7 @@ class TestCLI(unittest.TestCase):
         time.sleep(3)
         
         stdout.expect('Unsubscribing from "/queue/testsubscribe"')
-        cli.onecmd('unsubscribe /queue/testsubscribe')
-        
+        cli.onecmd('unsubscribe /queue/testsubscribe')      
         cli.onecmd('quit')
 
     def testsendrec(self):
@@ -126,7 +125,6 @@ class TestCLI(unittest.TestCase):
 
         stdout.expect('Unsubscribing from "/queue/testabort"')
         cli.onecmd('unsubscribe /queue/testabort')
-
         cli.onecmd('quit')
             
     def testcommit(self):
@@ -153,7 +151,6 @@ class TestCLI(unittest.TestCase):
 
         stdout.expect('Unsubscribing from "/queue/testcommit"')
         cli.onecmd('unsubscribe /queue/testcommit')
-
         cli.onecmd('quit')
 
     def teststats(self):
@@ -185,7 +182,6 @@ class TestCLI(unittest.TestCase):
 
         stdout.expect('Unsubscribing from "/queue/teststats"')
         cli.onecmd('unsubscribe /queue/teststats')
-
         cli.onecmd('quit')
             
     def testrun(self):
@@ -201,7 +197,6 @@ class TestCLI(unittest.TestCase):
         stdout.expect('this is a test')
         stdout.expect('MESSAGE')
         stdout.expect('Unsubscribing from "/queue/testfile"')
-        cli.onecmd('run stomp/test/test.txt')
-        
+        cli.onecmd('run stomp/test/test.txt')      
         cli.onecmd('quit')
 

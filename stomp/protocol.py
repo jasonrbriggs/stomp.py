@@ -198,9 +198,13 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
 class Protocol12(Protocol11):
     def __init__(self, transport, heartbeats = (0, 0)):
-        Protocol11.__init__(self, transport, heatbeats = (0, 0))
+        Protocol11.__init__(self, transport, heartbeats)
         self.version = 1.2
-        
+
+    def __send_frame(self, cmd, headers = {}, body = ''):
+        frame = utils.Frame(cmd, headers, body)
+        self.transport.send_frame(frame)
+
     def connect(self, username=None, passcode=None, wait=False):
         cmd = CMD_STOMP
         headers = {

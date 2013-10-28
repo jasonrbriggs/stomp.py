@@ -1,6 +1,6 @@
-Version 4.0.2 - TBC
+Version 4.0.2 - Oct 2013
 
- *
+ * Fix minor error with 1.2 connections. Add basic unit tests for 1.0, and 1.2
 
 
 Version 4.0.1 - Oct 2013
