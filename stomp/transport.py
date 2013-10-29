@@ -9,6 +9,7 @@ import types
 import xml.dom.minidom
 import errno
 
+
 ##@namespace stomp.transport
 # Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual 
 # STOMP protocol
@@ -39,7 +40,7 @@ except ImportError:
 import exception
 import listener
 import utils
-from backward import decode, encode, pack, socksend, NULL
+from backward import decode, encode, pack, NULL
 
 try:
     import uuid    

@@ -57,7 +57,7 @@ def default_create_thread(callback):
     \param callback the callback function provided to threading.Thread
     """
     thread = threading.Thread(None, callback)
-    thread.daemon = True  # Don't let receiver thread prevent termination
+    thread.daemon = True  # Don't let thread prevent termination
     thread.start()
     return thread
 

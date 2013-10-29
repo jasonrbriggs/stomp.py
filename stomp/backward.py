@@ -15,10 +15,11 @@ if sys.hexversion >= 0x03000000: # Python 3+
 else: # Python 2
     from backward2 import *
 
-def socksend(conn, msg):
-    conn.sendall(encode(msg))
         
 class uuid(object):
+    """
+    A dummy version of Python's uuid module.
+    """
     def uuid4(*args):
         """
         uuid courtesy of Carl Free Jr:
@@ -37,6 +38,7 @@ class uuid(object):
         md5.update(data.encode())
         data = md5.hexdigest()
         return data
+
 
 def gcd(a, b):
     """Calculate the Greatest Common Divisor of a and b.

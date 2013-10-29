@@ -1,4 +1,4 @@
-##@namespace stomp.exceptions
+##@namespace stomp.exception
 # Errors thrown by stomp.py connections.
 
 

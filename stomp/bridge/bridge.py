@@ -72,7 +72,7 @@ class StompConnection(threading.Thread):
     def send(self, msg):
         if not msg.endswith('\x00'):
             msg = msg + '\x00'
-        backward.socksend(self.conn, msg)
+        self.conn.sendall(backward.encode(msg))
         
     def run(self):
         try:

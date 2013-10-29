@@ -10,6 +10,7 @@ Quick Start
 A basic example of using stomp.py can be found [here](https://github.com/kwoli/stomp.py/wiki/Simple-Example). Testing via the command-line interface is described [here](https://github.com/kwoli/stomp.py/wiki/Command-Line-Access).
 
 Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).
+API documentation can be found [here](http://jasonrbriggs.github.io/stomp.py/index.html).
 
 Please note that stomp.py was available as a single file (stomp.py), but as of version 2 was split into multiple files in a module directory (click [this link](https://code.google.com/p/stomppy/downloads/detail?name=stomp.py&can=1&q=) if you still want access to this older version).
 

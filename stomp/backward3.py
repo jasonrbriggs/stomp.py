@@ -1,4 +1,4 @@
-##@namespace stomp.backward2
+##@namespace stomp.backward3
 # Python3-specific versions of various functions used by stomp.py
 
 
