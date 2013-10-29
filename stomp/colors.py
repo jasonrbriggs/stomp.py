@@ -1,5 +1,8 @@
 import platform
 
+##@namespace stomp.colors
+# Color 'constants' used by the command line client.
+
 if platform.system().lower() != 'windows':
     GREEN = "\33[32m"
     RED = "\33[31m"

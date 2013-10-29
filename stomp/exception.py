@@ -1,3 +1,7 @@
+##@namespace stomp.exceptions
+# Errors thrown by stomp.py connections.
+
+
 class ConnectionClosedException(Exception):
     """
     Raised in the receiver thread when the connection has been closed
@@ -18,10 +22,4 @@ class ConnectFailedException(Exception):
     """
     Raised by Connection.__attempt_connection when reconnection attempts
     have exceeded Connection.__reconnect_attempts_max.
-    """
-
-
-class ProtocolException(Exception):
-    """
-    Raised on a protocol violation.
     """

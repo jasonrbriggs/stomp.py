@@ -1,3 +1,6 @@
+##@namespace stomp.constants
+# The STOMP command and header name strings.
+
 HDR_ACCEPT_VERSION = 'accept-version'
 HDR_ACK = 'ack'
 HDR_CONTENT_LENGTH = 'content-length'

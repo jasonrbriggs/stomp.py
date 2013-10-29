@@ -1,6 +1,5 @@
-#
-# Functions for backwards compatibility
-#
+##@namespace stomp.backward2
+# Python2-specific versions of various functions used by stomp.py
 
 def input_prompt(prompt):
     """

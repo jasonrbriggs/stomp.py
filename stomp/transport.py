@@ -9,6 +9,11 @@ import types
 import xml.dom.minidom
 import errno
 
+##@namespace stomp.transport
+# Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual 
+# STOMP protocol
+
+
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -296,7 +301,7 @@ class Transport(object):
 
     def set_listener(self, name, listener):
         """
-        Set a named listener on this connection
+        Set a named listener to use with this connection
         
         \see listener::ConnectionListener
         
@@ -315,7 +320,7 @@ class Transport(object):
 
     def get_listener(self, name):
         """
-        Return a named listener
+        Return the named listener
         
         \param name the listener to return
         """
@@ -325,6 +330,9 @@ class Transport(object):
             return None
         
     def disconnect_socket(self):
+        """
+        Disconnect the underlying socket connection
+        """
         self.running = False
         if self.__socket is not None:
             if self.__ssl:

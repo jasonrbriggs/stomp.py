@@ -5,6 +5,10 @@ import exception
 import utils
 from constants import *
 
+##@namespace stomp.listener
+# Various listeners for using with stomp.py connections.
+
+
 try:
     from fractions import gcd
 except ImportError:

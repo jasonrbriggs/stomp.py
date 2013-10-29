@@ -1,5 +1,9 @@
 #!  /usr/bin/env python
 
+##
+# @namespace stomp.bridge.oracleaq
+# NO LONGER SUPPORTED
+
 import cx_Oracle
 from optparse import OptionParser
 import re

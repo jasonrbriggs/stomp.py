@@ -4,11 +4,13 @@ import random
 import socket
 import hashlib
 
+##@namespace stomp.backward
+# Functions to support backwards compatibility.
 #
-# Functions for backwards compatibility
-#
+# Basically where we have functions which differ between python 2 and 3, we provide implementations here
+# and then Python-specific versions in backward2 and backward3.
 
-if sys.hexversion >= 0x03000000: # Python 3
+if sys.hexversion >= 0x03000000: # Python 3+
     from backward3 import *
 else: # Python 2
     from backward2 import *

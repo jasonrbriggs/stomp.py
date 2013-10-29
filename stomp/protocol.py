@@ -6,7 +6,14 @@ from backward import pack, encode, hasbyte
 from constants import *
 
 
+##@namespace stomp.protocol
+# Provides the 1.0, 1.1 and 1.2 protocol classes.
+
+
 class Protocol10(ConnectionListener):
+    """
+    Version 1.0 of the protocol.
+    """
     def __init__(self, transport):
         self.transport = transport
         transport.set_listener('protocol-listener', self)
@@ -98,6 +105,9 @@ class Protocol10(ConnectionListener):
 
 
 class Protocol11(HeartbeatListener, ConnectionListener):
+    """
+    Version 1.1 of the protocol.
+    """
     def __init__(self, transport, heartbeats = (0, 0)):
         HeartbeatListener.__init__(self, heartbeats)
         self.transport = transport
@@ -197,6 +207,9 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
 
 class Protocol12(Protocol11):
+    """
+    Version 1.2 of the protocol.
+    """
     def __init__(self, transport, heartbeats = (0, 0)):
         Protocol11.__init__(self, transport, heartbeats)
         self.version = 1.2
@@ -206,6 +219,13 @@ class Protocol12(Protocol11):
         self.transport.send_frame(frame)
 
     def connect(self, username=None, passcode=None, wait=False):
+        """
+        Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
+        
+        \param username optionally specify the login user
+        \param passcode optionally specify the user password
+        \param wait wait for the connection to complete before returning
+        """
         cmd = CMD_STOMP
         headers = {
             HDR_ACCEPT_VERSION : self.version,

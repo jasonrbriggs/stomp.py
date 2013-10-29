@@ -1,8 +1,15 @@
 from transport import *
 from protocol import *
 
+##@namespace stomp.connect
+# Main entry point for clients to create a STOMP connection.
+#
+# Provides connection classes for 1.0, 1.1, and 1.2 versions of the STOMP protocol.
 
 class StompConnection10(Transport, Protocol10):
+    """
+    Represents a 1.0 connection (comprising transport plus 1.0 protocol class)
+    """
     def __init__(self, 
                  host_and_ports = [ ('localhost', 61613) ], 
                  prefer_localhost = True,
@@ -32,6 +39,9 @@ class StompConnection10(Transport, Protocol10):
 
 
 class StompConnection11(Transport, Protocol11):
+    """
+    Represents a 1.1 connection (comprising transport plus 1.1 protocol class)
+    """
     def __init__(self, 
                  host_and_ports = [ ('localhost', 61613) ], 
                  prefer_localhost = True,
@@ -64,6 +74,9 @@ class StompConnection11(Transport, Protocol11):
 
 
 class StompConnection12(Transport, Protocol12):
+    """
+    Represents a 1.2 connection (comprising transport plus 1.2 protocol class)
+    """
     def __init__(self, 
                  host_and_ports = [ ('localhost', 61613) ], 
                  prefer_localhost = True,

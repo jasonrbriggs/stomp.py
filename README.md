@@ -1,7 +1,7 @@
 README
 ======
 
-"stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ, Apollo or RabbitMQ) using the [STOMP protocol](http://stomp.github.io) (versions 1.0, 1.1 and 1.2). It can also be run as a standalone, command-line client for testing.
+"stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ, Apollo or RabbitMQ) using the [STOMP protocol](http://stomp.github.io) (versions [1.0](http://stomp.github.io/stomp-specification-1.0.html), [1.1](http://stomp.github.io/stomp-specification-1.1.html) and [1.2](http://stomp.github.io/stomp-specification-1.2.html)). It can also be run as a standalone, command-line client for testing.
 
 
 Quick Start
@@ -15,12 +15,11 @@ Please note that stomp.py was available as a single file (stomp.py), but as of v
 
 Select:
 
-- Version 4.0+ for both Python2.x and Python3.x - with support for STOMP 1.2 (note this version separates transport from protocol)
+- Version 4.0+ for both Python2.x and Python3.x - with support for STOMP 1.2 (note this version separates the transport mechanism from the protocol)
 - Version 3.0+ for both Python2.x and Python3.x - STOMP 1.0 and 1.1 only
-- Version 2.0.x for Python2.x, or
-- Version 2.2+ for Python3.x
+- Version 2.0.x for Python2.x
 
-stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/apollo/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer(s).
+stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/apollo/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer.
 
 
 Contributors
@@ -46,8 +45,9 @@ This release contains the following:
 
 README.md	                    - This file  
 LICENSE 		                - Software license  
+CHANGELOG                       - List of changes in each release  
 stomp/                          - The stomp.py client library code  
 stomp/test/                     - Test code for the library  
 stomp/bridge/                   - Bridges for message brokers which don't support STOMP  
-stomp/bridge/README-oracle      - Info on the Oracle AQ bridge (no longer supported) 
+stomp/bridge/README-oracle      - Info on the Oracle AQ bridge (no longer supported)  
 

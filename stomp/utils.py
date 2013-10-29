@@ -8,7 +8,11 @@ except ImportError:
     import md5 as hashlib
 
 
-# List of all host names (unqualified, fully-qualified, and IP
+##@namespace stomp.utils
+# General utilities.
+
+
+## List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
 # and external interfaces).  This is used for determining
 # preferred targets.
@@ -29,21 +33,28 @@ try:
 except:
     pass
 
-#
+##
 # Used to parse STOMP header lines in the format "key:value",
 #
 HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
 
-#
-# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed.
+##
+# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
 #
 PREAMBLE_END_RE = re.compile('\n\n|\r\n\r\n')
+
+##
+# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
+#
 LINE_END_RE     = re.compile('\n|\r\n')
 
 
 def default_create_thread(callback):
     """
-    Default thread creation
+    Default thread creation - used to create threads when the client doesn't want to provide their
+    own thread creation.
+    
+    \param callback the callback function provided to threading.Thread
     """
     thread = threading.Thread(None, callback)
     thread.daemon = True  # Don't let receiver thread prevent termination
@@ -63,6 +74,12 @@ def is_localhost(host_and_port):
 
 
 def parse_headers(lines, offset=0):
+    """
+    Parse the headers in a STOMP response
+    
+    \param lines the lines received in the response
+    \param offset the starting line number
+    """
     headers = {}
     for header_line in lines[offset:]:
         header_match = HEADER_LINE_RE.match(header_line)
@@ -137,6 +154,9 @@ def calculate_heartbeats(shb, chb):
 
     
 class Frame:
+    """
+    A STOMP frame to send. Comprises a command, the headers and the body content.
+    """
     def __init__(self, cmd = None, headers = {}, body = None):
         self.cmd = cmd
         self.headers = headers

@@ -3,6 +3,10 @@ import socket
 import sys
 import threading
 
+##
+# @namespace stomp.bridge.bridge
+# NO LONGER SUPPORTED
+
 sys.path.append(os.getcwd())
 
 from stomp import utils, backward

@@ -14,6 +14,12 @@ import colors
 sys.path.append('.')
 import stomp
 
+##@namespace stomp.__main__
+# The stomp.py command line client (used for testing or simple STOMP command scripting).
+
+##
+# Command-line version string
+#
 stomppy_version = 'Stomp.py Version %s.%s.%s' % stomp.__version__
 
 try:
@@ -21,14 +27,18 @@ try:
 except ImportError:
     from backward import uuid
 
+
 class SubscriptionInfo:
+    """
+    Used to store info about a subscription.
+    """
     def __init__(self, id, ack):
         self.id = id
         self.ack = ack
     
 class StompCLI(Cmd, ConnectionListener):
     """
-    A command line interface to the stomp.py client.  See \link stomp::internal::connect::Connection \endlink
+    A command line interface to the stomp.py client.  See \link stomp::connect::StompConnection11 \endlink
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.1, stdin=sys.stdin, stdout=sys.stdout):
