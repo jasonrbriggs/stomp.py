@@ -66,7 +66,7 @@ Inheritance diagram for stomp.protocol.Protocol12:</div>
   <img src="classstomp_1_1protocol_1_1_protocol12.png" usemap="#stomp.protocol.Protocol12_map" alt=""/>
   <map id="stomp.protocol.Protocol12_map" name="stomp.protocol.Protocol12_map">
 <area href="classstomp_1_1protocol_1_1_protocol11.html" title="Version 1.1 of the protocol. " alt="stomp.protocol.Protocol11" shape="rect" coords="109,168,318,192"/>
-<area href="classstomp_1_1listener_1_1_heartbeat_listener.html" alt="stomp.listener.HeartbeatListener" shape="rect" coords="0,112,209,136"/>
+<area href="classstomp_1_1listener_1_1_heartbeat_listener.html" title="Listener used to handle STOMP heartbeating. " alt="stomp.listener.HeartbeatListener" shape="rect" coords="0,112,209,136"/>
 <area href="classstomp_1_1listener_1_1_connection_listener.html" title="This class should be used as a base class for objects registered using Connection.set_listener(). " alt="stomp.listener.ConnectionListener" shape="rect" coords="219,112,428,136"/>
 <area href="classstomp_1_1listener_1_1_connection_listener.html" title="This class should be used as a base class for objects registered using Connection.set_listener(). " alt="stomp.listener.ConnectionListener" shape="rect" coords="0,56,209,80"/>
 <area href="classstomp_1_1connect_1_1_stomp_connection12.html" title="Represents a 1.2 connection (comprising transport plus 1.2 protocol class) " alt="stomp.connect.StompConnection12" shape="rect" coords="109,280,318,304"/>
@@ -107,12 +107,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4256bd4a26b2e998f82bee1bbf73d4f2 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#a4256bd4a26b2e998f82bee1bbf73d4f2">__init__</a></td></tr>
 <tr class="separator:a4256bd4a26b2e998f82bee1bbf73d4f2 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f69de2ec9742fe1057b51dd8ea8410e inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#a7f69de2ec9742fe1057b51dd8ea8410e">on_connected</a></td></tr>
+<tr class="memdesc:a7f69de2ec9742fe1057b51dd8ea8410e inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Once the connection is established, and 'heart-beat' is found in the headers, we calculate the real heartbeat numbers (based on what the server sent and what was specified by the client) - if the heartbeats are not 0, we start up the heartbeat loop accordingly.  <a href="#a7f69de2ec9742fe1057b51dd8ea8410e">More...</a><br/></td></tr>
 <tr class="separator:a7f69de2ec9742fe1057b51dd8ea8410e inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0df36453877b3dfddbed7ab668a54987 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#a0df36453877b3dfddbed7ab668a54987">on_message</a></td></tr>
+<tr class="memdesc:a0df36453877b3dfddbed7ab668a54987 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the last received time whenever a message is received.  <a href="#a0df36453877b3dfddbed7ab668a54987">More...</a><br/></td></tr>
 <tr class="separator:a0df36453877b3dfddbed7ab668a54987 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90ddbadba44952ae5af202ac0b49cb74 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#a90ddbadba44952ae5af202ac0b49cb74">on_heartbeat</a></td></tr>
+<tr class="memdesc:a90ddbadba44952ae5af202ac0b49cb74 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the last received time whenever a heartbeat message is received.  <a href="#a90ddbadba44952ae5af202ac0b49cb74">More...</a><br/></td></tr>
 <tr class="separator:a90ddbadba44952ae5af202ac0b49cb74 inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af060f822075fa4441cc2b6bce035360d inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#af060f822075fa4441cc2b6bce035360d">on_send</a></td></tr>
+<tr class="memdesc:af060f822075fa4441cc2b6bce035360d inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the heartbeat header to the frame when connecting.  <a href="#af060f822075fa4441cc2b6bce035360d">More...</a><br/></td></tr>
 <tr class="separator:af060f822075fa4441cc2b6bce035360d inherit pub_methods_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classstomp_1_1listener_1_1_connection_listener"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classstomp_1_1listener_1_1_connection_listener')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classstomp_1_1listener_1_1_connection_listener.html">stomp.listener.ConnectionListener</a></td></tr>
 <tr class="memitem:af52d0b42ef1da83cecb82f1fbf7adb30 inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_connection_listener.html#af52d0b42ef1da83cecb82f1fbf7adb30">on_connecting</a></td></tr>
@@ -128,6 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2a928aba08b7b0332b4f944415c07a0d inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the STOMP connection when a heartbeat message has not been received beyond the specified period.  <a href="#a2a928aba08b7b0332b4f944415c07a0d">More...</a><br/></td></tr>
 <tr class="separator:a2a928aba08b7b0332b4f944415c07a0d inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69662fc905f08b7d58cc5ae626e69360 inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_connection_listener.html#a69662fc905f08b7d58cc5ae626e69360">on_before_message</a></td></tr>
+<tr class="memdesc:a69662fc905f08b7d58cc5ae626e69360 inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the STOMP connection before a message is returned to the client app.  <a href="#a69662fc905f08b7d58cc5ae626e69360">More...</a><br/></td></tr>
 <tr class="separator:a69662fc905f08b7d58cc5ae626e69360 inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af280e86d541ef5b3c8be6250c9672ee3 inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_connection_listener.html#af280e86d541ef5b3c8be6250c9672ee3">on_message</a></td></tr>
 <tr class="memdesc:af280e86d541ef5b3c8be6250c9672ee3 inherit pub_methods_classstomp_1_1listener_1_1_connection_listener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the STOMP connection when a MESSAGE frame is received.  <a href="#af280e86d541ef5b3c8be6250c9672ee3">More...</a><br/></td></tr>
@@ -236,9 +241,15 @@ Public Attributes</h2></td></tr>
 
 <p>Send a STOMP CONNECT frame. </p>
 <p>Differs from 1.0 and 1.1 versions in that the HOST header is enforced. </p>
-<pre class="fragment">    \param username optionally specify the login user
-    \param passcode optionally specify the user password
-    \param wait wait for the connection to complete before returning</pre> 
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">username</td><td>optionally specify the login user </td></tr>
+    <tr><td class="paramname">passcode</td><td>optionally specify the user password </td></tr>
+    <tr><td class="paramname">wait</td><td>wait for the connection to complete before returning </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -260,7 +271,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 29 2013 14:31:36 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 30 2013 16:51:51 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

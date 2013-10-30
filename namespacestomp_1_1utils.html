@@ -129,6 +129,13 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Given a heartbeat string from the server, and a heartbeat tuple from the client, calculate what the actual heartbeat settings should be. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">shb</td><td>server heartbeat numbers </td></tr>
+    <tr><td class="paramname">chb</td><td>client heartbeat numbers </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -207,7 +214,13 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parse a STOMP frame into a (frame_type, headers, body) tuple, where frame_type is the frame type as a string (e.g. </p>
-<p>MESSAGE), headers is a map containing all header key/value pairs, and body is a string containing the frame's payload. </p>
+<p>MESSAGE), headers is a map containing all header key/value pairs, and body is a string containing the frame's payload.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame</td><td>the frame received from the server (as a string) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -238,7 +251,7 @@ Variables</h2></td></tr>
 <p>Parse the headers in a STOMP response. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lines</td><td>the lines received in the response </td></tr>
+    <tr><td class="paramname">lines</td><td>the lines received in the message response </td></tr>
     <tr><td class="paramname">offset</td><td>the starting line number </td></tr>
   </table>
   </dd>
@@ -309,7 +322,7 @@ Variables</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 29 2013 14:31:36 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 30 2013 16:51:51 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

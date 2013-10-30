@@ -64,7 +64,7 @@ Inheritance diagram for stomp.listener.ConnectionListener:</div>
  <div class="center">
   <img src="classstomp_1_1listener_1_1_connection_listener.png" usemap="#stomp.listener.ConnectionListener_map" alt=""/>
   <map id="stomp.listener.ConnectionListener_map" name="stomp.listener.ConnectionListener_map">
-<area href="classstomp_1_1listener_1_1_heartbeat_listener.html" alt="stomp.listener.HeartbeatListener" shape="rect" coords="109,112,318,136"/>
+<area href="classstomp_1_1listener_1_1_heartbeat_listener.html" title="Listener used to handle STOMP heartbeating. " alt="stomp.listener.HeartbeatListener" shape="rect" coords="109,112,318,136"/>
 <area href="classstomp_1_1listener_1_1_stats_listener.html" title="A connection listener for recording statistics on messages sent and received. " alt="stomp.listener.StatsListener" shape="rect" coords="328,112,537,136"/>
 <area href="classstomp_1_1listener_1_1_waiting_listener.html" title="A listener which waits for a specific receipt to arrive. " alt="stomp.listener.WaitingListener" shape="rect" coords="547,112,756,136"/>
 <area href="classstomp_1_1protocol_1_1_protocol10.html" title="Version 1.0 of the protocol. " alt="stomp.protocol.Protocol10" shape="rect" coords="766,112,975,136"/>
@@ -95,6 +95,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2a928aba08b7b0332b4f944415c07a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the STOMP connection when a heartbeat message has not been received beyond the specified period.  <a href="#a2a928aba08b7b0332b4f944415c07a0d">More...</a><br/></td></tr>
 <tr class="separator:a2a928aba08b7b0332b4f944415c07a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69662fc905f08b7d58cc5ae626e69360"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_connection_listener.html#a69662fc905f08b7d58cc5ae626e69360">on_before_message</a></td></tr>
+<tr class="memdesc:a69662fc905f08b7d58cc5ae626e69360"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the STOMP connection before a message is returned to the client app.  <a href="#a69662fc905f08b7d58cc5ae626e69360">More...</a><br/></td></tr>
 <tr class="separator:a69662fc905f08b7d58cc5ae626e69360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af280e86d541ef5b3c8be6250c9672ee3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_connection_listener.html#af280e86d541ef5b3c8be6250c9672ee3">on_message</a></td></tr>
 <tr class="memdesc:af280e86d541ef5b3c8be6250c9672ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the STOMP connection when a MESSAGE frame is received.  <a href="#af280e86d541ef5b3c8be6250c9672ee3">More...</a><br/></td></tr>
@@ -144,6 +145,16 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Called by the STOMP connection before a message is returned to the client app. </p>
+<p>Returns a tuple containing the headers and body (so that implementing listeners can pre-process the content).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">headers</td><td>the message headers</td></tr>
+    <tr><td class="paramname">body</td><td>the message body </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -441,7 +452,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 29 2013 14:31:36 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 30 2013 16:51:51 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>
