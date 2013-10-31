@@ -221,10 +221,12 @@ class Protocol12(Protocol11):
     def connect(self, username=None, passcode=None, wait=False):
         """
         Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
-        
-        \param username optionally specify the login user
-        \param passcode optionally specify the user password
-        \param wait wait for the connection to complete before returning
+        \param username
+            optionally specify the login user
+        \param passcode
+            optionally specify the user password
+        \param wait
+            wait for the connection to complete before returning
         """
         cmd = CMD_STOMP
         headers = {

@@ -5,7 +5,7 @@ import threading
 import logging
 log = logging.getLogger('testutils.py')
 
-from stomp import ConnectionListener
+from stomp import ConnectionListener, StatsListener, WaitingListener
 from stomp.backward import *
 
 
@@ -25,52 +25,15 @@ def get_stompserver_host():
     return [(os.environ['STOMPSERVER_HOST'], int(os.environ['STOMPSERVER_PORT']))]
     
 
-class TestListener(ConnectionListener):
-    def __init__(self):
-        self.errors = 0
-        self.connections = 0
-        self.disconnects = 0
-        self.messages = 0
-        self.heartbeat_timeouts = 0
+class TestListener(StatsListener,WaitingListener):
+    def __init__(self, receipt=None):
+        StatsListener.__init__(self)
+        WaitingListener.__init__(self, receipt)
         self.message_list = []
 
-    def on_error(self, headers, message):
-        log.debug('received an error %s [%s]' % (message, headers))
-        self.errors = self.errors + 1
-
-    def on_connecting(self, host_and_port):
-        self.connections = self.connections + 1
-        log.debug('connecting %s %s (x %s)' % (host_and_port[0], host_and_port[1], self.connections))
-
-    def on_disconnected(self):
-        self.disconnects = self.disconnects + 1
-        log.debug('disconnected (x %s)' % self.disconnects)
-
     def on_message(self, headers, message):
-        log.debug('received a message %s' % message)
-        self.messages = self.messages + 1
+        StatsListener.on_message(self, headers, message)
         self.message_list.append(message)
-
-    def on_heartbeat_timeout(self):
-        log.debug('received heartbeat timeout')
-        self.heartbeat_timeouts = self.heartbeat_timeouts + 1
-
-
-class PrintingListener(ConnectionListener):
-    def on_error(self, headers, message):
-        print('received an error: %s [%s]' % (message, headers))
-
-    def on_connecting(self, host_and_port):
-        print('connecting: %s %s' % (host_and_port[0], host_and_port[1]))
-
-    def on_disconnected(self):
-        print('disconnected')
-
-    def on_message(self, headers, message):
-        print('received a message: %s [%s]' % (message, headers))
-
-    def on_heartbeat_timeout(self):
-        log.debug('received heartbeat timeout')
 
 
 class TestStompServer(object):

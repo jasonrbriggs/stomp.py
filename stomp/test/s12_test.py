@@ -13,7 +13,7 @@ class Test12Connect(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection12(get_standard_host())
-        listener = TestListener()
+        listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
         conn.connect('admin', 'password', wait=True)
@@ -27,9 +27,9 @@ class Test12Connect(unittest.TestCase):
     def testsend12(self):
         self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        self.conn.send(body='this is a test using protocol 1.2', destination='/queue/test')
+        self.conn.send(body='this is a test using protocol 1.2', destination='/queue/test', receipt='123')
 
-        time.sleep(3)
+        self.listener.wait_on_receipt()
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')

@@ -11,7 +11,7 @@ class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection(get_standard_host())
-        listener = TestListener()
+        listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
         conn.connect('admin', 'password', wait=True)
@@ -26,9 +26,9 @@ class TestNonAsciiSend(unittest.TestCase):
         self.conn.subscribe(destination='/queue/test', ack='auto', id='1')
 
         txt = 'марко'
-        self.conn.send(body=txt, destination='/queue/test')
+        self.conn.send(body=txt, destination='/queue/test', receipt='123')
 
-        time.sleep(5)
+        self.listener.wait_on_receipt()
 
         self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages >= 1, 'should have received 1 message')

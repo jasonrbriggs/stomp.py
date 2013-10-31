@@ -54,7 +54,8 @@ def default_create_thread(callback):
     Default thread creation - used to create threads when the client doesn't want to provide their
     own thread creation.
     
-    \param callback the callback function provided to threading.Thread
+    \param callback
+        the callback function provided to threading.Thread
     """
     thread = threading.Thread(None, callback)
     thread.daemon = True  # Don't let thread prevent termination
@@ -64,7 +65,7 @@ def default_create_thread(callback):
 
 def is_localhost(host_and_port):
     """
-    Return true if the specified host+port is a member of the 'localhost' list of hosts
+    Return true if the specified host+port is a member of the 'localhost' list of hosts.
     """
     (host, port) = host_and_port
     if host in LOCALHOST_NAMES:
@@ -77,8 +78,10 @@ def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
     
-    \param lines the lines received in the response
-    \param offset the starting line number
+    \param lines
+        the lines received in the message response
+    \param offset
+        the starting line number
     """
     headers = {}
     for header_line in lines[offset:]:
@@ -96,6 +99,9 @@ def parse_frame(frame):
     where frame_type is the frame type as a string (e.g. MESSAGE),
     headers is a map containing all header key/value pairs, and
     body is a string containing the frame's payload.
+    
+    \param frame
+        the frame received from the server (as a string)
     """
     f = Frame()
     if frame == '\x0a':
@@ -141,6 +147,11 @@ def calculate_heartbeats(shb, chb):
     """
     Given a heartbeat string from the server, and a heartbeat tuple from the client,
     calculate what the actual heartbeat settings should be.
+    
+    \param shb
+        server heartbeat numbers
+    \param chb
+        client heartbeat numbers
     """
     (sx, sy) = shb
     (cx, cy) = chb

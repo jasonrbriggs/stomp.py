@@ -6,12 +6,14 @@ import xml
 
 import stomp
 from stomp import exception
+from stomp.listener import *
 
 from testutils import *
 
 
-class TransformationListener(ConnectionListener):
-    def __init__(self):
+class TransformationListener(WaitingListener):
+    def __init__(self, receipt):
+        WaitingListener.__init__(self, receipt)
         self.message = None
     
     def on_before_message(self, headers, body):
@@ -46,7 +48,7 @@ class TestMessageTransform(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection(get_standard_host())
-        listener = TransformationListener()
+        listener = TransformationListener('123')
         conn.set_listener('', listener)
         conn.start()
         conn.connect('admin', 'password', wait=True)
@@ -57,7 +59,7 @@ class TestMessageTransform(unittest.TestCase):
         if self.conn:
             self.conn.disconnect()
        
-    def testbasic(self):
+    def testTransform(self):
         self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
         self.conn.send(body='''<map>
@@ -69,9 +71,9 @@ class TestMessageTransform(unittest.TestCase):
         <string>city</string>
         <string>Belgrade</string>
     </entry>
-</map>''', destination='/queue/test', headers={'transformation':'jms-map-xml'})
+</map>''', destination='/queue/test', headers={'transformation':'jms-map-xml'}, receipt='123')
 
-        time.sleep(2)
+        self.listener.wait_on_receipt()
         
         self.assert_(self.listener.message.__class__ == dict, 'Message type should be dict after transformation')
         self.assert_(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')

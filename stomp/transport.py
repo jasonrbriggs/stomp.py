@@ -306,8 +306,10 @@ class Transport(object):
         
         \see listener::ConnectionListener
         
-        \param name the name of the listener
-        \param listener the listener object
+        \param name
+            the name of the listener
+        \param listener
+            the listener object
         """
         self.listeners[name] = listener
         
@@ -367,6 +369,9 @@ class Transport(object):
         self.current_host_and_port = None
 
     def send_frame(self, frame):
+        """
+        Convert a frame object to a frame string and transmit to the server.
+        """
         for listener in self.listeners.values():
             if not listener: continue
             if not hasattr(listener, 'on_send'):
@@ -689,8 +694,10 @@ class Transport(object):
         if not self.__socket:
             raise exception.ConnectFailedException()
 
-
     def wait_for_connection(self):
+        """
+        Wait until we've established a connection with the server.
+        """
         self.__connect_wait_condition.acquire()
         while not self.is_connected(): 
             self.__connect_wait_condition.wait()

@@ -13,7 +13,7 @@ class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection(get_standard_host())
-        listener = TestListener()
+        listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
         conn.connect('admin', 'password', wait=True)
@@ -27,9 +27,9 @@ class TestBasicSend(unittest.TestCase):
     def testbasic(self):
         self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        self.conn.send(body='this is a test', destination='/queue/test')
+        self.conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-        time.sleep(3)
+        self.listener.wait_on_receipt()
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
@@ -40,7 +40,7 @@ class TestBasicSend(unittest.TestCase):
         trans_id = self.conn.begin()
         self.conn.send(body='this is a test1', destination='/queue/test', transaction=trans_id)
         self.conn.send(body='this is a test2', destination='/queue/test', transaction=trans_id)
-        self.conn.send(body='this is a test3', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test3', destination='/queue/test', transaction=trans_id, receipt='123')
 
         time.sleep(3)
 
@@ -48,7 +48,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
 
         self.conn.commit(transaction = trans_id)
-        time.sleep(3)
+        self.listener.wait_on_receipt()
 
         self.assert_(self.listener.messages == 3, 'should have received 3 messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
@@ -93,9 +93,9 @@ class TestBasicSend(unittest.TestCase):
             conn.connect('admin', 'password', wait=True)
             conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-            conn.send(body='this is a test', destination='/queue/test')
+            conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-            time.sleep(3)
+            self.listener.wait_on_receipt()
             conn.disconnect()
 
             self.assert_(self.listener.connections > 1, 'should have received 1 connection acknowledgement')
@@ -110,9 +110,9 @@ class TestBasicSend(unittest.TestCase):
  
         oldhandler = signal.signal(signal.SIGCHLD, childhandler)
  
-        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
+        self.conn.subscribe(destination='/queue/test', id=1, ack='auto', receipt='123')
  
-        time.sleep(3)
+        self.listener.wait_on_receipt()
  
         self.conn.send(body='this is an interrupt test 1', destination='/queue/test')
  
@@ -124,9 +124,9 @@ class TestBasicSend(unittest.TestCase):
         signal.signal(signal.SIGCHLD, oldhandler)
         print("completed signal section")
  
-        self.conn.send(body='this is an interrupt test 2', destination='/queue/test')
+        self.conn.send(body='this is an interrupt test 2', destination='/queue/test', receipt='123')
  
-        time.sleep(3)
+        self.listener.wait_on_receipt()
  
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')

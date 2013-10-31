@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.split(__file__)[0])
 
 import connect, listener, exception, transport, protocol
 
-__version__ = (4, 0, 2)
+__version__ = (4, 0, 3)
 
 ##
 # Alias for STOMP 1.0 connections.
@@ -46,3 +46,7 @@ ConnectionListener = listener.ConnectionListener
 # Access to the stats listener.
 #
 StatsListener = listener.StatsListener
+
+##
+# Access to the 'waiting' listener.
+WaitingListener = listener.WaitingListener

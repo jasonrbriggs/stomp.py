@@ -10,15 +10,15 @@ class Test11Send(unittest.TestCase):
 
     def test11(self):
         conn = stomp.Connection(get_standard_host())
-        tl = TestListener()
+        tl = TestListener('123')
         conn.set_listener('', tl)
         conn.start()
         conn.connect('admin', 'password', wait=True)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
 
-        conn.send(body='this is a test', destination='/queue/test')
+        conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-        time.sleep(3)
+        tl.wait_on_receipt()
 
         self.assert_(tl.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(tl.messages >= 1, 'should have received at least 1 message')
@@ -35,21 +35,18 @@ class Test11Send(unittest.TestCase):
         # wait for the receipt
         wl.wait_on_receipt()
         
-        # unnecessary... but anyway
-        self.assert_(wl.received == True)
-        
     def testheartbeat(self):
         conn = stomp.Connection(get_standard_host(), heartbeats=(2000,3000))
-        listener = TestListener()
+        listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
         conn.connect('admin', 'password', wait=True)
         self.assert_(conn.heartbeats[0] > 0)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
 
-        conn.send(body='this is a test', destination='/queue/test')
+        conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-        time.sleep(10)
+        listener.wait_on_receipt()
         conn.disconnect()
 
         self.assert_(listener.connections >= 1, 'should have received 1 connection acknowledgement, was %s' % listener.connections)

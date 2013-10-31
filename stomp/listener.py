@@ -17,6 +17,7 @@ except ImportError:
 import logging
 log = logging.getLogger('stomp.py')
 
+
 class ConnectionListener(object):
     """
     This class should be used as a base class for objects registered
@@ -30,8 +31,8 @@ class ConnectionListener(object):
         protocol level. For this, you need to invoke the "connect"
         method on the connection.
 
-        \param host_and_port a tuple containing the host name and port
-        number to which the connection has been established.
+        \param host_and_port
+            a tuple containing the host name and port number to which the connection has been established.
         """
         pass
 
@@ -41,11 +42,10 @@ class ConnectionListener(object):
         received, that is after a connection has been established or
         re-established.
 
-        \param headers a dictionary containing all headers sent by the
-        server as key/value pairs.
-
-        \param body the frame's payload. This is usually empty for
-        CONNECTED frames.
+        \param headers
+            a dictionary containing all headers sent by the server as key/value pairs.
+        \param body
+            the frame's payload. This is usually empty for CONNECTED frames.
         """
         pass
 
@@ -65,6 +65,15 @@ class ConnectionListener(object):
         pass
         
     def on_before_message(self, headers, body):
+        """
+        Called by the STOMP connection before a message is returned to the client app. Returns a tuple
+        containing the headers and body (so that implementing listeners can pre-process the content).
+
+        \param headers
+            the message headers
+        \param body
+            the message body
+        """
         return (headers, body)
 
     def on_message(self, headers, body):
@@ -72,10 +81,10 @@ class ConnectionListener(object):
         Called by the STOMP connection when a MESSAGE frame is
         received.
 
-        \param headers a dictionary containing all headers sent by the
-        server as key/value pairs.
-
-        \param body the frame's payload - the message body.
+        \param headers
+            a dictionary containing all headers sent by the server as key/value pairs.
+        \param body
+            the frame's payload - the message body.
         """
         pass
 
@@ -85,11 +94,10 @@ class ConnectionListener(object):
         received, sent by the server if requested by the client using
         the 'receipt' header.
 
-        \param headers a dictionary containing all headers sent by the
-        server as key/value pairs.
-
-        \param body the frame's payload. This is usually empty for
-        RECEIPT frames.
+        \param headers
+            a dictionary containing all headers sent by the server as key/value pairs.
+        \param body
+            the frame's payload. This is usually empty for RECEIPT frames.
         """
         pass
 
@@ -98,11 +106,10 @@ class ConnectionListener(object):
         Called by the STOMP connection when an ERROR frame is
         received.
 
-        \param headers a dictionary containing all headers sent by the
-        server as key/value pairs.
-
-        \param body the frame's payload - usually a detailed error
-        description.
+        \param headers
+            a dictionary containing all headers sent by the server as key/value pairs.
+        \param body
+            the frame's payload - usually a detailed error description.
         """
         pass
 
@@ -110,7 +117,8 @@ class ConnectionListener(object):
         """
         Called by the STOMP connection when it is in the process of sending a message
         
-        \param frame the frame to be sent
+        \param frame
+            the frame to be sent
         """
         pass
 
@@ -122,6 +130,9 @@ class ConnectionListener(object):
 
 
 class HeartbeatListener(ConnectionListener):
+    """
+    Listener used to handle STOMP heartbeating.
+    """
     def __init__(self, heartbeats):
         self.connected = False
         self.running = False
@@ -129,26 +140,40 @@ class HeartbeatListener(ConnectionListener):
         self.__received_heartbeat = time.time()
     
     def on_connected(self, headers, body):
+        """
+        Once the connection is established, and 'heart-beat' is found in the headers, we calculate the real heartbeat numbers
+        (based on what the server sent and what was specified by the client) - if the heartbeats are not 0, we start up the
+        heartbeat loop accordingly.
+        """
         if 'heart-beat' in headers.keys():
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0,0):
                 utils.default_create_thread(self.__heartbeat_loop)
                 
     def on_message(self, headers, body):
+        """
+        Reset the last received time whenever a message is received.
+        """
         # reset the heartbeat for any received message
         self.__received_heartbeat = time.time()
         
     def on_heartbeat(self):
+        """
+        Reset the last received time whenever a heartbeat message is received.
+        """
         self.__received_heartbeat = time.time()
         
     def on_send(self, frame):
+        """
+        Add the heartbeat header to the frame when connecting.
+        """
         if frame.cmd == 'CONNECT' or frame.cmd == 'STOMP':
             if self.heartbeats != (0, 0):
                 frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
      
     def __heartbeat_loop(self):
         """
-        Loop for sending (and monitoring received) heartbeats
+        Main loop for sending (and monitoring received) heartbeats.
         """
         send_sleep = self.heartbeats[0] / 1000
 
@@ -191,7 +216,6 @@ class HeartbeatListener(ConnectionListener):
                     self.set_connected(False)
 
 
-
 class WaitingListener(ConnectionListener):
     """
     A listener which waits for a specific receipt to arrive
@@ -202,6 +226,9 @@ class WaitingListener(ConnectionListener):
         self.received = False
         
     def on_receipt(self, headers, body):
+        """
+        If the receipt id can be found in the headers, then notify the waiting thread.
+        """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
             self.condition.acquire()
             self.received = True
@@ -209,10 +236,14 @@ class WaitingListener(ConnectionListener):
             self.condition.release()
         
     def wait_on_receipt(self):
+        """
+        Wait until we receive a message receipt.
+        """
         self.condition.acquire()
         while not self.received:
             self.condition.wait()
         self.condition.release()
+        self.received = False
 
 
 class StatsListener(ConnectionListener):
@@ -220,35 +251,66 @@ class StatsListener(ConnectionListener):
     A connection listener for recording statistics on messages sent and received.
     """
     def __init__(self):
+        ## The number of errors received
         self.errors = 0
+        ## The number of connections established
         self.connections = 0
-        self.messages_recd = 0
+        ## The number of disconnections
+        self.disconnects = 0
+        ## The number of messages received
+        self.messages = 0
+        ## The number of messages sent
         self.messages_sent = 0
+        ## The number of heartbeat timeouts
+        self.heartbeat_timeouts = 0
+
+    def on_disconnected(self):
+        """
+        Increment the disconnect count.
+        \see ConnectionListener::on_disconnected
+        """
+        self.disconnects = self.disconnects + 1
+        log.debug('disconnected (x %s)' % self.disconnects)
 
     def on_error(self, headers, message):
         """
+        Increment the error count.
         \see ConnectionListener::on_error
         """
+        log.debug('received an error %s [%s]' % (message, headers))
         self.errors += 1
 
     def on_connecting(self, host_and_port):
         """
+        Increment the connection count.
         \see ConnectionListener::on_connecting
         """
+        log.debug('connecting %s %s (x %s)' % (host_and_port[0], host_and_port[1], self.connections))
         self.connections += 1
 
     def on_message(self, headers, body):
         """
+        Increment the message received count.
         \see ConnectionListener::on_message
         """
-        self.messages_recd += 1
+        log.debug('received a message %s' % body)
+        self.messages += 1
         
     def on_send(self, frame):
         """
+        Increment the send count.
         \see ConnectionListener::on_send
         """
         self.messages_sent += 1
         
+    def on_heartbeat_timeout(self):
+        """
+        Increment the heartbeat timeout.
+        \see ConnectionListener::on_heartbeat_timeout
+        """
+        log.debug('received heartbeat timeout')
+        self.heartbeat_timeouts = self.heartbeat_timeouts + 1
+
     def __str__(self):
         """
         Return a string containing the current statistics (messages sent and received,
@@ -257,4 +319,4 @@ class StatsListener(ConnectionListener):
         return '''Connections: %s
 Messages sent: %s
 Messages received: %s
-Errors: %s''' % (self.connections, self.messages_sent, self.messages_recd, self.errors)
+Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.errors)

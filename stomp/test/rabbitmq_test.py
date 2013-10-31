@@ -12,15 +12,15 @@ class TestRabbitMQSend(unittest.TestCase):
 
     def testbasic(self):
         conn = stomp.Connection(get_rabbitmq_host(), 'guest', 'guest')
-        listener = TestListener()
+        listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
         conn.connect(wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        conn.send(body='this is a test', destination='/queue/test')
+        conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-        time.sleep(2)
+        listener.wait_on_receipt()
         conn.disconnect()
 
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')

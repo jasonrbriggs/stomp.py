@@ -97,6 +97,10 @@ class StompConnection12(Transport, Protocol12):
                  heartbeats = (0, 0),
                  keepalive = None,
                  vhost = None):
+        """
+        \see stomp::transport::Transport.__init__
+        \see stomp::protocol::Protocol12.__init__
+        """
         Transport.__init__(self, host_and_ports, prefer_localhost, try_loopback_connect, 
             reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter, reconnect_sleep_max, reconnect_attempts_max,
             use_ssl, ssl_key_file, ssl_cert_file, ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,

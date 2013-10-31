@@ -29,7 +29,3 @@ def join(chars):
 
 def getheader(headers, key):
     return headers.getheader(key)
-
-def wrap_stringio(sio):
-    import codecs
-    return codecs.getwriter("utf8")(sio)        

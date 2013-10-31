@@ -35,6 +35,4 @@ def join(chars):
 def getheader(headers, key):
     return headers[key]
 
-def wrap_stringio(sio):
-    return sio
 
