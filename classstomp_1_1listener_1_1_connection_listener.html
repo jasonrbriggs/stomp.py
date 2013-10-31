@@ -150,7 +150,7 @@ Public Member Functions</h2></td></tr>
 <p>Returns a tuple containing the headers and body (so that implementing listeners can pre-process the content).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">headers</td><td>the message headers</td></tr>
+    <tr><td class="paramname">headers</td><td>the message headers </td></tr>
     <tr><td class="paramname">body</td><td>the message body </td></tr>
   </table>
   </dd>
@@ -191,7 +191,7 @@ Public Member Functions</h2></td></tr>
 <p>Called by the STOMP connection when a CONNECTED frame is received, that is after a connection has been established or re-established. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs.</td></tr>
+    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs. </td></tr>
     <tr><td class="paramname">body</td><td>the frame's payload. This is usually empty for CONNECTED frames. </td></tr>
   </table>
   </dd>
@@ -286,7 +286,7 @@ Public Member Functions</h2></td></tr>
 <p>Called by the STOMP connection when an ERROR frame is received. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs.</td></tr>
+    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs. </td></tr>
     <tr><td class="paramname">body</td><td>the frame's payload - usually a detailed error description. </td></tr>
   </table>
   </dd>
@@ -363,7 +363,7 @@ Public Member Functions</h2></td></tr>
 <p>Called by the STOMP connection when a MESSAGE frame is received. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs.</td></tr>
+    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs. </td></tr>
     <tr><td class="paramname">body</td><td>the frame's payload - the message body. </td></tr>
   </table>
   </dd>
@@ -404,7 +404,7 @@ Public Member Functions</h2></td></tr>
 <p>Called by the STOMP connection when a RECEIPT frame is received, sent by the server if requested by the client using the 'receipt' header. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs.</td></tr>
+    <tr><td class="paramname">headers</td><td>a dictionary containing all headers sent by the server as key/value pairs. </td></tr>
     <tr><td class="paramname">body</td><td>the frame's payload. This is usually empty for RECEIPT frames. </td></tr>
   </table>
   </dd>
@@ -452,7 +452,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 30 2013 16:51:51 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 31 2013 11:05:36 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>
