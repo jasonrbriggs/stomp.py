@@ -200,3 +200,18 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('run stomp/test/test.txt')      
         cli.onecmd('quit')
 
+    def testrunarg(self):
+        stdin = TestStdin()
+        stdout = TestStdout(self)
+        stdout.expect('CONNECTED')
+
+        cli = StompCLI(host, port, username, password, 1.0, stdin, stdout)
+
+        time.sleep(3)
+
+        stdout.expect('Subscribing to "/queue/testfile" with acknowledge set to "auto", id set to "1"')
+        stdout.expect('this is a test')
+        stdout.expect('MESSAGE')
+        stdout.expect('Unsubscribing from "/queue/testfile"')
+
+        cli.do_run('stomp/test/test.txt')
