@@ -9,16 +9,16 @@ Quick Start
 
 A basic example of using stomp.py can be found [here](https://github.com/kwoli/stomp.py/wiki/Simple-Example). Testing via the command-line interface is described [here](https://github.com/kwoli/stomp.py/wiki/Command-Line-Access).
 
-Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).
+Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).  
 API documentation can be found [here](http://jasonrbriggs.github.io/stomp.py/index.html).
 
 Please note that stomp.py was available as a single file (stomp.py), but as of version 2 was split into multiple files in a module directory (click [this link](https://code.google.com/p/stomppy/downloads/detail?name=stomp.py&can=1&q=) if you still want access to this older version).
 
 Select:
 
-- Version 4.0+ for both Python2.x and Python3.x - with support for STOMP 1.2 (note this version separates the transport mechanism from the protocol)
-- Version 3.0+ for both Python2.x and Python3.x - STOMP 1.0 and 1.1 only
-- Version 2.0.x for Python2.x
+- [Version 4.0+](https://pypi.python.org/pypi/stomp.py) for both Python2.x and Python3.x - with support for STOMP 1.2 (note this version separates the transport mechanism from the protocol)
+- [Version 3.0+](https://pypi.python.org/pypi/stomp.py/3.1.3) for both Python2.x and Python3.x - STOMP 1.0 and 1.1 only
+- [Version 2.0.x](https://pypi.python.org/pypi/stomp.py/2.0.1) for Python2.x
 
 stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/apollo/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer.
 
