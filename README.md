@@ -17,8 +17,8 @@ Please note that stomp.py was available as a single file (stomp.py), but as of v
 Select:
 
 - [Version 4.0+](https://pypi.python.org/pypi/stomp.py) for both Python2.x and Python3.x - with support for STOMP 1.2 (note this version separates the transport mechanism from the protocol)
-- [Version 3.0+](https://pypi.python.org/pypi/stomp.py/3.1.3) for both Python2.x and Python3.x - STOMP 1.0 and 1.1 only
-- [Version 2.0.x](https://pypi.python.org/pypi/stomp.py/2.0.1) for Python2.x
+- [Version 3.0+](https://code.google.com/p/stomppy/downloads/list?can=1&q=3.1.3) for both Python2.x and Python3.x - STOMP 1.0 and 1.1 only
+- [Version 2.0.x](https://code.google.com/p/stomppy/downloads/list?can=1&q=2.0.1) for Python2.x
 
 stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/apollo/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging). For more info on setting up the test server (using virtualbox), contact the developer.
 
