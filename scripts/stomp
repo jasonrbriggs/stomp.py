@@ -1,5 +1,9 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-STOMP_PATH=`python -c "import os,stomp; print(os.path.dirname(stomp.__file__))"`
+import os
+import stomp
+import sys
 
-python $STOMP_PATH $*
+stomp_path = os.path.dirname(stomp.__file__)
+
+os.system('python %s %s' % (stomp_path, ' '.join(sys.argv)))
