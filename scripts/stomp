@@ -1,0 +1,5 @@
+#! /bin/sh
+
+STOMP_PATH=`python -c "import os,stomp; print(os.path.dirname(stomp.__file__))"`
+
+python $STOMP_PATH $*
