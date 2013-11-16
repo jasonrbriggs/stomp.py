@@ -1,3 +1,8 @@
+Version 4.0.3 - Nov 2013
+
+ * Add script for cmd line access (so you can run `stomp -H localhost -P 61613` rather than python $PATH_TO_STOMP/stomp ....)
+
+
 Version 4.0.2 - Oct 2013
 
  * Fix minor error with 1.2 connections. Add basic unit tests for 1.0, and 1.2
