@@ -54,13 +54,15 @@ class TestMessageTransform(unittest.TestCase):
         conn.connect('admin', 'password', wait=True)
         self.conn = conn
         self.listener = listener
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
         
     def tearDown(self):
         if self.conn:
             self.conn.disconnect()
        
     def testTransform(self):
-        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
+        queuename = '/queue/testtransform-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='auto')
 
         self.conn.send(body='''<map>
     <entry>
@@ -71,7 +73,7 @@ class TestMessageTransform(unittest.TestCase):
         <string>city</string>
         <string>Belgrade</string>
     </entry>
-</map>''', destination='/queue/test', headers={'transformation':'jms-map-xml'}, receipt='123')
+</map>''', destination=queuename, headers={'transformation':'jms-map-xml'}, receipt='123')
 
         self.listener.wait_on_receipt()
         

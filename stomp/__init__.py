@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.split(__file__)[0])
 
 import connect, listener, exception, transport, protocol
 
-__version__ = (4, 0, 3)
+__version__ = (4, 0, 4)
 
 ##
 # Alias for STOMP 1.0 connections.

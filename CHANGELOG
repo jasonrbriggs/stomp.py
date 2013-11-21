@@ -1,3 +1,8 @@
+Version 4.0.4 - Nov 2013
+
+ * Fix ack/nack function inconsistencies in each protocol (as per https://github.com/jasonrbriggs/stomp.py/issues/1)
+
+
 Version 4.0.3 - Nov 2013
 
  * Add script for cmd line access (so you can run `stomp -H localhost -P 61613` rather than python $PATH_TO_STOMP/stomp ....)

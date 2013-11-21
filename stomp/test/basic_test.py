@@ -19,15 +19,17 @@ class TestBasicSend(unittest.TestCase):
         conn.connect('admin', 'password', wait=True)
         self.conn = conn
         self.listener = listener
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
         
     def tearDown(self):
         if self.conn:
             self.conn.disconnect()
-       
-    def testbasic(self):
-        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        self.conn.send(body='this is a test', destination='/queue/test', receipt='123')
+    def testbasic(self):
+        queuename = '/queue/test1-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='auto')
+
+        self.conn.send(body='this is a test', destination=queuename, receipt='123')
 
         self.listener.wait_on_receipt()
 
@@ -36,11 +38,12 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
     
     def testcommit(self):
-        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
+        queuename = '/queue/test2-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='auto')
         trans_id = self.conn.begin()
-        self.conn.send(body='this is a test1', destination='/queue/test', transaction=trans_id)
-        self.conn.send(body='this is a test2', destination='/queue/test', transaction=trans_id)
-        self.conn.send(body='this is a test3', destination='/queue/test', transaction=trans_id, receipt='123')
+        self.conn.send(body='this is a test1', destination=queuename, transaction=trans_id)
+        self.conn.send(body='this is a test2', destination=queuename, transaction=trans_id)
+        self.conn.send(body='this is a test3', destination=queuename, transaction=trans_id, receipt='123')
 
         time.sleep(3)
 
@@ -54,11 +57,12 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
     def testabort(self):
-        self.conn.subscribe(destination='/queue/test', id=1, ack='auto')
+        queuename = '/queue/test3-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='auto')
         trans_id = self.conn.begin()
-        self.conn.send(body='this is a test1', destination='/queue/test', transaction=trans_id)
-        self.conn.send(body='this is a test2', destination='/queue/test', transaction=trans_id)
-        self.conn.send(body='this is a test3', destination='/queue/test', transaction=trans_id)
+        self.conn.send(body='this is a test1', destination=queuename, transaction=trans_id)
+        self.conn.send(body='this is a test2', destination=queuename, transaction=trans_id)
+        self.conn.send(body='this is a test3', destination=queuename, transaction=trans_id)
 
         time.sleep(3)
 
@@ -87,13 +91,14 @@ class TestBasicSend(unittest.TestCase):
     def testssl(self):
         try:
             import ssl
+            queuename = '/queue/test4-%s' % self.timestamp
             conn = stomp.Connection(get_standard_ssl_host(), use_ssl = True)
             conn.set_listener('', self.listener)
             conn.start()
             conn.connect('admin', 'password', wait=True)
-            conn.subscribe(destination='/queue/test', id=1, ack='auto')
+            conn.subscribe(destination=queuename, id=1, ack='auto')
 
-            conn.send(body='this is a test', destination='/queue/test', receipt='123')
+            conn.send(body='this is a test', destination=queuename, receipt='123')
 
             self.listener.wait_on_receipt()
             conn.disconnect()
@@ -110,11 +115,12 @@ class TestBasicSend(unittest.TestCase):
  
         oldhandler = signal.signal(signal.SIGCHLD, childhandler)
  
-        self.conn.subscribe(destination='/queue/test', id=1, ack='auto', receipt='123')
+        queuename = '/queue/test5-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='auto', receipt='123')
  
         self.listener.wait_on_receipt()
  
-        self.conn.send(body='this is an interrupt test 1', destination='/queue/test')
+        self.conn.send(body='this is an interrupt test 1', destination=queuename)
  
         print("causing signal by starting child process")
         os.system("sleep 1")
@@ -124,10 +130,40 @@ class TestBasicSend(unittest.TestCase):
         signal.signal(signal.SIGCHLD, oldhandler)
         print("completed signal section")
  
-        self.conn.send(body='this is an interrupt test 2', destination='/queue/test', receipt='123')
+        self.conn.send(body='this is an interrupt test 2', destination=queuename, receipt='123')
  
         self.listener.wait_on_receipt()
  
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
         self.assert_(self.conn.is_connected(), 'should still be connected to STOMP provider')
+        
+    def testclientack(self):
+        queuename = '/queue/testclientack-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client')
+
+        self.conn.send(body='this is a test', destination=queuename, receipt='123')
+
+        self.listener.wait_on_receipt()
+        
+        (headers, msg) = self.listener.get_latest_message()
+        
+        message_id = headers['message-id']
+        subscription = headers['subscription']
+        
+        self.conn.ack(message_id, subscription)
+
+    def testclientnack(self):
+        queuename = '/queue/testclientnack-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client')
+
+        self.conn.send(body='this is a test', destination=queuename, receipt='123')
+
+        self.listener.wait_on_receipt()
+        
+        (headers, msg) = self.listener.get_latest_message()
+        
+        message_id = headers['message-id']
+        subscription = headers['subscription']
+        
+        self.conn.nack(message_id, subscription)

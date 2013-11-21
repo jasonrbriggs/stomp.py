@@ -302,33 +302,33 @@ class StompCLI(Cmd, ConnectionListener):
     help_ver = help_version
     
     def check_ack_nack(self, cmd, args):
-        if self.version >= 1.1 and len(args) < 2:
+        if self.version >= 1.2 and len(args) < 1:
+            self.__error("Expecting: %s <ack-id>" % cmd)
+            return None
+        elif self.version == 1.1 and len(args) < 2:
             self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
             return None
         elif len(args) < 1:
             self.__error("Expecting: %s <message-id>" % cmd)
             return None
+
+        if len(args) == 1:
+            return (args[0], None)
+        else:
+            return (args[0], args[1])
             
-        hdrs = { 'message-id' : args[0] }
-            
-        if self.version >= 1.1:
-            if len(args) < 2:
-                self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
-                return
-            hdrs['subscription'] = args[1]
-            
-        return hdrs
-    
     def do_ack(self, args):
         args = args.split()
         hdrs = self.check_ack_nack('ack', args)
         if hdrs is None:
             return
             
+        (message_id, subscription_id) = hdrs
+            
         if not self.transaction_id:
-            self.conn.ack(headers = hdrs)
+            self.conn.ack(message_id, subscription_id)
         else:
-            self.conn.ack(headers = hdrs, transaction=self.transaction_id)
+            self.conn.ack(message_id, subscription_id, transaction=self.transaction_id)
             
     def help_ack(self):
         self.help('ack <message-id> [subscription-id]', '''The command 'ack' is used to acknowledge consumption of a message from a subscription using client

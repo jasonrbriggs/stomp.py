@@ -30,10 +30,26 @@ class TestListener(StatsListener,WaitingListener):
         StatsListener.__init__(self)
         WaitingListener.__init__(self, receipt)
         self.message_list = []
+        self.message_condition = threading.Condition()
+        self.message_received = False
 
     def on_message(self, headers, message):
         StatsListener.on_message(self, headers, message)
-        self.message_list.append(message)
+        self.message_list.append((headers, message))
+        self.message_condition.acquire()
+        self.message_received = True
+        self.message_condition.notify()
+        self.message_condition.release()
+        
+    def wait_for_message(self):
+        self.message_condition.acquire()
+        while not self.message_received:
+            self.message_condition.wait()
+        self.message_condition.release()
+        self.message_received = False
+        
+    def get_latest_message(self):
+        return self.message_list[len(self.message_list)-1]
 
 
 class TestStompServer(object):

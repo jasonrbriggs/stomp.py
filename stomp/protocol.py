@@ -31,7 +31,7 @@ class Protocol10(ConnectionListener):
 
     def ack(self, id, transaction = None):
         assert id is not None, "'id' is required"
-        headers = { HDR_ID : id }
+        headers = { HDR_MESSAGE_ID : id }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_ACK, headers)
@@ -124,9 +124,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_ABORT, headers)
 
-    def ack(self, id, transaction = None):
+    def ack(self, id, subscription, transaction = None):
         assert id is not None, "'id' is required"
-        headers = { HDR_ID : id }
+        assert subscription is not None, "'subscription' is required"
+        headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_ACK, headers)
@@ -171,9 +172,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_RECEIPT] = receipt
         self.__send_frame(CMD_DISCONNECT, headers)
 
-    def nack(self, id, transaction = None):
+    def nack(self, id, subscription, transaction = None):
         assert id is not None, "'id' is required"
-        headers = { HDR_ID : id }
+        assert subscription is not None, "'subscription' is required"
+        headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_NACK, headers)
@@ -217,6 +219,20 @@ class Protocol12(Protocol11):
     def __send_frame(self, cmd, headers = {}, body = ''):
         frame = utils.Frame(cmd, headers, body)
         self.transport.send_frame(frame)
+
+    def ack(self, id, transaction = None):
+        assert id is not None, "'id' is required"
+        headers = { HDR_ID : id }
+        if transaction:
+            headers[HDR_TRANSACTION] = transaction
+        self.__send_frame(CMD_ACK, headers)
+
+    def nack(self, id, transaction = None):
+        assert id is not None, "'id' is required"
+        headers = { HDR_ID : id }
+        if transaction:
+            headers[HDR_TRANSACTION] = transaction
+        self.__send_frame(CMD_NACK, headers)
 
     def connect(self, username=None, passcode=None, wait=False):
         """

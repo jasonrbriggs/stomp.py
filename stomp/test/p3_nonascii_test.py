@@ -17,16 +17,18 @@ class TestNonAsciiSend(unittest.TestCase):
         conn.connect('admin', 'password', wait=True)
         self.conn = conn
         self.listener = listener
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
         
     def tearDown(self):
         if self.conn:
             self.conn.disconnect()
        
     def test_send_nonascii(self):
-        self.conn.subscribe(destination='/queue/test', ack='auto', id='1')
+        queuename = '/queue/p3nonasciitest-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
         txt = 'марко'
-        self.conn.send(body=txt, destination='/queue/test', receipt='123')
+        self.conn.send(body=txt, destination=queuename, receipt='123')
 
         self.listener.wait_on_receipt()
 
@@ -34,5 +36,5 @@ class TestNonAsciiSend(unittest.TestCase):
         self.assert_(self.listener.messages >= 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
         
-        msg = self.listener.message_list[0]
+        (headers, msg) = self.listener.get_latest_message()
         self.assertEquals(txt, msg)
