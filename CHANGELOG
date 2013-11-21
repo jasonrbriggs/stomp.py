@@ -1,6 +1,6 @@
 Version 4.0.4 - Nov 2013
 
- * Fix ack/nack function inconsistencies in each protocol (as per https://github.com/jasonrbriggs/stomp.py/issues/1)
+ * Fix ack/nack function inconsistencies in each protocol version (as per https://github.com/jasonrbriggs/stomp.py/issues/1)
 
 
 Version 4.0.3 - Nov 2013
