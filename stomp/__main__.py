@@ -2,6 +2,7 @@ import base64
 import os
 import sys
 import time
+import threading
 
 from cmd import Cmd
 from optparse import OptionParser
@@ -13,6 +14,7 @@ from backward import input_prompt
 import colors
 sys.path.append('.')
 import stomp
+import utils
 
 ##@namespace stomp.__main__
 # The stomp.py command line client (used for testing or simple STOMP command scripting).
@@ -41,9 +43,11 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See \link stomp::connect::StompConnection11 \endlink
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.1, stdin=sys.stdin, stdout=sys.stdout):
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.1, prompt='> ', verbose=True, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
+        self.prompt = prompt
+        self.verbose = verbose
         self.user = user
         self.passcode = passcode
         if ver == 1.0:
@@ -59,7 +63,6 @@ class StompCLI(Cmd, ConnectionListener):
         self.version = ver
         self.__subscriptions = {}
         self.__subscription_id = 1
-        self.prompt = '> '
 
     def __print_async(self, frame_type, headers, body):
         """
@@ -67,12 +70,14 @@ class StompCLI(Cmd, ConnectionListener):
         for the next input
         """
         self.__sysout("\r  \r", end='')
-        self.__sysout(frame_type)
-        for header_key in headers.keys():
-            self.__sysout('%s: %s' % (header_key, headers[header_key]))
-        self.__sysout('')
+        if self.verbose:
+            self.__sysout(frame_type)
+            for header_key in headers.keys():
+                self.__sysout('%s: %s' % (header_key, headers[header_key]))
+        if self.prompt != '':
+            self.__sysout('')
         self.__sysout(body)
-        self.__sysout('> ', end='')
+        self.__sysout(self.prompt, end='')
         self.stdout.flush()
         
     def __sysout(self, msg, end="\n"):
@@ -422,6 +427,9 @@ class StompCLI(Cmd, ConnectionListener):
     def help_run(self):
         self.help('run <filename>', 'Execute commands in a specified file')
 
+def do_nothing_loop():
+    while 1:
+        time.sleep(1)
 
 def main():    
     parser = OptionParser(version=stomppy_version)
@@ -438,13 +446,34 @@ def main():
                       help = 'File containing commands to be executed, instead of prompting from the command prompt.')
     parser.add_option('-S', '--stomp', type = 'float', dest = 'stomp', default = 1.1,
                       help = 'Set the STOMP protocol version.')
+    parser.add_option('-L', '--listen', type = 'string', dest = 'listen', default = None,
+                      help = 'Listen for messages on a queue/destination')
+    parser.add_option("-V", "--verbose", dest = "verbose", default = 'on',
+                      help = 'Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
                       
     parser.set_defaults()
     (options, args) = parser.parse_args()
     
-    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp)
+    if options.verbose == 'on':
+        verbose = True
+    else:
+        verbose = False
+
+    if options.listen:
+        prompt = ''
+    else:
+        prompt = '> '
+
+    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose)
     
-    if options.filename:
+    if options.listen:
+        st.do_subscribe(options.listen)
+        try:
+            while 1:
+                time.sleep(10)
+        except:
+            print("\n")
+    elif options.filename:
         st.do_run(options.filename)
     else:
         try:

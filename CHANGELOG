@@ -1,3 +1,12 @@
+Version 4.0.5 - Nov 2013
+
+ * Add command line message queue listener. So you can do:
+ 
+     > stomp -H localhost -P 61613 -L /queue/test
+	 
+ * Add verbose option to command line client (verbose "on" by default, if "off", headers aren't written to stdout)
+ 
+
 Version 4.0.4 - Nov 2013
 
  * Fix ack/nack function inconsistencies in each protocol version (as per https://github.com/jasonrbriggs/stomp.py/issues/1)
@@ -15,7 +24,9 @@ Version 4.0.2 - Oct 2013
 
 Version 4.0.1 - Oct 2013
  
- * Remove the 'transform' method/functionality, as this never went into the official spec. Clients who still want this should implement     themselves, using a listener (see https://github.com/jasonrbriggs/stomp.py/blob/master/stomp/test/misc_test.py for an example)
+ * Remove the 'transform' method/functionality, as this never went into the official spec. Clients who still want this should
+   implement themselves, using a listener (see https://github.com/jasonrbriggs/stomp.py/blob/master/stomp/test/misc_test.py for
+   an example)
  * Add support for STOMP 1.2 line endings
  * Enforce "host" header on 1.2 connect requests (note: should be enforced on 1.1 connections, but it seems rabbitmq connections
    fail if host is set)
