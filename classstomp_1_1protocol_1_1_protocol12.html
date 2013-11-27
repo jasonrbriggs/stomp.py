@@ -77,6 +77,10 @@ Inheritance diagram for stomp.protocol.Protocol12:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad9deca70fcbcced1b73ec2b425c9d6b2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1protocol_1_1_protocol12.html#ad9deca70fcbcced1b73ec2b425c9d6b2">__init__</a></td></tr>
 <tr class="separator:ad9deca70fcbcced1b73ec2b425c9d6b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94484df83ab976258e0e82a4e7d8427f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1protocol_1_1_protocol12.html#a94484df83ab976258e0e82a4e7d8427f">ack</a></td></tr>
+<tr class="separator:a94484df83ab976258e0e82a4e7d8427f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4efbf985d8945db5cc99e95569bf77de"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1protocol_1_1_protocol12.html#a4efbf985d8945db5cc99e95569bf77de">nack</a></td></tr>
+<tr class="separator:a4efbf985d8945db5cc99e95569bf77de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6977f566b387e98ce021af0171ad2662"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1protocol_1_1_protocol12.html#a6977f566b387e98ce021af0171ad2662">connect</a></td></tr>
 <tr class="memdesc:a6977f566b387e98ce021af0171ad2662"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a STOMP CONNECT frame.  <a href="#a6977f566b387e98ce021af0171ad2662">More...</a><br/></td></tr>
 <tr class="separator:a6977f566b387e98ce021af0171ad2662"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,6 +170,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a075d3bd1fde568ea36a01ed87d4729b1 inherit pub_attribs_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a156a201cb1824a2bf7b9910112fb91d9 inherit pub_attribs_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#a156a201cb1824a2bf7b9910112fb91d9">heartbeats</a></td></tr>
 <tr class="separator:a156a201cb1824a2bf7b9910112fb91d9 inherit pub_attribs_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93426d0a6a09d3a51e5eecef750bd9a3 inherit pub_attribs_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_heartbeat_listener.html#a93426d0a6a09d3a51e5eecef750bd9a3">heartbeat_thread</a></td></tr>
+<tr class="separator:a93426d0a6a09d3a51e5eecef750bd9a3 inherit pub_attribs_classstomp_1_1listener_1_1_heartbeat_listener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Version 1.2 of the protocol. </p>
@@ -203,6 +209,38 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a94484df83ab976258e0e82a4e7d8427f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def stomp.protocol.Protocol12.ack </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>transaction</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a6977f566b387e98ce021af0171ad2662"></a>
 <div class="memitem">
 <div class="memproto">
@@ -252,6 +290,38 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a4efbf985d8945db5cc99e95569bf77de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def stomp.protocol.Protocol12.nack </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>transaction</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="a56902eb7f9d68621c678776e352aa2a3"></a>
 <div class="memitem">
@@ -271,7 +341,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 1 2013 14:23:40 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 27 2013 21:15:00 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>
