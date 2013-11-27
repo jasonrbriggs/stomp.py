@@ -223,6 +223,7 @@ class Transport(object):
         
         self.blocking = None
         self.connected = False
+        self.connection_error = False
         
         # setup SSL
         if use_ssl and not ssl:
@@ -460,6 +461,12 @@ class Transport(object):
             elif frame_type == 'heartbeat':
                 listener.on_heartbeat()
                 continue
+
+            if frame_type == 'error' and self.connected == False:
+                self.__connect_wait_condition.acquire()
+                self.connection_error = True
+                self.__connect_wait_condition.notify()
+                self.__connect_wait_condition.release()
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
             rtn = notify_func(headers, body)
@@ -699,6 +706,6 @@ class Transport(object):
         Wait until we've established a connection with the server.
         """
         self.__connect_wait_condition.acquire()
-        while not self.is_connected(): 
+        while not self.is_connected() and not self.connection_error:
             self.__connect_wait_condition.wait()
         self.__connect_wait_condition.release()

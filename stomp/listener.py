@@ -148,7 +148,7 @@ class HeartbeatListener(ConnectionListener):
         if 'heart-beat' in headers.keys():
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0,0):
-                utils.default_create_thread(self.__heartbeat_loop)
+                self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
                 
     def on_message(self, headers, body):
         """
@@ -320,3 +320,36 @@ class StatsListener(ConnectionListener):
 Messages sent: %s
 Messages received: %s
 Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.errors)
+
+
+class PrintingListener(ConnectionListener):
+    def on_connecting(self, host_and_port):
+        print('on_connecting %s %s' % host_and_port)
+
+    def on_connected(self, headers, body):
+        print('on_connected %s %s' % (headers, body))
+
+    def on_disconnected(self):
+        print('on_disconnected')
+
+    def on_heartbeat_timeout(self):
+        print('on_heartbeat_timeout')
+
+    def on_before_message(self, headers, body):
+        print('on_before_message %s %s' % (headers, body))
+        return (headers, body)
+
+    def on_message(self, headers, body):
+        print('on_message %s %s' % (headers, body))
+
+    def on_receipt(self, headers, body):
+        print('on_receipt %s %s' % (headers, body))
+
+    def on_error(self, headers, body):
+        print('on_error %s %s' % (headers, body))
+
+    def on_send(self, frame):
+        print('on_send %s %s %s' % (frame.cmd, frame.headers, frame.body))
+
+    def on_heartbeat(self):
+        print('on_heartbeat')

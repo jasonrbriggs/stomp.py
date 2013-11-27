@@ -167,3 +167,24 @@ class TestBasicSend(unittest.TestCase):
         subscription = headers['subscription']
         
         self.conn.nack(message_id, subscription)
+
+
+class TestConnectionErrors(unittest.TestCase):   
+    def test_connect_wait_error(self):
+        conn = stomp.Connection(get_standard_host())
+        conn.start()
+        try:
+            conn.connect('invalid', 'user', True)
+            self.fail("Shouldn't happen")
+        except:
+            pass
+            
+    def test_connect_nowait_error(self):
+        conn = stomp.Connection(get_standard_host())
+        conn.start()
+        try:
+            conn.connect('invalid', 'user', False)
+            self.assert_(conn.is_connected() == False, 'Should not be connected')
+        except:
+            self.fail("Shouldn't happen")
+            

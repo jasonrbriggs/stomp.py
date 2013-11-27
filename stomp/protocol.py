@@ -1,6 +1,7 @@
 import uuid
 
 import utils
+from exception import ConnectFailedException
 from listener import *
 from backward import pack, encode, hasbyte
 from constants import *
@@ -66,6 +67,8 @@ class Protocol10(ConnectionListener):
         
         if wait:
             self.transport.wait_for_connection()
+            if self.connection_error:
+                raise ConnectFailedException()
 
     def disconnect(self, receipt = str(uuid.uuid4()), headers = {}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
@@ -165,6 +168,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         
         if wait:
             self.transport.wait_for_connection()
+            if self.connection_error:
+                raise ConnectFailedException()
 
     def disconnect(self, receipt = str(uuid.uuid4()), headers = {}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])

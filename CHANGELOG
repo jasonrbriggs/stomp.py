@@ -1,10 +1,11 @@
 Version 4.0.5 - Nov 2013
 
- * Add command line message queue listener. So you can do:
- 
+ * Add command-line subscription listener. So you can do:
      > stomp -H localhost -P 61613 -L /queue/test
-	 
  * Add verbose option to command line client (verbose "on" by default, if "off", headers aren't written to stdout)
+ * Fix problem with connect wait (should not wait if the connection fails)
+ * Throw exception when the connect fails (only if wait=True)
+ * Add PrintingListener (useful for debugging)
  
 
 Version 4.0.4 - Nov 2013
