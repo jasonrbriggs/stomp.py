@@ -138,8 +138,7 @@ def merge_headers(header_map_list):
     """
     headers = {}
     for header_map in header_map_list:
-        for header_key in header_map.keys():
-            headers[header_key] = header_map[header_key]
+        headers.update(header_map)
     return headers
 
     

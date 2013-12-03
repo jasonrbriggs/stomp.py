@@ -37,7 +37,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_ACK, headers)
 
-    def begin(self, transaction = None, headers = {}, **keyword_headers):
+    def begin(self, transaction = None, headers={}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
             transaction = str(uuid.uuid4())
@@ -45,17 +45,16 @@ class Protocol10(ConnectionListener):
         self.__send_frame(CMD_BEGIN, headers)
         return transaction
 
-    def commit(self, transaction = None, headers = {}, **keyword_headers):
+    def commit(self, transaction = None, headers={}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.__send_frame('COMMIT', headers)
 
-    def connect(self, username=None, passcode=None, wait=False):
+    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         cmd = CMD_CONNECT
-        headers = {
-            HDR_ACCEPT_VERSION : self.version
-        }
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_ACCEPT_VERSION] = self.version
         
         if username is not None:
             headers[HDR_LOGIN] = username
@@ -117,17 +116,17 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         transport.set_listener('protocol-listener', self)
         self.version = 1.1
 
-    def __send_frame(self, cmd, headers = {}, body = ''):
+    def __send_frame(self, cmd, headers={}, body=''):
         frame = utils.Frame(cmd, headers, body)
         self.transport.send_frame(frame)
 
-    def abort(self, transaction, headers = {}, **keyword_headers):
+    def abort(self, transaction, headers={}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_ABORT, headers)
 
-    def ack(self, id, subscription, transaction = None):
+    def ack(self, id, subscription, transaction=None):
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
         headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
@@ -135,7 +134,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_ACK, headers)
 
-    def begin(self, transaction = None, headers = {}, **keyword_headers):
+    def begin(self, transaction=None, headers={}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
             transaction = str(uuid.uuid4())
@@ -143,17 +142,16 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.__send_frame(CMD_BEGIN, headers)
         return transaction
 
-    def commit(self, transaction = None, headers = {}, **keyword_headers):
+    def commit(self, transaction=None, headers={}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.__send_frame('COMMIT', headers)
 
-    def connect(self, username=None, passcode=None, wait=False):
+    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         cmd = CMD_STOMP
-        headers = {
-            HDR_ACCEPT_VERSION : self.version
-        }
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_ACCEPT_VERSION] = self.version
         
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
@@ -239,7 +237,7 @@ class Protocol12(Protocol11):
             headers[HDR_TRANSACTION] = transaction
         self.__send_frame(CMD_NACK, headers)
 
-    def connect(self, username=None, passcode=None, wait=False):
+    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         """
         Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
         \param username
@@ -250,10 +248,9 @@ class Protocol12(Protocol11):
             wait for the connection to complete before returning
         """
         cmd = CMD_STOMP
-        headers = {
-            HDR_ACCEPT_VERSION : self.version,
-            HDR_HOST : self.transport.current_host_and_port[0]
-        }
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_ACCEPT_VERSION] = self.version
+        headers[HDR_HOST] = self.transport.current_host_and_port[0]
         
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
