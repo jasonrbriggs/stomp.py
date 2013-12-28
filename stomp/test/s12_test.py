@@ -64,3 +64,23 @@ class Test12Connect(unittest.TestCase):
         ack_id = headers['ack']
         
         self.conn.nack(ack_id)
+
+    def testtimeout(self):
+        server = TestStompServer('127.0.0.1', 60000)
+        try:
+            server.start()
+
+            server.add_frame('''ERROR
+message: connection failed\x00''')
+
+            conn = stomp.Connection12([('127.0.0.1', 60000)])
+            listener = TestListener()
+            conn.set_listener('', listener)
+            conn.start()
+            try:
+                conn.connect(wait=True)
+                self.fail("shouldn't happen")
+            except exception.ConnectFailedException:
+                pass
+        finally:
+            server.stop()

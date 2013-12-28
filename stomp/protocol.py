@@ -265,3 +265,5 @@ class Protocol12(Protocol11):
         
         if wait:
             self.transport.wait_for_connection()
+            if self.connection_error:
+                raise ConnectFailedException()
