@@ -12,8 +12,7 @@ class ConnectionClosedException(Exception):
 
 class NotConnectedException(Exception):
     """
-    Raised by Connection.__send_frame when there is currently no server
-    connection.
+    Raised when there is currently no server connection.
     """
     pass
 

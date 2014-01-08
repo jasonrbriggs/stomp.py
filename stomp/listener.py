@@ -18,6 +18,37 @@ import logging
 log = logging.getLogger('stomp.py')
 
 
+class Publisher(object):
+    """
+    Simply a registry of listeners. Subclasses 
+    """
+    def set_listener(self, name, listener): pass
+    """
+    Set a named listener to use with this connection
+    
+    \see listener::ConnectionListener
+    
+    \param name
+        the name of the listener
+    \param listener
+        the listener object
+    """
+        
+    def remove_listener(self, name): pass
+    """
+    Remove a listener according to the specified name
+    
+    \param name the name of the listener to remove
+    """
+
+    def get_listener(self, name): pass
+    """
+    Return the named listener
+    
+    \param name the listener to return
+    """
+
+
 class ConnectionListener(object):
     """
     This class should be used as a base class for objects registered
@@ -137,7 +168,8 @@ class HeartbeatListener(ConnectionListener):
         self.connected = False
         self.running = False
         self.heartbeats = heartbeats
-        self.__received_heartbeat = time.time()
+        self.received_heartbeat = time.time()
+        self.heartbeat_thread = None
     
     def on_connected(self, headers, body):
         """
@@ -145,23 +177,39 @@ class HeartbeatListener(ConnectionListener):
         (based on what the server sent and what was specified by the client) - if the heartbeats are not 0, we start up the
         heartbeat loop accordingly.
         """
+        self.received_heartbeat = time.time()
         if 'heart-beat' in headers.keys():
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0,0):
-                self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
+                self.send_sleep = self.heartbeats[0] / 1000
+
+                # receive gets an additional threshold of 2 additional seconds
+                self.receive_sleep = (self.heartbeats[1] / 1000) + 2
+                
+                if self.send_sleep == 0:
+                    self.sleep_time = self.receive_sleep
+                elif self.receive_sleep == 0:
+                    self.sleep_time = self.send_sleep
+                else:
+                    # sleep is the GCD of the send and receive times
+                    self.sleep_time = gcd(self.send_sleep, self.receive_sleep) / 2.0
+                
+                self.running = True
+                if self.heartbeat_thread is None:
+                    self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
                 
     def on_message(self, headers, body):
         """
         Reset the last received time whenever a message is received.
         """
         # reset the heartbeat for any received message
-        self.__received_heartbeat = time.time()
+        self.received_heartbeat = time.time()
         
     def on_heartbeat(self):
         """
         Reset the last received time whenever a heartbeat message is received.
         """
-        self.__received_heartbeat = time.time()
+        self.received_heartbeat = time.time()
         
     def on_send(self, frame):
         """
@@ -175,45 +223,35 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        send_sleep = self.heartbeats[0] / 1000
-
-        # receive gets an additional threshold of 3 additional seconds
-        receive_sleep = (self.heartbeats[1] / 1000) + 3
-
-        if send_sleep == 0:
-            sleep_time = receive_sleep
-        elif receive_sleep == 0:
-            sleep_time = send_sleep
-        else:
-            # sleep is the GCD of the send and receive times
-            sleep_time = gcd(send_sleep, receive_sleep) / 2.0
-
         send_time = time.time()
         receive_time = time.time()
 
         while self.running:
-            time.sleep(sleep_time)
-
+            time.sleep(self.sleep_time)
+            
             now = time.time()
 
-            if now - send_time > send_sleep:
+            if now - send_time > self.send_sleep:
                 send_time = now
-                log.debug('Sending a heartbeat message at %s' % now)
+                log.debug("Sending a heartbeat message at %s" % now)
                 try:
-                    self.send_frame(utils.Frame(None, {}, None))
+                    self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
-                    log.debug('Lost connection, unable to send heartbeat')
+                    log.debug("Lost connection, unable to send heartbeat")
 
-            diff_receive = now - receive_time
-            if diff_receive > receive_sleep:
-                diff_heartbeat = now - self.__received_heartbeat
-                if diff_heartbeat > receive_sleep:
-                    log.debug('Heartbeat timeout: diff_receive=%s, diff_heartbeat=%s, time=%s, lastrec=%s' % (diff_receive, diff_heartbeat, now, self.__received_heartbeat))
+            diff_receive = now - self.received_heartbeat
+            
+            if diff_receive > self.receive_sleep:
+                receive_time = now
+                diff_heartbeat = now - self.received_heartbeat
+                if diff_heartbeat > self.receive_sleep:
                     # heartbeat timeout
-                    for listener in self.listeners.values():
+                    log.debug("Heartbeat timeout: diff_receive=%s, diff_heartbeat=%s, time=%s, lastrec=%s" % (diff_receive, diff_heartbeat, now, self.received_heartbeat))
+                    self.received_heartbeat = now
+                    self.transport.disconnect_socket()
+                    self.transport.set_connected(False)
+                    for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
-                    self.disconnect_socket()
-                    self.set_connected(False)
 
 
 class WaitingListener(ConnectionListener):
@@ -270,14 +308,14 @@ class StatsListener(ConnectionListener):
         \see ConnectionListener::on_disconnected
         """
         self.disconnects = self.disconnects + 1
-        log.debug('disconnected (x %s)' % self.disconnects)
+        log.debug("disconnected (x %s)" % self.disconnects)
 
     def on_error(self, headers, message):
         """
         Increment the error count.
         \see ConnectionListener::on_error
         """
-        log.debug('received an error %s [%s]' % (message, headers))
+        log.debug("received an error %s [%s]" % (message, headers))
         self.errors += 1
 
     def on_connecting(self, host_and_port):
@@ -285,7 +323,7 @@ class StatsListener(ConnectionListener):
         Increment the connection count.
         \see ConnectionListener::on_connecting
         """
-        log.debug('connecting %s %s (x %s)' % (host_and_port[0], host_and_port[1], self.connections))
+        log.debug("connecting %s %s (x %s)" % (host_and_port[0], host_and_port[1], self.connections))
         self.connections += 1
 
     def on_message(self, headers, body):
@@ -293,7 +331,6 @@ class StatsListener(ConnectionListener):
         Increment the message received count.
         \see ConnectionListener::on_message
         """
-        log.debug('received a message %s' % body)
         self.messages += 1
         
     def on_send(self, frame):
@@ -308,7 +345,7 @@ class StatsListener(ConnectionListener):
         Increment the heartbeat timeout.
         \see ConnectionListener::on_heartbeat_timeout
         """
-        log.debug('received heartbeat timeout')
+        log.debug("received heartbeat timeout")
         self.heartbeat_timeouts = self.heartbeat_timeouts + 1
 
     def __str__(self):

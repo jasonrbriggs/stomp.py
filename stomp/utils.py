@@ -7,6 +7,7 @@ try:
 except ImportError:
     import md5 as hashlib
 
+from backward import NULL
 
 ##@namespace stomp.utils
 # General utilities.
@@ -157,11 +158,29 @@ def calculate_heartbeats(shb, chb):
     x = 0
     y = 0
     if cx != 0 and sy != '0':
-        x = max(cx, int(sy))
+        x = max(cx, int(sx))
     if cy != 0 and sx != '0':
-        y = max(cy, int(sx))
+        y = max(cy, int(sy))
     return (x, y)
 
+
+def convert_frame_to_lines(frame):
+    lines = [ ]
+    if frame.cmd:
+        lines.append(frame.cmd)
+        lines.append("\n")
+    for key, vals in sorted(frame.headers.items()):
+        if type(vals) != tuple:
+            vals = ( vals, )
+        for val in vals:
+            lines.append('%s:%s\n' % (key, val))
+    lines.append('\n')
+    if frame.body:
+        lines.append(frame.body)
+
+    if frame.cmd:
+        lines.append(NULL)
+    return lines
     
 class Frame:
     """
@@ -171,3 +190,6 @@ class Frame:
         self.cmd = cmd
         self.headers = headers
         self.body = body
+        
+    def __str__(self):
+        return '{cmd=%s,headers=[%s],body=%s}' % (self.cmd, self.headers, self.body)

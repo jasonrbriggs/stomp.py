@@ -20,36 +20,36 @@ class Protocol10(ConnectionListener):
         transport.set_listener('protocol-listener', self)
         self.version = 1.0
 
-    def __send_frame(self, cmd, headers = {}, body = ''):
+    def send_frame(self, cmd, headers = {}, body = ''):
         frame = utils.Frame(cmd, headers, body)
-        self.transport.send_frame(frame)
+        self.transport.transmit(frame)
 
     def abort(self, transaction, headers = {}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_ABORT, headers)
+        self.send_frame(CMD_ABORT, headers)
 
     def ack(self, id, transaction = None):
         assert id is not None, "'id' is required"
         headers = { HDR_MESSAGE_ID : id }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_ACK, headers)
+        self.send_frame(CMD_ACK, headers)
 
     def begin(self, transaction = None, headers={}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
             transaction = str(uuid.uuid4())
         headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_BEGIN, headers)
+        self.send_frame(CMD_BEGIN, headers)
         return transaction
 
     def commit(self, transaction = None, headers={}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
-        self.__send_frame('COMMIT', headers)
+        self.send_frame('COMMIT', headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         cmd = CMD_CONNECT
@@ -62,18 +62,18 @@ class Protocol10(ConnectionListener):
         if passcode is not None:
             headers[HDR_PASSCODE] = passcode
 
-        self.__send_frame(cmd, headers)
+        self.send_frame(cmd, headers)
         
         if wait:
             self.transport.wait_for_connection()
-            if self.connection_error:
+            if self.transport.connection_error:
                 raise ConnectFailedException()
 
     def disconnect(self, receipt = str(uuid.uuid4()), headers = {}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
         if receipt:
             headers[HDR_RECEIPT] = receipt
-        self.__send_frame(CMD_DISCONNECT, headers)
+        self.send_frame(CMD_DISCONNECT, headers)
 
     def send(self, destination, body, content_type = None, headers = {}, **keyword_headers):
         assert destination is not None, "'destination' is required"
@@ -85,7 +85,7 @@ class Protocol10(ConnectionListener):
         body = encode(body)
         #if HDR_CONTENT_LENGTH not in headers:
         #    headers[HDR_CONTENT_LENGTH] = len(body)
-        self.__send_frame(CMD_SEND, headers, body)
+        self.send_frame(CMD_SEND, headers, body)
 
     def subscribe(self, destination, id=None, ack = 'auto', headers = {}, **keyword_headers):
         assert destination is not None, "'destination' is required"
@@ -94,7 +94,7 @@ class Protocol10(ConnectionListener):
         if id:
             headers[HDR_ID] = id
         headers[HDR_ACK] = ack
-        self.__send_frame(CMD_SUBSCRIBE, headers)
+        self.send_frame(CMD_SUBSCRIBE, headers)
 
     def unsubscribe(self, destination = None, id = None, headers = {}, **keyword_headers):
         assert id is not None or destination is not None, "'id' or 'destination' is required"
@@ -103,7 +103,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_ID] = id
         if destination:
             headers[HDR_DESTINATION] = destination
-        self.__send_frame(CMD_UNSUBSCRIBE, headers)
+        self.send_frame(CMD_UNSUBSCRIBE, headers)
 
 
 class Protocol11(HeartbeatListener, ConnectionListener):
@@ -116,15 +116,15 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         transport.set_listener('protocol-listener', self)
         self.version = 1.1
 
-    def __send_frame(self, cmd, headers={}, body=''):
+    def send_frame(self, cmd, headers={}, body=''):
         frame = utils.Frame(cmd, headers, body)
-        self.transport.send_frame(frame)
+        self.transport.transmit(frame)
 
     def abort(self, transaction, headers={}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_ABORT, headers)
+        self.send_frame(CMD_ABORT, headers)
 
     def ack(self, id, subscription, transaction=None):
         assert id is not None, "'id' is required"
@@ -132,21 +132,21 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_ACK, headers)
+        self.send_frame(CMD_ACK, headers)
 
     def begin(self, transaction=None, headers={}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
             transaction = str(uuid.uuid4())
         headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_BEGIN, headers)
+        self.send_frame(CMD_BEGIN, headers)
         return transaction
 
     def commit(self, transaction=None, headers={}, **keyword_headers):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
-        self.__send_frame('COMMIT', headers)
+        self.send_frame('COMMIT', headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         cmd = CMD_STOMP
@@ -162,18 +162,18 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         if passcode is not None:
             headers[HDR_PASSCODE] = passcode
 
-        self.__send_frame(cmd, headers)
+        self.send_frame(cmd, headers)
         
         if wait:
             self.transport.wait_for_connection()
-            if self.connection_error:
+            if self.transport.connection_error:
                 raise ConnectFailedException()
 
     def disconnect(self, receipt = str(uuid.uuid4()), headers = {}, **keyword_headers):
         headers = utils.merge_headers([headers, keyword_headers])
         if receipt:
             headers[HDR_RECEIPT] = receipt
-        self.__send_frame(CMD_DISCONNECT, headers)
+        self.send_frame(CMD_DISCONNECT, headers)
 
     def nack(self, id, subscription, transaction = None):
         assert id is not None, "'id' is required"
@@ -181,7 +181,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_NACK, headers)
+        self.send_frame(CMD_NACK, headers)
 
     def send(self, destination, body, content_type = None, headers = {}, **keyword_headers):
         assert destination is not None, "'destination' is required"
@@ -193,7 +193,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         body = encode(body)
         if HDR_CONTENT_LENGTH not in headers and hasbyte(0, body):
             headers[HDR_CONTENT_LENGTH] = len(body)
-        self.__send_frame(CMD_SEND, headers, body)
+        self.send_frame(CMD_SEND, headers, body)
 
     def subscribe(self, destination, id, ack = 'auto', headers = {}, **keyword_headers):
         assert destination is not None, "'destination' is required"
@@ -202,13 +202,13 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_DESTINATION] = destination
         headers[HDR_ID] = id
         headers[HDR_ACK] = ack
-        self.__send_frame(CMD_SUBSCRIBE, headers)
+        self.send_frame(CMD_SUBSCRIBE, headers)
 
     def unsubscribe(self, id, headers = {}, **keyword_headers):
         assert id is not None, "'id' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ID] = id
-        self.__send_frame(CMD_UNSUBSCRIBE, headers)
+        self.send_frame(CMD_UNSUBSCRIBE, headers)
 
 
 class Protocol12(Protocol11):
@@ -219,23 +219,23 @@ class Protocol12(Protocol11):
         Protocol11.__init__(self, transport, heartbeats)
         self.version = 1.2
 
-    def __send_frame(self, cmd, headers = {}, body = ''):
+    def send_frame(self, cmd, headers = {}, body = ''):
         frame = utils.Frame(cmd, headers, body)
-        self.transport.send_frame(frame)
+        self.transport.transmit(frame)
 
     def ack(self, id, transaction = None):
         assert id is not None, "'id' is required"
         headers = { HDR_ID : id }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_ACK, headers)
+        self.send_frame(CMD_ACK, headers)
 
     def nack(self, id, transaction = None):
         assert id is not None, "'id' is required"
         headers = { HDR_ID : id }
         if transaction:
             headers[HDR_TRANSACTION] = transaction
-        self.__send_frame(CMD_NACK, headers)
+        self.send_frame(CMD_NACK, headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         """
@@ -261,9 +261,9 @@ class Protocol12(Protocol11):
         if passcode is not None:
             headers[HDR_PASSCODE] = passcode
 
-        self.__send_frame(cmd, headers)
+        self.send_frame(cmd, headers)
         
         if wait:
             self.transport.wait_for_connection()
-            if self.connection_error:
+            if self.transport.connection_error:
                 raise ConnectFailedException()

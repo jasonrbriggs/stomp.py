@@ -69,8 +69,10 @@ class TestStompServer(object):
         thread.daemon = True
         thread.start()
         self.stopped = False
+        log.debug('Stomp server started')
         
     def stop(self):
+        log.debug('Stopping test server')
         if self.conn:
             try:
                 self.conn.shutdown(socket.SHUT_WR)

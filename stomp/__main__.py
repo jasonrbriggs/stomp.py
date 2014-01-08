@@ -11,6 +11,7 @@ from connect import StompConnection10,StompConnection11,StompConnection12
 from listener import ConnectionListener, StatsListener
 from exception import NotConnectedException
 from backward import input_prompt
+from adapter.multicast import MulticastConnection
 import colors
 sys.path.append('.')
 import stomp
@@ -43,19 +44,23 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See \link stomp::connect::StompConnection11 \endlink
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver=1.1, prompt='> ', verbose=True, stdin=sys.stdin, stdout=sys.stdout):
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
         self.prompt = prompt
         self.verbose = verbose
         self.user = user
         self.passcode = passcode
-        if ver == 1.0:
+        if ver == '1.0':
             self.conn = StompConnection10([(host, port)], wait_on_receipt=True)
-        elif ver == 1.1:
+        elif ver == '1.1':
             self.conn = StompConnection11([(host, port)], wait_on_receipt=True)
-        elif ver == 1.2:
+        elif ver == '1.2':
             self.conn = StompConnection12([(host, port)], wait_on_receipt=True)
+        elif ver == 'multicast':
+            self.conn = MulticastConnection()
+        else:
+            raise RuntimeError('Unknown version')
         self.conn.set_listener('', self)
         self.conn.start()
         self.conn.connect(self.user, self.passcode, wait=True)
@@ -63,6 +68,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.version = ver
         self.__subscriptions = {}
         self.__subscription_id = 1
+        self.__quit = False
 
     def __print_async(self, frame_type, headers, body):
         """
@@ -95,7 +101,8 @@ class StompCLI(Cmd, ConnectionListener):
         """
         \see ConnectionListener::on_disconnected
         """
-        self.__error("lost connection")
+        if not self.__quit:
+            self.__error("lost connection")
 
     def on_message(self, headers, body):
         """
@@ -176,6 +183,7 @@ class StompCLI(Cmd, ConnectionListener):
         ''' % m)
      
     def do_quit(self, args):
+        self.__quit = True
         return True
     do_exit = do_quit
     do_EOF = do_quit
@@ -444,7 +452,7 @@ def main():
                       help = 'Password for the connection')
     parser.add_option('-F', '--file', type = 'string', dest = 'filename',
                       help = 'File containing commands to be executed, instead of prompting from the command prompt.')
-    parser.add_option('-S', '--stomp', type = 'float', dest = 'stomp', default = 1.1,
+    parser.add_option('-S', '--stomp', type = 'string', dest = 'stomp', default = '1.1',
                       help = 'Set the STOMP protocol version.')
     parser.add_option('-L', '--listen', type = 'string', dest = 'listen', default = None,
                       help = 'Listen for messages on a queue/destination')

@@ -1,12 +1,33 @@
 from transport import *
 from protocol import *
+from listener import *
 
 ##@namespace stomp.connect
 # Main entry point for clients to create a STOMP connection.
 #
 # Provides connection classes for 1.0, 1.1, and 1.2 versions of the STOMP protocol.
 
-class StompConnection10(Transport, Protocol10):
+class BaseConnection(Publisher):
+    def set_listener(self, name, listener):
+        self.transport.set_listener(name, listener)
+
+    def remove_listener(self, name):
+        self.transport.remove_listener(name)
+
+    def get_listener(self, name):
+        self.transport.get_listener(name)
+
+    def start(self):
+        self.transport.start()
+
+    def stop(self):
+        self.transport.stop()
+        
+    def is_connected(self):
+        return self.transport.is_connected()
+
+
+class StompConnection10(BaseConnection, Protocol10):
     """
     Represents a 1.0 connection (comprising transport plus 1.0 protocol class)
     """
@@ -28,17 +49,17 @@ class StompConnection10(Transport, Protocol10):
                  ssl_version = DEFAULT_SSL_VERSION,
                  timeout = None,
                  keepalive = None):
-        Transport.__init__(self, host_and_ports, prefer_localhost, try_loopback_connect, 
+        self.transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect, 
             reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter, reconnect_sleep_max, reconnect_attempts_max,
             use_ssl, ssl_key_file, ssl_cert_file, ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout, keepalive, None)
-        Protocol10.__init__(self, self)
+        Protocol10.__init__(self, self.transport)
         
     def disconnect(self, receipt = None, headers = {}, **keyword_headers):
         Protocol10.disconnect(self, receipt, headers, **keyword_headers)
-        Transport.stop(self)
+        self.transport.stop()
 
 
-class StompConnection11(Transport, Protocol11):
+class StompConnection11(BaseConnection, Protocol11):
     """
     Represents a 1.1 connection (comprising transport plus 1.1 protocol class)
     """
@@ -62,18 +83,18 @@ class StompConnection11(Transport, Protocol11):
                  heartbeats = (0, 0),
                  keepalive = None,
                  vhost = None):
-        Transport.__init__(self, host_and_ports, prefer_localhost, try_loopback_connect, 
+        self.transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect, 
             reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter, reconnect_sleep_max, reconnect_attempts_max,
             use_ssl, ssl_key_file, ssl_cert_file, ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
             keepalive, vhost)
-        Protocol11.__init__(self, self, heartbeats)
+        Protocol11.__init__(self, self.transport, heartbeats)
         
     def disconnect(self, receipt = None, headers = {}, **keyword_headers):
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
-        Transport.stop(self)
+        self.transport.stop()
 
 
-class StompConnection12(Transport, Protocol12):
+class StompConnection12(BaseConnection, Protocol12):
     """
     Represents a 1.2 connection (comprising transport plus 1.2 protocol class)
     """
@@ -101,12 +122,12 @@ class StompConnection12(Transport, Protocol12):
         \see stomp::transport::Transport.__init__
         \see stomp::protocol::Protocol12.__init__
         """
-        Transport.__init__(self, host_and_ports, prefer_localhost, try_loopback_connect, 
+        self.transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect, 
             reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter, reconnect_sleep_max, reconnect_attempts_max,
             use_ssl, ssl_key_file, ssl_cert_file, ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
             keepalive, vhost)
-        Protocol12.__init__(self, self, heartbeats)
+        Protocol12.__init__(self, self.transport, heartbeats)
 
     def disconnect(self):
         Protocol12.disconnect(self)
-        Transport.stop(self)
+        self.transport.stop()
