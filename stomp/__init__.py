@@ -15,22 +15,25 @@ sys.path.insert(0, os.path.split(__file__)[0])
 
 import connect, listener, exception, transport, protocol
 
-__version__ = (4, 0, 6)
+__version__ = (4, 0, 7)
 
 ##
 # Alias for STOMP 1.0 connections.
 #
 Connection10 = connect.StompConnection10
+StompConnection10 = Connection10
 
 ##
 # Alias for STOMP 1.1 connections.
 #
 Connection11 = connect.StompConnection11
+StompConnection11 = Connection11
 
 ##
 # Alias for STOMP 1.2 connections.
 #
 Connection12 = connect.StompConnection12
+StompConnection12 = Connection12
 
 ##
 # Default connection alias (STOMP 1.1).
