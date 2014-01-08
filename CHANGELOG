@@ -1,3 +1,11 @@
+Version 4.0.7 - Jan 2014
+
+ * Fix problem with heartbeat listener (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
+ * Add alternate aliases for the connection classes
+ * Add initial version multicast adapter (providing an interface to use the stomp.py API and send messages via multicast) 
+ 	- note: work in progress
+
+
 Version 4.0.6 - Dec 2013
 
  * Fix missing headers in connect func
