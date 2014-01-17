@@ -1,3 +1,8 @@
+Version 4.0.8 - Jan 2014
+
+ * Fix return on get_listener method (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
+ 
+
 Version 4.0.7 - Jan 2014
 
  * Fix problem with heartbeat listener (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
