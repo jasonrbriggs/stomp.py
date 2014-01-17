@@ -15,7 +15,7 @@ class BaseConnection(Publisher):
         self.transport.remove_listener(name)
 
     def get_listener(self, name):
-        self.transport.get_listener(name)
+        return self.transport.get_listener(name)
 
     def start(self):
         self.transport.start()

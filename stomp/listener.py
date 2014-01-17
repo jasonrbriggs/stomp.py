@@ -22,31 +22,35 @@ class Publisher(object):
     """
     Simply a registry of listeners. Subclasses 
     """
-    def set_listener(self, name, listener): pass
-    """
-    Set a named listener to use with this connection
     
-    \see listener::ConnectionListener
+    def set_listener(self, name, listener):
+        """
+        Set a named listener to use with this connection
     
-    \param name
-        the name of the listener
-    \param listener
-        the listener object
-    """
+        \see listener::ConnectionListener
+    
+        \param name
+            the name of the listener
+        \param listener
+            the listener object
+        """
+        pass
         
-    def remove_listener(self, name): pass
-    """
-    Remove a listener according to the specified name
+    def remove_listener(self, name):
+        """
+        Remove a listener according to the specified name
     
-    \param name the name of the listener to remove
-    """
+        \param name the name of the listener to remove
+        """
+        pass
 
-    def get_listener(self, name): pass
-    """
-    Return the named listener
+    def get_listener(self, name):
+        """
+        Return the named listener
     
-    \param name the listener to return
-    """
+        \param name the listener to return
+        """
+        return None
 
 
 class ConnectionListener(object):
