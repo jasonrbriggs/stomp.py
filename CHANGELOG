@@ -1,3 +1,10 @@
+Version 4.0.9 - Jan 2014
+
+ * Fix minor issue with backward uuid func
+ * Fixes for error number handling
+ * Fix for message listener return values
+ 
+
 Version 4.0.8 - Jan 2014
 
  * Fix return on get_listener method (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
