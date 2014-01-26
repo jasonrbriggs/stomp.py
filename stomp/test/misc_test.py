@@ -15,7 +15,7 @@ class TransformationListener(WaitingListener):
     def __init__(self, receipt):
         WaitingListener.__init__(self, receipt)
         self.message = None
-    
+
     def on_before_message(self, headers, body):
         if 'transformation' in headers:
             trans_type = headers['transformation']
@@ -77,6 +77,7 @@ class TestMessageTransform(unittest.TestCase):
 
         self.listener.wait_on_receipt()
         
-        self.assert_(self.listener.message.__class__ == dict, 'Message type should be dict after transformation')
+        self.assert_(self.listener.message is not None, 'Did not receive a message')
+        self.assert_(self.listener.message.__class__ == dict, 'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
         self.assert_(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')
         self.assert_(self.listener.message['city'] == 'Belgrade', 'Missing an expected dict element')

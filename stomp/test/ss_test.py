@@ -43,6 +43,8 @@ heart-beat: 1000,1000\x00''')
             else:
                 assert False, 'server never disconnected'
 
+            time.sleep(1)
+
             try:
                 conn.send(body='test disconnect', destination='/test/disconnectqueue')
                 self.fail('Should not have successfully sent a message at this point')

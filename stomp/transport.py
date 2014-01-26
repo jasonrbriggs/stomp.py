@@ -40,7 +40,7 @@ except ImportError:
 import exception
 import listener
 import utils
-from backward import decode, encode, pack, NULL
+from backward import decode, encode, get_errno, pack, NULL
 
 try:
     import uuid    
@@ -357,7 +357,7 @@ class Transport(listener.Publisher):
                 except socket.error:
                     _, e, _ = sys.exc_info()
                     # ignore when socket already closed
-                    if e.errno != 57:
+                    if get_errno(e) != errno.ENOTCONN:
                         log.info("Unable to issue SHUT_RDWR on socket because of error '%s'" % e)
 
         #
@@ -452,6 +452,7 @@ class Transport(listener.Publisher):
         elif frame_type == 'disconnected':
             self.set_connected(False)
 
+        rtn = None
         for listener in self.listeners.values():
             if not listener: continue
             if not hasattr(listener, 'on_%s' % frame_type):
@@ -477,7 +478,9 @@ class Transport(listener.Publisher):
             notify_func = getattr(listener, 'on_%s' % frame_type)
             rtn = notify_func(headers, body)
             if rtn:
-                return rtn
+                (headers, body) = rtn
+        if rtn:
+            return rtn
 
     def __receiver_loop(self):
         """
@@ -538,7 +541,7 @@ class Transport(listener.Publisher):
                     c = self.read_from_socket()
                 except socket.error:
                     _, e, _ = sys.exc_info()
-                    if e.args[0] in (errno.EAGAIN, errno.EINTR):
+                    if get_errno(e) in (errno.EAGAIN, errno.EINTR):
                         log.debug("socket read interrupted, restarting")
                         continue
                     raise

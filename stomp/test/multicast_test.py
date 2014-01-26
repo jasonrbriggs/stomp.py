@@ -2,11 +2,12 @@ import os
 import signal
 import time
 import unittest
-import uuid
 
 import stomp
 from stomp import exception
 from stomp.adapter.multicast import MulticastConnection
+
+from stomp.backward import uuid
 
 from testutils import *
 
@@ -22,7 +23,7 @@ class TestMulticast(unittest.TestCase):
         self.conn = conn
         self.listener = listener
         self.timestamp = time.strftime('%Y%m%d%H%M%S')
-        
+
     def tearDown(self):
         if self.conn:
             self.conn.disconnect()
@@ -63,7 +64,7 @@ class TestMulticast(unittest.TestCase):
         queuename = '/queue/test1-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
 
-        trans_id = uuid.uuid4()
+        trans_id = str(uuid.uuid4())
         self.conn.begin(trans_id)
 
         self.conn.send(body='this is a test', transaction=trans_id, destination=queuename, receipt='123')
