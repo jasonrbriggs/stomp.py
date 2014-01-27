@@ -19,6 +19,6 @@ class NotConnectedException(Exception):
 
 class ConnectFailedException(Exception):
     """
-    Raised by Connection.__attempt_connection when reconnection attempts
+    Raised by Connection.attempt_connection when reconnection attempts
     have exceeded Connection.__reconnect_attempts_max.
     """

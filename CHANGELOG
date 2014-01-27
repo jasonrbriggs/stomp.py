@@ -1,3 +1,9 @@
+Version 4.0.10 - Jan 2014
+
+ * Fix package info on setup (missing adapter package causes problems for command line client
+    - see https://github.com/jasonrbriggs/stomp.py/issues/7 for more info)
+
+
 Version 4.0.9 - Jan 2014
 
  * Fix minor issue with backward uuid func

@@ -16,6 +16,7 @@ def set_environ(name, value):
     if name not in os.environ:
         os.environ[name] = value
 
+
 set_environ('STD_HOST', '192.168.1.92')
 set_environ('STD_PORT', '62613')
 set_environ('STD_SSL_PORT', '62614')
@@ -45,6 +46,7 @@ class TestCommand(Command):
             suite = unittest.TestLoader().loadTestsFromName('test.%s' % self.test)
         unittest.TextTestRunner(verbosity=2).run(suite)
 
+
 class DoxygenCommand(Command):
     user_options = [ ]
 
@@ -56,6 +58,7 @@ class DoxygenCommand(Command):
 
     def run(self):
         os.system('doxygen config.dox')
+
         
 def version():
     s = []
@@ -73,7 +76,7 @@ setup(
     author = 'Jason R Briggs',
     author_email =  'jasonrbriggs@gmail.com',
     platforms = ['any'],
-    packages = ['stomp'],
+    packages = ['stomp', 'stomp.adapter'],
     cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand },
     scripts = ['./scripts/stomp'],
     classifiers = [
