@@ -8,6 +8,7 @@ import time
 import types
 import xml.dom.minidom
 import errno
+import warnings
 
 
 ##@namespace stomp.transport
@@ -75,7 +76,7 @@ class Transport(listener.Publisher):
                  ssl_ca_certs = None,
                  ssl_cert_validator = None,
                  wait_on_receipt = False,
-                 ssl_version = DEFAULT_SSL_VERSION,
+                 ssl_version = None,
                  timeout = None,
                  keepalive = None,
                  vhost = None
@@ -121,42 +122,28 @@ class Transport(listener.Publisher):
             maximum attempts to reconnect
                 
         \param use_ssl
-            connect using SSL to the socket.  This wraps the 
-            socket in a SSL connection.  The constructor will 
-            raise an exception if you ask for SSL, but it can't
-            find the SSL module.
+            deprecated, see Transport::add_ssl
 
         \param ssl_cert_file
-            the path to a X509 certificate 
+            deprecated, see Transport::add_ssl
 
         \param ssl_key_file
-            the path to a X509 key file
+            deprecated, see Transport::add_ssl
 
         \param ssl_ca_certs
-            the path to the a file containing CA certificates
-            to validate the server against.  If this is not set,
-            server side certificate validation is not done. 
+            deprecated, see Transport::add_ssl
 
         \param ssl_cert_validator
-            function which performs extra validation on the client
-            certificate, for example checking the returned
-            certificate has a commonName attribute equal to the
-            hostname (to avoid man in the middle attacks).
-            The signature is:
-                (OK, err_msg) = validation_function(cert, hostname)
-            where OK is a boolean, and cert is a certificate structure
-            as returned by ssl.SSLSocket.getpeercert()
-            
+            deprecated, see Transport::add_ssl
+
         \param wait_on_receipt
             if a receipt is specified, then the send method should wait
             (block) for the server to respond with that receipt-id
             before continuing
-            
+
         \param ssl_version
-            SSL protocol to use for the connection. This should be
-            one of the PROTOCOL_x constants provided by the ssl module.
-            The default is ssl.PROTOCOL_SSLv3
-            
+            deprecated, see Transport::add_ssl
+
         \param timeout
             the timeout value to use when connecting the stomp socket
             
@@ -226,15 +213,16 @@ class Transport(listener.Publisher):
         self.connection_error = False
         
         # setup SSL
-        if use_ssl and not ssl:
-            raise Exception("SSL connection requested, but SSL library not found.")
-        self.__ssl = use_ssl
-        self.__ssl_cert_file = ssl_cert_file
-        self.__ssl_key_file = ssl_key_file
-        self.__ssl_ca_certs = ssl_ca_certs
-        self.__ssl_cert_validator = ssl_cert_validator
-        self.__ssl_version = ssl_version
-        
+        self.__ssl_params = {}
+        if use_ssl:
+            warnings.warn("Deprecated: use add_ssl instead", DeprecationWarning)
+            self.add_ssl(host_and_ports,
+                         ssl_key_file,
+                         ssl_cert_file,
+                         ssl_ca_certs,
+                         ssl_cert_validator,
+                         ssl_version)
+
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
         
@@ -339,7 +327,7 @@ class Transport(listener.Publisher):
         """
         self.running = False
         if self.socket is not None:
-            if self.__ssl:
+            if self.__need_ssl():
                 #
                 # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
                 #
@@ -655,16 +643,22 @@ class Transport(listener.Publisher):
                     log.debug("Attempting connection to host %s, port %s" % host_and_port)
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.__enable_keepalive()
+                    ssl = self.__need_ssl(host_and_port)
 
-                    if self.__ssl: # wrap socket
-                        if self.__ssl_ca_certs:
+                    if ssl:  # wrap socket
+                        ssl_params = self.get_ssl()
+                        if ssl_params['ca_certs']:
                             cert_validation = ssl.CERT_REQUIRED
                         else:
                             cert_validation = ssl.CERT_NONE
-                        self.socket = ssl.wrap_socket(self.socket, keyfile = self.__ssl_key_file,
-                                certfile = self.__ssl_cert_file, cert_reqs = cert_validation, 
-                                ca_certs = self.__ssl_ca_certs, ssl_version = self.__ssl_version)
-                    self.socket.settimeout(self.__timeout)
+                        self.socket = ssl.wrap_socket(
+                            self.socket,
+                            keyfile=ssl_params['key_file'],
+                            certfile=ssl_params['cert_file'],
+                            cert_reqs=cert_validation,
+                            ca_certs=ssl_params['ca_certs'],
+                            ssl_version=ssl_params['ssl_version'])
+                        self.socket.settimeout(self.__timeout)
                     if self.blocking is not None:
                         self.socket.setblocking(self.blocking)
                     self.socket.connect(host_and_port)
@@ -672,9 +666,9 @@ class Transport(listener.Publisher):
                     #
                     # Validate server cert
                     #
-                    if self.__ssl and self.__ssl_cert_validator: 
+                    if ssl and ssl_params['cert_validator']: 
                         cert = self.socket.getpeercert()
-                        (ok, errmsg) = apply(self.__ssl_cert_validator, (cert, host_and_port[0]))
+                        (ok, errmsg) = apply(ssl_params['cert_validator'], (cert, host_and_port[0]))
                         if not ok:
                             raise SSLError("Server certificate validation failed: %s" % errmsg)
 
@@ -718,3 +712,78 @@ class Transport(listener.Publisher):
         while not self.is_connected() and not self.connection_error:      
             self.__connect_wait_condition.wait(wait_time)
         self.__connect_wait_condition.release()
+
+    def add_ssl(self,
+                for_hosts,
+                key_file=None,
+                cert_file=None,
+                ca_certs=None,
+                cert_validator=None,
+                ssl_version=DEFAULT_SSL_VERSION):
+        """
+        Add SSL configuration for the given hosts.
+
+        This ensures socket is wrapped in a SSL connection, raising an
+        exception if SSL module can't be found.
+
+        \param for_hosts
+            hosts this SSL configuration should be applied to
+
+        \param cert_file
+            the path to a X509 certificate
+
+        \param key_file
+            the path to a X509 key file
+
+        \param ca_certs
+            the path to the a file containing CA certificates
+            to validate the server against.  If this is not set,
+            server side certificate validation is not done.
+
+        \param cert_validator
+            function which performs extra validation on the client
+            certificate, for example checking the returned
+            certificate has a commonName attribute equal to the
+            hostname (to avoid man in the middle attacks).
+            The signature is:
+                (OK, err_msg) = validation_function(cert, hostname)
+            where OK is a boolean, and cert is a certificate structure
+            as returned by ssl.SSLSocket.getpeercert()
+
+        \param ssl_version
+            SSL protocol to use for the connection. This should be
+            one of the PROTOCOL_x constants provided by the ssl module.
+            The default is ssl.PROTOCOL_SSLv3
+        """
+        if not ssl:
+            raise Exception("SSL connection requested, but SSL library not found.")
+
+        for host_port in for_hosts:
+            self.__ssl_params[host_port] = dict(key_file=key_file,
+                                                cert_file=cert_file,
+                                                ca_certs=ca_certs,
+                                                cert_validator=cert_validator,
+                                                ssl_version=ssl_version)
+    def __need_ssl(self, host_and_port=None):
+        """
+        Wether current host needs SSL or not.
+        """
+        if not host_and_port:
+            host_and_port = self.current_host_and_port
+
+        return host_and_port in self.__ssl_params
+
+    def get_ssl(self, host_and_port=None):
+        """
+        Get SSL params for the given host.
+
+        \param host_and_port
+            The host/port pair we want SSL params for, default current_host_port
+        """
+        if not host_and_port:
+            host_and_port = self.current_host_and_port
+
+        try:
+            return self.__ssl_params[host_and_port]
+        except KeyError:
+            return None
