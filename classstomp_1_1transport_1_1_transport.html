@@ -65,7 +65,8 @@ Inheritance diagram for stomp.transport.Transport:</div>
  <div class="center">
   <img src="classstomp_1_1transport_1_1_transport.png" usemap="#stomp.transport.Transport_map" alt=""/>
   <map id="stomp.transport.Transport_map" name="stomp.transport.Transport_map">
-<area href="classstomp_1_1listener_1_1_publisher.html" title="Simply a registry of listeners. " alt="stomp.listener.Publisher" shape="rect" coords="0,56,156,80"/>
+<area href="classstomp_1_1listener_1_1_publisher.html" title="Simply a registry of listeners. " alt="stomp.listener.Publisher" shape="rect" coords="0,56,251,80"/>
+<area href="classstomp_1_1adapter_1_1multicast_1_1_multicast_transport.html" alt="stomp.adapter.multicast.MulticastTransport" shape="rect" coords="0,168,251,192"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -117,6 +118,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a29ad4d78be7b429cb10798e938df3f4c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1transport_1_1_transport.html#a29ad4d78be7b429cb10798e938df3f4c">wait_for_connection</a></td></tr>
 <tr class="memdesc:a29ad4d78be7b429cb10798e938df3f4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait until we've established a connection with the server.  <a href="#a29ad4d78be7b429cb10798e938df3f4c">More...</a><br/></td></tr>
 <tr class="separator:a29ad4d78be7b429cb10798e938df3f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05401a2354bdc4fdd3eabe19670fc493"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493">set_ssl</a></td></tr>
+<tr class="memdesc:a05401a2354bdc4fdd3eabe19670fc493"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up SSL configuration for the given hosts.  <a href="#a05401a2354bdc4fdd3eabe19670fc493">More...</a><br/></td></tr>
+<tr class="separator:a05401a2354bdc4fdd3eabe19670fc493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6443e6ec66c6c1608caa454b6cad1ccb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1transport_1_1_transport.html#a6443e6ec66c6c1608caa454b6cad1ccb">get_ssl</a></td></tr>
+<tr class="memdesc:a6443e6ec66c6c1608caa454b6cad1ccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get SSL params for the given host.  <a href="#a6443e6ec66c6c1608caa454b6cad1ccb">More...</a><br/></td></tr>
+<tr class="separator:a6443e6ec66c6c1608caa454b6cad1ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classstomp_1_1listener_1_1_publisher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classstomp_1_1listener_1_1_publisher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classstomp_1_1listener_1_1_publisher.html">stomp.listener.Publisher</a></td></tr>
 <tr class="memitem:a909007288bc5b7c894767cb81994d649 inherit pub_methods_classstomp_1_1listener_1_1_publisher"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classstomp_1_1listener_1_1_publisher.html#a909007288bc5b7c894767cb81994d649">set_listener</a></td></tr>
 <tr class="memdesc:a909007288bc5b7c894767cb81994d649 inherit pub_methods_classstomp_1_1listener_1_1_publisher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a named listener to use with this connection.  <a href="#a909007288bc5b7c894767cb81994d649">More...</a><br/></td></tr>
@@ -251,7 +258,7 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>ssl_version</em> = <code><a class="el" href="namespacestomp_1_1transport.html#a6d8e0e7e3e1c87c4ebc797388d25cd50">DEFAULT_SSL_VERSION</a></code>, </td>
+          <td class="paramname"><em>ssl_version</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -288,13 +295,13 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">reconnect_sleep_max</td><td>maximum delay between connection attempts, regardless of the reconnect_sleep_increase.</td></tr>
     <tr><td class="paramname">reconnect_sleep_jitter</td><td>random additional time to wait (as a percentage of the time determined using the previous parameters) between connection attempts in order to avoid stampeding. For example, a value of 0.1 means to wait an extra 0%-10% (randomly determined) of the delay calculated using the previous three parameters.</td></tr>
     <tr><td class="paramname">reconnect_attempts_max</td><td>maximum attempts to reconnect</td></tr>
-    <tr><td class="paramname">use_ssl</td><td>connect using SSL to the socket. This wraps the socket in a SSL connection. The constructor will raise an exception if you ask for SSL, but it can't find the SSL module.</td></tr>
-    <tr><td class="paramname">ssl_cert_file</td><td>the path to a X509 certificate</td></tr>
-    <tr><td class="paramname">ssl_key_file</td><td>the path to a X509 key file</td></tr>
-    <tr><td class="paramname">ssl_ca_certs</td><td>the path to the a file containing CA certificates to validate the server against. If this is not set, server side certificate validation is not done.</td></tr>
-    <tr><td class="paramname">ssl_cert_validator</td><td>function which performs extra validation on the client certificate, for example checking the returned certificate has a commonName attribute equal to the hostname (to avoid man in the middle attacks). The signature is: (OK, err_msg) = validation_function(cert, hostname) where OK is a boolean, and cert is a certificate structure as returned by ssl.SSLSocket.getpeercert()</td></tr>
+    <tr><td class="paramname">use_ssl</td><td>deprecated, see <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493" title="Sets up SSL configuration for the given hosts. ">Transport::set_ssl</a></td></tr>
+    <tr><td class="paramname">ssl_cert_file</td><td>deprecated, see <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493" title="Sets up SSL configuration for the given hosts. ">Transport::set_ssl</a></td></tr>
+    <tr><td class="paramname">ssl_key_file</td><td>deprecated, see <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493" title="Sets up SSL configuration for the given hosts. ">Transport::set_ssl</a></td></tr>
+    <tr><td class="paramname">ssl_ca_certs</td><td>deprecated, see <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493" title="Sets up SSL configuration for the given hosts. ">Transport::set_ssl</a></td></tr>
+    <tr><td class="paramname">ssl_cert_validator</td><td>deprecated, see <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493" title="Sets up SSL configuration for the given hosts. ">Transport::set_ssl</a></td></tr>
     <tr><td class="paramname">wait_on_receipt</td><td>if a receipt is specified, then the send method should wait (block) for the server to respond with that receipt-id before continuing</td></tr>
-    <tr><td class="paramname">ssl_version</td><td>SSL protocol to use for the connection. This should be one of the PROTOCOL_x constants provided by the ssl module. The default is ssl.PROTOCOL_SSLv3</td></tr>
+    <tr><td class="paramname">ssl_version</td><td>deprecated, see <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493" title="Sets up SSL configuration for the given hosts. ">Transport::set_ssl</a></td></tr>
     <tr><td class="paramname">timeout</td><td>the timeout value to use when connecting the stomp socket</td></tr>
     <tr><td class="paramname">keepalive</td><td>some operating systems support sending the occasional heart beat packets to detect when a connection fails. This parameter can either be set set to a boolean to turn on the default keepalive options for your OS, or as a tuple of values, which also enables keepalive packets, but specifies options specific to your OS implementation</td></tr>
     <tr><td class="paramname">vhost</td><td>specify a virtual hostname to provide in the 'host' header of the connection </td></tr>
@@ -377,6 +384,42 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6443e6ec66c6c1608caa454b6cad1ccb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def stomp.transport.Transport.get_ssl </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>host_and_port</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get SSL params for the given host. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host_and_port</td><td>The host/port pair we want SSL params for, default current_host_port </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Referenced by <a class="el" href="classstomp_1_1transport_1_1_transport.html#a94d727a504367ecba1e7d1f6d280cddb">stomp.transport.Transport.attempt_connection()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a97ef88316fa3f57e8948fc1d1ec81bea"></a>
 <div class="memitem">
 <div class="memproto">
@@ -443,7 +486,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="classstomp_1_1transport_1_1_transport.html#af8b7658427869250332e4af75aad5614">stomp.transport.Transport.notify()</a>, <a class="el" href="classmulticast_1_1_multicast_transport.html#a6554ba04c69b60da895405e3f68b9487">multicast.MulticastTransport.process_frame()</a>, <a class="el" href="classstomp_1_1transport_1_1_transport.html#a140862b3951787fd28c7b2933ccd8f48">stomp.transport.Transport.process_frame()</a>, and <a class="el" href="classmulticast_1_1_multicast_connection.html#a79b66ee9849c63911a8fbeef8664d103">multicast.MulticastConnection.send_frame()</a>.</p>
+<p>Referenced by <a class="el" href="classstomp_1_1transport_1_1_transport.html#af8b7658427869250332e4af75aad5614">stomp.transport.Transport.notify()</a>, <a class="el" href="classstomp_1_1adapter_1_1multicast_1_1_multicast_transport.html#adfab1275606fb906b41231c0baa08edb">stomp.adapter.multicast.MulticastTransport.process_frame()</a>, <a class="el" href="classstomp_1_1transport_1_1_transport.html#a140862b3951787fd28c7b2933ccd8f48">stomp.transport.Transport.process_frame()</a>, and <a class="el" href="classstomp_1_1adapter_1_1multicast_1_1_multicast_connection.html#a58b33601914b390f2678af62ffc73831">stomp.adapter.multicast.MulticastConnection.send_frame()</a>.</p>
 
 </div>
 </div>
@@ -660,6 +703,78 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a05401a2354bdc4fdd3eabe19670fc493"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def stomp.transport.Transport.set_ssl </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>for_hosts</em> = <code>[]</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>key_file</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cert_file</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ca_certs</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cert_validator</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ssl_version</em> = <code><a class="el" href="namespacestomp_1_1transport.html#a6d8e0e7e3e1c87c4ebc797388d25cd50">DEFAULT_SSL_VERSION</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets up SSL configuration for the given hosts. </p>
+<p>This ensures socket is wrapped in a SSL connection, raising an exception if the SSL module can't be found.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">for_hosts</td><td>hosts this SSL configuration should be applied to</td></tr>
+    <tr><td class="paramname">cert_file</td><td>the path to a X509 certificate</td></tr>
+    <tr><td class="paramname">key_file</td><td>the path to a X509 key file</td></tr>
+    <tr><td class="paramname">ca_certs</td><td>the path to the a file containing CA certificates to validate the server against. If this is not set, server side certificate validation is not done.</td></tr>
+    <tr><td class="paramname">cert_validator</td><td>function which performs extra validation on the client certificate, for example checking the returned certificate has a commonName attribute equal to the hostname (to avoid man in the middle attacks). The signature is: (OK, err_msg) = validation_function(cert, hostname) where OK is a boolean, and cert is a certificate structure as returned by ssl.SSLSocket.getpeercert()</td></tr>
+    <tr><td class="paramname">ssl_version</td><td>SSL protocol to use for the connection. This should be one of the PROTOCOL_x constants provided by the ssl module. The default is ssl.PROTOCOL_SSLv3 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Referenced by <a class="el" href="classstomp_1_1transport_1_1_transport.html#a29ad4d78be7b429cb10798e938df3f4c">stomp.transport.Transport.wait_for_connection()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="abe73845dfc7e7f051fe4bb2ccf85ec65"></a>
 <div class="memitem">
 <div class="memproto">
@@ -821,7 +936,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Referenced by <a class="el" href="classstomp_1_1transport_1_1_transport.html#a94d727a504367ecba1e7d1f6d280cddb">stomp.transport.Transport.attempt_connection()</a>, <a class="el" href="classstomp_1_1transport_1_1_transport.html#acc1aeabe1b91e5296086db31d16cd61a">stomp.transport.Transport.disconnect_socket()</a>, and <a class="el" href="classstomp_1_1transport_1_1_transport.html#af8b7658427869250332e4af75aad5614">stomp.transport.Transport.notify()</a>.</p>
+<p>Referenced by <a class="el" href="classstomp_1_1transport_1_1_transport.html#a94d727a504367ecba1e7d1f6d280cddb">stomp.transport.Transport.attempt_connection()</a>, <a class="el" href="classstomp_1_1transport_1_1_transport.html#acc1aeabe1b91e5296086db31d16cd61a">stomp.transport.Transport.disconnect_socket()</a>, <a class="el" href="classstomp_1_1transport_1_1_transport.html#a6443e6ec66c6c1608caa454b6cad1ccb">stomp.transport.Transport.get_ssl()</a>, <a class="el" href="classstomp_1_1transport_1_1_transport.html#af8b7658427869250332e4af75aad5614">stomp.transport.Transport.notify()</a>, and <a class="el" href="classstomp_1_1transport_1_1_transport.html#a05401a2354bdc4fdd3eabe19670fc493">stomp.transport.Transport.set_ssl()</a>.</p>
 
 </div>
 </div>
@@ -885,7 +1000,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 8 2014 19:57:02 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 1 2014 17:32:32 for stomp.py by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
