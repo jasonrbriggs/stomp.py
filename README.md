@@ -37,6 +37,7 @@ Martin Pieuchot
 Joe Gdaniec  
 Jayson Vantuyl  
 Tatiana Al-Chueyr Martins  
+Rafael Durán Casteñada  
 
 
 What's In This Release
