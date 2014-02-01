@@ -50,6 +50,5 @@ LICENSE 		                - Software license
 CHANGELOG                       - List of changes in each release  
 stomp/                          - The stomp.py client library code  
 stomp/test/                     - Test code for the library  
-stomp/bridge/                   - Bridges for message brokers which don't support STOMP  
-stomp/bridge/README-oracle      - Info on the Oracle AQ bridge (no longer supported)  
+stomp/adaptor					- Experimental stuff (at the moment, a multicast adaptor)  
 
