@@ -2,11 +2,12 @@ import unittest
 
 from stomp import transport
 
+from testutils import *
 
 class TestSSLParams(unittest.TestCase):
     def setUp(self):
-        self.host1 = ('localhost', 61613)
-        self.host2 = ('localhost', 61614)
+        self.host1 = get_standard_ssl_host()[0]
+        self.host2 = get_standard_ssl_host()[0]
         self.transport = transport.Transport(host_and_ports=[
             self.host1,
             self.host2,
