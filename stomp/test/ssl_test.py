@@ -4,6 +4,35 @@ from stomp import transport
 
 from testutils import *
 
+class TestSSL(unittest.TestCase):
+    def setUp(self):
+        listener = TestListener('123')
+        self.listener = listener
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
+
+    def test_ssl_connection(self):
+        try:
+            import ssl
+            queuename = '/queue/test4-%s' % self.timestamp
+            conn = stomp.Connection(get_standard_ssl_host())
+            conn.set_ssl([get_standard_ssl_host()])
+            conn.set_listener('', self.listener)
+            conn.start()
+            conn.connect('admin', 'password', wait=True)
+            conn.subscribe(destination=queuename, id=1, ack='auto')
+
+            conn.send(body='this is a test', destination=queuename, receipt='123')
+
+            self.listener.wait_on_receipt()
+            conn.disconnect()
+
+            self.assert_(self.listener.connections > 1, 'should have received 1 connection acknowledgement')
+            self.assert_(self.listener.messages == 1, 'should have received 1 message')
+            self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        except:
+            pass
+
+
 class TestSSLParams(unittest.TestCase):
     def setUp(self):
         self.host1 = get_standard_ssl_host()[0]
@@ -18,8 +47,8 @@ class TestSSLParams(unittest.TestCase):
         self.ssl_cert_validator = 'validator'
         self.ssl_version = 'version'
 
-    def test_add_ssl(self):
-        self.transport.add_ssl([self.host1],
+    def test_set_ssl(self):
+        self.transport.set_ssl([self.host1],
                                self.ssl_key_file,
                                self.ssl_cert_file,
                                self.ssl_ca_certs,

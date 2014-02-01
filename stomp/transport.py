@@ -122,19 +122,19 @@ class Transport(listener.Publisher):
             maximum attempts to reconnect
                 
         \param use_ssl
-            deprecated, see Transport::add_ssl
+            deprecated, see Transport::set_ssl
 
         \param ssl_cert_file
-            deprecated, see Transport::add_ssl
+            deprecated, see Transport::set_ssl
 
         \param ssl_key_file
-            deprecated, see Transport::add_ssl
+            deprecated, see Transport::set_ssl
 
         \param ssl_ca_certs
-            deprecated, see Transport::add_ssl
+            deprecated, see Transport::set_ssl
 
         \param ssl_cert_validator
-            deprecated, see Transport::add_ssl
+            deprecated, see Transport::set_ssl
 
         \param wait_on_receipt
             if a receipt is specified, then the send method should wait
@@ -142,7 +142,7 @@ class Transport(listener.Publisher):
             before continuing
 
         \param ssl_version
-            deprecated, see Transport::add_ssl
+            deprecated, see Transport::set_ssl
 
         \param timeout
             the timeout value to use when connecting the stomp socket
@@ -215,8 +215,8 @@ class Transport(listener.Publisher):
         # setup SSL
         self.__ssl_params = {}
         if use_ssl:
-            warnings.warn("Deprecated: use add_ssl instead", DeprecationWarning)
-            self.add_ssl(host_and_ports,
+            warnings.warn("Deprecated: use set_ssl instead", DeprecationWarning)
+            self.set_ssl(host_and_ports,
                          ssl_key_file,
                          ssl_cert_file,
                          ssl_ca_certs,
@@ -713,18 +713,18 @@ class Transport(listener.Publisher):
             self.__connect_wait_condition.wait(wait_time)
         self.__connect_wait_condition.release()
 
-    def add_ssl(self,
-                for_hosts,
+    def set_ssl(self,
+                for_hosts = [],
                 key_file=None,
                 cert_file=None,
                 ca_certs=None,
                 cert_validator=None,
                 ssl_version=DEFAULT_SSL_VERSION):
         """
-        Add SSL configuration for the given hosts.
+        Sets up SSL configuration for the given hosts.
 
         This ensures socket is wrapped in a SSL connection, raising an
-        exception if SSL module can't be found.
+        exception if the SSL module can't be found.
 
         \param for_hosts
             hosts this SSL configuration should be applied to
@@ -764,9 +764,10 @@ class Transport(listener.Publisher):
                                                 ca_certs=ca_certs,
                                                 cert_validator=cert_validator,
                                                 ssl_version=ssl_version)
+
     def __need_ssl(self, host_and_port=None):
         """
-        Wether current host needs SSL or not.
+        Whether current host needs SSL or not.
         """
         if not host_and_port:
             host_and_port = self.current_host_and_port

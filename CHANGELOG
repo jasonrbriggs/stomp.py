@@ -1,7 +1,13 @@
+Version 4.0.11 - Feb 2014
+
+ * Merge Rafael's patch for specifying ssl settings as a separate method rather than constructor args
+   - see https://github.com/jasonrbriggs/stomp.py/pull/6 for more info
+
+
 Version 4.0.10 - Jan 2014
 
  * Fix package info on setup (missing adapter package causes problems for command line client
-    - see https://github.com/jasonrbriggs/stomp.py/issues/7 for more info)
+    - see https://github.com/jasonrbriggs/stomp.py/issues/7 for more info
 
 
 Version 4.0.9 - Jan 2014
