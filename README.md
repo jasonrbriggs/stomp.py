@@ -50,5 +50,5 @@ LICENSE 		                - Software license
 CHANGELOG                       - List of changes in each release  
 stomp/                          - The stomp.py client library code  
 stomp/test/                     - Test code for the library  
-stomp/adaptor					- Experimental stuff (at the moment, a multicast adaptor)  
+stomp/adapter					- Experimental stuff (at the moment, a multicast adapter)  
 
