@@ -39,16 +39,3 @@ Jayson Vantuyl
 Tatiana Al-Chueyr Martins  
 Rafael Durán Casteñada  
 
-
-What's In This Release
-----------------------
-
-This release contains the following:
-
-README.md	                    - This file  
-LICENSE 		                - Software license  
-CHANGELOG                       - List of changes in each release  
-stomp/                          - The stomp.py client library code  
-stomp/test/                     - Test code for the library  
-stomp/adapter					- Experimental stuff (at the moment, a multicast adapter)  
-
