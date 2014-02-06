@@ -643,10 +643,10 @@ class Transport(listener.Publisher):
                     log.debug("Attempting connection to host %s, port %s" % host_and_port)
                     self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.__enable_keepalive()
-                    ssl = self.__need_ssl(host_and_port)
+                    need_ssl = self.__need_ssl(host_and_port)
 
-                    if ssl:  # wrap socket
-                        ssl_params = self.get_ssl()
+                    if need_ssl:  # wrap socket
+                        ssl_params = self.get_ssl(host_and_port)
                         if ssl_params['ca_certs']:
                             cert_validation = ssl.CERT_REQUIRED
                         else:
@@ -666,7 +666,7 @@ class Transport(listener.Publisher):
                     #
                     # Validate server cert
                     #
-                    if ssl and ssl_params['cert_validator']: 
+                    if need_ssl and ssl_params['cert_validator']: 
                         cert = self.socket.getpeercert()
                         (ok, errmsg) = apply(ssl_params['cert_validator'], (cert, host_and_port[0]))
                         if not ok:
