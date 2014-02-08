@@ -174,10 +174,10 @@ def convert_frame_to_lines(frame):
         lines.append("\n")
     for key, vals in sorted(frame.headers.items()):
         if type(vals) != tuple:
-            vals = ( vals, )
+            vals = (vals,)
         for val in vals:
-            lines.append('%s:%s\n' % (key, val))
-    lines.append('\n')
+            lines.append("%s:%s\n" % (key, val))
+    lines.append("\n")
     if frame.body:
         lines.append(frame.body)
 
