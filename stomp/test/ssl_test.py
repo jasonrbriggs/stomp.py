@@ -1,5 +1,6 @@
 import unittest
 
+import stomp
 from stomp import transport
 
 from testutils import *
@@ -15,7 +16,7 @@ class TestSSL(unittest.TestCase):
             import ssl
             queuename = '/queue/test4-%s' % self.timestamp
             conn = stomp.Connection(get_standard_ssl_host())
-            conn.set_ssl([get_standard_ssl_host()])
+            conn.set_ssl(get_standard_ssl_host())
             conn.set_listener('', self.listener)
             conn.start()
             conn.connect('admin', 'password', wait=True)
@@ -26,10 +27,10 @@ class TestSSL(unittest.TestCase):
             self.listener.wait_on_receipt()
             conn.disconnect()
 
-            self.assert_(self.listener.connections > 1, 'should have received 1 connection acknowledgement')
+            self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
             self.assert_(self.listener.messages == 1, 'should have received 1 message')
             self.assert_(self.listener.errors == 0, 'should not have received any errors')
-        except:
+        except ImportError:
             pass
 
 
