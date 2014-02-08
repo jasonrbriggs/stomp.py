@@ -35,4 +35,6 @@ nosetests.xml
 .project
 .pydevproject
 
+.idea
+
 MANIFEST
