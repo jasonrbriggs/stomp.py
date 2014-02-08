@@ -25,7 +25,7 @@ class TestBasicSend(unittest.TestCase):
         if self.conn:
             self.conn.disconnect()
 
-    def testbasic(self):
+    def test_basic(self):
         queuename = '/queue/test1-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
 
@@ -37,7 +37,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
     
-    def testcommit(self):
+    def test_commit(self):
         queuename = '/queue/test2-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
         trans_id = self.conn.begin()
@@ -56,7 +56,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.messages == 3, 'should have received 3 messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-    def testabort(self):
+    def test_abort(self):
         queuename = '/queue/test3-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
         trans_id = self.conn.begin()
@@ -75,8 +75,8 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
       
-    def testtimeout(self):
-        conn = stomp.Connection([('203.0.113.100', 60000)], timeout=5, reconnect_attempts_max=1)
+    def test_timeout(self):
+        conn = stomp.Connection([('192.0.2.0', 60000)], timeout=5, reconnect_attempts_max=1)
         conn.set_listener('', self.listener)
         
         try:
@@ -88,28 +88,7 @@ class TestBasicSend(unittest.TestCase):
             ms = time.time() - ms
             self.assert_(ms > 5.0, 'connection timeout should have been at least 5 seconds')
 
-    def testssl(self):
-        try:
-            import ssl
-            queuename = '/queue/test4-%s' % self.timestamp
-            conn = stomp.Connection(get_standard_ssl_host(), use_ssl = True)
-            conn.set_listener('', self.listener)
-            conn.start()
-            conn.connect('admin', 'password', wait=True)
-            conn.subscribe(destination=queuename, id=1, ack='auto')
-
-            conn.send(body='this is a test', destination=queuename, receipt='123')
-
-            self.listener.wait_on_receipt()
-            conn.disconnect()
-
-            self.assert_(self.listener.connections > 1, 'should have received 1 connection acknowledgement')
-            self.assert_(self.listener.messages == 1, 'should have received 1 message')
-            self.assert_(self.listener.errors == 0, 'should not have received any errors')
-        except:
-            pass
-
-    def testchildinterrupt(self):
+    def test_childinterrupt(self):
         def childhandler(signum, frame):
             print("received child signal")
  
@@ -138,7 +117,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
         self.assert_(self.conn.is_connected(), 'should still be connected to STOMP provider')
         
-    def testclientack(self):
+    def test_clientack(self):
         queuename = '/queue/testclientack-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='client')
 
@@ -153,7 +132,7 @@ class TestBasicSend(unittest.TestCase):
         
         self.conn.ack(message_id, subscription)
 
-    def testclientnack(self):
+    def test_clientnack(self):
         queuename = '/queue/testclientnack-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='client')
 
@@ -168,6 +147,31 @@ class TestBasicSend(unittest.TestCase):
         
         self.conn.nack(message_id, subscription)
 
+    def test_specialchars(self):
+        queuename = '/queue/testspecialchars-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client')
+
+        hdrs = {
+            'special-1' : 'test with colon : test',
+            'special-2' : 'test with backslash \\ test',
+            'special-3' : 'test with newline \n'
+        }
+
+        self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
+
+        self.listener.wait_on_receipt()
+        
+        (headers, msg) = self.listener.get_latest_message()
+        
+        message_id = headers['message-id']
+        subscription = headers['subscription']
+        self.assert_('special-1' in headers)
+        self.assertEqual('test with colon : test', headers['special-1'])
+        self.assert_('special-2' in headers)
+        self.assertEqual('test with backslash \\ test', headers['special-2'])
+        self.assert_('special-3' in headers)
+        self.assertEqual('test with newline \n', headers['special-3'])
+        
 
 class TestConnectionErrors(unittest.TestCase):   
     def test_connect_wait_error(self):

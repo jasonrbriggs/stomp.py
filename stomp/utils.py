@@ -66,7 +66,8 @@ def default_create_thread(callback):
 
 def is_localhost(host_and_port):
     """
-    Return true if the specified host+port is a member of the 'localhost' list of hosts.
+    Return 1 if the specified host+port is a member of the 'localhost' list of hosts, 2 if not (predominately used
+    as a sort key.
     """
     (host, port) = host_and_port
     if host in LOCALHOST_NAMES:
@@ -90,7 +91,9 @@ def parse_headers(lines, offset=0):
         if header_match:
             key = header_match.group('key')
             if key not in headers:
-                headers[key] = header_match.group('value')
+                value = header_match.group('value')
+                value = value.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
+                headers[key] = value
     return headers
 
 

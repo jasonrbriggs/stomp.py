@@ -18,7 +18,7 @@ class Protocol10(ConnectionListener):
     def __init__(self, transport):
         self.transport = transport
         transport.set_listener('protocol-listener', self)
-        self.version = 1.0
+        self.version = '1.0'
 
     def send_frame(self, cmd, headers = {}, body = ''):
         frame = utils.Frame(cmd, headers, body)
@@ -114,9 +114,18 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         HeartbeatListener.__init__(self, heartbeats)
         self.transport = transport
         transport.set_listener('protocol-listener', self)
-        self.version = 1.1
+        self.version = '1.1'
+
+    def __escape_headers(self, headers):
+        for key,val in headers.items():
+            try:
+                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c')
+            except: pass
+            headers[key] = val
 
     def send_frame(self, cmd, headers={}, body=''):
+        if cmd != CMD_CONNECT:
+            self.__escape_headers(headers)
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 
@@ -217,9 +226,18 @@ class Protocol12(Protocol11):
     """
     def __init__(self, transport, heartbeats = (0, 0)):
         Protocol11.__init__(self, transport, heartbeats)
-        self.version = 1.2
+        self.version = '1.2'
+
+    def __escape_headers(self, headers):
+        for key,val in headers.items():
+            try:
+                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c').replace('\r', '\\r')
+            except: pass
+            headers[key] = val
 
     def send_frame(self, cmd, headers = {}, body = ''):
+        if cmd != CMD_CONNECT:
+            self.__escape_headers(headers)
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 

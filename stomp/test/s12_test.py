@@ -84,3 +84,31 @@ message: connection failed\x00''')
                 pass
         finally:
             server.stop()
+            
+    def test_specialchars12(self):
+        queuename = '/queue/testspecialchars12-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client')
+
+        hdrs = {
+            'special-1' : 'test with colon : test',
+            'special-2' : 'test with backslash \\ test',
+            'special-3' : 'test with newline \n',
+            'special-4' : 'test with carriage return \r'
+        }
+
+        self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
+
+        self.listener.wait_on_receipt()
+        
+        (headers, msg) = self.listener.get_latest_message()
+        
+        message_id = headers['message-id']
+        subscription = headers['subscription']
+        self.assert_('special-1' in headers)
+        self.assertEqual('test with colon : test', headers['special-1'])
+        self.assert_('special-2' in headers)
+        self.assertEqual('test with backslash \\ test', headers['special-2'])
+        self.assert_('special-3' in headers)
+        self.assertEqual('test with newline \n', headers['special-3'])
+        self.assert_('special-4' in headers)
+        self.assertEqual('test with carriage return \r', headers['special-4'])

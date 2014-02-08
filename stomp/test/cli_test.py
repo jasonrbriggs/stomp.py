@@ -12,8 +12,7 @@ from testutils import *
 username = 'admin'
 password = 'password'
 
-host = os.environ['STD_HOST']
-port = int(os.environ['STD_PORT'])
+(host, port) = get_standard_host()[0]
 
 class TestStdin:
     pass

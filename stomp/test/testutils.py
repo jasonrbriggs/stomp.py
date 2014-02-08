@@ -5,24 +5,45 @@ import threading
 import logging
 log = logging.getLogger('testutils.py')
 
+from configparser import ConfigParser
+
+
 from stomp import ConnectionListener, StatsListener, WaitingListener
 from stomp.backward import *
 
 
+config = ConfigParser()
+config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
+
+
+def get_environ(name):
+    try:
+        return os.environ[name]
+    except:
+        return None
+
 def get_standard_host():
-    return [(os.environ['STD_HOST'], int(os.environ['STD_PORT']))]
+    host = config.get('default', 'host')
+    port = config.get('default', 'port')
+    return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
     
 def get_standard_ssl_host():
-    return [(os.environ['STD_HOST'], int(os.environ['STD_SSL_PORT']))]
+    host = config.get('default', 'host')
+    port = config.get('default', 'ssl_port')
+    return [(get_environ('STD_HOST') or host, int(get_environ('STD_SSL_PORT') or port))]
 
 
 def get_rabbitmq_host():
-    return [(os.environ['RABBITMQ_HOST'], int(os.environ['RABBITMQ_PORT']))]
+    host = config.get('rabbitmq', 'host')
+    port = config.get('rabbitmq', 'port')
+    return [(get_environ('RABBITMQ_HOST') or host, int(get_environ('RABBITMQ_PORT') or port))]
     
 
 def get_stompserver_host():
-    return [(os.environ['STOMPSERVER_HOST'], int(os.environ['STOMPSERVER_PORT']))]
+    host = config.get('stompserver', 'host')
+    port = config.get('stompserver', 'port')
+    return [(get_environ('STOMPSERVER_HOST') or host, int(get_environ('STOMPSERVER_PORT') or port))]
     
 
 class TestListener(StatsListener,WaitingListener):
