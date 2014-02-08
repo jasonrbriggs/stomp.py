@@ -26,6 +26,12 @@ class BaseConnection(Publisher):
     def is_connected(self):
         return self.transport.is_connected()
 
+    def set_ssl(self, *args, **kwargs):
+        self.transport.set_ssl(*args, **kwargs)
+
+    def get_ssl(self, *args, **kwargs):
+        self.transport.get_ssl(*args, **kwargs)
+
 
 class StompConnection10(BaseConnection, Protocol10):
     """

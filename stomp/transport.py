@@ -666,7 +666,7 @@ class Transport(listener.Publisher):
                     #
                     # Validate server cert
                     #
-                    if need_ssl and ssl_params['cert_validator']: 
+                    if need_ssl and ssl_params['cert_validator']:
                         cert = self.socket.getpeercert()
                         (ok, errmsg) = apply(ssl_params['cert_validator'], (cert, host_and_port[0]))
                         if not ok:
