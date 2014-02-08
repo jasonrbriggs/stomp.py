@@ -1,7 +1,8 @@
 Version 4.0.11 - Feb 2014
 
- * Merge Rafael's patch for specifying ssl settings as a separate method rather than constructor args
-   - see https://github.com/jasonrbriggs/stomp.py/pull/6 for more info
+ * Merge Rafael's patches for specifying ssl settings as a separate method rather than constructor args
+   - https://github.com/jasonrbriggs/stomp.py/pull/6
+   - https://github.com/jasonrbriggs/stomp.py/pull/10
  * Fix for header escaping (as per https://github.com/jasonrbriggs/stomp.py/issues/9)
  * Move ip/ports for tests into setup.ini
 
