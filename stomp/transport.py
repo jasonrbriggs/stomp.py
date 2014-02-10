@@ -5,6 +5,7 @@ import socket
 import sys
 import threading
 import time
+import traceback
 import types
 import xml.dom.minidom
 import errno
@@ -490,8 +491,7 @@ class Transport(listener.Publisher):
                                     f = utils.parse_frame(frame)
                                     self.process_frame(f, frame)
                         except:
-                            _, e, _ = sys.exc_info()
-                            print(e)
+                            traceback.print_exc()
                         finally:
                             try:
                                 self.socket.close()
