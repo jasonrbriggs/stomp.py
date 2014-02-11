@@ -381,8 +381,8 @@ class Transport(listener.Publisher):
                 finally:
                     self.__socket_semaphore.release()
             except Exception:
-                print(e)
                 _, e, _ = sys.exc_info()
+                print(e)
                 log.error("Error sending frame: %s" % e)
                 raise e
         else:
