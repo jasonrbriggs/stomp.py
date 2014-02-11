@@ -7,7 +7,6 @@ from stomp import listener
 from testutils import *
 
 class Test11Send(unittest.TestCase):
-    '''
     def test11(self):
         conn = stomp.Connection(get_standard_host())
         tl = TestListener('123')
@@ -53,7 +52,6 @@ class Test11Send(unittest.TestCase):
         self.assert_(listener.messages >= 1, 'should have received 1 message, was %s' % listener.messages)
         self.assert_(listener.errors == 0, 'should not have received any errors, was %s' % listener.errors)
         self.assert_(listener.heartbeat_timeouts == 0, 'should not have received a heartbeat timeout, was %s' % listener.heartbeat_timeouts)
-    '''
 
     def testheartbeat_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)

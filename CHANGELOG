@@ -1,3 +1,7 @@
+Version 4.0.12 -
+
+
+
 Version 4.0.11 - Feb 2014
 
  * Merge Rafael's patches for specifying ssl settings as a separate method rather than constructor args

@@ -1,6 +1,5 @@
 import re
 import threading
-import xml.dom
 
 try:
     import hashlib

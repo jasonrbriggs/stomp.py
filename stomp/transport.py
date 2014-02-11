@@ -5,8 +5,6 @@ import socket
 import sys
 import threading
 import time
-import types
-import xml.dom.minidom
 import errno
 import warnings
 
@@ -62,7 +60,7 @@ class Transport(listener.Publisher):
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
     def __init__(self, 
-                 host_and_ports = [ ('localhost', 61613) ], 
+                 host_and_ports = [('localhost', 61613)],
                  prefer_localhost = True,
                  try_loopback_connect = True,
                  reconnect_sleep_initial = 0.1,

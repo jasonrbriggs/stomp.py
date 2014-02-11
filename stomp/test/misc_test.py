@@ -1,11 +1,9 @@
-import os
-import signal
 import time
 import unittest
-import xml
+import xml.dom.minidom
+import traceback
 
 import stomp
-from stomp import exception
 from stomp.listener import *
 
 from testutils import *
@@ -38,6 +36,7 @@ class TransformationListener(WaitingListener):
                 #
                 # unable to parse message. return original
                 #
+                traceback.print_exc()
                 return (headers, body)
                 
     def on_message(self, headers, body):
