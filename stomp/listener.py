@@ -237,7 +237,7 @@ class HeartbeatListener(ConnectionListener):
 
             if now - send_time > self.send_sleep:
                 send_time = now
-                log.debug("Sending a heartbeat message at %s" % now)
+                log.debug("Sending a heartbeat message at %s", now)
                 try:
                     self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
@@ -250,7 +250,7 @@ class HeartbeatListener(ConnectionListener):
                 diff_heartbeat = now - self.received_heartbeat
                 if diff_heartbeat > self.receive_sleep:
                     # heartbeat timeout
-                    log.debug("Heartbeat timeout: diff_receive=%s, diff_heartbeat=%s, time=%s, lastrec=%s" % (diff_receive, diff_heartbeat, now, self.received_heartbeat))
+                    log.info("Heartbeat timeout: diff_receive=%s, diff_heartbeat=%s, time=%s, lastrec=%s", diff_receive, diff_heartbeat, now, self.received_heartbeat)
                     self.received_heartbeat = now
                     self.transport.disconnect_socket()
                     self.transport.set_connected(False)
@@ -312,14 +312,14 @@ class StatsListener(ConnectionListener):
         \see ConnectionListener::on_disconnected
         """
         self.disconnects = self.disconnects + 1
-        log.debug("disconnected (x %s)" % self.disconnects)
+        log.info("disconnected (x %s)", self.disconnects)
 
     def on_error(self, headers, message):
         """
         Increment the error count.
         \see ConnectionListener::on_error
         """
-        log.debug("received an error %s [%s]" % (message, headers))
+        log.info("received an error %s [%s]", message, headers)
         self.errors += 1
 
     def on_connecting(self, host_and_port):
@@ -327,7 +327,7 @@ class StatsListener(ConnectionListener):
         Increment the connection count.
         \see ConnectionListener::on_connecting
         """
-        log.debug("connecting %s %s (x %s)" % (host_and_port[0], host_and_port[1], self.connections))
+        log.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
 
     def on_message(self, headers, body):

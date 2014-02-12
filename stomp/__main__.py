@@ -2,7 +2,6 @@ import base64
 import os
 import sys
 import time
-import threading
 
 from cmd import Cmd
 from optparse import OptionParser
