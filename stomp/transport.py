@@ -674,7 +674,7 @@ class Transport(listener.Publisher):
                 except socket.error:
                     self.socket = None
                     connect_count += 1
-                    log.warning("Could not connect to host %s, port %s: %s", host_and_port[0], host_and_port[1], exc_info=1)
+                    log.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max, 
