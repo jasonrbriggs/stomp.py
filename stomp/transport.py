@@ -60,24 +60,24 @@ class Transport(listener.Publisher):
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
     def __init__(self, 
-                 host_and_ports = [('localhost', 61613)],
-                 prefer_localhost = True,
-                 try_loopback_connect = True,
-                 reconnect_sleep_initial = 0.1,
-                 reconnect_sleep_increase = 0.5,
-                 reconnect_sleep_jitter = 0.1,
-                 reconnect_sleep_max = 60.0,
-                 reconnect_attempts_max = 3,
-                 use_ssl = False,
-                 ssl_key_file = None,
-                 ssl_cert_file = None,
-                 ssl_ca_certs = None,
-                 ssl_cert_validator = None,
-                 wait_on_receipt = False,
-                 ssl_version = None,
-                 timeout = None,
-                 keepalive = None,
-                 vhost = None
+                 host_and_ports=None,
+                 prefer_localhost=True,
+                 try_loopback_connect=True,
+                 reconnect_sleep_initial=0.1,
+                 reconnect_sleep_increase=0.5,
+                 reconnect_sleep_jitter=0.1,
+                 reconnect_sleep_max=60.0,
+                 reconnect_attempts_max=3,
+                 use_ssl=False,
+                 ssl_key_file=None,
+                 ssl_cert_file=None,
+                 ssl_ca_certs=None,
+                 ssl_cert_validator=None,
+                 wait_on_receipt=False,
+                 ssl_version=None,
+                 timeout=None,
+                 keepalive=None,
+                 vhost=None
                  ):
         """
         \param host_and_ports            
@@ -157,6 +157,9 @@ class Transport(listener.Publisher):
             specify a virtual hostname to provide in the 'host' header of the connection
         """
 
+        if host_and_ports is None:
+            host_and_ports = [('localhost', 61613)]
+
         sorted_host_and_ports = []
         sorted_host_and_ports.extend(host_and_ports)
 
@@ -164,7 +167,7 @@ class Transport(listener.Publisher):
         # If localhost is preferred, make sure all (host, port) tuples that refer to the local host come first in the list
         #
         if prefer_localhost:
-            sorted_host_and_ports.sort(key = utils.is_localhost)
+            sorted_host_and_ports.sort(key=utils.is_localhost)
 
         #
         # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port) tuple
@@ -205,7 +208,8 @@ class Transport(listener.Publisher):
         self.__receiver_thread_exited = False
         self.__send_wait_condition = threading.Condition()
         self.__connect_wait_condition = threading.Condition()
-        
+
+        self.running = False
         self.blocking = None
         self.connected = False
         self.connection_error = False
@@ -396,7 +400,7 @@ class Transport(listener.Publisher):
         
     def process_frame(self, f, frame_str):
         frame_type = f.cmd.lower()
-        if frame_type in [ 'connected', 'message', 'receipt', 'error', 'heartbeat' ]:
+        if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
             if frame_type == 'message':
                 (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
             self.notify(frame_type, f.headers, f.body)
@@ -473,28 +477,18 @@ class Transport(listener.Publisher):
         """
         log.info("Starting receiver loop")
         try:
-            try:
-                while self.running:
-                    if self.socket is None:
-                        break
+            while self.running:
+                if self.socket is None:
+                    break
 
+                try:
                     try:
-                        try:
-                            while self.running:
-                                frames = self.__read()
-                                
-                                for frame in frames:
-                                    f = utils.parse_frame(frame)
-                                    self.process_frame(f, frame)
-                        except:
-                            log.debug("Error processing frame", exc_info=1)
-                        finally:
-                            try:
-                                self.socket.close()
-                            except:
-                                pass # ignore errors when attempting to close socket
-                            self.socket = None
-                            self.current_host_and_port = None
+                        while self.running:
+                            frames = self.__read()
+
+                            for frame in frames:
+                                f = utils.parse_frame(frame)
+                                self.process_frame(f, frame)
                     except exception.ConnectionClosedException:
                         if self.running:
                             self.notify('disconnected')
@@ -504,8 +498,15 @@ class Transport(listener.Publisher):
                             self.__recvbuf = ''
                             self.running = False
                         break
-            except:
-                log.exception("An unhandled exception was encountered in the stomp receiver loop")
+                except:
+                    log.debug("Error processing frame", exc_info=1)
+                finally:
+                    try:
+                        self.socket.close()
+                    except:
+                        pass # ignore errors when attempting to close socket
+                    self.socket = None
+                    self.current_host_and_port = None
 
         finally:
             self.__receiver_thread_exit_condition.acquire()
@@ -579,7 +580,7 @@ class Transport(listener.Publisher):
     def __enable_keepalive(self):
         def try_setsockopt(sock, name, fam, opt, val):
             if val is None:
-                return True # no value to set always works
+                return True  # no value to set always works
             try:
                 sock.setsockopt(fam, opt, val)
                 log.info("keepalive: set %r option to %r on socket", name, val)
@@ -593,7 +594,7 @@ class Transport(listener.Publisher):
         if not ka:
             return
 
-        if ka == True:
+        if ka:
             ka_sig = 'auto'
             ka_args = ()
         else:
@@ -664,7 +665,7 @@ class Transport(listener.Publisher):
                     #
                     if need_ssl and ssl_params['cert_validator']:
                         cert = self.socket.getpeercert()
-                        (ok, errmsg) = apply(ssl_params['cert_validator'], (cert, host_and_port[0]))
+                        (ok, errmsg) = ssl_params['cert_validator'](cert, host_and_port[0])
                         if not ok:
                             raise SSLError("Server certificate validation failed: %s", errmsg)
 
@@ -706,7 +707,7 @@ class Transport(listener.Publisher):
         self.__connect_wait_condition.release()
 
     def set_ssl(self,
-                for_hosts = [],
+                for_hosts=[],
                 key_file=None,
                 cert_file=None,
                 ca_certs=None,
@@ -748,7 +749,7 @@ class Transport(listener.Publisher):
             The default is ssl.PROTOCOL_SSLv3
         """
         if not ssl:
-            raise Exception("SSL connection requested, but SSL library not found.")
+            raise Exception("SSL connection requested, but SSL library not found")
 
         for host_port in for_hosts:
             self.__ssl_params[host_port] = dict(key_file=key_file,

@@ -1,4 +1,5 @@
 import re
+import socket
 import threading
 
 try:
@@ -46,7 +47,7 @@ PREAMBLE_END_RE = re.compile('\n\n|\r\n\r\n')
 ##
 # As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
 #
-LINE_END_RE     = re.compile('\n|\r\n')
+LINE_END_RE = re.compile('\n|\r\n')
 
 
 def default_create_thread(callback):
@@ -188,7 +189,7 @@ class Frame:
     """
     A STOMP frame to send. Comprises a command, the headers and the body content.
     """
-    def __init__(self, cmd = None, headers = {}, body = None):
+    def __init__(self, cmd=None, headers={}, body=None):
         self.cmd = cmd
         self.headers = headers
         self.body = body

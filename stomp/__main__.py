@@ -8,13 +8,11 @@ from optparse import OptionParser
 
 from connect import StompConnection10,StompConnection11,StompConnection12
 from listener import ConnectionListener, StatsListener
-from exception import NotConnectedException
-from backward import input_prompt
 from adapter.multicast import MulticastConnection
 import colors
 sys.path.append('.')
 import stomp
-import utils
+
 
 ##@namespace stomp.__main__
 # The stomp.py command line client (used for testing or simple STOMP command scripting).
@@ -150,7 +148,7 @@ class StompCLI(Cmd, ConnectionListener):
     def emptyline(self):
         pass
         
-    def help(self, usage, description, required = [], optional = []):        
+    def help(self, usage, description, required=[], optional=[]):
         required.insert(0, '')
         rparams = "\n\t".join(required)
         
