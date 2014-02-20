@@ -25,11 +25,11 @@ class TestCommand(Command):
         suite = unittest.TestSuite()
         if self.test == '*':
             print('Running all tests')
-            import test
-            for tst in test.__all__:
-                suite.addTests(unittest.TestLoader().loadTestsFromName('test.%s' % tst))
+            import stomp.test
+            for tst in stomp.test.__all__:
+                suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
         else:
-            suite = unittest.TestLoader().loadTestsFromName('test.%s' % self.test)
+            suite = unittest.TestLoader().loadTestsFromName('stomp.test.%s' % self.test)
         unittest.TextTestRunner(verbosity=2).run(suite)
 
 
