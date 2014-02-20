@@ -1,14 +1,15 @@
 import os
-import socket
-import sys
 import threading
 import logging
 log = logging.getLogger('testutils.py')
 
-from configparser import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
 
 
-from stomp import ConnectionListener, StatsListener, WaitingListener
+from stomp import StatsListener, WaitingListener
 from stomp.backward import *
 
 
