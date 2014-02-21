@@ -1,4 +1,5 @@
 import unittest
+import sys
 
 from stomp.utils import *
 from stomp.backward import *
@@ -16,4 +17,7 @@ class TestUtils(unittest.TestCase):
 
         s = pack(lines)
 
-        self.assertEquals(b'SEND\nheader1:value1\n\nthis is the body\x00', s)
+        if sys.hexversion >= 0x03000000:
+            self.assertEquals(bytearray('SEND\nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
+        else:
+            self.assertEquals('SEND\nheader1:value1\n\nthis is the body\x00', s)

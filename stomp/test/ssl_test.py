@@ -3,7 +3,7 @@ import unittest
 import stomp
 from stomp import transport
 
-from testutils import *
+from stomp.test.testutils import *
 
 class TestSSL(unittest.TestCase):
     def setUp(self):
