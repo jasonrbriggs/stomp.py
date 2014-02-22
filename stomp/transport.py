@@ -331,13 +331,14 @@ class Transport(listener.Publisher):
         if self.socket is not None:
             if self.__need_ssl():
                 #
-                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL shutdown
+                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL
+                # shutdown
                 #
                 try:
                     self.socket = self.socket.unwrap()
                 except Exception:
                     #
-                    # unwrap seems flaky on Win with the backported ssl mod, so catch any exception and log it
+                    # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
                     #
                     _, e, _ = sys.exc_info()
                     log.warn(e)
@@ -458,7 +459,7 @@ class Transport(listener.Publisher):
                 listener.on_heartbeat()
                 continue
 
-            if frame_type == 'error' and self.connected == False:
+            if frame_type == 'error' and self.connected is False:
                 self.__connect_wait_condition.acquire()
                 self.connection_error = True
                 self.__connect_wait_condition.notify()
@@ -482,24 +483,21 @@ class Transport(listener.Publisher):
                     break
 
                 try:
-                    try:
-                        while self.running:
-                            frames = self.__read()
+                    while self.running:
+                        frames = self.__read()
 
-                            for frame in frames:
-                                f = utils.parse_frame(frame)
-                                self.process_frame(f, frame)
-                    except exception.ConnectionClosedException:
-                        if self.running:
-                            self.notify('disconnected')
-                            #
-                            # Clear out any half-received messages after losing connection
-                            #
-                            self.__recvbuf = ''
-                            self.running = False
-                        break
-                except:
-                    log.debug("Error processing frame", exc_info=1)
+                        for frame in frames:
+                            f = utils.parse_frame(frame)
+                            self.process_frame(f, frame)
+                except exception.ConnectionClosedException:
+                    if self.running:
+                        self.notify('disconnected')
+                        #
+                        # Clear out any half-received messages after losing connection
+                        #
+                        self.__recvbuf = ''
+                        self.running = False
+                    break
                 finally:
                     try:
                         self.socket.close()
@@ -507,7 +505,6 @@ class Transport(listener.Publisher):
                         pass # ignore errors when attempting to close socket
                     self.socket = None
                     self.current_host_and_port = None
-
         finally:
             self.__receiver_thread_exit_condition.acquire()
             self.__receiver_thread_exited = True
