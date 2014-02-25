@@ -1,6 +1,7 @@
 from transport import *
 from protocol import *
 from listener import *
+import uuid
 
 ##@namespace stomp.connect
 # Main entry point for clients to create a STOMP connection.
@@ -66,7 +67,7 @@ class StompConnection10(BaseConnection, Protocol10):
         BaseConnection.__init__(self, transport)
         Protocol10.__init__(self, transport)
         
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         Protocol10.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
@@ -103,7 +104,7 @@ class StompConnection11(BaseConnection, Protocol11):
         BaseConnection.__init__(self, transport)
         Protocol11.__init__(self, transport, heartbeats)
         
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
@@ -144,6 +145,6 @@ class StompConnection12(BaseConnection, Protocol12):
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats)
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
