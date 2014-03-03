@@ -21,7 +21,7 @@ class TestNonAsciiSend(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.disconnect(receipt=None)
        
     def test_send_nonascii(self):
         queuename = '/queue/p3nonasciitest-%s' % self.timestamp

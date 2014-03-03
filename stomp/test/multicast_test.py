@@ -26,7 +26,7 @@ class TestMulticast(unittest.TestCase):
 
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.disconnect(receipt=None)
 
     def testsubscribe(self):
         queuename = '/queue/test1-%s' % self.timestamp

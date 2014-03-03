@@ -21,7 +21,7 @@ class TestRabbitMQSend(unittest.TestCase):
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
         listener.wait_on_receipt()
-        conn.disconnect()
+        conn.disconnect(receipt=None)
 
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(listener.messages == 1, 'should have received 1 message')

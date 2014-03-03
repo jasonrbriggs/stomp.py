@@ -23,7 +23,7 @@ class Test10Connect(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.disconnect(receipt=None)
        
     def testsend10(self):
         queuename = '/queue/testsend10-%s' % self.timestamp

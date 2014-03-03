@@ -57,7 +57,7 @@ class TestMessageTransform(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.disconnect(receipt=None)
        
     def testTransform(self):
         queuename = '/queue/testtransform-%s' % self.timestamp

@@ -29,7 +29,7 @@ class Test11Send(unittest.TestCase):
         conn.set_listener('waiting', wl)
         
         # stomp1.1 disconnect with receipt
-        conn.disconnect(headers={'receipt' : 'DISCONNECT1'})
+        conn.disconnect(receipt='DISCONNECT1')
         
         # wait for the receipt
         wl.wait_on_receipt()
@@ -46,7 +46,7 @@ class Test11Send(unittest.TestCase):
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
         listener.wait_on_receipt()
-        conn.disconnect()
+        conn.disconnect(receipt=None)
 
         self.assert_(listener.connections >= 1, 'should have received 1 connection acknowledgement, was %s' % listener.connections)
         self.assert_(listener.messages >= 1, 'should have received 1 message, was %s' % listener.messages)

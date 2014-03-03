@@ -55,7 +55,7 @@ heart-beat: 1000,1000\x00''')
                 log.debug('stopping conn after expected exception %s' % e)
                 # lost connection, now restart the server
                 try:
-                    conn.disconnect()
+                    conn.disconnect(receipt=None)
                 except:
                     pass
 

@@ -25,7 +25,7 @@ class TestSSL(unittest.TestCase):
             conn.send(body='this is a test', destination=queuename, receipt='123')
 
             self.listener.wait_on_receipt()
-            conn.disconnect()
+            conn.disconnect(receipt=None)
 
             self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
             self.assert_(self.listener.messages == 1, 'should have received 1 message')
