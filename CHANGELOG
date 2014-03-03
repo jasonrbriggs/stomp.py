@@ -1,5 +1,9 @@
 Version 4.0.12 -
 
+ * Merge Chaskiel's patch for defaulting receipt headers
+ * Fix defaulting for host_and_ports list
+ * Fix exception handling in receiver loop
+ * Tidy up logging
 
 
 Version 4.0.11 - Feb 2014
