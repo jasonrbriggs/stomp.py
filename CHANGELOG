@@ -189,12 +189,3 @@ Version 3.0.1 beta - Apr 2010
   * Fixes for Oracle AQ bridge for Python3
   * Change to debian style changelog
 
-
-
-NOTES/ATTRIBUTION
-  * patch from Andreas Schobel
-  * patches from Julian Scheid of Rising Sun Pictures (http://open.rsp.com.au)
-  * patch from Fernando
-  * patches from Eugene Strulyov
-  * patch for SSL protocol from 'jmgdaniec'
-  * patches for Linux TCP Keepalive, provided by Jayson Vantuyl

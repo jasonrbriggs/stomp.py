@@ -37,5 +37,6 @@ Martin Pieuchot
 Joe Gdaniec  
 Jayson Vantuyl  
 Tatiana Al-Chueyr Martins  
-Rafael Durán Casteñada  
+Rafael Durán Casteñada
+Chaskiel Grundman
 
