@@ -1,15 +1,8 @@
-import os
-import signal
-import time
 import unittest
 
-import stomp
-from stomp import exception
 from stomp.adapter.multicast import MulticastConnection
 
-from stomp.backward import uuid
-
-from testutils import *
+from stomp.test.testutils import *
 
 
 class TestMulticast(unittest.TestCase):

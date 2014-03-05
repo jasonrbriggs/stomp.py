@@ -6,7 +6,7 @@ import traceback
 import stomp
 from stomp.listener import *
 
-from testutils import *
+from stomp.test.testutils import *
 
 
 class TransformationListener(WaitingListener):

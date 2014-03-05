@@ -7,7 +7,7 @@ from stomp.__main__ import StompCLI
 
 header_re = re.compile(r'[^:]+:.*')
 
-from testutils import *
+from stomp.test.testutils import *
 
 username = 'admin'
 password = 'password'

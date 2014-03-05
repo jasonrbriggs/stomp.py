@@ -9,7 +9,7 @@ import unittest
 
 import stomp
 
-from testutils import *
+from stomp.test.testutils import *
 
 class MQ(object):
     def __init__(self):

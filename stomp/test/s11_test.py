@@ -1,10 +1,9 @@
-import time
 import unittest
 
 import stomp
 from stomp import listener
 
-from testutils import *
+from stomp.test.testutils import *
 
 class Test11Send(unittest.TestCase):
     def test11(self):

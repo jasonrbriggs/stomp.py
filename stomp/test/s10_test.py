@@ -1,12 +1,8 @@
-import os
-import signal
-import time
 import unittest
 
 import stomp
-from stomp import exception
 
-from testutils import *
+from stomp.test.testutils import *
 
 
 class Test10Connect(unittest.TestCase):

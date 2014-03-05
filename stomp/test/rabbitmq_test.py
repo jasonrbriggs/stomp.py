@@ -1,9 +1,8 @@
-import time
 import unittest
 
 import stomp
 
-from testutils import *
+from stomp.test.testutils import *
 
 class TestRabbitMQSend(unittest.TestCase):
 

@@ -8,7 +8,7 @@ import unittest
 
 import stomp
 
-from testutils import *
+from stomp.test.testutils import *
 
 import logging
 log = logging.getLogger('ss_test.py')

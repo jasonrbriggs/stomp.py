@@ -3,11 +3,9 @@
 import time
 import unittest
 
-import base64
-
 import stomp
 
-from testutils import *
+from stomp.test.testutils import *
 
 class TestNonAsciiSend(unittest.TestCase):
 

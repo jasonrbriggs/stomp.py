@@ -6,7 +6,7 @@ import unittest
 import stomp
 from stomp import exception
 
-from testutils import *
+from stomp.test.testutils import *
 
 
 class TestBasicSend(unittest.TestCase):

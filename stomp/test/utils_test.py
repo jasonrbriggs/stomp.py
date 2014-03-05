@@ -1,5 +1,4 @@
 import unittest
-import sys
 
 from stomp.utils import *
 from stomp.backward import *
