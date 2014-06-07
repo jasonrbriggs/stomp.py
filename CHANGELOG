@@ -1,4 +1,4 @@
-Version 4.0.12 -
+Version 4.0.12 - Jun 2014
 
  * Merge Chaskiel's patch for defaulting receipt headers
  * Fix defaulting for host_and_ports list
