@@ -11,9 +11,9 @@ import hashlib
 # and then Python-specific versions in backward2 and backward3.
 
 if sys.hexversion >= 0x03000000: # Python 3+
-    from backward3 import *
+    from stomp.backward3 import *
 else: # Python 2
-    from backward2 import *
+    from stomp.backward2 import *
 
 
 def get_errno(e):

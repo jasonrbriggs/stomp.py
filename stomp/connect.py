@@ -1,6 +1,6 @@
-from transport import *
-from protocol import *
-from listener import *
+from stomp.transport import *
+from stomp.protocol import *
+from stomp.listener import *
 import uuid
 
 ##@namespace stomp.connect

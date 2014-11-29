@@ -36,10 +36,10 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL=False
 
-import exception
-import listener
-import utils
-from backward import decode, encode, get_errno, pack, NULL
+import stomp.exception as exception
+import stomp.listener as listener
+import stomp.utils as utils
+from stomp.backward import decode, encode, get_errno, pack, NULL
 
 try:
     import uuid    

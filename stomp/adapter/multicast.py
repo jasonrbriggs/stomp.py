@@ -2,10 +2,10 @@ import socket
 import struct
 import uuid
 
-from transport import *
-from connect import BaseConnection
-from protocol import *
-from utils import *
+from stomp.transport import *
+from stomp.connect import BaseConnection
+from stomp.protocol import *
+from stomp.utils import *
 
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 5000

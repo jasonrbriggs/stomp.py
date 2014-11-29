@@ -9,13 +9,9 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 
 """
 
-import os
-import sys
-sys.path.insert(0, os.path.split(__file__)[0])
+import stomp.connect as connect, stomp.listener as listener
 
-import connect, listener, exception, transport, protocol
-
-__version__ = (4, 0, 12)
+__version__ = (4, 0, 13)
 
 ##
 # Alias for STOMP 1.0 connections.

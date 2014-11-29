@@ -1,9 +1,9 @@
 import threading
 import time
 
-import exception
-import utils
-from constants import *
+import stomp.exception as exception
+import stomp.utils as utils
+from stomp.constants import *
 
 ##@namespace stomp.listener
 # Various listeners for using with stomp.py connections.

@@ -6,10 +6,10 @@ import time
 from cmd import Cmd
 from optparse import OptionParser
 
-from connect import StompConnection10,StompConnection11,StompConnection12
-from listener import ConnectionListener, StatsListener
-from adapter.multicast import MulticastConnection
-import colors
+from stomp.connect import StompConnection10,StompConnection11,StompConnection12
+from stomp.listener import ConnectionListener, StatsListener
+from stomp.adapter.multicast import MulticastConnection
+import stomp.colors
 sys.path.append('.')
 import stomp
 
@@ -87,7 +87,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.stdout.write(str(msg) + end)
         
     def __error(self, msg, end="\n"):
-        self.stdout.write(colors.BOLD + colors.RED + str(msg) + colors.NO_COLOR + end)
+        self.stdout.write(stomp.colors.BOLD + stomp.colors.RED + str(msg) + stomp.colors.NO_COLOR + end)
 
     def on_connecting(self, host_and_port):
         """

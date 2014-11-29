@@ -1,9 +1,10 @@
 import uuid
 
-from exception import ConnectFailedException
-from listener import *
-from backward import encode, hasbyte
-from constants import *
+from stomp.exception import ConnectFailedException
+from stomp.listener import *
+from stomp.backward import encode, hasbyte
+from stomp.constants import *
+import stomp.utils as utils
 
 
 ##@namespace stomp.protocol

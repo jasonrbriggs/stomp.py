@@ -7,7 +7,7 @@ try:
 except ImportError:
     import md5 as hashlib
 
-from backward import NULL
+from stomp.backward import NULL
 
 ##@namespace stomp.utils
 # General utilities.
