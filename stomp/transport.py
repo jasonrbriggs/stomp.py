@@ -10,7 +10,7 @@ import warnings
 
 
 ##@namespace stomp.transport
-# Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual 
+# Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual
 # STOMP protocol
 
 
@@ -42,7 +42,7 @@ import stomp.utils as utils
 from stomp.backward import decode, encode, get_errno, pack, NULL
 
 try:
-    import uuid    
+    import uuid
 except ImportError:
     from backward import uuid
 
@@ -53,13 +53,13 @@ class Transport(listener.Publisher):
     """
     Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of the protocol.
     """
-    
+
     #
     # Used to parse the STOMP "content-length" header lines,
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
-    def __init__(self, 
+    def __init__(self,
                  host_and_ports=None,
                  prefer_localhost=True,
                  try_loopback_connect=True,
@@ -80,24 +80,24 @@ class Transport(listener.Publisher):
                  vhost=None
                  ):
         """
-        \param host_and_ports            
+        \param host_and_ports
             a list of (host, port) tuples.
 
         \param prefer_localhost
             if True and the local host is mentioned in the (host,
             port) tuples, try to connect to this first
 
-        \param try_loopback_connect    
+        \param try_loopback_connect
             if True and the local host is found in the host
             tuples, try connecting to it using loopback interface
             (127.0.0.1)
 
-        \param reconnect_sleep_initial 
+        \param reconnect_sleep_initial
             initial delay in seconds to wait before reattempting
             to establish a connection if connection to any of the
             hosts fails.
 
-        \param reconnect_sleep_increase 
+        \param reconnect_sleep_increase
             factor by which the sleep delay is increased after
             each connection attempt. For example, 0.5 means
             to wait 50% longer than before the previous attempt,
@@ -115,10 +115,10 @@ class Transport(listener.Publisher):
             stampeding. For example, a value of 0.1 means to wait
             an extra 0%-10% (randomly determined) of the delay
             calculated using the previous three parameters.
-                 
+
         \param reconnect_attempts_max
             maximum attempts to reconnect
-                
+
         \param use_ssl
             deprecated, see Transport::set_ssl
 
@@ -144,7 +144,7 @@ class Transport(listener.Publisher):
 
         \param timeout
             the timeout value to use when connecting the stomp socket
-            
+
         \param keepalive
             some operating systems support sending the occasional heart
             beat packets to detect when a connection fails.  This
@@ -178,7 +178,7 @@ class Transport(listener.Publisher):
             for host_and_port in sorted_host_and_ports:
                 if utils.is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
-                    if (not ("127.0.0.1", port) in sorted_host_and_ports 
+                    if (not ("127.0.0.1", port) in sorted_host_and_ports
                         and not ("localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
@@ -199,7 +199,7 @@ class Transport(listener.Publisher):
         self.__reconnect_sleep_max = reconnect_sleep_max
         self.__reconnect_attempts_max = reconnect_attempts_max
         self.__timeout = timeout
-        
+
         self.socket = None
         self.__socket_semaphore = threading.BoundedSemaphore(1)
         self.current_host_and_port = None
@@ -213,7 +213,7 @@ class Transport(listener.Publisher):
         self.blocking = None
         self.connected = False
         self.connection_error = False
-        
+
         # setup SSL
         self.__ssl_params = {}
         if use_ssl:
@@ -227,17 +227,17 @@ class Transport(listener.Publisher):
 
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
-        
+
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
-        
+
         # function for creating threads used by the connection
         self.create_thread_fc = utils.default_create_thread
 
         self.__keepalive = keepalive
         self.vhost = vhost
 
-            
+
     def override_threading(self, create_thread_fc):
         """
         Override for thread creation. Use an alternate threading library by
@@ -270,7 +270,7 @@ class Transport(listener.Publisher):
         while not self.__receiver_thread_exited:
             self.__receiver_thread_exit_condition.wait()
         self.__receiver_thread_exit_condition.release()
-        
+
     def is_connected(self):
         """
         Return true if the socket managed by this connection is connected
@@ -279,14 +279,14 @@ class Transport(listener.Publisher):
             return self.socket is not None and self.socket.getsockname()[1] != 0 and self.connected
         except socket.error:
             return False
-            
+
     def set_connected(self, connected):
         self.__connect_wait_condition.acquire()
         self.connected = connected
         if connected:
             self.__connect_wait_condition.notify()
         self.__connect_wait_condition.release()
-        
+
     #
     # Manage objects listening to incoming frames
     #
@@ -294,20 +294,20 @@ class Transport(listener.Publisher):
     def set_listener(self, name, listener):
         """
         Set a named listener to use with this connection
-        
+
         \see listener::ConnectionListener
-        
+
         \param name
             the name of the listener
         \param listener
             the listener object
         """
         self.listeners[name] = listener
-        
+
     def remove_listener(self, name):
         """
         Remove a listener according to the specified name
-        
+
         \param name the name of the listener to remove
         """
         del self.listeners[name]
@@ -315,14 +315,14 @@ class Transport(listener.Publisher):
     def get_listener(self, name):
         """
         Return the named listener
-        
+
         \param name the listener to return
         """
         if name in self.listeners:
             return self.listeners[name]
         else:
             return None
-        
+
     def disconnect_socket(self):
         """
         Disconnect the underlying socket connection
@@ -376,7 +376,10 @@ class Transport(listener.Publisher):
 
         packed_frame = pack(lines)
 
-        log.info("Sending frame %s", lines)
+        if log.isEnabledFor(logging.DEBUG):
+            log.debug("Sending frame %s", lines)
+        else:
+            log.info("Sending frame cmd=%r headers=%r", frame.cmd, frame.headers)
 
         if self.socket is not None:
             try:
@@ -394,31 +397,34 @@ class Transport(listener.Publisher):
 
     def send_over_socket(self, encoded_frame):
         self.socket.sendall(encoded_frame)
-        
+
     def read_from_socket(self):
         c = self.socket.recv(1024)
         return c
-        
+
     def process_frame(self, f, frame_str):
         frame_type = f.cmd.lower()
         if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
             if frame_type == 'message':
                 (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
             self.notify(frame_type, f.headers, f.body)
-            log.info("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
+            if log.isEnabledFor(logging.DEBUG):
+                log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
+            else:
+                log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, len(f.body))
         else:
             log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, len(frame_str))
 
     def notify(self, frame_type, headers=None, body=None):
         """
         Utility function for notifying listeners of incoming and outgoing messages
-        
+
         \param frame_type
             the type of message
-        
+
         \param headers
             the map of headers associated with the message
-        
+
         \param body
             the content of the message
         """
@@ -431,7 +437,7 @@ class Transport(listener.Publisher):
                 self.__send_wait_condition.notify()
             finally:
                 self.__send_wait_condition.release()
-            
+
             # received a stomp 1.1+ disconnect receipt
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
@@ -448,7 +454,7 @@ class Transport(listener.Publisher):
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
-                
+
             if frame_type == 'connecting':
                 listener.on_connecting(self.current_host_and_port)
                 continue
@@ -656,7 +662,7 @@ class Transport(listener.Publisher):
                     if self.blocking is not None:
                         self.socket.setblocking(self.blocking)
                     self.socket.connect(host_and_port)
-                    
+
                     #
                     # Validate server cert
                     #
@@ -675,8 +681,8 @@ class Transport(listener.Publisher):
                     log.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
 
             if self.socket is None:
-                sleep_duration = (min(self.__reconnect_sleep_max, 
-                                      ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase)) 
+                sleep_duration = (min(self.__reconnect_sleep_max,
+                                      ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase))
                                        * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
                                   * (1.0 + random.random() * self.__reconnect_sleep_jitter))
                 sleep_end = time.time() + sleep_duration
@@ -686,9 +692,9 @@ class Transport(listener.Publisher):
 
                 if sleep_duration < self.__reconnect_sleep_max:
                     sleep_exp += 1
-                    
+
         if not self.socket:
-            raise exception.ConnectFailedException()            
+            raise exception.ConnectFailedException()
 
     def wait_for_connection(self, timeout=None):
         """
