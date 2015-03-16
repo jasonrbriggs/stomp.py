@@ -30,10 +30,10 @@ class MulticastTransport(Transport):
         if not self.socket or not self.receiver_socket:
             raise exception.ConnectFailedException()
 
-    def send_over_socket(self, encoded_frame):
+    def send(self, encoded_frame):
         self.socket.sendto(encoded_frame, (MCAST_GRP, MCAST_PORT))
         
-    def read_from_socket(self):
+    def receive(self):
         return self.receiver_socket.recv(1024)
         
     def process_frame(self, f, frame_str):
@@ -55,7 +55,7 @@ class MulticastTransport(Transport):
         if 'receipt' in f.headers:
             receipt_frame = Frame('RECEIPT', {'receipt-id': f.headers['receipt']})
             lines = convert_frame_to_lines(receipt_frame)
-            self.send_over_socket(encode(pack(lines)))
+            self.send(encode(pack(lines)))
         log.debug("Received frame: %r, headers=%r, body=%r" % (f.cmd, f.headers, f.body))
             
     def stop(self):
