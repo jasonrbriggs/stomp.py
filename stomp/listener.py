@@ -201,7 +201,10 @@ class HeartbeatListener(ConnectionListener):
                 self.running = True
                 if self.heartbeat_thread is None:
                     self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
-                
+
+    def on_disconnected(self):
+        self.running = False
+
     def on_message(self, headers, body):
         """
         Reset the last received time whenever a message is received.
