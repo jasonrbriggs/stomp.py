@@ -1,3 +1,11 @@
+Version 4.0.13 - Mar 2015
+
+ * refactor transport to make providing new transports easier
+ * fix bug in listener (https://github.com/jasonrbriggs/stomp.py/issues/26)
+ * Merge Andre's logging changes
+ * fix for issue #23 (https://github.com/jasonrbriggs/stomp.py/issues/23), stop stomp.py inserting into the path
+ 
+
 Version 4.0.12 - Jun 2014
 
  * Merge Chaskiel's patch for defaulting receipt headers
