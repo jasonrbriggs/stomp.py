@@ -1,4 +1,4 @@
-Version 4.0.13 - Mar 2015
+Version 4.0.14 - Mar 2015
 
  * refactor transport to make providing new transports easier
  * fix bug in listener (https://github.com/jasonrbriggs/stomp.py/issues/26)
