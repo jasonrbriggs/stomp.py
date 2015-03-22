@@ -49,182 +49,26 @@ except ImportError:
 import logging
 log = logging.getLogger('stomp.py')
 
-class Transport(listener.Publisher):
-    """
-    Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of the protocol.
-    """
+class BaseTransport(listener.Publisher):
 
     #
     # Used to parse the STOMP "content-length" header lines,
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
-
-    def __init__(self,
-                 host_and_ports=None,
-                 prefer_localhost=True,
-                 try_loopback_connect=True,
-                 reconnect_sleep_initial=0.1,
-                 reconnect_sleep_increase=0.5,
-                 reconnect_sleep_jitter=0.1,
-                 reconnect_sleep_max=60.0,
-                 reconnect_attempts_max=3,
-                 use_ssl=False,
-                 ssl_key_file=None,
-                 ssl_cert_file=None,
-                 ssl_ca_certs=None,
-                 ssl_cert_validator=None,
-                 wait_on_receipt=False,
-                 ssl_version=None,
-                 timeout=None,
-                 keepalive=None,
-                 vhost=None
-                 ):
+    
+    def __init__(self, wait_on_receipt):
         """
-        \param host_and_ports
-            a list of (host, port) tuples.
-
-        \param prefer_localhost
-            if True and the local host is mentioned in the (host,
-            port) tuples, try to connect to this first
-
-        \param try_loopback_connect
-            if True and the local host is found in the host
-            tuples, try connecting to it using loopback interface
-            (127.0.0.1)
-
-        \param reconnect_sleep_initial
-            initial delay in seconds to wait before reattempting
-            to establish a connection if connection to any of the
-            hosts fails.
-
-        \param reconnect_sleep_increase
-            factor by which the sleep delay is increased after
-            each connection attempt. For example, 0.5 means
-            to wait 50% longer than before the previous attempt,
-            1.0 means wait twice as long, and 0.0 means keep
-            the delay constant.
-
-        \param reconnect_sleep_max
-            maximum delay between connection attempts, regardless
-            of the reconnect_sleep_increase.
-
-        \param reconnect_sleep_jitter
-            random additional time to wait (as a percentage of
-            the time determined using the previous parameters)
-            between connection attempts in order to avoid
-            stampeding. For example, a value of 0.1 means to wait
-            an extra 0%-10% (randomly determined) of the delay
-            calculated using the previous three parameters.
-
-        \param reconnect_attempts_max
-            maximum attempts to reconnect
-
-        \param use_ssl
-            deprecated, see Transport::set_ssl
-
-        \param ssl_cert_file
-            deprecated, see Transport::set_ssl
-
-        \param ssl_key_file
-            deprecated, see Transport::set_ssl
-
-        \param ssl_ca_certs
-            deprecated, see Transport::set_ssl
-
-        \param ssl_cert_validator
-            deprecated, see Transport::set_ssl
-
         \param wait_on_receipt
             if a receipt is specified, then the send method should wait
             (block) for the server to respond with that receipt-id
             before continuing
-
-        \param ssl_version
-            deprecated, see Transport::set_ssl
-
-        \param timeout
-            the timeout value to use when connecting the stomp socket
-
-        \param keepalive
-            some operating systems support sending the occasional heart
-            beat packets to detect when a connection fails.  This
-            parameter can either be set set to a boolean to turn on the
-            default keepalive options for your OS, or as a tuple of
-            values, which also enables keepalive packets, but specifies
-            options specific to your OS implementation
-
-        \param vhost
-            specify a virtual hostname to provide in the 'host' header of the connection
         """
-
-        if host_and_ports is None:
-            host_and_ports = [('localhost', 61613)]
-
-        sorted_host_and_ports = []
-        sorted_host_and_ports.extend(host_and_ports)
-
-        #
-        # If localhost is preferred, make sure all (host, port) tuples that refer to the local host come first in the list
-        #
-        if prefer_localhost:
-            sorted_host_and_ports.sort(key=utils.is_localhost)
-
-        #
-        # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port) tuple
-        # referring to a local host, add an entry with the host name replaced by 127.0.0.1 if it doesn't exist already
-        #
-        loopback_host_and_ports = []
-        if try_loopback_connect:
-            for host_and_port in sorted_host_and_ports:
-                if utils.is_localhost(host_and_port) == 1:
-                    port = host_and_port[1]
-                    if (not ("127.0.0.1", port) in sorted_host_and_ports
-                        and not ("localhost", port) in sorted_host_and_ports):
-                        loopback_host_and_ports.append(("127.0.0.1", port))
-
-        #
-        # Assemble the final, possibly sorted list of (host, port) tuples
-        #
-        self.__host_and_ports = []
-        self.__host_and_ports.extend(loopback_host_and_ports)
-        self.__host_and_ports.extend(sorted_host_and_ports)
-
         self.__recvbuf = ''
-
         self.listeners = {}
-
-        self.__reconnect_sleep_initial = reconnect_sleep_initial
-        self.__reconnect_sleep_increase = reconnect_sleep_increase
-        self.__reconnect_sleep_jitter = reconnect_sleep_jitter
-        self.__reconnect_sleep_max = reconnect_sleep_max
-        self.__reconnect_attempts_max = reconnect_attempts_max
-        self.__timeout = timeout
-
-        self.socket = None
-        self.__socket_semaphore = threading.BoundedSemaphore(1)
-        self.current_host_and_port = None
-
-        self.__receiver_thread_exit_condition = threading.Condition()
-        self.__receiver_thread_exited = False
-        self.__send_wait_condition = threading.Condition()
-        self.__connect_wait_condition = threading.Condition()
-
         self.running = False
         self.blocking = None
         self.connected = False
         self.connection_error = False
-
-        # setup SSL
-        self.__ssl_params = {}
-        if use_ssl:
-            warnings.warn("Deprecated: use set_ssl instead", DeprecationWarning)
-            self.set_ssl(host_and_ports,
-                         ssl_key_file,
-                         ssl_cert_file,
-                         ssl_ca_certs,
-                         ssl_cert_validator,
-                         ssl_version)
-
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
 
@@ -233,10 +77,11 @@ class Transport(listener.Publisher):
 
         # function for creating threads used by the connection
         self.create_thread_fc = utils.default_create_thread
-
-        self.__keepalive = keepalive
-        self.vhost = vhost
-
+        
+        self.__receiver_thread_exit_condition = threading.Condition()
+        self.__receiver_thread_exited = False
+        self.__send_wait_condition = threading.Condition()
+        self.__connect_wait_condition = threading.Condition()
 
     def override_threading(self, create_thread_fc):
         """
@@ -245,7 +90,7 @@ class Transport(listener.Publisher):
         The thread which is returned should be started (ready to run)
         """
         self.create_thread_fc = create_thread_fc
-
+        
     #
     # Manage the connection
     #
@@ -272,13 +117,7 @@ class Transport(listener.Publisher):
         self.__receiver_thread_exit_condition.release()
 
     def is_connected(self):
-        """
-        Return true if the socket managed by this connection is connected
-        """
-        try:
-            return self.socket is not None and self.socket.getsockname()[1] != 0 and self.connected
-        except socket.error:
-            return False
+        return self.connected
 
     def set_connected(self, connected):
         self.__connect_wait_condition.acquire()
@@ -286,7 +125,7 @@ class Transport(listener.Publisher):
         if connected:
             self.__connect_wait_condition.notify()
         self.__connect_wait_condition.release()
-
+        
     #
     # Manage objects listening to incoming frames
     #
@@ -322,85 +161,6 @@ class Transport(listener.Publisher):
             return self.listeners[name]
         else:
             return None
-
-    def disconnect_socket(self):
-        """
-        Disconnect the underlying socket connection
-        """
-        self.running = False
-        if self.socket is not None:
-            if self.__need_ssl():
-                #
-                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL
-                # shutdown
-                #
-                try:
-                    self.socket = self.socket.unwrap()
-                except Exception:
-                    #
-                    # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
-                    #
-                    _, e, _ = sys.exc_info()
-                    log.warn(e)
-            elif hasattr(socket, 'SHUT_RDWR'):
-                try:
-                    self.socket.shutdown(socket.SHUT_RDWR)
-                except socket.error:
-                    _, e, _ = sys.exc_info()
-                    # ignore when socket already closed
-                    if get_errno(e) != errno.ENOTCONN:
-                        log.warn("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
-
-        #
-        # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
-        #
-        if self.socket is not None:
-            try:
-                self.socket.close()
-            except socket.error:
-                _, e, _ = sys.exc_info()
-                log.warn("Unable to close socket because of error '%s'", e)
-        self.current_host_and_port = None
-
-    def transmit(self, frame):
-        """
-        Convert a frame object to a frame string and transmit to the server.
-        """
-        for listener in self.listeners.values():
-            if not listener: continue
-            if not hasattr(listener, 'on_send'):
-                continue
-            listener.on_send(frame)
-
-        lines = utils.convert_frame_to_lines(frame)
-
-        packed_frame = pack(lines)
-
-        if log.isEnabledFor(logging.DEBUG):
-            log.debug("Sending frame %s", lines)
-        else:
-            log.info("Sending frame cmd=%r headers=%r", frame.cmd, frame.headers)
-
-        if self.socket is not None:
-            try:
-                self.__socket_semaphore.acquire()
-                try:
-                    self.send_over_socket(encode(packed_frame))
-                finally:
-                    self.__socket_semaphore.release()
-            except Exception:
-                _, e, _ = sys.exc_info()
-                log.error("Error sending frame", exc_info=1)
-                raise e
-        else:
-            raise exception.NotConnectedException()
-
-    def send_over_socket(self, encoded_frame):
-        self.socket.sendall(encoded_frame)
-
-    def read_from_socket(self):
-        c = self.socket.recv(1024)
-        return c
 
     def process_frame(self, f, frame_str):
         frame_type = f.cmd.lower()
@@ -477,7 +237,53 @@ class Transport(listener.Publisher):
                 (headers, body) = rtn
         if rtn:
             return rtn
+            
+    def transmit(self, frame):
+        """
+        Convert a frame object to a frame string and transmit to the server.
+        """
+        for listener in self.listeners.values():
+            if not listener: continue
+            if not hasattr(listener, 'on_send'):
+                continue
+            listener.on_send(frame)
 
+        lines = utils.convert_frame_to_lines(frame)
+
+        packed_frame = pack(lines)
+
+        if log.isEnabledFor(logging.DEBUG):
+            log.debug("Sending frame %s", lines)
+        else:
+            log.info("Sending frame cmd=%r headers=%r", frame.cmd, frame.headers)
+            
+        self.send(encode(packed_frame))
+        
+    def send(self, frame):
+        pass
+        
+    def receive(self):
+        pass
+            
+    def cleanup(self):
+        pass
+        
+    def attempt_connection(self):
+        pass
+        
+    def wait_for_connection(self, timeout=None):
+        """
+        Wait until we've established a connection with the server.
+        """
+        if timeout is not None:
+            wait_time = timeout / 10.0
+        else:
+            wait_time = None
+        self.__connect_wait_condition.acquire()
+        while not self.is_connected() and not self.connection_error:
+            self.__connect_wait_condition.wait(wait_time)
+        self.__connect_wait_condition.release()
+        
     def __receiver_loop(self):
         """
         Main loop listening for incoming data.
@@ -485,9 +291,6 @@ class Transport(listener.Publisher):
         log.info("Starting receiver loop")
         try:
             while self.running:
-                if self.socket is None:
-                    break
-
                 try:
                     while self.running:
                         frames = self.__read()
@@ -505,12 +308,7 @@ class Transport(listener.Publisher):
                         self.running = False
                     break
                 finally:
-                    try:
-                        self.socket.close()
-                    except:
-                        pass # ignore errors when attempting to close socket
-                    self.socket = None
-                    self.current_host_and_port = None
+                    self.cleanup()
         finally:
             self.__receiver_thread_exit_condition.acquire()
             self.__receiver_thread_exited = True
@@ -526,13 +324,10 @@ class Transport(listener.Publisher):
         while self.running:
             try:
                 try:
-                    c = self.read_from_socket()
-                except socket.error:
-                    _, e, _ = sys.exc_info()
-                    if get_errno(e) in (errno.EAGAIN, errno.EINTR):
-                        log.debug("socket read interrupted, restarting")
-                        continue
-                    raise
+                    c = self.receive()
+                except InterruptedException:
+                    log.debug("socket read interrupted, restarting")
+                    continue
                 c = decode(c)
             except Exception:
                 _, e, _ = sys.exc_info()
@@ -579,6 +374,249 @@ class Transport(listener.Publisher):
                 else:
                     break
         return result
+
+
+class Transport(BaseTransport):
+    """
+    Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of the protocol.
+    """
+
+    def __init__(self,
+                 host_and_ports=None,
+                 prefer_localhost=True,
+                 try_loopback_connect=True,
+                 reconnect_sleep_initial=0.1,
+                 reconnect_sleep_increase=0.5,
+                 reconnect_sleep_jitter=0.1,
+                 reconnect_sleep_max=60.0,
+                 reconnect_attempts_max=3,
+                 use_ssl=False,
+                 ssl_key_file=None,
+                 ssl_cert_file=None,
+                 ssl_ca_certs=None,
+                 ssl_cert_validator=None,
+                 wait_on_receipt=False,
+                 ssl_version=None,
+                 timeout=None,
+                 keepalive=None,
+                 vhost=None
+                 ):
+        """
+        \param host_and_ports
+            a list of (host, port) tuples.
+
+        \param prefer_localhost
+            if True and the local host is mentioned in the (host,
+            port) tuples, try to connect to this first
+
+        \param try_loopback_connect
+            if True and the local host is found in the host
+            tuples, try connecting to it using loopback interface
+            (127.0.0.1)
+
+        \param reconnect_sleep_initial
+            initial delay in seconds to wait before reattempting
+            to establish a connection if connection to any of the
+            hosts fails.
+
+        \param reconnect_sleep_increase
+            factor by which the sleep delay is increased after
+            each connection attempt. For example, 0.5 means
+            to wait 50% longer than before the previous attempt,
+            1.0 means wait twice as long, and 0.0 means keep
+            the delay constant.
+
+        \param reconnect_sleep_max
+            maximum delay between connection attempts, regardless
+            of the reconnect_sleep_increase.
+
+        \param reconnect_sleep_jitter
+            random additional time to wait (as a percentage of
+            the time determined using the previous parameters)
+            between connection attempts in order to avoid
+            stampeding. For example, a value of 0.1 means to wait
+            an extra 0%-10% (randomly determined) of the delay
+            calculated using the previous three parameters.
+
+        \param reconnect_attempts_max
+            maximum attempts to reconnect
+
+        \param use_ssl
+            deprecated, see Transport::set_ssl
+
+        \param ssl_cert_file
+            deprecated, see Transport::set_ssl
+
+        \param ssl_key_file
+            deprecated, see Transport::set_ssl
+
+        \param ssl_ca_certs
+            deprecated, see Transport::set_ssl
+
+        \param ssl_cert_validator
+            deprecated, see Transport::set_ssl
+
+        \param ssl_version
+            deprecated, see Transport::set_ssl
+
+        \param timeout
+            the timeout value to use when connecting the stomp socket
+
+        \param keepalive
+            some operating systems support sending the occasional heart
+            beat packets to detect when a connection fails.  This
+            parameter can either be set set to a boolean to turn on the
+            default keepalive options for your OS, or as a tuple of
+            values, which also enables keepalive packets, but specifies
+            options specific to your OS implementation
+
+        \param vhost
+            specify a virtual hostname to provide in the 'host' header of the connection
+        """
+
+        BaseTransport.__init__(self, wait_on_receipt)
+
+        if host_and_ports is None:
+            host_and_ports = [('localhost', 61613)]
+
+        sorted_host_and_ports = []
+        sorted_host_and_ports.extend(host_and_ports)
+
+        #
+        # If localhost is preferred, make sure all (host, port) tuples that refer to the local host come first in the list
+        #
+        if prefer_localhost:
+            sorted_host_and_ports.sort(key=utils.is_localhost)
+
+        #
+        # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port) tuple
+        # referring to a local host, add an entry with the host name replaced by 127.0.0.1 if it doesn't exist already
+        #
+        loopback_host_and_ports = []
+        if try_loopback_connect:
+            for host_and_port in sorted_host_and_ports:
+                if utils.is_localhost(host_and_port) == 1:
+                    port = host_and_port[1]
+                    if (not ("127.0.0.1", port) in sorted_host_and_ports
+                        and not ("localhost", port) in sorted_host_and_ports):
+                        loopback_host_and_ports.append(("127.0.0.1", port))
+
+        #
+        # Assemble the final, possibly sorted list of (host, port) tuples
+        #
+        self.__host_and_ports = []
+        self.__host_and_ports.extend(loopback_host_and_ports)
+        self.__host_and_ports.extend(sorted_host_and_ports)
+
+        self.__reconnect_sleep_initial = reconnect_sleep_initial
+        self.__reconnect_sleep_increase = reconnect_sleep_increase
+        self.__reconnect_sleep_jitter = reconnect_sleep_jitter
+        self.__reconnect_sleep_max = reconnect_sleep_max
+        self.__reconnect_attempts_max = reconnect_attempts_max
+        self.__timeout = timeout
+
+        self.socket = None
+        self.__socket_semaphore = threading.BoundedSemaphore(1)
+        self.current_host_and_port = None
+
+        # setup SSL
+        self.__ssl_params = {}
+        if use_ssl:
+            warnings.warn("Deprecated: use set_ssl instead", DeprecationWarning)
+            self.set_ssl(host_and_ports,
+                         ssl_key_file,
+                         ssl_cert_file,
+                         ssl_ca_certs,
+                         ssl_cert_validator,
+                         ssl_version)
+
+        self.__keepalive = keepalive
+        self.vhost = vhost
+
+    def is_connected(self):
+        """
+        Return true if the socket managed by this connection is connected
+        """
+        try:
+            return self.socket is not None and self.socket.getsockname()[1] != 0 and BaseTransport.is_connected(self)
+        except socket.error:
+            return False
+
+    def disconnect_socket(self):
+        """
+        Disconnect the underlying socket connection
+        """
+        self.running = False
+        if self.socket is not None:
+            if self.__need_ssl():
+                #
+                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL
+                # shutdown
+                #
+                try:
+                    self.socket = self.socket.unwrap()
+                except Exception:
+                    #
+                    # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
+                    #
+                    _, e, _ = sys.exc_info()
+                    log.warn(e)
+            elif hasattr(socket, 'SHUT_RDWR'):
+                try:
+                    self.socket.shutdown(socket.SHUT_RDWR)
+                except socket.error:
+                    _, e, _ = sys.exc_info()
+                    # ignore when socket already closed
+                    if get_errno(e) != errno.ENOTCONN:
+                        log.warn("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+
+        #
+        # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
+        #
+        if self.socket is not None:
+            try:
+                self.socket.close()
+            except socket.error:
+                _, e, _ = sys.exc_info()
+                log.warn("Unable to close socket because of error '%s'", e)
+        self.current_host_and_port = None
+
+
+    def send(self, encoded_frame):
+        if self.socket is not None:
+            try:
+                self.__socket_semaphore.acquire()
+                try:
+                    self.socket.sendall(encoded_frame)
+                finally:
+                    self.__socket_semaphore.release()
+            except Exception:
+                _, e, _ = sys.exc_info()
+                log.error("Error sending frame", exc_info=1)
+                raise e
+        else:
+            raise exception.NotConnectedException()
+
+
+    def receive(self):
+        try:
+            return self.socket.recv(1024)
+        except socket.error:
+            _, e, _ = sys.exc_info()
+            if get_errno(e) in (errno.EAGAIN, errno.EINTR):
+                log.debug("socket read interrupted, restarting")
+                raise InterruptedException()
+            raise
+
+
+    def cleanup(self):
+        try:
+            self.socket.close()
+        except:
+            pass # ignore errors when attempting to close socket
+        self.socket = None
+        self.current_host_and_port = None
+
 
     def __enable_keepalive(self):
         def try_setsockopt(sock, name, fam, opt, val):
@@ -637,6 +675,7 @@ class Transport(listener.Publisher):
         self.connection_error = False
         sleep_exp = 1
         connect_count = 0
+
         while self.running and self.socket is None and connect_count < self.__reconnect_attempts_max:
             for host_and_port in self.__host_and_ports:
                 try:
@@ -659,6 +698,7 @@ class Transport(listener.Publisher):
                             ca_certs=ssl_params['ca_certs'],
                             ssl_version=ssl_params['ssl_version'])
                         self.socket.settimeout(self.__timeout)
+
                     if self.blocking is not None:
                         self.socket.setblocking(self.blocking)
                     self.socket.connect(host_and_port)
@@ -696,18 +736,6 @@ class Transport(listener.Publisher):
         if not self.socket:
             raise exception.ConnectFailedException()
 
-    def wait_for_connection(self, timeout=None):
-        """
-        Wait until we've established a connection with the server.
-        """
-        if timeout is not None:
-            wait_time = timeout / 10.0
-        else:
-            wait_time = None
-        self.__connect_wait_condition.acquire()
-        while not self.is_connected() and not self.connection_error:
-            self.__connect_wait_condition.wait(wait_time)
-        self.__connect_wait_condition.release()
 
     def set_ssl(self,
                 for_hosts=[],
@@ -761,6 +789,7 @@ class Transport(listener.Publisher):
                                                 cert_validator=cert_validator,
                                                 ssl_version=ssl_version)
 
+
     def __need_ssl(self, host_and_port=None):
         """
         Whether current host needs SSL or not.
@@ -769,6 +798,7 @@ class Transport(listener.Publisher):
             host_and_port = self.current_host_and_port
 
         return host_and_port in self.__ssl_params
+
 
     def get_ssl(self, host_and_port=None):
         """

@@ -22,3 +22,8 @@ class ConnectFailedException(Exception):
     Raised by Connection.attempt_connection when reconnection attempts
     have exceeded Connection.__reconnect_attempts_max.
     """
+
+class InterruptedException(Exception):
+    """
+    Raised by receive when data read is interrupted
+    """
