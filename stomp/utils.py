@@ -184,7 +184,14 @@ def convert_frame_to_lines(frame):
     if frame.cmd:
         lines.append(NULL)
     return lines
-    
+
+
+def length(s):
+    if s is not None:
+        return len(s)
+    return 0
+
+
 class Frame:
     """
     A STOMP frame to send. Comprises a command, the headers and the body content.

@@ -171,9 +171,9 @@ class BaseTransport(listener.Publisher):
             if log.isEnabledFor(logging.DEBUG):
                 log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
-                log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, len(f.body))
+                log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, utils.length(f.body))
         else:
-            log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, len(frame_str))
+            log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
 
     def notify(self, frame_type, headers=None, body=None):
         """
