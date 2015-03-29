@@ -1,3 +1,8 @@
+Version 4.0.16 - Apr 2015
+
+ * Catch attribute error in SSL import (https://github.com/jasonrbriggs/stomp.py/issues/30)
+
+
 Version 4.0.15 - Mar 2015
 
  * Fix for type error in transport logging (https://github.com/jasonrbriggs/stomp.py/issues/29)

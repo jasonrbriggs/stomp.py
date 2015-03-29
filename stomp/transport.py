@@ -23,7 +23,7 @@ try:
     import ssl
     from ssl import SSLError
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_SSLv3
-except ImportError: # python version < 2.6 without the backported ssl module
+except (ImportError,AttributeError): # python version < 2.6 without the backported ssl module
     ssl = None
     class SSLError:
         pass
