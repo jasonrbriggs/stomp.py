@@ -1,6 +1,7 @@
 Version 4.0.16 - Apr 2015
 
  * Catch attribute error in SSL import (https://github.com/jasonrbriggs/stomp.py/issues/30)
+ * Set default ssl version to TLSv1
 
 
 Version 4.0.15 - Mar 2015
