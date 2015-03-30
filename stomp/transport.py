@@ -22,7 +22,7 @@ except ImportError:
 try:
     import ssl
     from ssl import SSLError
-    DEFAULT_SSL_VERSION = ssl.PROTOCOL_SSLv3
+    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLSv1
 except (ImportError,AttributeError): # python version < 2.6 without the backported ssl module
     ssl = None
     class SSLError:
@@ -777,7 +777,7 @@ class Transport(BaseTransport):
         \param ssl_version
             SSL protocol to use for the connection. This should be
             one of the PROTOCOL_x constants provided by the ssl module.
-            The default is ssl.PROTOCOL_SSLv3
+            The default is ssl.PROTOCOL_TLSv1
         """
         if not ssl:
             raise Exception("SSL connection requested, but SSL library not found")
