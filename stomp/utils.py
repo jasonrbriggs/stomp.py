@@ -108,7 +108,7 @@ def parse_frame(frame):
         the frame received from the server (as a string)
     """
     f = Frame()
-    if frame == '\x0a':
+    if frame == b'\x0a':
         f.cmd = 'heartbeat'
         return f
         

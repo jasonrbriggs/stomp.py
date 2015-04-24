@@ -327,7 +327,7 @@ class BaseTransport(listener.Publisher):
                     continue
             except Exception:
                 _, e, _ = sys.exc_info()
-                c = ''
+                c = b''
             if len(c) == 0:
                 raise exception.ConnectionClosedException()
             fastbuf.write(c)
@@ -335,7 +335,7 @@ class BaseTransport(listener.Publisher):
                 break
             elif c == b'\x0a':
                 # heartbeat (special case)
-                return c
+                return [c,]
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
