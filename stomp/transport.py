@@ -39,12 +39,7 @@ except ImportError:
 import stomp.exception as exception
 import stomp.listener as listener
 import stomp.utils as utils
-from stomp.backward import decode, encode, get_errno, pack, NULL
-
-try:
-    import uuid
-except ImportError:
-    from backward import uuid
+from stomp.backward import decode, encode, get_errno, pack
 
 import logging
 log = logging.getLogger('stomp.py')
