@@ -157,10 +157,7 @@ class BaseTransport(listener.Publisher):
 
         \param name the listener to return
         """
-        if name in self.listeners:
-            return self.listeners[name]
-        else:
-            return None
+        return self.listeners.get(name)
 
     def process_frame(self, f, frame_str):
         frame_type = f.cmd.lower()
@@ -225,7 +222,7 @@ class BaseTransport(listener.Publisher):
                 listener.on_heartbeat()
                 continue
 
-            if frame_type == 'error' and self.connected is False:
+            if frame_type == 'error' and not self.connected:
                 self.__connect_wait_condition.acquire()
                 self.connection_error = True
                 self.__connect_wait_condition.notify()
@@ -810,7 +807,4 @@ class Transport(BaseTransport):
         if not host_and_port:
             host_and_port = self.current_host_and_port
 
-        try:
-            return self.__ssl_params[host_and_port]
-        except KeyError:
-            return None
+        return self.__ssl_params.get(host_and_port)
