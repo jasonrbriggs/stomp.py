@@ -20,13 +20,11 @@ class TestRabbitMQSend(unittest.TestCase):
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
         listener.wait_on_receipt()
-        
+
         conn.unsubscribe('/queue/test')
-        
+
         conn.disconnect(receipt=None)
 
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(listener.messages == 1, 'should have received 1 message')
         self.assert_(listener.errors == 0, 'should not have received any errors')
-
-

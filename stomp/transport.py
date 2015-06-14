@@ -55,7 +55,7 @@ class BaseTransport(listener.Publisher):
     # Used to parse the STOMP "content-length" header lines,
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
-    
+
     def __init__(self, wait_on_receipt):
         """
         \param wait_on_receipt
@@ -77,7 +77,7 @@ class BaseTransport(listener.Publisher):
 
         # function for creating threads used by the connection
         self.create_thread_fc = utils.default_create_thread
-        
+
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
         self.__send_wait_condition = threading.Condition()
@@ -90,7 +90,7 @@ class BaseTransport(listener.Publisher):
         The thread which is returned should be started (ready to run)
         """
         self.create_thread_fc = create_thread_fc
-        
+
     #
     # Manage the connection
     #
@@ -125,7 +125,7 @@ class BaseTransport(listener.Publisher):
         if connected:
             self.__connect_wait_condition.notify()
         self.__connect_wait_condition.release()
-        
+
     #
     # Manage objects listening to incoming frames
     #
@@ -234,7 +234,7 @@ class BaseTransport(listener.Publisher):
                 (headers, body) = rtn
         if rtn:
             return rtn
-            
+
     def transmit(self, frame):
         """
         Convert a frame object to a frame string and transmit to the server.
@@ -253,21 +253,21 @@ class BaseTransport(listener.Publisher):
             log.debug("Sending frame %s", lines)
         else:
             log.info("Sending frame cmd=%r headers=%r", frame.cmd, frame.headers)
-            
+
         self.send(encode(packed_frame))
-        
+
     def send(self, frame):
         pass
-        
+
     def receive(self):
         pass
-            
+
     def cleanup(self):
         pass
-        
+
     def attempt_connection(self):
         pass
-        
+
     def wait_for_connection(self, timeout=None):
         """
         Wait until we've established a connection with the server.
@@ -280,7 +280,7 @@ class BaseTransport(listener.Publisher):
         while not self.is_connected() and not self.connection_error:
             self.__connect_wait_condition.wait(wait_time)
         self.__connect_wait_condition.release()
-        
+
     def __receiver_loop(self):
         """
         Main loop listening for incoming data.

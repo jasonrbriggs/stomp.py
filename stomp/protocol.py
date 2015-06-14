@@ -55,7 +55,7 @@ class Protocol10(ConnectionListener):
         cmd = CMD_CONNECT
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
-        
+
         if username is not None:
             headers[HDR_LOGIN] = username
 
@@ -63,7 +63,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_PASSCODE] = passcode
 
         self.send_frame(cmd, headers)
-        
+
         if wait:
             self.transport.wait_for_connection()
             if self.transport.connection_error:
@@ -161,7 +161,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         cmd = CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
-        
+
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
 
@@ -172,7 +172,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_PASSCODE] = passcode
 
         self.send_frame(cmd, headers)
-        
+
         if wait:
             self.transport.wait_for_connection()
             if self.transport.connection_error:
@@ -269,7 +269,7 @@ class Protocol12(Protocol11):
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
         headers[HDR_HOST] = self.transport.current_host_and_port[0]
-        
+
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
 
@@ -280,7 +280,7 @@ class Protocol12(Protocol11):
             headers[HDR_PASSCODE] = passcode
 
         self.send_frame(cmd, headers)
-        
+
         if wait:
             self.transport.wait_for_connection()
             if self.transport.connection_error:

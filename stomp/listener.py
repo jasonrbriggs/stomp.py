@@ -13,33 +13,33 @@ try:
     from fractions import gcd
 except ImportError:
     from backward import gcd
-    
+
 import logging
 log = logging.getLogger('stomp.py')
 
 
 class Publisher(object):
     """
-    Simply a registry of listeners. Subclasses 
+    Simply a registry of listeners. Subclasses
     """
-    
+
     def set_listener(self, name, listener):
         """
         Set a named listener to use with this connection
-    
+
         \see listener::ConnectionListener
-    
+
         \param name
             the name of the listener
         \param listener
             the listener object
         """
         pass
-        
+
     def remove_listener(self, name):
         """
         Remove a listener according to the specified name
-    
+
         \param name the name of the listener to remove
         """
         pass
@@ -47,7 +47,7 @@ class Publisher(object):
     def get_listener(self, name):
         """
         Return the named listener
-    
+
         \param name the listener to return
         """
         return None
@@ -91,14 +91,14 @@ class ConnectionListener(object):
         the connection until it has been reestablished.
         """
         pass
-        
+
     def on_heartbeat_timeout(self):
         """
         Called by the STOMP connection when a heartbeat message has not been
         received beyond the specified period.
         """
         pass
-        
+
     def on_before_message(self, headers, body):
         """
         Called by the STOMP connection before a message is returned to the client app. Returns a tuple
@@ -151,7 +151,7 @@ class ConnectionListener(object):
     def on_send(self, frame):
         """
         Called by the STOMP connection when it is in the process of sending a message
-        
+
         \param frame
             the frame to be sent
         """
@@ -174,7 +174,7 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeats = heartbeats
         self.received_heartbeat = time.time()
         self.heartbeat_thread = None
-    
+
     def on_connected(self, headers, body):
         """
         Once the connection is established, and 'heart-beat' is found in the headers, we calculate the real heartbeat numbers
@@ -189,7 +189,7 @@ class HeartbeatListener(ConnectionListener):
 
                 # receive gets an additional threshold of 2 additional seconds
                 self.receive_sleep = (self.heartbeats[1] / 1000) + 2
-                
+
                 if self.send_sleep == 0:
                     self.sleep_time = self.receive_sleep
                 elif self.receive_sleep == 0:
@@ -197,7 +197,7 @@ class HeartbeatListener(ConnectionListener):
                 else:
                     # sleep is the GCD of the send and receive times
                     self.sleep_time = gcd(self.send_sleep, self.receive_sleep) / 2.0
-                
+
                 self.running = True
                 if self.heartbeat_thread is None:
                     self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
@@ -211,13 +211,13 @@ class HeartbeatListener(ConnectionListener):
         """
         # reset the heartbeat for any received message
         self.received_heartbeat = time.time()
-        
+
     def on_heartbeat(self):
         """
         Reset the last received time whenever a heartbeat message is received.
         """
         self.received_heartbeat = time.time()
-        
+
     def on_send(self, frame):
         """
         Add the heartbeat header to the frame when connecting.
@@ -225,7 +225,7 @@ class HeartbeatListener(ConnectionListener):
         if frame.cmd == 'CONNECT' or frame.cmd == 'STOMP':
             if self.heartbeats != (0, 0):
                 frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
-     
+
     def __heartbeat_loop(self):
         """
         Main loop for sending (and monitoring received) heartbeats.
@@ -235,7 +235,7 @@ class HeartbeatListener(ConnectionListener):
 
         while self.running:
             time.sleep(self.sleep_time)
-            
+
             now = time.time()
 
             if now - send_time > self.send_sleep:
@@ -247,7 +247,7 @@ class HeartbeatListener(ConnectionListener):
                     log.debug("Lost connection, unable to send heartbeat")
 
             diff_receive = now - self.received_heartbeat
-            
+
             if diff_receive > self.receive_sleep:
                 receive_time = now
                 diff_heartbeat = now - self.received_heartbeat
@@ -269,7 +269,7 @@ class WaitingListener(ConnectionListener):
         self.condition = threading.Condition()
         self.receipt = receipt
         self.received = False
-        
+
     def on_receipt(self, headers, body):
         """
         If the receipt id can be found in the headers, then notify the waiting thread.
@@ -279,7 +279,7 @@ class WaitingListener(ConnectionListener):
             self.received = True
             self.condition.notify()
             self.condition.release()
-        
+
     def wait_on_receipt(self):
         """
         Wait until we receive a message receipt.
@@ -339,14 +339,14 @@ class StatsListener(ConnectionListener):
         \see ConnectionListener::on_message
         """
         self.messages += 1
-        
+
     def on_send(self, frame):
         """
         Increment the send count.
         \see ConnectionListener::on_send
         """
         self.messages_sent += 1
-        
+
     def on_heartbeat_timeout(self):
         """
         Increment the heartbeat timeout.

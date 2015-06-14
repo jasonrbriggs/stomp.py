@@ -23,12 +23,12 @@ try:
     LOCALHOST_NAMES.append(socket.gethostbyname(socket.gethostname()))
 except:
     pass
-    
+
 try:
     LOCALHOST_NAMES.append(socket.gethostname())
 except:
     pass
-    
+
 try:
     LOCALHOST_NAMES.append(socket.getfqdn(socket.gethostname()))
 except:
@@ -40,12 +40,12 @@ except:
 HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
 
 ##
-# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
+# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed.
 #
 PREAMBLE_END_RE = re.compile('\n\n|\r\n\r\n')
 
 ##
-# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
+# As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed.
 #
 LINE_END_RE = re.compile('\n|\r\n')
 
@@ -54,7 +54,7 @@ def default_create_thread(callback):
     """
     Default thread creation - used to create threads when the client doesn't want to provide their
     own thread creation.
-    
+
     \param callback
         the callback function provided to threading.Thread
     """
@@ -79,7 +79,7 @@ def is_localhost(host_and_port):
 def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
-    
+
     \param lines
         the lines received in the message response
     \param offset
@@ -103,7 +103,7 @@ def parse_frame(frame):
     where frame_type is the frame type as a string (e.g. MESSAGE),
     headers is a map containing all header key/value pairs, and
     body is a string containing the frame's payload.
-    
+
     \param frame
         the frame received from the server (as a string)
     """
@@ -111,7 +111,7 @@ def parse_frame(frame):
     if frame == '\x0a':
         f.cmd = 'heartbeat'
         return f
-        
+
     mat = PREAMBLE_END_RE.search(frame)
     preamble_end = -1
     if mat:
@@ -135,7 +135,7 @@ def parse_frame(frame):
 
     return f
 
-    
+
 def merge_headers(header_map_list):
     """
     Helper function for combining multiple header maps into one.
@@ -145,12 +145,12 @@ def merge_headers(header_map_list):
         headers.update(header_map)
     return headers
 
-    
+
 def calculate_heartbeats(shb, chb):
     """
     Given a heartbeat string from the server, and a heartbeat tuple from the client,
     calculate what the actual heartbeat settings should be.
-    
+
     \param shb
         server heartbeat numbers
     \param chb
@@ -200,6 +200,6 @@ class Frame:
         self.cmd = cmd
         self.headers = headers
         self.body = body
-        
+
     def __str__(self):
         return '{cmd=%s,headers=[%s],body=%s}' % (self.cmd, self.headers, self.body)

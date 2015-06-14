@@ -45,7 +45,7 @@ class DoxygenCommand(Command):
     def run(self):
         os.system('doxygen config.dox')
 
-        
+
 def version():
     s = []
     for num in stomp.__version__:

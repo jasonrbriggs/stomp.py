@@ -21,18 +21,18 @@ class Test11Send(unittest.TestCase):
         self.assert_(tl.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(tl.messages >= 1, 'should have received at least 1 message')
         self.assert_(tl.errors == 0, 'should not have received any errors')
-        
+
         conn.unsubscribe(destination='/queue/test', id=1)
-        
+
         wl = listener.WaitingListener('DISCONNECT1')
         conn.set_listener('waiting', wl)
-        
+
         # stomp1.1 disconnect with receipt
         conn.disconnect(receipt='DISCONNECT1')
-        
+
         # wait for the receipt
         wl.wait_on_receipt()
-        
+
     def testheartbeat(self):
         conn = stomp.Connection(get_standard_host(), heartbeats=(2000,3000))
         listener = TestListener('123')
@@ -76,5 +76,5 @@ heart-beat: 1000,1000\x00''')
             log.error("Error: %s" % e)
         finally:
             server.stop()
-            
+
         self.assert_(listener.heartbeat_timeouts >= 1, 'should have received a heartbeat timeout')
