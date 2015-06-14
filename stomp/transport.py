@@ -325,7 +325,7 @@ class BaseTransport(listener.Publisher):
             try:
                 try:
                     c = self.receive()
-                except InterruptedException:
+                except exception.InterruptedException:
                     log.debug("socket read interrupted, restarting")
                     continue
                 c = decode(c)
@@ -605,7 +605,7 @@ class Transport(BaseTransport):
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
                 log.debug("socket read interrupted, restarting")
-                raise InterruptedException()
+                raise exception.InterruptedException()
             raise
 
 
