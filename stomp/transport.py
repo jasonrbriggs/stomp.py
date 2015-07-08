@@ -14,10 +14,7 @@ import warnings
 # STOMP protocol
 
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import BytesIO
 
 try:
     import ssl
@@ -63,7 +60,7 @@ class BaseTransport(listener.Publisher):
             (block) for the server to respond with that receipt-id
             before continuing
         """
-        self.__recvbuf = ''
+        self.__recvbuf = b''
         self.listeners = {}
         self.running = False
         self.blocking = None
@@ -320,7 +317,7 @@ class BaseTransport(listener.Publisher):
         """
         Read the next frame(s) from the socket.
         """
-        fastbuf = StringIO()
+        fastbuf = BytesIO()
         while self.running:
             try:
                 try:
@@ -328,31 +325,30 @@ class BaseTransport(listener.Publisher):
                 except InterruptedException:
                     log.debug("socket read interrupted, restarting")
                     continue
-                c = decode(c)
             except Exception:
                 _, e, _ = sys.exc_info()
-                c = ''
+                c = b''
             if len(c) == 0:
                 raise exception.ConnectionClosedException()
             fastbuf.write(c)
-            if '\x00' in c:
+            if b'\x00' in c:
                 break
-            elif c == '\x0a':
+            elif c == b'\x0a':
                 # heartbeat (special case)
-                return c
+                return [c,]
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
 
         if len(self.__recvbuf) > 0 and self.running:
             while True:
-                pos = self.__recvbuf.find('\x00')
+                pos = self.__recvbuf.find(b'\x00')
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
-                    preamble_end = frame.find('\n\n')
+                    preamble_end = frame.find(b'\n\n')
                     if preamble_end >= 0:
-                        content_length_match = Transport.__content_length_re.search(frame[0:preamble_end])
+                        content_length_match = Transport.__content_length_re.search(decode(frame[0:preamble_end]))
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
                             content_offset = preamble_end + 2
