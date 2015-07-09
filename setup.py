@@ -56,7 +56,7 @@ def version():
 setup(
     name = 'stomp.py',
     version = version(),
-    description = 'Python STOMP client, supporting versions 1.0 and 1.1 of the protocol',
+    description = 'Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol',
     license = 'Apache',
     url = 'https://github.com/jasonrbriggs/stomp.py',
     author = 'Jason R Briggs',

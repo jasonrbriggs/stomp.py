@@ -58,12 +58,13 @@ class StompConnection10(BaseConnection, Protocol10):
                  wait_on_receipt=False,
                  ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
-                 keepalive=None):
+                 keepalive=None,
+                 auto_decode=True):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
-                              keepalive, None)
+                              keepalive, None, auto_decode)
         BaseConnection.__init__(self, transport)
         Protocol10.__init__(self, transport)
         
@@ -95,12 +96,13 @@ class StompConnection11(BaseConnection, Protocol11):
                  timeout=None,
                  heartbeats=(0, 0),
                  keepalive=None,
-                 vhost=None):
+                 vhost=None,
+                 auto_decode=True):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
-                              keepalive, vhost)
+                              keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
         Protocol11.__init__(self, transport, heartbeats)
         
@@ -132,7 +134,8 @@ class StompConnection12(BaseConnection, Protocol12):
                  timeout=None,
                  heartbeats=(0, 0),
                  keepalive=None,
-                 vhost=None):
+                 vhost=None,
+                 auto_decode=True):
         """
         \see stomp::transport::Transport.__init__
         \see stomp::protocol::Protocol12.__init__
@@ -141,7 +144,7 @@ class StompConnection12(BaseConnection, Protocol12):
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
-                              keepalive, vhost)
+                              keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats)
 

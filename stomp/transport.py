@@ -53,12 +53,16 @@ class BaseTransport(listener.Publisher):
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
     
-    def __init__(self, wait_on_receipt):
+    def __init__(self, wait_on_receipt, auto_decode=True):
         """
         \param wait_on_receipt
             if a receipt is specified, then the send method should wait
             (block) for the server to respond with that receipt-id
             before continuing
+        \param auto_decode 
+            automatically decode message responses as strings, rather than
+            leaving them as bytes. This preserves the behaviour as of version 4.0.16.
+            (To be defaulted to False as of the next release)
         """
         self.__recvbuf = b''
         self.listeners = {}
@@ -79,6 +83,7 @@ class BaseTransport(listener.Publisher):
         self.__receiver_thread_exited = False
         self.__send_wait_condition = threading.Condition()
         self.__connect_wait_condition = threading.Condition()
+        self.__auto_decode = auto_decode
 
     def override_threading(self, create_thread_fc):
         """
@@ -294,6 +299,8 @@ class BaseTransport(listener.Publisher):
 
                         for frame in frames:
                             f = utils.parse_frame(frame)
+                            if self.__auto_decode:
+                                f.body = decode(f.body)
                             self.process_frame(f, frame)
                 except exception.ConnectionClosedException:
                     if self.running:
@@ -301,7 +308,7 @@ class BaseTransport(listener.Publisher):
                         #
                         # Clear out any half-received messages after losing connection
                         #
-                        self.__recvbuf = ''
+                        self.__recvbuf = b''
                         self.running = False
                     break
                 finally:
@@ -395,7 +402,8 @@ class Transport(BaseTransport):
                  ssl_version=None,
                  timeout=None,
                  keepalive=None,
-                 vhost=None
+                 vhost=None,
+                 auto_decode=True
                  ):
         """
         \param host_and_ports
@@ -470,7 +478,7 @@ class Transport(BaseTransport):
             specify a virtual hostname to provide in the 'host' header of the connection
         """
 
-        BaseTransport.__init__(self, wait_on_receipt)
+        BaseTransport.__init__(self, wait_on_receipt, auto_decode)
 
         if host_and_ports is None:
             host_and_ports = [('localhost', 61613)]
