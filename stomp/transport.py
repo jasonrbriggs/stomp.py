@@ -14,10 +14,7 @@ import warnings
 # STOMP protocol
 
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import BytesIO
 
 try:
     import ssl
@@ -56,14 +53,18 @@ class BaseTransport(listener.Publisher):
     #
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
     
-    def __init__(self, wait_on_receipt):
+    def __init__(self, wait_on_receipt, auto_decode=True):
         """
         \param wait_on_receipt
             if a receipt is specified, then the send method should wait
             (block) for the server to respond with that receipt-id
             before continuing
+        \param auto_decode 
+            automatically decode message responses as strings, rather than
+            leaving them as bytes. This preserves the behaviour as of version 4.0.16.
+            (To be defaulted to False as of the next release)
         """
-        self.__recvbuf = ''
+        self.__recvbuf = b''
         self.listeners = {}
         self.running = False
         self.blocking = None
@@ -82,6 +83,7 @@ class BaseTransport(listener.Publisher):
         self.__receiver_thread_exited = False
         self.__send_wait_condition = threading.Condition()
         self.__connect_wait_condition = threading.Condition()
+        self.__auto_decode = auto_decode
 
     def override_threading(self, create_thread_fc):
         """
@@ -297,6 +299,8 @@ class BaseTransport(listener.Publisher):
 
                         for frame in frames:
                             f = utils.parse_frame(frame)
+                            if self.__auto_decode:
+                                f.body = decode(f.body)
                             self.process_frame(f, frame)
                 except exception.ConnectionClosedException:
                     if self.running:
@@ -304,7 +308,7 @@ class BaseTransport(listener.Publisher):
                         #
                         # Clear out any half-received messages after losing connection
                         #
-                        self.__recvbuf = ''
+                        self.__recvbuf = b''
                         self.running = False
                     break
                 finally:
@@ -320,7 +324,7 @@ class BaseTransport(listener.Publisher):
         """
         Read the next frame(s) from the socket.
         """
-        fastbuf = StringIO()
+        fastbuf = BytesIO()
         while self.running:
             try:
                 try:
@@ -328,31 +332,30 @@ class BaseTransport(listener.Publisher):
                 except InterruptedException:
                     log.debug("socket read interrupted, restarting")
                     continue
-                c = decode(c)
             except Exception:
                 _, e, _ = sys.exc_info()
-                c = ''
+                c = b''
             if len(c) == 0:
                 raise exception.ConnectionClosedException()
             fastbuf.write(c)
-            if '\x00' in c:
+            if b'\x00' in c:
                 break
-            elif c == '\x0a':
+            elif c == b'\x0a':
                 # heartbeat (special case)
-                return c
+                return [c,]
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
 
         if len(self.__recvbuf) > 0 and self.running:
             while True:
-                pos = self.__recvbuf.find('\x00')
+                pos = self.__recvbuf.find(b'\x00')
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
-                    preamble_end = frame.find('\n\n')
+                    preamble_end = frame.find(b'\n\n')
                     if preamble_end >= 0:
-                        content_length_match = Transport.__content_length_re.search(frame[0:preamble_end])
+                        content_length_match = Transport.__content_length_re.search(decode(frame[0:preamble_end]))
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
                             content_offset = preamble_end + 2
@@ -399,7 +402,8 @@ class Transport(BaseTransport):
                  ssl_version=None,
                  timeout=None,
                  keepalive=None,
-                 vhost=None
+                 vhost=None,
+                 auto_decode=True
                  ):
         """
         \param host_and_ports
@@ -474,7 +478,7 @@ class Transport(BaseTransport):
             specify a virtual hostname to provide in the 'host' header of the connection
         """
 
-        BaseTransport.__init__(self, wait_on_receipt)
+        BaseTransport.__init__(self, wait_on_receipt, auto_decode)
 
         if host_and_ports is None:
             host_and_ports = [('localhost', 61613)]

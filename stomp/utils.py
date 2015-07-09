@@ -7,7 +7,7 @@ try:
 except ImportError:
     import md5 as hashlib
 
-from stomp.backward import NULL
+from stomp.backward import NULL, decode
 
 ##@namespace stomp.utils
 # General utilities.
@@ -42,7 +42,7 @@ HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
 ##
 # As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
 #
-PREAMBLE_END_RE = re.compile('\n\n|\r\n\r\n')
+PREAMBLE_END_RE = re.compile(b'\n\n|\r\n\r\n')
 
 ##
 # As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed. 
@@ -108,7 +108,7 @@ def parse_frame(frame):
         the frame received from the server (as a string)
     """
     f = Frame()
-    if frame == '\x0a':
+    if frame == b'\x0a':
         f.cmd = 'heartbeat'
         return f
         
@@ -118,7 +118,7 @@ def parse_frame(frame):
         preamble_end = mat.start()
     if preamble_end == -1:
         preamble_end = len(frame)
-    preamble = frame[0:preamble_end]
+    preamble = decode(frame[0:preamble_end])
     preamble_lines = LINE_END_RE.split(preamble)
     f.body = frame[preamble_end + 2:]
 

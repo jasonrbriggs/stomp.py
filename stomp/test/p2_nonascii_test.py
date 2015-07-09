@@ -37,5 +37,5 @@ class TestNonAsciiSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
         (headers, msg) = self.listener.get_latest_message()
-        self.assertEquals(txt, msg.decode('utf-8'))
+        self.assertEquals(stomp.backward.encode(txt), msg)
         
