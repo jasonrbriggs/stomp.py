@@ -48,6 +48,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.verbose = verbose
         self.user = user
         self.passcode = passcode
+        self.__quit = False
         if ver == '1.0':
             self.conn = StompConnection10([(host, port)], wait_on_receipt=True)
         elif ver == '1.1':
@@ -65,7 +66,6 @@ class StompCLI(Cmd, ConnectionListener):
         self.version = ver
         self.__subscriptions = {}
         self.__subscription_id = 1
-        self.__quit = False
 
     def __print_async(self, frame_type, headers, body):
         """
