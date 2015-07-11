@@ -1,4 +1,6 @@
+import time
 import unittest
+import uuid
 
 from stomp.adapter.multicast import MulticastConnection
 

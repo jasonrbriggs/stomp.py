@@ -5,6 +5,7 @@ Version 4.1.0 - Jul 2015
    release, before ultimately being removed.
  * Merge code cleanup patches from Ville S (https://github.com/jasonrbriggs/stomp.py/pull/35,
    https://github.com/jasonrbriggs/stomp.py/pull/36)
+ * Merge another code cleanup patch from Ville E (https://github.com/jasonrbriggs/stomp.py/pull/37)
 
 
 Version 4.0.16 - Apr 2015

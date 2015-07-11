@@ -1,4 +1,5 @@
 import os
+import socket
 import threading
 import logging
 log = logging.getLogger('testutils.py')

@@ -2,12 +2,7 @@ import re
 import socket
 import threading
 
-try:
-    import hashlib
-except ImportError:
-    import md5 as hashlib
-
-from stomp.backward import NULL, decode
+from stomp.backward import decode, NULL
 
 ##@namespace stomp.utils
 # General utilities.
