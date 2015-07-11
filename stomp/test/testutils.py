@@ -28,7 +28,7 @@ def get_standard_host():
     port = config.get('default', 'port')
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
-    
+
 def get_standard_ssl_host():
     host = config.get('default', 'host')
     port = config.get('default', 'ssl_port')
@@ -39,13 +39,13 @@ def get_rabbitmq_host():
     host = config.get('rabbitmq', 'host')
     port = config.get('rabbitmq', 'port')
     return [(get_environ('RABBITMQ_HOST') or host, int(get_environ('RABBITMQ_PORT') or port))]
-    
+
 
 def get_stompserver_host():
     host = config.get('stompserver', 'host')
     port = config.get('stompserver', 'port')
     return [(get_environ('STOMPSERVER_HOST') or host, int(get_environ('STOMPSERVER_PORT') or port))]
-    
+
 
 class TestListener(StatsListener,WaitingListener):
     def __init__(self, receipt=None):
@@ -62,14 +62,14 @@ class TestListener(StatsListener,WaitingListener):
         self.message_received = True
         self.message_condition.notify()
         self.message_condition.release()
-        
+
     def wait_for_message(self):
         self.message_condition.acquire()
         while not self.message_received:
             self.message_condition.wait()
         self.message_condition.release()
         self.message_received = False
-        
+
     def get_latest_message(self):
         return self.message_list[len(self.message_list)-1]
 
@@ -79,7 +79,7 @@ class TestStompServer(object):
         self.host = host
         self.port = port
         self.frames = []
-        
+
     def start(self):
         log.debug('Starting stomp server')
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -92,7 +92,7 @@ class TestStompServer(object):
         thread.start()
         self.stopped = False
         log.debug('Stomp server started')
-        
+
     def stop(self):
         log.debug('Stopping test server')
         if self.conn:
@@ -108,7 +108,7 @@ class TestStompServer(object):
         self.s = None
         self.stopped = True
         log.debug('Connection stopped')
-        
+
     def get_next_frame(self):
         if len(self.frames) > 0:
             rtn = self.frames[0]
@@ -119,7 +119,7 @@ class TestStompServer(object):
 
     def add_frame(self, frame):
         self.frames.append(frame)
-        
+
     def run(self):
         self.conn, addr = self.s.accept()
         while self.running:

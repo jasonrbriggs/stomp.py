@@ -25,7 +25,7 @@ def get_errno(e):
     except AttributeError:
         return e.args[0]
 
-        
+
 class uuid(object):
     """
     A dummy version of Python's uuid module.
@@ -56,7 +56,7 @@ def gcd(a, b):
 
     Unless b==0, the result will have the same sign as b (so that when
     b is divided by it, the result comes out positive).
-    
+
     Copied from the Python2.6 source
     Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved
     """

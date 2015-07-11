@@ -1,3 +1,12 @@
+Version 4.1.0 - Jul 2015
+
+ * Merge patch from George G (https://github.com/jasonrbriggs/stomp.py/pull/31) to fix binary message handling. Note that current
+   text-only behaviour is still the default (auto_decode=True on the connection), but will be switched to false in a future
+   release, before ultimately being removed.
+ * Merge code cleanup patches from Ville S (https://github.com/jasonrbriggs/stomp.py/pull/35,
+   https://github.com/jasonrbriggs/stomp.py/pull/36)
+
+
 Version 4.0.16 - Apr 2015
 
  * Catch attribute error in SSL import (https://github.com/jasonrbriggs/stomp.py/issues/30)
@@ -15,7 +24,7 @@ Version 4.0.14 - Mar 2015
  * fix bug in listener (https://github.com/jasonrbriggs/stomp.py/issues/26)
  * Merge Andre's logging changes
  * fix for issue #23 (https://github.com/jasonrbriggs/stomp.py/issues/23), stop stomp.py inserting into the path
- 
+
 
 Version 4.0.12 - Jun 2014
 
@@ -45,18 +54,18 @@ Version 4.0.9 - Jan 2014
  * Fix minor issue with backward uuid func
  * Fixes for error number handling
  * Fix for message listener return values
- 
+
 
 Version 4.0.8 - Jan 2014
 
  * Fix return on get_listener method (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
- 
+
 
 Version 4.0.7 - Jan 2014
 
  * Fix problem with heartbeat listener (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
  * Add alternate aliases for the connection classes
- * Add initial version multicast adapter (providing an interface to use the stomp.py API and send messages via multicast) 
+ * Add initial version multicast adapter (providing an interface to use the stomp.py API and send messages via multicast)
  	- note: work in progress
 
 
@@ -74,7 +83,7 @@ Version 4.0.5 - Nov 2013
  * Fix problem with connect wait (should not wait if the connection fails)
  * Throw exception when the connect fails (only if wait=True)
  * Add PrintingListener (useful for debugging)
- 
+
 
 Version 4.0.4 - Nov 2013
 
@@ -92,7 +101,7 @@ Version 4.0.2 - Oct 2013
 
 
 Version 4.0.1 - Oct 2013
- 
+
  * Remove the 'transform' method/functionality, as this never went into the official spec. Clients who still want this should
    implement themselves, using a listener (see https://github.com/jasonrbriggs/stomp.py/blob/master/stomp/test/misc_test.py for
    an example)
@@ -107,7 +116,7 @@ Version 4.0.0 - Oct 2013
    args are changing accordingly.
  * Add initial support for STOMP 1.2
  * Moved username and passcode params out of constructor and into the connect method. The basic connection process is therefore now:
- 
+
      > conn = stomp.Connection([('localhost', 61613)])
      > conn.start()
      > conn.connect('admin', 'password', wait=True)
@@ -116,11 +125,11 @@ Version 4.0.0 - Oct 2013
 Version 3.1.6 - Sep 2013
 
  * Integrate fix for threading primitives issue (http://code.google.com/p/stomppy/issues/detail?id=53)
- * Add vhost constructor arg 
+ * Add vhost constructor arg
  * Change cli to __main__ (so you can run `python stomp` rather than `python stomp/cli.py`)
  * Integrate interrupt patch (http://code.google.com/p/stomppy/issues/detail?id=48)
  * Change test hosts and ports so that they're provided from the setup.py file
- 
+
 
 Version 3.1.5 - Aug 2013
 

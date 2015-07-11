@@ -48,7 +48,7 @@ class TestThreading(unittest.TestCase):
                                  target=self.make_sender(i))
             t.setDaemon(1)
             self.threads.append(t)
-            
+
     def tearDown(self):
         for t in self.threads:
             if not t.isAlive:
@@ -119,4 +119,3 @@ class TestThreading(unittest.TestCase):
             except Full:
                 assert False, "Failed: 'request' queue filled up"
                 print("passed")
-

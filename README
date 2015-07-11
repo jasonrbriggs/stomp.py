@@ -1,7 +1,7 @@
 "stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ, Apollo or RabbitMQ) using the `STOMP protocol <http://stomp.github.io>`_ (versions `1.0 <http://stomp.github.io/stomp-specification-1.0.html>`_, `1.1 <http://stomp.github.io/stomp-specification-1.1.html>`_ and `1.2 <http://stomp.github.io/stomp-specification-1.2.html>`_). It can also be run as a standalone, command-line client for testing.
 
 
-A basic example of using stomp.py can be found `here <https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example>`_. 
+A basic example of using stomp.py can be found `here <https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example>`_.
 
 More info can be found on `GitHub <https://github.com/jasonrbriggs/stomp.py>`_.
 

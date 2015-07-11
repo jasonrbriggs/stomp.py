@@ -11,7 +11,7 @@ stomp.py (3.1.1) stable; urgency=low
 stomp.py (3.0.2) beta; urgency=low
 
   * Fix for localhost connection problem (issue #17)
-  
+
  -- Jason R Briggs <jasonrbriggs@gmail.com>  Wed, 02 Jun 2010 21:48:00 +0000
 
 
