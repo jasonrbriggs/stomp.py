@@ -10,7 +10,7 @@ Quick Start
 A basic example of using stomp.py can be found [here](https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example). Testing via the command-line interface is described [here](https://github.com/jasonrbriggs/stomp.py/wiki/Command-Line-Access).
 
 Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).  
-API documentation can be found [here](http://jasonrbriggs.github.io/stomp.py/index.html).
+API documentation can be found [here](http://jasonrbriggs.github.io/stomp.py/index.html). Current test coverage can be found [here](http://jasonrbriggs.github.io/stomp.py/htmlcov/).
 
 [Version 4.0+](https://pypi.python.org/pypi/stomp.py) is for both Python2.x and Python3.x - with support for versions 1.0, 1.1 and 1.2 of the protocol.
 

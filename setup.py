@@ -1,6 +1,7 @@
 import os
 from distutils.core import setup, Command
 
+import coverage
 import unittest
 
 import logging.config
@@ -22,6 +23,9 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        cov = coverage.coverage()
+        cov.start()
+        
         suite = unittest.TestSuite()
         if self.test == '*':
             print('Running all tests')
@@ -31,6 +35,11 @@ class TestCommand(Command):
         else:
             suite = unittest.TestLoader().loadTestsFromName('stomp.test.%s' % self.test)
         unittest.TextTestRunner(verbosity=2).run(suite)
+        
+        cov.stop()
+        cov.save()
+
+        cov.html_report(directory='../stomppy-docs/htmlcov')
 
 
 class DoxygenCommand(Command):
