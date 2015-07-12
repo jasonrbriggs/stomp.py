@@ -1,3 +1,9 @@
+Version 4.1.1 - Jul 2015
+
+ * Merge patches from Ville S covering invalid module references for colors in the CLI, fixing an attribute error and correctly
+   invoking the python exe using sys.executable (https://github.com/jasonrbriggs/stomp.py/pull/41,
+   https://github.com/jasonrbriggs/stomp.py/pull/42, https://github.com/jasonrbriggs/stomp.py/pull/43)
+
 Version 4.1.0 - Jul 2015
 
  * Merge patch from George G (https://github.com/jasonrbriggs/stomp.py/pull/31) to fix binary message handling. Note that current
