@@ -156,8 +156,8 @@ class StompCLI(Cmd, ConnectionListener):
         oparams = "\n\t".join(optional)
 
         m = {
-            'hl' : colors.BOLD + colors.GREEN,
-            'nc' : colors.NO_COLOR,
+            'hl' : stomp.colors.BOLD + stomp.colors.GREEN,
+            'nc' : stomp.colors.NO_COLOR,
             'usage' : usage,
             'description' : description,
             'required' : rparams.rstrip(),
@@ -304,7 +304,7 @@ class StompCLI(Cmd, ConnectionListener):
                 [ 'destination - where to send the message', 'filename - the file to send' ])
 
     def do_version(self, args):
-        self.__sysout('%s%s [Protocol version %s]%s' % (colors.BOLD, stomppy_version, self.conn.version, colors.NO_COLOR))
+        self.__sysout('%s%s [Protocol version %s]%s' % (stomp.colors.BOLD, stomppy_version, self.conn.version, stomp.colors.NO_COLOR))
     do_ver = do_version
 
     def help_version(self):
