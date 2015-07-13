@@ -64,6 +64,10 @@ class StompCLI(Cmd, ConnectionListener):
         self.conn.connect(self.user, self.passcode, wait=True)
         self.transaction_id = None
         self.version = ver
+        try:
+            self.nversion = float(ver)
+        except ValueError:
+            self.nversion = 1.0
         self.__subscriptions = {}
         self.__subscription_id = 1
 
@@ -312,10 +316,10 @@ class StompCLI(Cmd, ConnectionListener):
     help_ver = help_version
 
     def check_ack_nack(self, cmd, args):
-        if float(self.version) >= 1.2 and len(args) < 1:
+        if self.nversion >= 1.2 and len(args) < 1:
             self.__error("Expecting: %s <ack-id>" % cmd)
             return None
-        elif self.version == '1.1' and len(args) < 2:
+        elif self.nversion == 1.1 and len(args) < 2:
             self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
             return None
         elif len(args) < 1:
