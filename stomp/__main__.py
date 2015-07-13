@@ -312,10 +312,10 @@ class StompCLI(Cmd, ConnectionListener):
     help_ver = help_version
 
     def check_ack_nack(self, cmd, args):
-        if self.version >= 1.2 and len(args) < 1:
+        if float(self.version) >= 1.2 and len(args) < 1:
             self.__error("Expecting: %s <ack-id>" % cmd)
             return None
-        elif self.version == 1.1 and len(args) < 2:
+        elif self.version == '1.1' and len(args) < 2:
             self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
             return None
         elif len(args) < 1:
