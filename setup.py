@@ -22,9 +22,12 @@ class TestCommand(Command):
         pass
 
     def run(self):
-        import coverage
-        cov = coverage.coverage()
-        cov.start()
+        try:
+            import coverage
+            cov = coverage.coverage()
+            cov.start()
+        except ImportError:
+            cov = None
         
         suite = unittest.TestSuite()
         if self.test == '*':
@@ -36,10 +39,10 @@ class TestCommand(Command):
             suite = unittest.TestLoader().loadTestsFromName('stomp.test.%s' % self.test)
         unittest.TextTestRunner(verbosity=2).run(suite)
         
-        cov.stop()
-        cov.save()
-
-        cov.html_report(directory='../stomppy-docs/htmlcov')
+        if cov:
+            cov.stop()
+            cov.save()
+            cov.html_report(directory='../stomppy-docs/htmlcov')
 
 
 class TestPipInstallCommand(Command):

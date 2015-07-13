@@ -8,5 +8,7 @@ __all__ = [ 'basic_test', 'ss_test', 'cli_test', 's10_test', 's11_test', 's12_te
 
 if sys.hexversion >= 0x03000000:
     __all__.append('p3_nonascii_test')
+    __all__.append('p3_backward_test')
 else:
     __all__.append('p2_nonascii_test')
+    __all__.append('p2_backward_test')
