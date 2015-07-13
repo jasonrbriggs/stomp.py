@@ -42,6 +42,21 @@ class TestCommand(Command):
         cov.html_report(directory='../stomppy-docs/htmlcov')
 
 
+class TestPipInstallCommand(Command):
+    user_options = [ ]
+    
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from virtualenvapi.manage import VirtualEnvironment
+        env = VirtualEnvironment('tmp/scratch')
+        env.install('stomp.py')            
+        
+
 class DoxygenCommand(Command):
     user_options = [ ]
 
@@ -72,7 +87,7 @@ setup(
     author_email = 'jasonrbriggs@gmail.com',
     platforms = ['any'],
     packages = ['stomp', 'stomp.adapter'],
-    cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand },
+    cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand, 'piptest' : TestPipInstallCommand },
     scripts = ['./scripts/stomp'],
     classifiers = [
          'Development Status :: 5 - Production/Stable',
