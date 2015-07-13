@@ -12,6 +12,8 @@ def input_prompt(prompt):
 
 
 def decode(byte_data):
+    if byte_data is None:
+        return None
     return byte_data.decode('utf-8')
 
 

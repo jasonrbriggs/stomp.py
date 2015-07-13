@@ -89,3 +89,19 @@ class TestNonAsciiSendAutoEncoding(unittest.TestCase):
 
         (headers, msg) = self.listener.get_latest_message()
         self.assertEquals(txt, msg)
+
+    def test_send_none_auto_encoding(self):
+        queuename = '/queue/p3nonasciitest2-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, ack='auto', id='1')
+
+        txt = None
+        self.conn.send(body=txt, destination=queuename, receipt='123')
+
+        self.listener.wait_on_receipt()
+
+        self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assert_(self.listener.messages >= 1, 'should have received 1 message')
+        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+
+        (headers, msg) = self.listener.get_latest_message()
+        self.assertEquals(txt, msg)
