@@ -1,4 +1,5 @@
 import os
+import shutil
 from distutils.core import setup, Command
 
 import unittest
@@ -55,6 +56,10 @@ class TestPipInstallCommand(Command):
         pass
 
     def run(self):
+        if os.path.exists('tmp'):
+            shutil.rmtree('tmp')
+        os.mkdir('tmp')
+        
         from virtualenvapi.manage import VirtualEnvironment
         env = VirtualEnvironment('tmp/scratch')
         env.install('stomp.py')            
