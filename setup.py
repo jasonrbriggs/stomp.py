@@ -1,7 +1,6 @@
 import os
 from distutils.core import setup, Command
 
-import coverage
 import unittest
 
 import logging.config
@@ -23,6 +22,7 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        import coverage
         cov = coverage.coverage()
         cov.start()
         
