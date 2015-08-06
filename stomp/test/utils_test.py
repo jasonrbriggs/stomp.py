@@ -20,3 +20,12 @@ class TestUtils(unittest.TestCase):
             self.assertEquals(bytearray('SEND\nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
         else:
             self.assertEquals('SEND\nheader1:value1\n\nthis is the body\x00', s)
+
+    def test_parse_headers(self):
+        lines = [
+            r'h1:foo\c\\bar  ',
+            r'h1:2nd h1 ignored -- not a must, but allowed and that is how we behave ATM',
+            r'h\c2:baz\r\nquux',
+        ]
+        self.assertEquals(
+            {'h1': r'foo:\bar  ', 'h:2': 'baz\r\nquux'}, parse_headers(lines))
