@@ -235,12 +235,6 @@ class Protocol12(Protocol11):
             except: pass
             headers[key] = val
 
-    def send_frame(self, cmd, headers={}, body=''):
-        if cmd != CMD_CONNECT:
-            self.__escape_headers(headers)
-        frame = utils.Frame(cmd, headers, body)
-        self.transport.transmit(frame)
-
     def ack(self, id, transaction=None):
         assert id is not None, "'id' is required"
         headers = { HDR_ID : id }
