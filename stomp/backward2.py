@@ -21,10 +21,6 @@ def encode(char_data):
         return char_data
 
 
-def hasbyte(byte, byte_data):
-    return chr(byte) in byte_data
-
-
 def pack(pieces):
     return ''.join(pieces)
 

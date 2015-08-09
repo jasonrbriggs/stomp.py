@@ -26,11 +26,6 @@ def encode(char_data):
         raise TypeError('message should be a string or bytes')
 
 
-def hasbyte(byte, byte_data):
-    assert type(byte) is int and 0 <= byte and byte < 2**8
-    return bytes([byte]) in byte_data
-
-
 def pack(pieces):
     encoded_pieces = (encode(piece) for piece in pieces)
     return b''.join(encoded_pieces)
