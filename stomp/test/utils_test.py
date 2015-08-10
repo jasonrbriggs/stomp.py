@@ -29,3 +29,16 @@ class TestUtils(unittest.TestCase):
         ]
         self.assertEquals(
             {'h1': r'foo:\bar  ', 'h:2': 'baz\r\nquux'}, parse_headers(lines))
+
+    def test_calculate_heartbeats(self):
+        chb = (3000, 5000)
+        shb = map(str, reversed(chb))
+        self.assertEquals((3000, 5000), calculate_heartbeats(shb, chb))
+        shb = ('6000', '2000')
+        self.assertEquals((3000, 6000), calculate_heartbeats(shb, chb))
+        shb = ('0', '0')
+        self.assertEquals((0, 0), calculate_heartbeats(shb, chb))
+        shb = ('10000', '0')
+        self.assertEquals((0, 10000), calculate_heartbeats(shb, chb))
+        chb = (0, 0)
+        self.assertEquals((0, 0), calculate_heartbeats(shb, chb))

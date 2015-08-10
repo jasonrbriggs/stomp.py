@@ -157,9 +157,9 @@ def calculate_heartbeats(shb, chb):
     x = 0
     y = 0
     if cx != 0 and sy != '0':
-        x = max(cx, int(sx))
+        x = max(cx, int(sy))
     if cy != 0 and sx != '0':
-        y = max(cy, int(sy))
+        y = max(cy, int(sx))
     return (x, y)
 
 
