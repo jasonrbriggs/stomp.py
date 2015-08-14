@@ -1,3 +1,11 @@
+Version 4.1.3 - Aug 2015
+
+ * Merge patches from Ville S:
+    * https://github.com/jasonrbriggs/stomp.py/pull/48 (Auto-send content-length when message body is present)
+    * https://github.com/jasonrbriggs/stomp.py/pull/49 (Unescape header names in addition to values)
+    * https://github.com/jasonrbriggs/stomp.py/pull/50 (Remove unnecessary code)
+
+
 Version 4.1.2 - Jul 2015
 
  * Merge patch from Ville S to fix coverage in setup (https://github.com/jasonrbriggs/stomp.py/pull/44)
