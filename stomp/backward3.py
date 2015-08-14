@@ -14,7 +14,7 @@ def input_prompt(prompt):
 def decode(byte_data):
     if byte_data is None:
         return None
-    return byte_data.decode('utf-8')
+    return byte_data.decode()
 
 
 def encode(char_data):
@@ -32,7 +32,7 @@ def pack(pieces):
 
 
 def join(chars):
-    return b''.join(chars).decode('UTF-8')
+    return b''.join(chars).decode()
 
 
 def getheader(headers, key):
