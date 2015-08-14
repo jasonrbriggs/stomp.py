@@ -119,7 +119,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
     def __escape_headers(self, headers):
         for key,val in headers.items():
             try:
-                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c')
+                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c').replace('\r', '\\r')
             except: pass
             headers[key] = val
 

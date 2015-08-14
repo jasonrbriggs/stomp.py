@@ -90,7 +90,7 @@ message: connection failed\x00''')
         hdrs = {
             'special-1' : 'test with colon : test',
             'special-2' : 'test with backslash \\ test',
-            'special-3' : 'test with newline \n',
+            'special-3' : 'test with newlines \n \n',
             'special-4' : 'test with carriage return \r'
         }
 
@@ -107,6 +107,6 @@ message: connection failed\x00''')
         self.assert_('special-2' in headers)
         self.assertEqual('test with backslash \\ test', headers['special-2'])
         self.assert_('special-3' in headers)
-        self.assertEqual('test with newline \n', headers['special-3'])
+        self.assertEqual('test with newlines \n \n', headers['special-3'])
         self.assert_('special-4' in headers)
         self.assertEqual('test with carriage return \r', headers['special-4'])
