@@ -85,6 +85,7 @@ def parse_headers(lines, offset=0):
         header_match = HEADER_LINE_RE.match(header_line)
         if header_match:
             key = header_match.group('key')
+            key = key.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
             if key not in headers:
                 value = header_match.group('value')
                 value = value.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
@@ -156,9 +157,9 @@ def calculate_heartbeats(shb, chb):
     x = 0
     y = 0
     if cx != 0 and sy != '0':
-        x = max(cx, int(sx))
+        x = max(cx, int(sy))
     if cy != 0 and sx != '0':
-        y = max(cy, int(sy))
+        y = max(cy, int(sx))
     return (x, y)
 
 
