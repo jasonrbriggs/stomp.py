@@ -1,3 +1,10 @@
+Version 4.1.4 - Aug 2015
+
+ * Add --ssl option to command line tool
+ * Disable CTRL-C in command line tool (when in interactive mode)
+ * Add shutdown message to cli
+
+
 Version 4.1.3 - Aug 2015
 
  * Merge patches from Ville S:

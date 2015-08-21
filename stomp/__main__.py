@@ -41,7 +41,7 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See \link stomp::connect::StompConnection11 \endlink
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, stdin=sys.stdin, stdout=sys.stdout):
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, use_ssl=False, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
         self.prompt = prompt
@@ -59,6 +59,8 @@ class StompCLI(Cmd, ConnectionListener):
             self.conn = MulticastConnection()
         else:
             raise RuntimeError('Unknown version')
+        if use_ssl:
+            self.conn.set_ssl([(host, port)])
         self.conn.set_listener('', self)
         self.conn.start()
         self.conn.connect(self.user, self.passcode, wait=True)
@@ -76,6 +78,8 @@ class StompCLI(Cmd, ConnectionListener):
         Utility function to print a message and setup the command prompt
         for the next input
         """
+        if self.__quit:
+            return
         self.__sysout("\r  \r", end='')
         if self.verbose:
             self.__sysout(frame_type)
@@ -185,6 +189,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_quit(self, args):
         self.__quit = True
+        self.__sysout('Shutting down, please wait')
         return True
     do_exit = do_quit
     do_EOF = do_quit
@@ -194,7 +199,7 @@ class StompCLI(Cmd, ConnectionListener):
     help_exit = help_quit
 
     def help_EOF(self):
-        self.__sysout('')
+        self.help('exit', 'Exit the stomp client (using CTRL-D)')
 
     def do_subscribe(self, args):
         args = args.split()
@@ -440,6 +445,18 @@ def do_nothing_loop():
     while 1:
         time.sleep(1)
 
+
+def optional_arg(arg_default):
+    def func(option, opt_str, value, parser):
+        if parser.rargs and not parser.rargs[0].startswith('-'):
+            val = parser.rargs[0]
+            parser.rargs.pop(0)
+        else:
+            val = arg_default
+        setattr(parser.values, option.dest, val)
+    return func
+
+
 def main():
     parser = OptionParser(version=stomppy_version)
 
@@ -459,6 +476,8 @@ def main():
                       help = 'Listen for messages on a queue/destination')
     parser.add_option("-V", "--verbose", dest = "verbose", default = 'on',
                       help = 'Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
+    parser.add_option('--ssl', action='callback', callback = optional_arg(True), dest='ssl',
+                      help = 'Enable SSL connection')
 
     parser.set_defaults()
     (options, args) = parser.parse_args()
@@ -467,14 +486,17 @@ def main():
         verbose = True
     else:
         verbose = False
+        
+    if options.ssl is None:
+        options.ssl = False
 
     if options.listen:
         prompt = ''
     else:
         prompt = '> '
 
-    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose)
-
+    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose, options.ssl)
+    
     if options.listen:
         st.do_subscribe(options.listen)
         try:
@@ -485,11 +507,17 @@ def main():
     elif options.filename:
         st.do_run(options.filename)
     else:
+        # disable CTRL-C, since can't guarantee correct handling of disconnect
+        import signal
+        def signal_handler(signal, frame):
+            pass
+        signal.signal(signal.SIGINT, signal_handler)
+        
         try:
             try:
                 st.cmdloop()
             except KeyboardInterrupt:
-                pass
+                st.do_quit()
         finally:
             st.conn.disconnect()
 
@@ -498,4 +526,7 @@ def main():
 # command line access
 #
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except:
+        pass
