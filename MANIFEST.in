@@ -1,6 +1,6 @@
 include LICENSE
 include CHANGELOG
 include *.conf
-include stomp/**/*
 include *.dox
-exclude **/*.pyc
+include stomp/test/*
+exclude stomp/test/*.pyc
