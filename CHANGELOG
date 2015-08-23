@@ -1,7 +1,9 @@
 Version 4.1.5 - Aug 2015
 
  * Remove incorrect \r escaping from 1.1 protocol
- 
+ * Merge patch from Ville S:
+     * https://github.com/jasonrbriggs/stomp.py/pull/52
+
 
 Version 4.1.4 - Aug 2015
 
