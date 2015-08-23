@@ -1,3 +1,8 @@
+Version 4.1.5 - Aug 2015
+
+ * Remove incorrect \r escaping from 1.1 protocol
+ 
+
 Version 4.1.4 - Aug 2015
 
  * Add --ssl option to command line tool
