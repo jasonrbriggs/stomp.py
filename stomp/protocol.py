@@ -116,16 +116,16 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         transport.set_listener('protocol-listener', self)
         self.version = '1.1'
 
-    def __escape_headers(self, headers):
+    def _escape_headers(self, headers):
         for key,val in headers.items():
             try:
-                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c').replace('\r', '\\r')
+                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c')
             except: pass
             headers[key] = val
 
     def send_frame(self, cmd, headers={}, body=''):
         if cmd != CMD_CONNECT:
-            self.__escape_headers(headers)
+            self._escape_headers(headers)
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 
@@ -228,7 +228,7 @@ class Protocol12(Protocol11):
         Protocol11.__init__(self, transport, heartbeats)
         self.version = '1.2'
 
-    def __escape_headers(self, headers):
+    def _escape_headers(self, headers):
         for key,val in headers.items():
             try:
                 val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c').replace('\r', '\\r')
