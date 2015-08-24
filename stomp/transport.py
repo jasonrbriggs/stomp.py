@@ -37,6 +37,7 @@ import stomp.exception as exception
 import stomp.listener as listener
 import stomp.utils as utils
 from stomp.backward import decode, encode, get_errno, pack
+from stomp.backwardsock import get_socket
 
 import logging
 log = logging.getLogger('stomp.py')
@@ -676,7 +677,8 @@ class Transport(BaseTransport):
             for host_and_port in self.__host_and_ports:
                 try:
                     log.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
-                    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    #self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.socket = get_socket(host_and_port[0], host_and_port[1], self.__timeout)
                     self.__enable_keepalive()
                     need_ssl = self.__need_ssl(host_and_port)
 
@@ -697,7 +699,6 @@ class Transport(BaseTransport):
 
                     if self.blocking is not None:
                         self.socket.setblocking(self.blocking)
-                    self.socket.connect(host_and_port)
 
                     #
                     # Validate server cert
