@@ -245,6 +245,9 @@ class HeartbeatListener(ConnectionListener):
                     self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
                     log.debug("Lost connection, unable to send heartbeat")
+                except Exception:
+                    _, e, _ = sys.exc_info()
+                    log.debug("Unable to send heartbeat, due to: %s" % e)
 
             diff_receive = now - self.received_heartbeat
 
