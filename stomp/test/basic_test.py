@@ -125,7 +125,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.listener.wait_on_receipt()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
         message_id = headers['message-id']
         subscription = headers['subscription']
@@ -140,7 +140,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.listener.wait_on_receipt()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
         message_id = headers['message-id']
         subscription = headers['subscription']
@@ -161,10 +161,10 @@ class TestBasicSend(unittest.TestCase):
 
         self.listener.wait_on_receipt()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
-        message_id = headers['message-id']
-        subscription = headers['subscription']
+        _ = headers['message-id']
+        _ = headers['subscription']
         self.assert_('special-1' in headers)
         self.assertEqual('test with colon : test', headers['special-1'])
         self.assert_('special-2' in headers)

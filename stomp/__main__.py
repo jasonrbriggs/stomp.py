@@ -480,7 +480,7 @@ def main():
                       help = 'Enable SSL connection')
 
     parser.set_defaults()
-    (options, args) = parser.parse_args()
+    (options, _) = parser.parse_args()
 
     if options.verbose == 'on':
         verbose = True

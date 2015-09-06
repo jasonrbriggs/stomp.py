@@ -42,7 +42,7 @@ class Test10Connect(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
         message_id = headers['message-id']
 

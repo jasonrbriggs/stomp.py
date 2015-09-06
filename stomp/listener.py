@@ -231,7 +231,6 @@ class HeartbeatListener(ConnectionListener):
         Main loop for sending (and monitoring received) heartbeats.
         """
         send_time = time.time()
-        receive_time = time.time()
 
         while self.running:
             time.sleep(self.sleep_time)
@@ -252,7 +251,6 @@ class HeartbeatListener(ConnectionListener):
             diff_receive = now - self.received_heartbeat
 
             if diff_receive > self.receive_sleep:
-                receive_time = now
                 diff_heartbeat = now - self.received_heartbeat
                 if diff_heartbeat > self.receive_sleep:
                     # heartbeat timeout
