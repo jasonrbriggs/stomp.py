@@ -64,7 +64,7 @@ def is_localhost(host_and_port):
     Return 1 if the specified host+port is a member of the 'localhost' list of hosts, 2 if not (predominately used
     as a sort key.
     """
-    (host, port) = host_and_port
+    (host, _) = host_and_port
     if host in LOCALHOST_NAMES:
         return 1
     else:

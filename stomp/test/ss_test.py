@@ -36,7 +36,7 @@ heart-beat: 1000,1000\x00''')
 
             server.stop()
 
-            for count in range(100):
+            for _ in range(100):
                 if server.stopped:
                     break
                 time.sleep(0.1)

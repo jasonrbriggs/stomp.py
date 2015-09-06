@@ -43,7 +43,7 @@ class Test12Connect(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
         ack_id = headers['ack']
 
@@ -57,7 +57,7 @@ class Test12Connect(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
         ack_id = headers['ack']
 
@@ -98,10 +98,10 @@ message: connection failed\x00''')
 
         self.listener.wait_on_receipt()
 
-        (headers, msg) = self.listener.get_latest_message()
+        (headers, _) = self.listener.get_latest_message()
 
-        message_id = headers['message-id']
-        subscription = headers['subscription']
+        _ = headers['message-id']
+        _ = headers['subscription']
         self.assert_('special-1' in headers)
         self.assertEqual('test with colon : test', headers['special-1'])
         self.assert_('special-2' in headers)

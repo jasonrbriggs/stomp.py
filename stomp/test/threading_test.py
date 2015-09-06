@@ -66,7 +66,7 @@ class TestThreading(unittest.TestCase):
                 break
         print("Dead threads:", len(errs), "of", self.clients)
         etype = {}
-        for ec, ev, tb in errs:
+        for ec, _, _ in errs:
             if ec in etype:
                 etype[ec] = etype[ec] + 1
             else:
