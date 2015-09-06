@@ -100,7 +100,7 @@ class BaseTransport(listener.Publisher):
         """
         self.running = True
         self.attempt_connection()
-        thread = self.create_thread_fc(self.__receiver_loop)
+        _ = self.create_thread_fc(self.__receiver_loop)
         self.notify('connecting')
 
     def stop(self):
@@ -325,7 +325,6 @@ class BaseTransport(listener.Publisher):
                     log.debug("socket read interrupted, restarting")
                     continue
             except Exception:
-                _, e, _ = sys.exc_info()
                 c = b''
             if len(c) == 0:
                 raise exception.ConnectionClosedException()

@@ -122,10 +122,10 @@ class TestStompServer(object):
         self.frames.append(frame)
 
     def run(self):
-        self.conn, addr = self.s.accept()
+        self.conn, _ = self.s.accept()
         while self.running:
             try:
-                data = self.conn.recv(1024)
+                _ = self.conn.recv(1024)
                 frame = self.get_next_frame()
                 if self.conn is None:
                     break

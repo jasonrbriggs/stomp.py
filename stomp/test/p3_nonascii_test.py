@@ -36,7 +36,7 @@ class TestNonAsciiSend(unittest.TestCase):
         self.assert_(self.listener.messages >= 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-        (headers, msg) = self.listener.get_latest_message()
+        (_, msg) = self.listener.get_latest_message()
         self.assertEquals(stomp.backward.encode(txt), msg)
 
     def test_image_send(self):
@@ -54,7 +54,7 @@ class TestNonAsciiSend(unittest.TestCase):
         self.assert_(self.listener.messages >= 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-        (headers, msg) = self.listener.get_latest_message()
+        (_, msg) = self.listener.get_latest_message()
         self.assertEquals(img, msg)
         open(os.path.join(d, 'test-out.gif'), 'wb').write(img)
 
@@ -87,5 +87,5 @@ class TestNonAsciiSendAutoEncoding(unittest.TestCase):
         self.assert_(self.listener.messages >= 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-        (headers, msg) = self.listener.get_latest_message()
+        (_, msg) = self.listener.get_latest_message()
         self.assertEquals(txt, msg)
