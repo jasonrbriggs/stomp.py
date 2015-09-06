@@ -231,7 +231,6 @@ class HeartbeatListener(ConnectionListener):
         Main loop for sending (and monitoring received) heartbeats.
         """
         send_time = time.time()
-        receive_time = time.time()
 
         while self.running:
             time.sleep(self.sleep_time)
@@ -245,11 +244,13 @@ class HeartbeatListener(ConnectionListener):
                     self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
                     log.debug("Lost connection, unable to send heartbeat")
+                except Exception:
+                    _, e, _ = sys.exc_info()
+                    log.debug("Unable to send heartbeat, due to: %s" % e)
 
             diff_receive = now - self.received_heartbeat
 
             if diff_receive > self.receive_sleep:
-                receive_time = now
                 diff_heartbeat = now - self.received_heartbeat
                 if diff_heartbeat > self.receive_sleep:
                     # heartbeat timeout

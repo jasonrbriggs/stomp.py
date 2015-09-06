@@ -1,3 +1,9 @@
+Version 4.1.6 - Aug 2015
+
+ * Generic exception catch on heartbeat send
+ * 
+ 
+
 Version 4.1.5 - Aug 2015
 
  * Remove incorrect \r escaping from 1.1 protocol
