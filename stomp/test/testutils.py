@@ -5,16 +5,16 @@ import logging
 log = logging.getLogger('testutils.py')
 
 try:
-    from configparser import ConfigParser
+    from configparser import RawConfigParser
 except ImportError:
-    from ConfigParser import ConfigParser
+    from ConfigParser import RawConfigParser
 
 
 from stomp import StatsListener, WaitingListener
 from stomp.backward import *
 
 
-config = ConfigParser()
+config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 
 

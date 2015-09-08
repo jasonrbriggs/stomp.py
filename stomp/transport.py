@@ -676,7 +676,6 @@ class Transport(BaseTransport):
             for host_and_port in self.__host_and_ports:
                 try:
                     log.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
-                    #self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     self.socket = get_socket(host_and_port[0], host_and_port[1], self.__timeout)
                     self.__enable_keepalive()
                     need_ssl = self.__need_ssl(host_and_port)
