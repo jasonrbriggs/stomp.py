@@ -693,7 +693,8 @@ class Transport(BaseTransport):
                             cert_reqs=cert_validation,
                             ca_certs=ssl_params['ca_certs'],
                             ssl_version=ssl_params['ssl_version'])
-                        self.socket.settimeout(self.__timeout)
+                        
+                    self.socket.settimeout(self.__timeout)
 
                     if self.blocking is not None:
                         self.socket.setblocking(self.blocking)
