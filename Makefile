@@ -11,11 +11,19 @@ all:
 	@echo "make builddeb - Generate a deb package"
 	@echo "make clean - Get rid of scratch and byte files"
 
+.PHONY: docs
+
+docs:
+	cd docs && make html 
+
 source:
 	$(PYTHON) setup.py sdist $(COMPILE)
 
 install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
+
+test:
+	$(PYTHON) setup.py test
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
