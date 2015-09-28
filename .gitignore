@@ -40,3 +40,4 @@ nosetests.xml
 MANIFEST
 
 tmp/
+docs/build
