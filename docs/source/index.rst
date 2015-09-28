@@ -15,7 +15,8 @@ Contents:
 
     quickstart
     intro
-
+    api
+    commandline
 
 
 Indices and tables
