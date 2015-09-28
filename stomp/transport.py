@@ -41,6 +41,11 @@ import logging
 log = logging.getLogger('stomp.py')
 
 class BaseTransport(listener.Publisher):
+    """
+    Base class for transport classes providing support for listeners, threading overrides, 
+    and anything else outside of actually establishing a network connection, sending and
+    receiving of messages (so generally socket-agnostic functions).
+    """
 
     #
     # Used to parse the STOMP "content-length" header lines,
