@@ -1,12 +1,13 @@
+"""Various listeners for using with stomp.py connections.
+"""
+
+
 import threading
 import time
 
 import stomp.exception as exception
 import stomp.utils as utils
 from stomp.constants import *
-
-##@namespace stomp.listener
-# Various listeners for using with stomp.py connections.
 
 
 try:
@@ -20,7 +21,7 @@ log = logging.getLogger('stomp.py')
 
 class Publisher(object):
     """
-    Simply a registry of listeners. Subclasses
+    Simply a registry of listeners.
     """
 
     def set_listener(self, name, listener):

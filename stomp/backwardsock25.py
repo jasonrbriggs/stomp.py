@@ -1,3 +1,7 @@
+"""
+Python2.5 (and lower) specific versions of various networking (ipv6) functions used by stomp.py
+"""
+
 from socket import *
 
 def get_socket(host, port, timeout=None):

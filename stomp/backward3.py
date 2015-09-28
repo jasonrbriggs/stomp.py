@@ -1,5 +1,6 @@
-##@namespace stomp.backward3
-# Python3-specific versions of various functions used by stomp.py
+"""
+Python3-specific versions of various functions used by stomp.py
+"""
 
 NULL = b'\x00'
 
@@ -33,7 +34,3 @@ def pack(pieces):
 
 def join(chars):
     return b''.join(chars).decode()
-
-
-def getheader(headers, key):
-    return headers[key]

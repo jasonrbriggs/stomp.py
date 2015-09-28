@@ -1,5 +1,5 @@
-##@namespace stomp.exception
-# Errors thrown by stomp.py connections.
+"""Errors thrown by stomp.py connections.
+"""
 
 
 class ConnectionClosedException(Exception):

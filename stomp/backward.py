@@ -1,10 +1,10 @@
 import sys
 
-##@namespace stomp.backward
-# Functions to support backwards compatibility.
-#
-# Basically where we have functions which differ between python 2 and 3, we provide implementations here
-# and then Python-specific versions in backward2 and backward3.
+"""Functions to support backwards compatibility.
+
+Basically where we have functions which differ between python 2 and 3, we provide implementations here
+and then Python-specific versions in backward2 and backward3.
+"""
 
 if sys.hexversion >= 0x03000000: # Python 3+
     from stomp.backward3 import *

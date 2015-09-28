@@ -1,3 +1,8 @@
+"""Multicast transport for stomp.py.
+
+Obviously not a typical message broker, but convenient if you don't have a broker, but still want to use stomp.py methods.
+"""
+
 import socket
 import struct
 import uuid
@@ -17,6 +22,9 @@ class MulticastTransport(Transport):
         self.current_host_and_port = (MCAST_GRP, MCAST_PORT)
 
     def attempt_connection(self):
+        """
+        Establish a multicast connection - uses 2 sockets (one for sending, the other for receiving)
+        """
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
 
@@ -31,9 +39,15 @@ class MulticastTransport(Transport):
             raise exception.ConnectFailedException()
 
     def send(self, encoded_frame):
+        """
+        Send an encoded frame through the mcast socket.
+        """
         self.socket.sendto(encoded_frame, (MCAST_GRP, MCAST_PORT))
 
     def receive(self):
+        """
+        Receive 1024 bytes from the multicast receiver socket.
+        """
         return self.receiver_socket.recv(1024)
 
     def process_frame(self, f, frame_str):
@@ -68,8 +82,7 @@ class MulticastTransport(Transport):
 
 
 class MulticastConnection(BaseConnection, Protocol12):
-    def __init__(self,
-                 wait_on_receipt = False):
+    def __init__(self, wait_on_receipt = False):
         self.transport = MulticastTransport()
         self.transport.set_listener('mcast-listener', self)
         self.transactions = { }

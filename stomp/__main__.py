@@ -1,3 +1,7 @@
+"""The stomp.py command line client (used for testing or simple STOMP command scripting).
+
+"""
+
 import base64
 import os
 import sys
@@ -13,9 +17,6 @@ import stomp.colors
 sys.path.append('.')
 import stomp
 
-
-##@namespace stomp.__main__
-# The stomp.py command line client (used for testing or simple STOMP command scripting).
 
 ##
 # Command-line version string

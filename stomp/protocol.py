@@ -1,3 +1,7 @@
+"""Provides the 1.0, 1.1 and 1.2 protocol classes.
+"""
+
+
 import uuid
 
 from stomp.exception import ConnectFailedException
@@ -7,13 +11,9 @@ from stomp.constants import *
 import stomp.utils as utils
 
 
-##@namespace stomp.protocol
-# Provides the 1.0, 1.1 and 1.2 protocol classes.
-
-
 class Protocol10(ConnectionListener):
     """
-    Version 1.0 of the protocol.
+    Represents version 1.0 of the protocol (see https://stomp.github.io/stomp-specification-1.0.html)
     """
     def __init__(self, transport):
         self.transport = transport
@@ -108,7 +108,7 @@ class Protocol10(ConnectionListener):
 
 class Protocol11(HeartbeatListener, ConnectionListener):
     """
-    Version 1.1 of the protocol.
+    Represents version 1.1 of the protocol (see https://stomp.github.io/stomp-specification-1.1.html)
     """
     def __init__(self, transport, heartbeats=(0, 0)):
         HeartbeatListener.__init__(self, heartbeats)
@@ -222,7 +222,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
 class Protocol12(Protocol11):
     """
-    Version 1.2 of the protocol.
+    Represents version 1.2 of the protocol (see https://stomp.github.io/stomp-specification-1.2.html)
     """
     def __init__(self, transport, heartbeats=(0, 0)):
         Protocol11.__init__(self, transport, heartbeats)

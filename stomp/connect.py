@@ -1,12 +1,13 @@
+"""Main entry point for clients to create a STOMP connection.
+
+Provides connection classes for 1.0, 1.1, and 1.2 versions of the STOMP protocol.
+"""
+
 from stomp.transport import *
 from stomp.protocol import *
 from stomp.listener import *
 import uuid
 
-##@namespace stomp.connect
-# Main entry point for clients to create a STOMP connection.
-#
-# Provides connection classes for 1.0, 1.1, and 1.2 versions of the STOMP protocol.
 
 class BaseConnection(Publisher):
     def __init__(self, transport):

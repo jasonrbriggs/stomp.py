@@ -1,11 +1,11 @@
+"""General utility functions.
+"""
+
 import re
 import socket
 import threading
 
 from stomp.backward import decode, NULL
-
-##@namespace stomp.utils
-# General utilities.
 
 
 ## List of all host names (unqualified, fully-qualified, and IP

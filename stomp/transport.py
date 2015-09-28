@@ -1,3 +1,6 @@
+"""Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual STOMP protocol
+"""
+
 import math
 import random
 import re
@@ -7,11 +10,6 @@ import threading
 import time
 import errno
 import warnings
-
-
-##@namespace stomp.transport
-# Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual
-# STOMP protocol
 
 
 from io import BytesIO
