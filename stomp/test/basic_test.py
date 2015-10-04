@@ -195,7 +195,7 @@ class TestConnectionErrors(unittest.TestCase):
 
 class TestIPV6Send(unittest.TestCase):
     def setUp(self):
-        conn = stomp.Connection(get_ipv6_host())
+        conn = stomp.Connection11(get_ipv6_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
