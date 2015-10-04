@@ -41,3 +41,5 @@ MANIFEST
 
 tmp/
 docs/build
+
+.DS_Store

@@ -114,7 +114,41 @@ class StompConnection11(BaseConnection, Protocol11):
 
 class StompConnection12(BaseConnection, Protocol12):
     """
-    Represents a 1.2 connection (comprising transport plus 1.2 protocol class)
+    :param host_and_ports: a list of (host, port) tuples.
+    :param prefer_localhost: if True and the local host is mentioned in the (host, port) tuples,
+                             try to connect to this first
+    :param try_loopback_connect: if True and the local host is found in the host tuples, try
+                                 connecting to it using loopback interface (127.0.0.1)
+    :param reconnect_sleep_initial: initial delay in seconds to wait before reattempting
+                                    to establish a connection if connection to any of the hosts fails.
+    :param reconnect_sleep_increase: factor by which the sleep delay is increased after
+                                     each connection attempt. For example, 0.5 means
+                                     to wait 50% longer than before the previous attempt,
+                                     1.0 means wait twice as long, and 0.0 means keep
+                                     the delay constant.
+    :param reconnect_sleep_max: maximum delay between connection attempts, regardless
+                                of the reconnect_sleep_increase.
+    :param reconnect_sleep_jitter: random additional time to wait (as a percentage of
+                                   the time determined using the previous parameters)
+                                   between connection attempts in order to avoid
+                                   stampeding. For example, a value of 0.1 means to wait
+                                   an extra 0%-10% (randomly determined) of the delay
+                                   calculated using the previous three parameters.
+    :param reconnect_attempts_max: maximum attempts to reconnect
+    :param use_ssl: deprecated, use the set_ssl method instead
+    :param ssl_cert_file: deprecated, use the set_ssl method instead
+    :param ssl_key_file: deprecated, use the set_ssl method instead
+    :param ssl_ca_certs: deprecated, use the set_ssl method instead
+    :param ssl_cert_validator: deprecated, use the set_ssl method instead
+    :param ssl_version: deprecated, use the set_ssl method instead
+    :param timeout: the timeout value to use when connecting the stomp socket
+    :param keepalive: some operating systems support sending the occasional heart
+                      beat packets to detect when a connection fails.  This
+                      parameter can either be set set to a boolean to turn on the
+                      default keepalive options for your OS, or as a tuple of
+                      values, which also enables keepalive packets, but specifies
+                      options specific to your OS implementation
+    :param vhost: specify a virtual hostname to provide in the 'host' header of the connection
     """
     def __init__(self,
                  host_and_ports=None,
@@ -138,8 +172,7 @@ class StompConnection12(BaseConnection, Protocol12):
                  vhost=None,
                  auto_decode=True):
         """
-        \see stomp::transport::Transport.__init__
-        \see stomp::protocol::Protocol12.__init__
+        Initialise a stomp version 1.2 connection
         """
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,

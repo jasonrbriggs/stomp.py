@@ -147,10 +147,8 @@ def calculate_heartbeats(shb, chb):
     Given a heartbeat string from the server, and a heartbeat tuple from the client,
     calculate what the actual heartbeat settings should be.
 
-    \param shb
-        server heartbeat numbers
-    \param chb
-        client heartbeat numbers
+    :param shb: server heartbeat numbers
+    :param chb: client heartbeat numbers
     """
     (sx, sy) = shb
     (cx, cy) = chb

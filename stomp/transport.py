@@ -744,39 +744,22 @@ class Transport(BaseTransport):
                 cert_validator=None,
                 ssl_version=DEFAULT_SSL_VERSION):
         """
-        Sets up SSL configuration for the given hosts.
-
-        This ensures socket is wrapped in a SSL connection, raising an
+        Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
         exception if the SSL module can't be found.
 
-        \param for_hosts
-            hosts this SSL configuration should be applied to
-
-        \param cert_file
-            the path to a X509 certificate
-
-        \param key_file
-            the path to a X509 key file
-
-        \param ca_certs
-            the path to the a file containing CA certificates
-            to validate the server against.  If this is not set,
-            server side certificate validation is not done.
-
-        \param cert_validator
-            function which performs extra validation on the client
-            certificate, for example checking the returned
-            certificate has a commonName attribute equal to the
-            hostname (to avoid man in the middle attacks).
-            The signature is:
-                (OK, err_msg) = validation_function(cert, hostname)
-            where OK is a boolean, and cert is a certificate structure
-            as returned by ssl.SSLSocket.getpeercert()
-
-        \param ssl_version
-            SSL protocol to use for the connection. This should be
-            one of the PROTOCOL_x constants provided by the ssl module.
-            The default is ssl.PROTOCOL_TLSv1
+        :param for_hosts: hosts this SSL configuration should be applied to
+        :param cert_file: the path to a X509 certificate
+        :param key_file: the path to a X509 key file
+        :param ca_certs: the path to the a file containing CA certificates to validate the server against.  
+                         If this is not set, server side certificate validation is not done.
+        :param cert_validator: function which performs extra validation on the client certificate, for example
+                               checking the returned certificate has a commonName attribute equal to the
+                               hostname (to avoid man in the middle attacks).
+                               The signature is: (OK, err_msg) = validation_function(cert, hostname)
+                               where OK is a boolean, and cert is a certificate structure
+                               as returned by ssl.SSLSocket.getpeercert()
+        :param ssl_version: SSL protocol to use for the connection. This should be one of the PROTOCOL_x 
+                            constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1
         """
         if not ssl:
             raise Exception("SSL connection requested, but SSL library not found")

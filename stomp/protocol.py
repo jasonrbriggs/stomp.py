@@ -193,6 +193,14 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.send_frame(CMD_NACK, headers)
 
     def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
+        """
+        Send a message to a destination in the messaging system (as per https://stomp.github.io/stomp-specification-1.2.html#SEND)
+        
+        :param destination: the destination (such as a message queue - for example '/queue/test' - or a message topic)
+        :param body: the content of the message
+        :param content_type: the MIME type of message 
+        :param headers: additional headers to send in the message frame
+        """
         assert destination is not None, "'destination' is required"
         assert body is not None, "'body' is required"
         headers = utils.merge_headers([headers, keyword_headers])
@@ -205,6 +213,14 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.send_frame(CMD_SEND, headers, body)
 
     def subscribe(self, destination, id, ack='auto', headers={}, **keyword_headers):
+        """
+        Subscribe to a destination
+        
+        :param destination: the topic or queue to subscribe to
+        :param id: the identifier to uniquely identify the subscription
+        :param ack: either auto, client or client-individual (see https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE for more info)
+        :param headers: any additional headers to send with the subscription
+        """
         assert destination is not None, "'destination' is required"
         assert id is not None, "'id' is required"
         headers = utils.merge_headers([headers, keyword_headers])
@@ -214,6 +230,12 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.send_frame(CMD_SUBSCRIBE, headers)
 
     def unsubscribe(self, id, headers={}, **keyword_headers):
+        """
+        Unsubscribe from a destination by its unique identifier
+        
+        :param id: the unique identifier to unsubscribe from
+        :param headers: additional headers to send with the unsubscribe
+        """
         assert id is not None, "'id' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ID] = id
@@ -252,12 +274,10 @@ class Protocol12(Protocol11):
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         """
         Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
-        \param username
-            optionally specify the login user
-        \param passcode
-            optionally specify the user password
-        \param wait
-            wait for the connection to complete before returning
+        
+        :param username: optionally specify the login user
+        :param passcode: optionally specify the user password
+        :param wait: wait for the connection to complete before returning
         """
         cmd = CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])

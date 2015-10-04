@@ -31,9 +31,9 @@ Connection12 = connect.StompConnection12
 StompConnection12 = Connection12
 
 ##
-# Default connection alias (STOMP 1.1).
+# Default connection alias (STOMP 1.2).
 #
-Connection = connect.StompConnection11
+Connection = connect.StompConnection12
 
 ##
 # Access to the default connection listener.
@@ -48,3 +48,7 @@ StatsListener = listener.StatsListener
 ##
 # Access to the 'waiting' listener.
 WaitingListener = listener.WaitingListener
+
+##
+# Access to the printing listener
+PrintingListener = listener.PrintingListener
