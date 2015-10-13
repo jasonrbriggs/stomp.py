@@ -169,6 +169,8 @@ def convert_frame_to_lines(frame):
         lines.append(frame.cmd)
         lines.append("\n")
     for key, vals in sorted(frame.headers.items()):
+        if vals is None:
+            continue
         if type(vals) != tuple:
             vals = (vals,)
         for val in vals:
