@@ -49,7 +49,7 @@ class Protocol10(ConnectionListener):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
-        self.send_frame('COMMIT', headers)
+        self.send_frame(CMD_COMMIT, headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         cmd = CMD_CONNECT
@@ -155,7 +155,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
-        self.send_frame('COMMIT', headers)
+        self.send_frame(CMD_COMMIT, headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         cmd = CMD_STOMP
