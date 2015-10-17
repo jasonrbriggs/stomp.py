@@ -4,6 +4,7 @@ Version 4.1.7
     * https://github.com/jasonrbriggs/stomp.py/pull/56
     * https://github.com/jasonrbriggs/stomp.py/pull/57
  * Update source to tidy up documentation
+ * Add sphinx generated documentation
 
 
 Version 4.1.6 - Aug 2015
