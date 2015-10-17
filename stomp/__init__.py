@@ -33,7 +33,7 @@ StompConnection12 = Connection12
 ##
 # Default connection alias (STOMP 1.2).
 #
-Connection = connect.StompConnection12
+Connection = connect.StompConnection11
 
 ##
 # Access to the default connection listener.
