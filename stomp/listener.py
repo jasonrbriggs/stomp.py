@@ -223,7 +223,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Add the heartbeat header to the frame when connecting.
         """
-        if frame.cmd == 'CONNECT' or frame.cmd == 'STOMP':
+        if frame.cmd == CMD_CONNECT or frame.cmd == CMD_STOMP:
             if self.heartbeats != (0, 0):
                 frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
 
