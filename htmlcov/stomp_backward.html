@@ -102,11 +102,11 @@
             <td class='text' valign='top'>
 <p id='t1' class='stm mis'><span class='key'>import</span> <span class='nam'>sys</span><span class='strut'>&nbsp;</span></p>
 <p id='t2' class='pln'><span class='strut'>&nbsp;</span></p>
-<p id='t3' class='pln'><span class='com'>##@namespace stomp.backward</span><span class='strut'>&nbsp;</span></p>
-<p id='t4' class='pln'><span class='com'># Functions to support backwards compatibility.</span><span class='strut'>&nbsp;</span></p>
-<p id='t5' class='pln'><span class='com'>#</span><span class='strut'>&nbsp;</span></p>
-<p id='t6' class='pln'><span class='com'># Basically where we have functions which differ between python 2 and 3, we provide implementations here</span><span class='strut'>&nbsp;</span></p>
-<p id='t7' class='pln'><span class='com'># and then Python-specific versions in backward2 and backward3.</span><span class='strut'>&nbsp;</span></p>
+<p id='t3' class='pln'><span class='str'>&quot;&quot;&quot;Functions to support backwards compatibility.</span><span class='strut'>&nbsp;</span></p>
+<p id='t4' class='pln'><span class='strut'>&nbsp;</span></p>
+<p id='t5' class='pln'><span class='str'>Basically where we have functions which differ between python 2 and 3, we provide implementations here</span><span class='strut'>&nbsp;</span></p>
+<p id='t6' class='pln'><span class='str'>and then Python-specific versions in backward2 and backward3.</span><span class='strut'>&nbsp;</span></p>
+<p id='t7' class='pln'><span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t8' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t9' class='stm mis'><span class='key'>if</span> <span class='nam'>sys</span><span class='op'>.</span><span class='nam'>hexversion</span> <span class='op'>&gt;=</span> <span class='num'>0x03000000</span><span class='op'>:</span> <span class='com'># Python 3+</span><span class='strut'>&nbsp;</span></p>
 <p id='t10' class='stm mis'>&nbsp; &nbsp; <span class='key'>from</span> <span class='nam'>stomp</span><span class='op'>.</span><span class='nam'>backward3</span> <span class='key'>import</span> <span class='op'>*</span><span class='strut'>&nbsp;</span></p>

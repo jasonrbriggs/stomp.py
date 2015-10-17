@@ -61,43 +61,45 @@
     <table cellspacing='0' cellpadding='0'>
         <tr>
             <td class='linenos' valign='top'>
-<p id='n1' class='stm run hide_run'><a href='#n1'>1</a></p>
+<p id='n1' class='pln'><a href='#n1'>1</a></p>
 <p id='n2' class='pln'><a href='#n2'>2</a></p>
 <p id='n3' class='pln'><a href='#n3'>3</a></p>
-<p id='n4' class='pln'><a href='#n4'>4</a></p>
+<p id='n4' class='stm run hide_run'><a href='#n4'>4</a></p>
 <p id='n5' class='pln'><a href='#n5'>5</a></p>
-<p id='n6' class='stm run hide_run'><a href='#n6'>6</a></p>
+<p id='n6' class='pln'><a href='#n6'>6</a></p>
 <p id='n7' class='stm run hide_run'><a href='#n7'>7</a></p>
 <p id='n8' class='stm run hide_run'><a href='#n8'>8</a></p>
 <p id='n9' class='stm run hide_run'><a href='#n9'>9</a></p>
-<p id='n10' class='pln'><a href='#n10'>10</a></p>
-<p id='n11' class='stm run hide_run'><a href='#n11'>11</a></p>
-<p id='n12' class='pln'><a href='#n12'>12</a></p>
-<p id='n13' class='stm mis'><a href='#n13'>13</a></p>
+<p id='n10' class='stm run hide_run'><a href='#n10'>10</a></p>
+<p id='n11' class='pln'><a href='#n11'>11</a></p>
+<p id='n12' class='stm run hide_run'><a href='#n12'>12</a></p>
+<p id='n13' class='pln'><a href='#n13'>13</a></p>
 <p id='n14' class='stm mis'><a href='#n14'>14</a></p>
 <p id='n15' class='stm mis'><a href='#n15'>15</a></p>
-<p id='n16' class='pln'><a href='#n16'>16</a></p>
-<p id='n17' class='stm mis'><a href='#n17'>17</a></p>
+<p id='n16' class='stm mis'><a href='#n16'>16</a></p>
+<p id='n17' class='pln'><a href='#n17'>17</a></p>
+<p id='n18' class='stm mis'><a href='#n18'>18</a></p>
                 
             </td>
             <td class='text' valign='top'>
-<p id='t1' class='stm run hide_run'><span class='key'>import</span> <span class='nam'>platform</span><span class='strut'>&nbsp;</span></p>
-<p id='t2' class='pln'><span class='strut'>&nbsp;</span></p>
-<p id='t3' class='pln'><span class='com'>##@namespace stomp.colors</span><span class='strut'>&nbsp;</span></p>
-<p id='t4' class='pln'><span class='com'># Color &#39;constants&#39; used by the command line client.</span><span class='strut'>&nbsp;</span></p>
+<p id='t1' class='pln'><span class='str'>&quot;&quot;&quot;Color &#39;constants&#39; used by the command line client.</span><span class='strut'>&nbsp;</span></p>
+<p id='t2' class='pln'><span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t3' class='pln'><span class='strut'>&nbsp;</span></p>
+<p id='t4' class='stm run hide_run'><span class='key'>import</span> <span class='nam'>platform</span><span class='strut'>&nbsp;</span></p>
 <p id='t5' class='pln'><span class='strut'>&nbsp;</span></p>
-<p id='t6' class='stm run hide_run'><span class='key'>if</span> <span class='nam'>platform</span><span class='op'>.</span><span class='nam'>system</span><span class='op'>(</span><span class='op'>)</span><span class='op'>.</span><span class='nam'>lower</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>!=</span> <span class='str'>&#39;windows&#39;</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t7' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>GREEN</span> <span class='op'>=</span> <span class='str'>&quot;\33[32m&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t8' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>RED</span> <span class='op'>=</span> <span class='str'>&quot;\33[31m&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t9' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>NO_COLOR</span> <span class='op'>=</span> <span class='str'>&quot;\33[0m&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t10' class='pln'><span class='strut'>&nbsp;</span></p>
-<p id='t11' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>BOLD</span><span class='op'>=</span><span class='str'>&quot;\33[1m&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t12' class='pln'><span class='key'>else</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
-<p id='t13' class='stm mis'>&nbsp; &nbsp; <span class='nam'>GREEN</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t14' class='stm mis'>&nbsp; &nbsp; <span class='nam'>NO_COLOR</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t15' class='stm mis'>&nbsp; &nbsp; <span class='nam'>RED</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t16' class='pln'><span class='strut'>&nbsp;</span></p>
-<p id='t17' class='stm mis'>&nbsp; &nbsp; <span class='nam'>BOLD</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t6' class='pln'><span class='strut'>&nbsp;</span></p>
+<p id='t7' class='stm run hide_run'><span class='key'>if</span> <span class='nam'>platform</span><span class='op'>.</span><span class='nam'>system</span><span class='op'>(</span><span class='op'>)</span><span class='op'>.</span><span class='nam'>lower</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>!=</span> <span class='str'>&#39;windows&#39;</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
+<p id='t8' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>GREEN</span> <span class='op'>=</span> <span class='str'>&quot;\33[32m&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t9' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>RED</span> <span class='op'>=</span> <span class='str'>&quot;\33[31m&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t10' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>NO_COLOR</span> <span class='op'>=</span> <span class='str'>&quot;\33[0m&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t11' class='pln'><span class='strut'>&nbsp;</span></p>
+<p id='t12' class='stm run hide_run'>&nbsp; &nbsp; <span class='nam'>BOLD</span><span class='op'>=</span><span class='str'>&quot;\33[1m&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t13' class='pln'><span class='key'>else</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
+<p id='t14' class='stm mis'>&nbsp; &nbsp; <span class='nam'>GREEN</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t15' class='stm mis'>&nbsp; &nbsp; <span class='nam'>NO_COLOR</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t16' class='stm mis'>&nbsp; &nbsp; <span class='nam'>RED</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
+<p id='t17' class='pln'><span class='strut'>&nbsp;</span></p>
+<p id='t18' class='stm mis'>&nbsp; &nbsp; <span class='nam'>BOLD</span> <span class='op'>=</span> <span class='str'>&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
                 
             </td>
         </tr>
