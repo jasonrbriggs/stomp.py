@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stomp.adapter package &mdash; Stomp 4.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Stomp 4.1.6 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="stomp-adapter-package">
+<h1>stomp.adapter package<a class="headerlink" href="#stomp-adapter-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-stomp.adapter.multicast">
+<span id="stomp-adapter-multicast-module"></span><h2>stomp.adapter.multicast module<a class="headerlink" href="#module-stomp.adapter.multicast" title="Permalink to this headline">¶</a></h2>
+<p>Multicast transport for stomp.py.</p>
+<p>Obviously not a typical message broker, but convenient if you don&#8217;t have a broker, but still want to use stomp.py methods.</p>
+<dl class="class">
+<dt id="stomp.adapter.multicast.MulticastConnection">
+<em class="property">class </em><code class="descclassname">stomp.adapter.multicast.</code><code class="descname">MulticastConnection</code><span class="sig-paren">(</span><em>wait_on_receipt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="stomp.html#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastConnection.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>username=None</em>, <em>passcode=None</em>, <em>wait=False</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastConnection.disconnect">
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='7e1b0d5f-a292-4801-be6f-5e46e9858e60'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastConnection.send_frame">
+<code class="descname">send_frame</code><span class="sig-paren">(</span><em>cmd</em>, <em>headers={}</em>, <em>body=''</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.send_frame" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastConnection.subscribe">
+<code class="descname">subscribe</code><span class="sig-paren">(</span><em>destination</em>, <em>id</em>, <em>ack='auto'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.subscribe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastConnection.unsubscribe">
+<code class="descname">unsubscribe</code><span class="sig-paren">(</span><em>id</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.unsubscribe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stomp.adapter.multicast.MulticastTransport">
+<em class="property">class </em><code class="descclassname">stomp.adapter.multicast.</code><code class="descname">MulticastTransport</code><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a></p>
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastTransport.attempt_connection">
+<code class="descname">attempt_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.attempt_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establish a multicast connection - uses 2 sockets (one for sending, the other for receiving)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastTransport.process_frame">
+<code class="descname">process_frame</code><span class="sig-paren">(</span><em>f</em>, <em>frame_str</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.process_frame" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastTransport.receive">
+<code class="descname">receive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.receive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive 1024 bytes from the multicast receiver socket.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastTransport.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>encoded_frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an encoded frame through the mcast socket.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.adapter.multicast.MulticastTransport.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-stomp.adapter">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stomp.adapter" title="Permalink to this headline">¶</a></h2>
+<p>Non-standard adapters.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">stomp.adapter package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-stomp.adapter.multicast">stomp.adapter.multicast module</a></li>
+<li><a class="reference internal" href="#module-stomp.adapter">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/stomp.adapter.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Jason R Briggs.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/stomp.adapter.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

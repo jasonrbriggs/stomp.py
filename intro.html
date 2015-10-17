@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to Stomp.py &mdash; Stomp 4.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Stomp 4.1.6 documentation" href="index.html" />
+    <link rel="next" title="Using the API" href="api.html" />
+    <link rel="prev" title="Quick start" href="quickstart.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction-to-stomp-py">
+<h1>Introduction to Stomp.py<a class="headerlink" href="#introduction-to-stomp-py" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="about-stomp-py">
+<h2>About Stomp.py<a class="headerlink" href="#about-stomp-py" title="Permalink to this headline">¶</a></h2>
+<p>Stomp.py started as an <a class="reference external" href="https://en.wikipedia.org/wiki/The_Cathedral_and_the_Bazaar#Lessons_for_creating_good_open_source_software">&#8220;itch-scratching&#8221; project</a>, after discovering that the message broker we were using for inter-application communications in a telecommunications platform, had a text-based protocol called <a class="reference external" href="https://stomp.github.io/">STOMP</a> you could use for access. We wanted something which could randomly send a variation of messages, easily scriptable - and there was only one other Python-based client library available at the time (which didn&#8217;t work, and it looked as if the project had stalled). So after a number of evenings spent coding (ah! those were the days - when one could get away with endless coding in the evenings), the first version of stomp.py was created (supporting the basics of the 1.0 protocol, a smidgen of a CLI, and little else). In the 8 or 9 years since its inception, support for the subsequent versions of STOMP have been added, and the command line client has been significantly enhanced.</p>
+<ul class="simple">
+<li>Stomp.py currently supports all versions of the stomp protocol (1.0, 1.1 and 1.2)</li>
+<li>Both Python 2 and Python 3 are supported</li>
+<li>The command-line client is installed via pip and has a number of useful features for testing</li>
+<li>The code is perfunctorily tested on: ActiveMQ, RabbitMQ, stompserver, and has been reported to work with JBossMessaging in the distant past. Full test suite runs against Apache Apollo (for info on setting up VirtualBox for testing, contact the developer).</li>
+</ul>
+</div>
+<div class="section" id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this headline">¶</a></h2>
+<p>View outstanding issues on the GitHub <a class="reference external" href="https://github.com/jasonrbriggs/stomp.py/issues">issues list</a>, or raise a request for help (note that stomp.py is &#8216;intermittently&#8217; supported at times).</p>
+</div>
+<div class="section" id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h2>
+<p>Julian Scheid (<a class="reference external" href="http://open.rsp.com.au/">Rising Sun Pictures</a>)</p>
+<p>Andreas Schobel</p>
+<p>Fernando Ciciliati</p>
+<p>Eugene Strulyov</p>
+<p>Gavin M. Roy</p>
+<p>Martin Pieuchot</p>
+<p>Joe Gdaniec</p>
+<p>Jayson Vantuyl</p>
+<p>Tatiana Al-Chueyr Martins</p>
+<p>Rafael Durán Casteñada</p>
+<p>Chaskiel Grundman</p>
+<p>Ville Skyttä</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to Stomp.py</a><ul>
+<li><a class="reference internal" href="#about-stomp-py">About Stomp.py</a></li>
+<li><a class="reference internal" href="#getting-help">Getting Help</a></li>
+<li><a class="reference internal" href="#contributors">Contributors</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick start</a></li>
+      <li>Next: <a href="api.html" title="next chapter">Using the API</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/intro.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Jason R Briggs.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/intro.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
