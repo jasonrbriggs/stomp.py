@@ -1,3 +1,11 @@
+Version 4.1.7 
+
+ * Merge patches from Ville S:
+    * https://github.com/jasonrbriggs/stomp.py/pull/56
+    * https://github.com/jasonrbriggs/stomp.py/pull/57
+ 
+
+
 Version 4.1.6 - Aug 2015
 
  * Generic exception catch on heartbeat send
