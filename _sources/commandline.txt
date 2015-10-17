@@ -43,7 +43,7 @@ And you can also get more help within the application using the help command::
     abort  commit  nack  run       sendrec    subscribe    version
     ack    exit    quit  send      sendreply  unsubscribe
     
-Some of the differences to the programmatic API are the ability to run a script, and to send files (``run``, ``sendfile``)::
+Some of the differences to the programmatic API are the ability to run a script, and to send files (``run``, ``sendfile``, ``stats``)::
 
     > help run
     Usage:
@@ -63,4 +63,12 @@ Some of the differences to the programmatic API are the ability to run a script,
     Description:
     	Sends a file to a destination in the messaging system.
         
-Apart from that, the commands are largely inline with what you can do programmatically.
+    > help stats
+    Usage:
+    	stats [on|off]
+
+    Description:
+    	Record statistics on messages sent, received, errors, etc. If no argument (on|off) is specified,
+    	dump the current statistics.
+        
+Apart from that, the commands are largely inline with what you can do programmatically. Note that you can run it as a normal CLI, as a standalone listener and use it to run a script of commands.

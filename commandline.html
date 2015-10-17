@@ -80,7 +80,7 @@ abort  commit  nack  run       sendrec    subscribe    version
 ack    exit    quit  send      sendreply  unsubscribe
 </pre></div>
 </div>
-<p>Some of the differences to the programmatic API are the ability to run a script, and to send files (<code class="docutils literal"><span class="pre">run</span></code>, <code class="docutils literal"><span class="pre">sendfile</span></code>):</p>
+<p>Some of the differences to the programmatic API are the ability to run a script, and to send files (<code class="docutils literal"><span class="pre">run</span></code>, <code class="docutils literal"><span class="pre">sendfile</span></code>, <code class="docutils literal"><span class="pre">stats</span></code>):</p>
 <div class="highlight-python"><div class="highlight"><pre>&gt; help run
 Usage:
     run &lt;filename&gt;
@@ -98,9 +98,17 @@ Required Parameters:
 
 Description:
     Sends a file to a destination in the messaging system.
+
+&gt; help stats
+Usage:
+    stats [on|off]
+
+Description:
+    Record statistics on messages sent, received, errors, etc. If no argument (on|off) is specified,
+    dump the current statistics.
 </pre></div>
 </div>
-<p>Apart from that, the commands are largely inline with what you can do programmatically.</p>
+<p>Apart from that, the commands are largely inline with what you can do programmatically. Note that you can run it as a normal CLI, as a standalone listener and use it to run a script of commands.</p>
 </div>
 
 

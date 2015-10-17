@@ -683,52 +683,8 @@
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-stomp.test.threading_test">
-<span id="stomp-test-threading-test-module"></span><h2>stomp.test.threading_test module<a class="headerlink" href="#module-stomp.test.threading_test" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="stomp.test.threading_test.MQ">
-<em class="property">class </em><code class="descclassname">stomp.test.threading_test.</code><code class="descname">MQ</code><a class="headerlink" href="#stomp.test.threading_test.MQ" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="stomp.test.threading_test.MQ.send">
-<code class="descname">send</code><span class="sig-paren">(</span><em>topic</em>, <em>msg</em>, <em>persistent='true'</em>, <em>retry=False</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.test.threading_test.MQ.send" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="stomp.test.threading_test.TestThreading">
-<em class="property">class </em><code class="descclassname">stomp.test.threading_test.</code><code class="descname">TestThreading</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.test.threading_test.TestThreading" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
-<dl class="method">
-<dt id="stomp.test.threading_test.TestThreading.make_sender">
-<code class="descname">make_sender</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.test.threading_test.TestThreading.make_sender" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="stomp.test.threading_test.TestThreading.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.test.threading_test.TestThreading.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test that mq sends don&#8217;t wedge their threads.</p>
-<p>Starts a number of sender threads, and runs for a set amount of
-time. Each thread sends messages as fast as it can, and after each
-send, pops from a Queue. Meanwhile, the Queue is filled with one
-marker per second. If the Queue fills, the test fails, as that
-indicates that all threads are no longer emptying the queue, and thus
-must be wedged in their send() calls.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="stomp.test.threading_test.TestThreading.tearDown">
-<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.test.threading_test.TestThreading.tearDown" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="stomp.test.threading_test.TestThreading.test_threads_dont_wedge">
-<code class="descname">test_threads_dont_wedge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.test.threading_test.TestThreading.test_threads_dont_wedge" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<div class="section" id="stomp-test-threading-test-module">
+<h2>stomp.test.threading_test module<a class="headerlink" href="#stomp-test-threading-test-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-stomp.test.transport_test">
 <span id="stomp-test-transport-test-module"></span><h2>stomp.test.transport_test module<a class="headerlink" href="#module-stomp.test.transport_test" title="Permalink to this headline">¶</a></h2>
@@ -824,7 +780,7 @@ must be wedged in their send() calls.</p>
 <li><a class="reference internal" href="#module-stomp.test.ssl_test">stomp.test.ssl_test module</a></li>
 <li><a class="reference internal" href="#module-stomp.test.stompserver_test">stomp.test.stompserver_test module</a></li>
 <li><a class="reference internal" href="#module-stomp.test.testutils">stomp.test.testutils module</a></li>
-<li><a class="reference internal" href="#module-stomp.test.threading_test">stomp.test.threading_test module</a></li>
+<li><a class="reference internal" href="#stomp-test-threading-test-module">stomp.test.threading_test module</a></li>
 <li><a class="reference internal" href="#module-stomp.test.transport_test">stomp.test.transport_test module</a></li>
 <li><a class="reference internal" href="#module-stomp.test.utils_test">stomp.test.utils_test module</a></li>
 <li><a class="reference internal" href="#module-stomp.test">Module contents</a></li>
