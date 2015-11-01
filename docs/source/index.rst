@@ -6,7 +6,7 @@
 Stomp.py |release| documentation
 ================================
 
-Stomp.py was created by `Jason R Briggs <http://jasonrbriggs.com>`_. You can view outstanding issues, and find further info, on the `Github page <http://github.com/jasonrbriggs/stomp.py>`_.
+Stomp.py was created by `Jason R Briggs <http://jasonrbriggs.com>`_. You can view outstanding issues, and find further info, on the `Github project page <http://github.com/jasonrbriggs/stomp.py>`_.
 
 Contents:
 
