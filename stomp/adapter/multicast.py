@@ -16,6 +16,9 @@ MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 5000
 
 class MulticastTransport(Transport):
+    """
+    Transport over multicast connections rather than using a broker.
+    """
     def __init__(self):
         Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False, DEFAULT_SSL_VERSION, None, None, None)
         self.subscriptions = {}

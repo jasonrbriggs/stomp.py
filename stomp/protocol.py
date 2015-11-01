@@ -13,7 +13,9 @@ import stomp.utils as utils
 
 class Protocol10(ConnectionListener):
     """
-    Represents version 1.0 of the protocol (see https://stomp.github.io/stomp-specification-1.0.html)
+    Represents version 1.0 of the protocol (see https://stomp.github.io/stomp-specification-1.0.html).
+    
+    Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
     def __init__(self, transport):
         self.transport = transport
@@ -21,16 +23,37 @@ class Protocol10(ConnectionListener):
         self.version = '1.0'
 
     def send_frame(self, cmd, headers={}, body=''):
+        """
+        Encode and send a stomp frame
+        through the underlying transport:
+        
+        :param cmd: the protocol command
+        :param headers: a map of headers to include in the frame
+        :param body: the content of the message
+        """
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 
     def abort(self, transaction, headers={}, **keyword_headers):
+        """
+        Abort a transaction.
+        
+        :param transaction: the identifier of the transaction
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ABORT, headers)
 
     def ack(self, id, transaction=None):
+        """
+        Acknowledge 'consumption' of a message by id.
+        
+        :param id: identifier of the message
+        :param transaction: include the acknowledgement in the specified transaction
+        """
         assert id is not None, "'id' is required"
         headers = { HDR_MESSAGE_ID : id }
         if transaction:
@@ -38,6 +61,16 @@ class Protocol10(ConnectionListener):
         self.send_frame(CMD_ACK, headers)
 
     def begin(self, transaction=None, headers={}, **keyword_headers):
+        """
+        Begin a transaction.
+        
+        :param transaction: the identifier for the transaction (optional - if not specified
+            a unique transaction id will be generated)
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        
+        :return: the transaction id
+        """
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
             transaction = str(uuid.uuid4())
@@ -46,12 +79,28 @@ class Protocol10(ConnectionListener):
         return transaction
 
     def commit(self, transaction=None, headers={}, **keyword_headers):
+        """
+        Commit a transcation.
+        
+        :param transaction: the identifier for the transaction
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_COMMIT, headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+        """
+        Start a connection.
+        
+        :param username: the username to connect with
+        :param passcode: the password used to authenticate with
+        :param wait: if True, wait for the connection to be established/acknowledged
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         cmd = CMD_CONNECT
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
@@ -70,12 +119,29 @@ class Protocol10(ConnectionListener):
                 raise ConnectFailedException()
 
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
+        """
+        Disconnect from the server.
+        
+        :param receipt: the receipt to use (once the server acknowledges that receipt, we're
+            officially disconnected)
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         headers = utils.merge_headers([headers, keyword_headers])
         if receipt:
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_DISCONNECT, headers)
 
     def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
+        """
+        Send a message to a destination.
+        
+        :param destination: the destination of the message (e.g. queue or topic name)
+        :param body: the content of the message
+        :param content_type: the content type of the message
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert destination is not None, "'destination' is required"
         assert body is not None, "'body' is required"
         headers = utils.merge_headers([headers, keyword_headers])
@@ -88,6 +154,17 @@ class Protocol10(ConnectionListener):
         self.send_frame(CMD_SEND, headers, body)
 
     def subscribe(self, destination, id=None, ack='auto', headers={}, **keyword_headers):
+        """
+        Subscribe to a destination.
+        
+        :param destination: the topic or queue to subscribe to
+        :param id: a unique id to represent the subscription
+        :param ack: acknowledgement mode, either auto, client, or client-individual 
+            (see http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header)
+            for more information
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert destination is not None, "'destination' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_DESTINATION] = destination
@@ -97,6 +174,14 @@ class Protocol10(ConnectionListener):
         self.send_frame(CMD_SUBSCRIBE, headers)
 
     def unsubscribe(self, destination=None, id=None, headers={}, **keyword_headers):
+        """
+        Unsubscribe from a destination by either id or the destination name.
+        
+        :param destination: the name of the topic or queue to unsubscribe from
+        :param id: the unique identifier of the topic or queue to unsubscribe from
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert id is not None or destination is not None, "'id' or 'destination' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         if id:
@@ -108,7 +193,9 @@ class Protocol10(ConnectionListener):
 
 class Protocol11(HeartbeatListener, ConnectionListener):
     """
-    Represents version 1.1 of the protocol (see https://stomp.github.io/stomp-specification-1.1.html)
+    Represents version 1.1 of the protocol (see https://stomp.github.io/stomp-specification-1.1.html).
+    
+    Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
     def __init__(self, transport, heartbeats=(0, 0)):
         HeartbeatListener.__init__(self, heartbeats)
@@ -124,18 +211,39 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[key] = val
 
     def send_frame(self, cmd, headers={}, body=''):
+        """
+        Encode and send a stomp frame
+        through the underlying transport:
+        
+        :param cmd: the protocol command
+        :param headers: a map of headers to include in the frame
+        :param body: the content of the message
+        """
         if cmd != CMD_CONNECT:
             self._escape_headers(headers)
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 
     def abort(self, transaction, headers={}, **keyword_headers):
+        """
+        Abort a transaction.
+        
+        :param transaction: the identifier of the transaction
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ABORT, headers)
 
     def ack(self, id, subscription, transaction=None):
+        """
+        Acknowledge 'consumption' of a message by id.
+        
+        :param id: identifier of the message
+        :param transaction: include the acknowledgement in the specified transaction
+        """
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
         headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
@@ -144,6 +252,16 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.send_frame(CMD_ACK, headers)
 
     def begin(self, transaction=None, headers={}, **keyword_headers):
+        """
+        Begin a transaction.
+        
+        :param transaction: the identifier for the transaction (optional - if not specified
+            a unique transaction id will be generated)
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        
+        :return: the transaction id
+        """
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
             transaction = str(uuid.uuid4())
@@ -152,12 +270,28 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         return transaction
 
     def commit(self, transaction=None, headers={}, **keyword_headers):
+        """
+        Commit a transcation.
+        
+        :param transaction: the identifier for the transaction
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert transaction is not None, "'transaction' is required"
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_COMMIT, headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+        """
+        Start a connection.
+        
+        :param username: the username to connect with
+        :param passcode: the password used to authenticate with
+        :param wait: if True, wait for the connection to be established/acknowledged
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         cmd = CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
@@ -179,12 +313,29 @@ class Protocol11(HeartbeatListener, ConnectionListener):
                 raise ConnectFailedException()
 
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
+        """
+        Disconnect from the server.
+        
+        :param receipt: the receipt to use (once the server acknowledges that receipt, we're
+            officially disconnected)
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         headers = utils.merge_headers([headers, keyword_headers])
         if receipt:
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_DISCONNECT, headers)
 
     def nack(self, id, subscription, transaction=None):
+        """
+        Let the server know that a message was not consumed.
+        
+        :param id: the unique id of the message to nack
+        :param subscription: the subscription this message is associated with
+        :param transaction: include this nack in a named transaction
+        :param headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
         headers = { HDR_MESSAGE_ID : id, HDR_SUBSCRIPTION : subscription }
@@ -219,7 +370,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param destination: the topic or queue to subscribe to
         :param id: the identifier to uniquely identify the subscription
         :param ack: either auto, client or client-individual (see https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE for more info)
-        :param headers: any additional headers to send with the subscription
+        :param headers: a map of any additional headers to send with the subscription
+        :param keyword_headers: any additional headers to send with the subscription
         """
         assert destination is not None, "'destination' is required"
         assert id is not None, "'id' is required"
@@ -244,7 +396,9 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
 class Protocol12(Protocol11):
     """
-    Represents version 1.2 of the protocol (see https://stomp.github.io/stomp-specification-1.2.html)
+    Represents version 1.2 of the protocol (see https://stomp.github.io/stomp-specification-1.2.html).
+    
+    Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
     def __init__(self, transport, heartbeats=(0, 0)):
         Protocol11.__init__(self, transport, heartbeats)
@@ -258,6 +412,12 @@ class Protocol12(Protocol11):
             headers[key] = val
 
     def ack(self, id, transaction=None):
+        """
+        Acknowledge 'consumption' of a message by id.
+        
+        :param id: identifier of the message
+        :param transaction: include the acknowledgement in the specified transaction
+        """
         assert id is not None, "'id' is required"
         headers = { HDR_ID : id }
         if transaction:
@@ -265,6 +425,12 @@ class Protocol12(Protocol11):
         self.send_frame(CMD_ACK, headers)
 
     def nack(self, id, transaction=None):
+        """
+        Let the server know that a message was not consumed.
+        
+        :param id: the unique id of the message to nack
+        :param transaction: include this nack in a named transaction
+        """
         assert id is not None, "'id' is required"
         headers = { HDR_ID : id }
         if transaction:
@@ -278,6 +444,8 @@ class Protocol12(Protocol11):
         :param username: optionally specify the login user
         :param passcode: optionally specify the user password
         :param wait: wait for the connection to complete before returning
+        :param headers: a map of any additional headers to send with the subscription
+        :param keyword_headers: any additional headers to send with the subscription
         """
         cmd = CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])

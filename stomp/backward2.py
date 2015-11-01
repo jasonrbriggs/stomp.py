@@ -28,14 +28,14 @@ def encode(char_data):
         return char_data
 
 
-def pack(pieces):
+def pack(pieces=[]):
     """
     Join a list of strings together (note: py3 version differs)
     """
     return ''.join(pieces)
 
 
-def join(chars):
+def join(chars=[]):
     """
     Join a list of characters into a string.
     """

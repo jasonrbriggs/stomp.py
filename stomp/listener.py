@@ -26,30 +26,26 @@ class Publisher(object):
 
     def set_listener(self, name, listener):
         """
-        Set a named listener to use with this connection
+        Set a named listener to use with this connection. See :py:class:`stomp.listener.ConnectionListener`
 
-        \see listener::ConnectionListener
-
-        \param name
-            the name of the listener
-        \param listener
-            the listener object
+        :param name: the name of the listener
+        :param listener: the listener object
         """
         pass
 
     def remove_listener(self, name):
         """
-        Remove a listener according to the specified name
+        Remove a listener.
 
-        \param name the name of the listener to remove
+        :param name: the name of the listener to remove
         """
         pass
 
     def get_listener(self, name):
         """
-        Return the named listener
+        Return the named listener.
 
-        \param name the listener to return
+        :param name: the listener to return
         """
         return None
 
@@ -67,21 +63,18 @@ class ConnectionListener(object):
         protocol level. For this, you need to invoke the "connect"
         method on the connection.
 
-        \param host_and_port
-            a tuple containing the host name and port number to which the connection has been established.
+        :param host_and_port: a tuple containing the host name and port number to which the connection has been established.
         """
         pass
 
     def on_connected(self, headers, body):
         """
         Called by the STOMP connection when a CONNECTED frame is
-        received, that is after a connection has been established or
-        re-established.
+        received (after a connection has been established or
+        re-established).
 
-        \param headers
-            a dictionary containing all headers sent by the server as key/value pairs.
-        \param body
-            the frame's payload. This is usually empty for CONNECTED frames.
+        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param body: the frame's payload. This is usually empty for CONNECTED frames.
         """
         pass
 
@@ -105,22 +98,17 @@ class ConnectionListener(object):
         Called by the STOMP connection before a message is returned to the client app. Returns a tuple
         containing the headers and body (so that implementing listeners can pre-process the content).
 
-        \param headers
-            the message headers
-        \param body
-            the message body
+        :param headers: the message headers
+        :param body: the message body
         """
         return (headers, body)
 
     def on_message(self, headers, body):
         """
-        Called by the STOMP connection when a MESSAGE frame is
-        received.
+        Called by the STOMP connection when a MESSAGE frame is received.
 
-        \param headers
-            a dictionary containing all headers sent by the server as key/value pairs.
-        \param body
-            the frame's payload - the message body.
+        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param body: the frame's payload - the message body.
         """
         pass
 
@@ -130,22 +118,17 @@ class ConnectionListener(object):
         received, sent by the server if requested by the client using
         the 'receipt' header.
 
-        \param headers
-            a dictionary containing all headers sent by the server as key/value pairs.
-        \param body
-            the frame's payload. This is usually empty for RECEIPT frames.
+        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param body: the frame's payload. This is usually empty for RECEIPT frames.
         """
         pass
 
     def on_error(self, headers, body):
         """
-        Called by the STOMP connection when an ERROR frame is
-        received.
+        Called by the STOMP connection when an ERROR frame is received.
 
-        \param headers
-            a dictionary containing all headers sent by the server as key/value pairs.
-        \param body
-            the frame's payload - usually a detailed error description.
+        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param body: the frame's payload - usually a detailed error description.
         """
         pass
 
@@ -153,8 +136,7 @@ class ConnectionListener(object):
         """
         Called by the STOMP connection when it is in the process of sending a message
 
-        \param frame
-            the frame to be sent
+        :param frame: the frame to be sent
         """
         pass
 
@@ -313,46 +295,40 @@ class StatsListener(ConnectionListener):
 
     def on_disconnected(self):
         """
-        Increment the disconnect count.
-        \see ConnectionListener::on_disconnected
+        Increment the disconnect count. See :py:meth:`ConnectionListener.on_disconnected`
         """
         self.disconnects = self.disconnects + 1
         log.info("disconnected (x %s)", self.disconnects)
 
     def on_error(self, headers, message):
         """
-        Increment the error count.
-        \see ConnectionListener::on_error
+        Increment the error count. See :py:meth:`ConnectionListener.on_error`
         """
         log.info("received an error %s [%s]", message, headers)
         self.errors += 1
 
     def on_connecting(self, host_and_port):
         """
-        Increment the connection count.
-        \see ConnectionListener::on_connecting
+        Increment the connection count. See :py:meth:`ConnectionListener.on_connecting`
         """
         log.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
 
     def on_message(self, headers, body):
         """
-        Increment the message received count.
-        \see ConnectionListener::on_message
+        Increment the message received count. See :py:meth:`ConnectionListener.on_message`
         """
         self.messages += 1
 
     def on_send(self, frame):
         """
-        Increment the send count.
-        \see ConnectionListener::on_send
+        Increment the send count. See :py:meth:`ConnectionListener.on_send`
         """
         self.messages_sent += 1
 
     def on_heartbeat_timeout(self):
         """
-        Increment the heartbeat timeout.
-        \see ConnectionListener::on_heartbeat_timeout
+        Increment the heartbeat timeout. See :py:meth:`ConnectionListener.on_heartbeat_timeout`
         """
         log.debug("received heartbeat timeout")
         self.heartbeat_timeouts = self.heartbeat_timeouts + 1

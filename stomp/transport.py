@@ -45,6 +45,13 @@ class BaseTransport(listener.Publisher):
     Base class for transport classes providing support for listeners, threading overrides, 
     and anything else outside of actually establishing a network connection, sending and
     receiving of messages (so generally socket-agnostic functions).
+    
+    :param wait_on_receipt: if a receipt is specified, then the send method should wait
+        (block) for the server to respond with that receipt-id
+        before continuing
+    :param auto_decode: automatically decode message responses as strings, rather than
+        leaving them as bytes. This preserves the behaviour as of version 4.0.16.
+        (To be defaulted to False as of the next release)
     """
 
     #
@@ -53,16 +60,6 @@ class BaseTransport(listener.Publisher):
     __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
     def __init__(self, wait_on_receipt, auto_decode=True):
-        """
-        \param wait_on_receipt
-            if a receipt is specified, then the send method should wait
-            (block) for the server to respond with that receipt-id
-            before continuing
-        \param auto_decode
-            automatically decode message responses as strings, rather than
-            leaving them as bytes. This preserves the behaviour as of version 4.0.16.
-            (To be defaulted to False as of the next release)
-        """
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -133,14 +130,11 @@ class BaseTransport(listener.Publisher):
 
     def set_listener(self, name, listener):
         """
-        Set a named listener to use with this connection
+        Set a named listener to use with this connection.
+        See :py:class:`listener.ConnectionListener`
 
-        \see listener::ConnectionListener
-
-        \param name
-            the name of the listener
-        \param listener
-            the listener object
+        :param name: the name of the listener
+        :param listener: the listener object
         """
         self.listeners[name] = listener
 
@@ -148,7 +142,7 @@ class BaseTransport(listener.Publisher):
         """
         Remove a listener according to the specified name
 
-        \param name the name of the listener to remove
+        :param name: the name of the listener to remove
         """
         del self.listeners[name]
 
@@ -156,7 +150,7 @@ class BaseTransport(listener.Publisher):
         """
         Return the named listener
 
-        \param name the listener to return
+        :param name: the listener to return
         """
         return self.listeners.get(name)
 
@@ -177,14 +171,9 @@ class BaseTransport(listener.Publisher):
         """
         Utility function for notifying listeners of incoming and outgoing messages
 
-        \param frame_type
-            the type of message
-
-        \param headers
-            the map of headers associated with the message
-
-        \param body
-            the content of the message
+        :param frame_type: the type of message
+        :param headers: the map of headers associated with the message
+        :param body: the content of the message
         """
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
@@ -257,16 +246,28 @@ class BaseTransport(listener.Publisher):
 
         self.send(encode(packed_frame))
 
-    def send(self, frame):
+    def send(self, encoded_frame):
+        """
+        Send an encoded frame over this transport (to be implemented in subclasses)
+        """
         pass
 
     def receive(self):
+        """
+        Receive a chunk of data (to be implemented in subclasses)
+        """
         pass
 
     def cleanup(self):
+        """
+        Cleanup the transport (to be implemented in subclasses)
+        """
         pass
 
     def attempt_connection(self):
+        """
+        Attempt to establish a connection.
+        """
         pass
 
     def wait_for_connection(self, timeout=None):
@@ -377,6 +378,44 @@ class BaseTransport(listener.Publisher):
 class Transport(BaseTransport):
     """
     Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of the protocol.
+    
+    :param host_and_ports: a list of (host, port) tuples.
+    :param prefer_localhost: if True and the local host is mentioned in the (host,
+        port) tuples, try to connect to this first
+    :param try_loopback_connect: if True and the local host is found in the host
+        tuples, try connecting to it using loopback interface
+        (127.0.0.1)
+    :param reconnect_sleep_initial: initial delay in seconds to wait before reattempting
+        to establish a connection if connection to any of the
+        hosts fails.
+    :param reconnect_sleep_increase: factor by which the sleep delay is increased after
+        each connection attempt. For example, 0.5 means
+        to wait 50% longer than before the previous attempt,
+        1.0 means wait twice as long, and 0.0 means keep
+        the delay constant.
+    :param reconnect_sleep_max: maximum delay between connection attempts, regardless
+        of the reconnect_sleep_increase.
+    :param reconnect_sleep_jitter: random additional time to wait (as a percentage of
+        the time determined using the previous parameters)
+        between connection attempts in order to avoid
+        stampeding. For example, a value of 0.1 means to wait
+        an extra 0%-10% (randomly determined) of the delay
+        calculated using the previous three parameters.
+    :param reconnect_attempts_max: maximum attempts to reconnect
+    :param use_ssl: deprecated, see :py:meth:`set_ssl`
+    :param ssl_cert_file: deprecated, see :py:meth:`set_ssl`
+    :param ssl_key_file: deprecated, see :py:meth:`set_ssl`
+    :param ssl_ca_certs: deprecated, see :py:meth:`set_ssl`
+    :param ssl_cert_validator: deprecated, see :py:meth:`set_ssl`
+    :param ssl_version: deprecated, see :py:meth:`set_ssl`
+    :param timeout: the timeout value to use when connecting the stomp socket
+    :param keepalive: some operating systems support sending the occasional heart
+        beat packets to detect when a connection fails.  This
+        parameter can either be set set to a boolean to turn on the
+        default keepalive options for your OS, or as a tuple of
+        values, which also enables keepalive packets, but specifies
+        options specific to your OS implementation
+    :param vhost: specify a virtual hostname to provide in the 'host' header of the connection
     """
 
     def __init__(self,
@@ -400,79 +439,6 @@ class Transport(BaseTransport):
                  vhost=None,
                  auto_decode=True
                  ):
-        """
-        \param host_and_ports
-            a list of (host, port) tuples.
-
-        \param prefer_localhost
-            if True and the local host is mentioned in the (host,
-            port) tuples, try to connect to this first
-
-        \param try_loopback_connect
-            if True and the local host is found in the host
-            tuples, try connecting to it using loopback interface
-            (127.0.0.1)
-
-        \param reconnect_sleep_initial
-            initial delay in seconds to wait before reattempting
-            to establish a connection if connection to any of the
-            hosts fails.
-
-        \param reconnect_sleep_increase
-            factor by which the sleep delay is increased after
-            each connection attempt. For example, 0.5 means
-            to wait 50% longer than before the previous attempt,
-            1.0 means wait twice as long, and 0.0 means keep
-            the delay constant.
-
-        \param reconnect_sleep_max
-            maximum delay between connection attempts, regardless
-            of the reconnect_sleep_increase.
-
-        \param reconnect_sleep_jitter
-            random additional time to wait (as a percentage of
-            the time determined using the previous parameters)
-            between connection attempts in order to avoid
-            stampeding. For example, a value of 0.1 means to wait
-            an extra 0%-10% (randomly determined) of the delay
-            calculated using the previous three parameters.
-
-        \param reconnect_attempts_max
-            maximum attempts to reconnect
-
-        \param use_ssl
-            deprecated, see Transport::set_ssl
-
-        \param ssl_cert_file
-            deprecated, see Transport::set_ssl
-
-        \param ssl_key_file
-            deprecated, see Transport::set_ssl
-
-        \param ssl_ca_certs
-            deprecated, see Transport::set_ssl
-
-        \param ssl_cert_validator
-            deprecated, see Transport::set_ssl
-
-        \param ssl_version
-            deprecated, see Transport::set_ssl
-
-        \param timeout
-            the timeout value to use when connecting the stomp socket
-
-        \param keepalive
-            some operating systems support sending the occasional heart
-            beat packets to detect when a connection fails.  This
-            parameter can either be set set to a boolean to turn on the
-            default keepalive options for your OS, or as a tuple of
-            values, which also enables keepalive packets, but specifies
-            options specific to your OS implementation
-
-        \param vhost
-            specify a virtual hostname to provide in the 'host' header of the connection
-        """
-
         BaseTransport.__init__(self, wait_on_receipt, auto_decode)
 
         if host_and_ports is None:
@@ -609,6 +575,9 @@ class Transport(BaseTransport):
 
 
     def cleanup(self):
+        """
+        Close the socket and clear the current host and port details.
+        """
         try:
             self.socket.close()
         except:
@@ -786,8 +755,7 @@ class Transport(BaseTransport):
         """
         Get SSL params for the given host.
 
-        \param host_and_port
-            The host/port pair we want SSL params for, default current_host_port
+        :param host_and_port: the host/port pair we want SSL params for, default current_host_port
         """
         if not host_and_port:
             host_and_port = self.current_host_and_port

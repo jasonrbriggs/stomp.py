@@ -25,5 +25,5 @@ class ConnectFailedException(Exception):
 
 class InterruptedException(Exception):
     """
-    Raised by receive when data read is interrupted
+    Raised by receive when data read is interrupted.
     """

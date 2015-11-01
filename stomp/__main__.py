@@ -39,7 +39,7 @@ class SubscriptionInfo:
 
 class StompCLI(Cmd, ConnectionListener):
     """
-    A command line interface to the stomp.py client.  See \link stomp::connect::StompConnection11 \endlink
+    A command line interface to the stomp.py client.  See :py:class:`stomp.connect.StompConnection11`
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, use_ssl=False, stdin=sys.stdin, stdout=sys.stdout):
@@ -100,19 +100,19 @@ class StompCLI(Cmd, ConnectionListener):
 
     def on_connecting(self, host_and_port):
         """
-        \see ConnectionListener::on_connecting
+        See :py:meth:`ConnectionListener.on_connecting`
         """
 
     def on_disconnected(self):
         """
-        \see ConnectionListener::on_disconnected
+        see :py:meth:`ConnectionListener.on_disconnected`
         """
         if not self.__quit:
             self.__error("lost connection")
 
     def on_message(self, headers, body):
         """
-        \see ConnectionListener::on_message
+        See :py:meth:`ConnectionListener.on_message`
 
         Special case: if the header 'filename' is present, the content is written out
         as a file
@@ -132,19 +132,19 @@ class StompCLI(Cmd, ConnectionListener):
 
     def on_error(self, headers, body):
         """
-        \see ConnectionListener::on_error
+        See :py:meth:`ConnectionListener.on_error`
         """
         self.__print_async("ERROR", headers, body)
 
     def on_receipt(self, headers, body):
         """
-        \see ConnectionListener::on_receipt
+        See :py:meth:`ConnectionListener.on_receipt`
         """
         self.__print_async("RECEIPT", headers, body)
 
     def on_connected(self, headers, body):
         """
-        \see ConnectionListener::on_connected
+        See :py:meth:`ConnectionListener.on_connected`
         """
         self.__print_async("CONNECTED", headers, body)
 

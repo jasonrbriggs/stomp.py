@@ -50,8 +50,7 @@ def default_create_thread(callback):
     Default thread creation - used to create threads when the client doesn't want to provide their
     own thread creation.
 
-    \param callback
-        the callback function provided to threading.Thread
+    :param callback: the callback function provided to threading.Thread
     """
     thread = threading.Thread(None, callback)
     thread.daemon = True  # Don't let thread prevent termination
@@ -75,10 +74,8 @@ def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
 
-    \param lines
-        the lines received in the message response
-    \param offset
-        the starting line number
+    :param lines: the lines received in the message response
+    :param offset: the starting line number
     """
     headers = {}
     for header_line in lines[offset:]:
@@ -100,8 +97,7 @@ def parse_frame(frame):
     headers is a map containing all header key/value pairs, and
     body is a string containing the frame's payload.
 
-    \param frame
-        the frame received from the server (as a string)
+    :param frame: the frame received from the server (as a string)
     """
     f = Frame()
     if frame == b'\x0a':
@@ -162,6 +158,9 @@ def calculate_heartbeats(shb, chb):
 
 
 def convert_frame_to_lines(frame):
+    """
+    Convert a frame to a list of lines separated by newlines.
+    """
     lines = [ ]
     if frame.cmd:
         lines.append(frame.cmd)
@@ -183,6 +182,9 @@ def convert_frame_to_lines(frame):
 
 
 def length(s):
+    """
+    Null (none) safe length function.
+    """
     if s is not None:
         return len(s)
     return 0
@@ -190,7 +192,11 @@ def length(s):
 
 class Frame:
     """
-    A STOMP frame to send. Comprises a command, the headers and the body content.
+    A STOMP frame (or message).
+    
+    :param cmd: the protocol command
+    :param headers: a map of headers for the frame
+    :param body: the content of the frame.
     """
     def __init__(self, cmd=None, headers={}, body=None):
         self.cmd = cmd

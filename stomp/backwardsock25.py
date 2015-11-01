@@ -4,8 +4,16 @@ Python2.5 (and lower) specific versions of various networking (ipv6) functions u
 
 from socket import *
 
+ERRMSG = "getaddrinfo returns an empty list"
+
 def get_socket(host, port, timeout=None):
-    msg = "getaddrinfo returns an empty list"
+    """
+    Return a socket.
+    
+    :param host: the hostname to connect to
+    :param port: the port number to connect to
+    :param timeout: if specified, set the socket timeout
+    """
     for res in getaddrinfo(host, port, 0, SOCK_STREAM):
         af, socktype, proto, canonname, sa = res
         sock = None
@@ -20,4 +28,4 @@ def get_socket(host, port, timeout=None):
             if sock is not None:
                 sock.close()
 
-    raise error, msg
+    raise error, ERRMSG
