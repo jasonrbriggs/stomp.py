@@ -5,12 +5,12 @@ Version 4.1.7
     * https://github.com/jasonrbriggs/stomp.py/pull/57
  * Update source to tidy up documentation
  * Add sphinx generated documentation
+ * Fix keepalive bug (https://github.com/jasonrbriggs/stomp.py/issues/60)
 
 
 Version 4.1.6 - Aug 2015
 
  * Generic exception catch on heartbeat send
- * Change default connection to the 1.2 protocol
  * Fix timeout (https://github.com/jasonrbriggs/stomp.py/issues/55)
  
 

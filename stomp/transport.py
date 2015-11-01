@@ -634,7 +634,7 @@ class Transport(BaseTransport):
         if not ka:
             return
 
-        if ka:
+        if ka == True:
             ka_sig = 'auto'
             ka_args = ()
         else:
