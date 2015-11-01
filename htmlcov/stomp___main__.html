@@ -699,19 +699,19 @@
 <p id='t100' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t101' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>on_connecting</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>,</span> <span class='nam'>host_and_port</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t102' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t103' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; \see ConnectionListener::on_connecting</span><span class='strut'>&nbsp;</span></p>
+<p id='t103' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; See :py:meth:`ConnectionListener.on_connecting`</span><span class='strut'>&nbsp;</span></p>
 <p id='t104' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t105' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t106' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>on_disconnected</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t107' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t108' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; \see ConnectionListener::on_disconnected</span><span class='strut'>&nbsp;</span></p>
+<p id='t108' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; see :py:meth:`ConnectionListener.on_disconnected`</span><span class='strut'>&nbsp;</span></p>
 <p id='t109' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t110' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='key'>if</span> <span class='key'>not</span> <span class='nam'>self</span><span class='op'>.</span><span class='nam'>__quit</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t111' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>self</span><span class='op'>.</span><span class='nam'>__error</span><span class='op'>(</span><span class='str'>&quot;lost connection&quot;</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t112' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t113' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>on_message</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t114' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t115' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; \see ConnectionListener::on_message</span><span class='strut'>&nbsp;</span></p>
+<p id='t115' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; See :py:meth:`ConnectionListener.on_message`</span><span class='strut'>&nbsp;</span></p>
 <p id='t116' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t117' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; Special case: if the header &#39;filename&#39; is present, the content is written out</span><span class='strut'>&nbsp;</span></p>
 <p id='t118' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; as a file</span><span class='strut'>&nbsp;</span></p>
@@ -731,19 +731,19 @@
 <p id='t132' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t133' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>on_error</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t134' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t135' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; \see ConnectionListener::on_error</span><span class='strut'>&nbsp;</span></p>
+<p id='t135' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; See :py:meth:`ConnectionListener.on_error`</span><span class='strut'>&nbsp;</span></p>
 <p id='t136' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t137' class='stm mis'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>self</span><span class='op'>.</span><span class='nam'>__print_async</span><span class='op'>(</span><span class='str'>&quot;ERROR&quot;</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t138' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t139' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>on_receipt</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t140' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t141' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; \see ConnectionListener::on_receipt</span><span class='strut'>&nbsp;</span></p>
+<p id='t141' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; See :py:meth:`ConnectionListener.on_receipt`</span><span class='strut'>&nbsp;</span></p>
 <p id='t142' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t143' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>self</span><span class='op'>.</span><span class='nam'>__print_async</span><span class='op'>(</span><span class='str'>&quot;RECEIPT&quot;</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t144' class='pln'><span class='strut'>&nbsp;</span></p>
 <p id='t145' class='stm run hide_run'>&nbsp; &nbsp; <span class='key'>def</span> <span class='nam'>on_connected</span><span class='op'>(</span><span class='nam'>self</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='op'>:</span><span class='strut'>&nbsp;</span></p>
 <p id='t146' class='pln'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='str'>&quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
-<p id='t147' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; \see ConnectionListener::on_connected</span><span class='strut'>&nbsp;</span></p>
+<p id='t147' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; See :py:meth:`ConnectionListener.on_connected`</span><span class='strut'>&nbsp;</span></p>
 <p id='t148' class='pln'><span class='str'>&nbsp; &nbsp; &nbsp; &nbsp; &quot;&quot;&quot;</span><span class='strut'>&nbsp;</span></p>
 <p id='t149' class='stm run hide_run'>&nbsp; &nbsp; &nbsp; &nbsp; <span class='nam'>self</span><span class='op'>.</span><span class='nam'>__print_async</span><span class='op'>(</span><span class='str'>&quot;CONNECTED&quot;</span><span class='op'>,</span> <span class='nam'>headers</span><span class='op'>,</span> <span class='nam'>body</span><span class='op'>)</span><span class='strut'>&nbsp;</span></p>
 <p id='t150' class='pln'><span class='strut'>&nbsp;</span></p>

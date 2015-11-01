@@ -71,51 +71,8 @@
 <div><dl class="class">
 <dt id="stomp.connect.StompConnection12">
 <em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=3</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host_and_ports</strong> &#8211; a list of (host, port) tuples.</li>
-<li><strong>prefer_localhost</strong> &#8211; if True and the local host is mentioned in the (host, port) tuples,
-try to connect to this first</li>
-<li><strong>try_loopback_connect</strong> &#8211; if True and the local host is found in the host tuples, try
-connecting to it using loopback interface (127.0.0.1)</li>
-<li><strong>reconnect_sleep_initial</strong> &#8211; initial delay in seconds to wait before reattempting
-to establish a connection if connection to any of the hosts fails.</li>
-<li><strong>reconnect_sleep_increase</strong> &#8211; factor by which the sleep delay is increased after
-each connection attempt. For example, 0.5 means
-to wait 50% longer than before the previous attempt,
-1.0 means wait twice as long, and 0.0 means keep
-the delay constant.</li>
-<li><strong>reconnect_sleep_max</strong> &#8211; maximum delay between connection attempts, regardless
-of the reconnect_sleep_increase.</li>
-<li><strong>reconnect_sleep_jitter</strong> &#8211; random additional time to wait (as a percentage of
-the time determined using the previous parameters)
-between connection attempts in order to avoid
-stampeding. For example, a value of 0.1 means to wait
-an extra 0%-10% (randomly determined) of the delay
-calculated using the previous three parameters.</li>
-<li><strong>reconnect_attempts_max</strong> &#8211; maximum attempts to reconnect</li>
-<li><strong>use_ssl</strong> &#8211; deprecated, use the set_ssl method instead</li>
-<li><strong>ssl_cert_file</strong> &#8211; deprecated, use the set_ssl method instead</li>
-<li><strong>ssl_key_file</strong> &#8211; deprecated, use the set_ssl method instead</li>
-<li><strong>ssl_ca_certs</strong> &#8211; deprecated, use the set_ssl method instead</li>
-<li><strong>ssl_cert_validator</strong> &#8211; deprecated, use the set_ssl method instead</li>
-<li><strong>ssl_version</strong> &#8211; deprecated, use the set_ssl method instead</li>
-<li><strong>timeout</strong> &#8211; the timeout value to use when connecting the stomp socket</li>
-<li><strong>keepalive</strong> &#8211; some operating systems support sending the occasional heart
-beat packets to detect when a connection fails.  This
-parameter can either be set set to a boolean to turn on the
-default keepalive options for your OS, or as a tuple of
-values, which also enables keepalive packets, but specifies
-options specific to your OS implementation</li>
-<li><strong>vhost</strong> &#8211; specify a virtual hostname to provide in the &#8216;host&#8217; header of the connection</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class). 
+See <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 </dd></dl>
 
 </div></blockquote>
@@ -133,6 +90,8 @@ options specific to your OS implementation</li>
 <li><strong>username</strong> &#8211; optionally specify the login user</li>
 <li><strong>passcode</strong> &#8211; optionally specify the user password</li>
 <li><strong>wait</strong> &#8211; wait for the connection to complete before returning</li>
+<li><strong>headers</strong> &#8211; a map of any additional headers to send with the subscription</li>
+<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the subscription</li>
 </ul>
 </td>
 </tr>
@@ -200,7 +159,8 @@ options specific to your OS implementation</li>
 <li><strong>destination</strong> &#8211; the topic or queue to subscribe to</li>
 <li><strong>id</strong> &#8211; the identifier to uniquely identify the subscription</li>
 <li><strong>ack</strong> &#8211; either auto, client or client-individual (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a> for more info)</li>
-<li><strong>headers</strong> &#8211; any additional headers to send with the subscription</li>
+<li><strong>headers</strong> &#8211; a map of any additional headers to send with the subscription</li>
+<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the subscription</li>
 </ul>
 </td>
 </tr>
