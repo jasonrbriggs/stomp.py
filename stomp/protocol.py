@@ -55,7 +55,7 @@ class Protocol10(ConnectionListener):
         :param transaction: include the acknowledgement in the specified transaction
         """
         assert id is not None, "'id' is required"
-        headers = { HDR_MESSAGE_ID : id }
+        headers = {HDR_MESSAGE_ID : id}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ACK, headers)
@@ -204,10 +204,11 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.version = '1.1'
 
     def _escape_headers(self, headers):
-        for key,val in headers.items():
+        for key, val in headers.items():
             try:
                 val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c')
-            except: pass
+            except:
+                pass
             headers[key] = val
 
     def send_frame(self, cmd, headers={}, body=''):
@@ -351,6 +352,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param body: the content of the message
         :param content_type: the MIME type of message 
         :param headers: additional headers to send in the message frame
+        :param keyword_headers: any additional headers the broker requires
         """
         assert destination is not None, "'destination' is required"
         assert body is not None, "'body' is required"
@@ -432,7 +434,7 @@ class Protocol12(Protocol11):
         :param transaction: include this nack in a named transaction
         """
         assert id is not None, "'id' is required"
-        headers = { HDR_ID : id }
+        headers = {HDR_ID : id}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_NACK, headers)

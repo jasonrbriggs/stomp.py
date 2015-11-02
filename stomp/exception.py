@@ -23,6 +23,7 @@ class ConnectFailedException(Exception):
     have exceeded Connection.__reconnect_attempts_max.
     """
 
+
 class InterruptedException(Exception):
     """
     Raised by receive when data read is interrupted.

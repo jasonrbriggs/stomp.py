@@ -1,8 +1,8 @@
 """Main entry point for clients to create a STOMP connection.
 
 Provides connection classes for `1.0 <http://stomp.github.io/stomp-specification-1.0.html>`_,
-`1.1 <http://stomp.github.io/stomp-specification-1.1.html>`_, and `1.2 <http://stomp.github.io/stomp-specification-1.2.html>`_
-versions of the STOMP protocol.
+`1.1 <http://stomp.github.io/stomp-specification-1.1.html>`_, and
+`1.2 <http://stomp.github.io/stomp-specification-1.2.html>`_ versions of the STOMP protocol.
 """
 
 from stomp.transport import *
@@ -19,8 +19,8 @@ class BaseConnection(Publisher):
     def __init__(self, transport):
         self.transport = transport
 
-    def set_listener(self, name, listener):
-        self.transport.set_listener(name, listener)
+    def set_listener(self, name, lstnr):
+        self.transport.set_listener(name, lstnr)
 
     def remove_listener(self, name):
         self.transport.remove_listener(name)
@@ -79,6 +79,10 @@ class StompConnection10(BaseConnection, Protocol10):
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
+
+        :param receipt: the receipt to use with the disconnect
+        :param headers: a map of any additional headers to send with the disconnection
+        :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol10.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
@@ -121,6 +125,10 @@ class StompConnection11(BaseConnection, Protocol11):
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
+
+        :param receipt: the receipt to use with the disconnect
+        :param headers: a map of any additional headers to send with the disconnection
+        :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
@@ -163,6 +171,10 @@ class StompConnection12(BaseConnection, Protocol12):
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
+
+        :param receipt: the receipt to use with the disconnect
+        :param headers: a map of any additional headers to send with the disconnection
+        :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()

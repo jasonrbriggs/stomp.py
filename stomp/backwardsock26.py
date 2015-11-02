@@ -4,6 +4,7 @@ Python2.6 (and greater) specific versions of various networking (ipv6) functions
 
 import socket
 
+
 def get_socket(host, port, timeout=None):
     """
     Return a socket connection.

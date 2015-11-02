@@ -37,6 +37,7 @@ class SubscriptionInfo:
         self.id = id
         self.ack = ack
 
+
 class StompCLI(Cmd, ConnectionListener):
     """
     A command line interface to the stomp.py client.  See :py:class:`stomp.connect.StompConnection11`
@@ -461,24 +462,24 @@ def optional_arg(arg_default):
 def main():
     parser = OptionParser(version=stomppy_version)
 
-    parser.add_option('-H', '--host', type = 'string', dest = 'host', default = 'localhost',
-                      help = 'Hostname or IP to connect to. Defaults to localhost if not specified.')
-    parser.add_option('-P', '--port', type = int, dest = 'port', default = 61613,
+    parser.add_option('-H', '--host', type='string', dest='host', default='localhost',
+                      help='Hostname or IP to connect to. Defaults to localhost if not specified.')
+    parser.add_option('-P', '--port', type=int, dest='port', default=61613,
                       help = 'Port providing stomp protocol connections. Defaults to 61613 if not specified.')
-    parser.add_option('-U', '--user', type = 'string', dest = 'user', default = None,
-                      help = 'Username for the connection')
-    parser.add_option('-W', '--password', type = 'string', dest = 'password', default = None,
-                      help = 'Password for the connection')
-    parser.add_option('-F', '--file', type = 'string', dest = 'filename',
-                      help = 'File containing commands to be executed, instead of prompting from the command prompt.')
-    parser.add_option('-S', '--stomp', type = 'string', dest = 'stomp', default = '1.1',
-                      help = 'Set the STOMP protocol version.')
-    parser.add_option('-L', '--listen', type = 'string', dest = 'listen', default = None,
-                      help = 'Listen for messages on a queue/destination')
-    parser.add_option("-V", "--verbose", dest = "verbose", default = 'on',
-                      help = 'Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
-    parser.add_option('--ssl', action='callback', callback = optional_arg(True), dest='ssl',
-                      help = 'Enable SSL connection')
+    parser.add_option('-U', '--user', type='string', dest='user', default=None,
+                      help='Username for the connection')
+    parser.add_option('-W', '--password', type='string', dest='password', default=None,
+                      help='Password for the connection')
+    parser.add_option('-F', '--file', type='string', dest='filename',
+                      help='File containing commands to be executed, instead of prompting from the command prompt.')
+    parser.add_option('-S', '--stomp', type='string', dest='stomp', default='1.1',
+                      help='Set the STOMP protocol version.')
+    parser.add_option('-L', '--listen', type='string', dest='listen', default=None,
+                      help='Listen for messages on a queue/destination')
+    parser.add_option("-V", "--verbose", dest="verbose", default='on',
+                      help='Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
+    parser.add_option('--ssl', action='callback', callback=optional_arg(True), dest='ssl',
+                      help='Enable SSL connection')
 
     parser.set_defaults()
     (options, _) = parser.parse_args()
@@ -510,6 +511,7 @@ def main():
     else:
         # disable CTRL-C, since can't guarantee correct handling of disconnect
         import signal
+
         def signal_handler(signal, frame):
             pass
         signal.signal(signal.SIGINT, signal_handler)

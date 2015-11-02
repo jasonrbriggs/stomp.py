@@ -63,7 +63,8 @@ class ConnectionListener(object):
         protocol level. For this, you need to invoke the "connect"
         method on the connection.
 
-        :param host_and_port: a tuple containing the host name and port number to which the connection has been established.
+        :param host_and_port: a tuple containing the host name and port number to which the connection
+            has been established.
         """
         pass
 
@@ -101,7 +102,7 @@ class ConnectionListener(object):
         :param headers: the message headers
         :param body: the message body
         """
-        return (headers, body)
+        return headers, body
 
     def on_message(self, headers, body):
         """
@@ -160,14 +161,17 @@ class HeartbeatListener(ConnectionListener):
 
     def on_connected(self, headers, body):
         """
-        Once the connection is established, and 'heart-beat' is found in the headers, we calculate the real heartbeat numbers
-        (based on what the server sent and what was specified by the client) - if the heartbeats are not 0, we start up the
-        heartbeat loop accordingly.
+        Once the connection is established, and 'heart-beat' is found in the headers, we calculate the real
+        heartbeat numbers (based on what the server sent and what was specified by the client) - if the heartbeats
+        are not 0, we start up the heartbeat loop accordingly.
+
+        :param headers: headers in the connection message
+        :param body: the message body
         """
         self.received_heartbeat = time.time()
         if 'heart-beat' in headers.keys():
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
-            if self.heartbeats != (0,0):
+            if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
                 # receive gets an additional threshold of 2 additional seconds
@@ -191,6 +195,9 @@ class HeartbeatListener(ConnectionListener):
     def on_message(self, headers, body):
         """
         Reset the last received time whenever a message is received.
+
+        :param headers: headers in the message
+        :param body: the message content
         """
         # reset the heartbeat for any received message
         self.received_heartbeat = time.time()
@@ -204,6 +211,8 @@ class HeartbeatListener(ConnectionListener):
     def on_send(self, frame):
         """
         Add the heartbeat header to the frame when connecting.
+
+        :param frame: the Frame object
         """
         if frame.cmd == CMD_CONNECT or frame.cmd == CMD_STOMP:
             if self.heartbeats != (0, 0):
@@ -257,6 +266,9 @@ class WaitingListener(ConnectionListener):
     def on_receipt(self, headers, body):
         """
         If the receipt id can be found in the headers, then notify the waiting thread.
+
+        :param headers: headers in the message
+        :param body: the message content
         """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
             self.condition.acquire()
@@ -280,36 +292,41 @@ class StatsListener(ConnectionListener):
     A connection listener for recording statistics on messages sent and received.
     """
     def __init__(self):
-        ## The number of errors received
+        # The number of errors received
         self.errors = 0
-        ## The number of connections established
+        # The number of connections established
         self.connections = 0
-        ## The number of disconnections
+        # The number of disconnections
         self.disconnects = 0
-        ## The number of messages received
+        # The number of messages received
         self.messages = 0
-        ## The number of messages sent
+        # The number of messages sent
         self.messages_sent = 0
-        ## The number of heartbeat timeouts
+        # The number of heartbeat timeouts
         self.heartbeat_timeouts = 0
 
     def on_disconnected(self):
         """
         Increment the disconnect count. See :py:meth:`ConnectionListener.on_disconnected`
         """
-        self.disconnects = self.disconnects + 1
+        self.disconnects += 1
         log.info("disconnected (x %s)", self.disconnects)
 
-    def on_error(self, headers, message):
+    def on_error(self, headers, body):
         """
         Increment the error count. See :py:meth:`ConnectionListener.on_error`
+
+        :param headers: headers in the message
+        :param body: the message content
         """
-        log.info("received an error %s [%s]", message, headers)
+        log.info("received an error %s [%s]", body, headers)
         self.errors += 1
 
     def on_connecting(self, host_and_port):
         """
         Increment the connection count. See :py:meth:`ConnectionListener.on_connecting`
+
+        :param host_and_port: the host and port as a tuple
         """
         log.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
@@ -317,6 +334,9 @@ class StatsListener(ConnectionListener):
     def on_message(self, headers, body):
         """
         Increment the message received count. See :py:meth:`ConnectionListener.on_message`
+
+        :param headers: headers in the message
+        :param body: the message content
         """
         self.messages += 1
 
@@ -331,7 +351,7 @@ class StatsListener(ConnectionListener):
         Increment the heartbeat timeout. See :py:meth:`ConnectionListener.on_heartbeat_timeout`
         """
         log.debug("received heartbeat timeout")
-        self.heartbeat_timeouts = self.heartbeat_timeouts + 1
+        self.heartbeat_timeouts += 1
 
     def __str__(self):
         """
@@ -359,7 +379,7 @@ class PrintingListener(ConnectionListener):
 
     def on_before_message(self, headers, body):
         print('on_before_message %s %s' % (headers, body))
-        return (headers, body)
+        return headers, body
 
     def on_message(self, headers, body):
         print('on_message %s %s' % (headers, body))

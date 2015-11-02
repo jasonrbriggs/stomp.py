@@ -12,7 +12,7 @@ from stomp.backward import decode, NULL
 # addresses) that refer to the local host (both loopback interface
 # and external interfaces).  This is used for determining
 # preferred targets.
-LOCALHOST_NAMES = [ "localhost", "127.0.0.1" ]
+LOCALHOST_NAMES = ["localhost", "127.0.0.1"]
 
 try:
     LOCALHOST_NAMES.append(socket.gethostbyname(socket.gethostname()))
@@ -62,6 +62,8 @@ def is_localhost(host_and_port):
     """
     Return 1 if the specified host+port is a member of the 'localhost' list of hosts, 2 if not (predominately used
     as a sort key.
+
+    :param host_and_port: tuple containing host (string) and port (number)
     """
     (host, _) = host_and_port
     if host in LOCALHOST_NAMES:
@@ -131,6 +133,8 @@ def parse_frame(frame):
 def merge_headers(header_map_list):
     """
     Helper function for combining multiple header maps into one.
+
+    :param header_map_list: list of maps
     """
     headers = {}
     for header_map in header_map_list:
@@ -154,14 +158,16 @@ def calculate_heartbeats(shb, chb):
         x = max(cx, int(sy))
     if cy != 0 and sx != '0':
         y = max(cy, int(sx))
-    return (x, y)
+    return x, y
 
 
 def convert_frame_to_lines(frame):
     """
     Convert a frame to a list of lines separated by newlines.
+
+    :param frame: the Frame object to convert
     """
-    lines = [ ]
+    lines = []
     if frame.cmd:
         lines.append(frame.cmd)
         lines.append("\n")
@@ -184,6 +190,8 @@ def convert_frame_to_lines(frame):
 def length(s):
     """
     Null (none) safe length function.
+
+    :param s: the string to return length of (None allowed)
     """
     if s is not None:
         return len(s)

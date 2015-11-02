@@ -40,6 +40,7 @@ from stomp.backwardsock import get_socket
 import logging
 log = logging.getLogger('stomp.py')
 
+
 class BaseTransport(listener.Publisher):
     """
     Base class for transport classes providing support for listeners, threading overrides, 
@@ -68,6 +69,7 @@ class BaseTransport(listener.Publisher):
         self.connection_error = False
         self.__receipts = {}
         self.__wait_on_receipt = wait_on_receipt
+        self.current_host_and_port = None
 
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
@@ -86,6 +88,8 @@ class BaseTransport(listener.Publisher):
         Override for thread creation. Use an alternate threading library by
         setting this to a function with a single argument (which is the receiver loop callback).
         The thread which is returned should be started (ready to run)
+
+        :param create_thread_fc: single argument function for creating a thread
         """
         self.create_thread_fc = create_thread_fc
 
@@ -197,7 +201,8 @@ class BaseTransport(listener.Publisher):
 
         rtn = None
         for listener in self.listeners.values():
-            if not listener: continue
+            if not listener:
+                continue
             if not hasattr(listener, 'on_%s' % frame_type):
                 log.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
@@ -228,6 +233,8 @@ class BaseTransport(listener.Publisher):
     def transmit(self, frame):
         """
         Convert a frame object to a frame string and transmit to the server.
+
+        :param frame: the Frame object to transmit
         """
         for listener in self.listeners.values():
             if not listener: continue
@@ -249,6 +256,8 @@ class BaseTransport(listener.Publisher):
     def send(self, encoded_frame):
         """
         Send an encoded frame over this transport (to be implemented in subclasses)
+
+        :param encoded_frame: a Frame object which has been encoded for transmission
         """
         pass
 
@@ -270,9 +279,16 @@ class BaseTransport(listener.Publisher):
         """
         pass
 
+    def disconnect_socket(self):
+        """
+        Disconnect the socket.
+        """
+
     def wait_for_connection(self, timeout=None):
         """
         Wait until we've established a connection with the server.
+
+        :param timeout: how long to wait
         """
         if timeout is not None:
             wait_time = timeout / 10.0
@@ -338,7 +354,7 @@ class BaseTransport(listener.Publisher):
                 break
             elif c == b'\x0a':
                 # heartbeat (special case)
-                return [c,]
+                return [c, ]
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
@@ -351,7 +367,7 @@ class BaseTransport(listener.Publisher):
                     frame = self.__recvbuf[0:pos]
                     preamble_end = frame.find(b'\n\n')
                     if preamble_end >= 0:
-                        content_length_match = Transport.__content_length_re.search(decode(frame[0:preamble_end]))
+                        content_length_match = BaseTransport.__content_length_re.search(decode(frame[0:preamble_end]))
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
                             content_offset = preamble_end + 2
@@ -377,7 +393,8 @@ class BaseTransport(listener.Publisher):
 
 class Transport(BaseTransport):
     """
-    Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of the protocol.
+    Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of
+    the protocol.
     
     :param host_and_ports: a list of (host, port) tuples.
     :param prefer_localhost: if True and the local host is mentioned in the (host,
@@ -448,14 +465,16 @@ class Transport(BaseTransport):
         sorted_host_and_ports.extend(host_and_ports)
 
         #
-        # If localhost is preferred, make sure all (host, port) tuples that refer to the local host come first in the list
+        # If localhost is preferred, make sure all (host, port) tuples that refer to the local host come first in
+        # the list
         #
         if prefer_localhost:
             sorted_host_and_ports.sort(key=utils.is_localhost)
 
         #
-        # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port) tuple
-        # referring to a local host, add an entry with the host name replaced by 127.0.0.1 if it doesn't exist already
+        # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port)
+        # tuple referring to a local host, add an entry with the host name replaced by 127.0.0.1 if it doesn't
+        # exist already
         #
         loopback_host_and_ports = []
         if try_loopback_connect:
@@ -463,7 +482,7 @@ class Transport(BaseTransport):
                 if utils.is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
                     if (not ("127.0.0.1", port) in sorted_host_and_ports
-                        and not ("localhost", port) in sorted_host_and_ports):
+                            and not ("localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
         #
@@ -546,7 +565,6 @@ class Transport(BaseTransport):
                 log.warn("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
 
-
     def send(self, encoded_frame):
         if self.socket is not None:
             try:
@@ -573,7 +591,6 @@ class Transport(BaseTransport):
                 raise exception.InterruptedException()
             raise
 
-
     def cleanup(self):
         """
         Close the socket and clear the current host and port details.
@@ -584,7 +601,6 @@ class Transport(BaseTransport):
             pass # ignore errors when attempting to close socket
         self.socket = None
         self.current_host_and_port = None
-
 
     def __enable_keepalive(self):
         def try_setsockopt(sock, name, fam, opt, val):
@@ -740,7 +756,6 @@ class Transport(BaseTransport):
                                                 cert_validator=cert_validator,
                                                 ssl_version=ssl_version)
 
-
     def __need_ssl(self, host_and_port=None):
         """
         Whether current host needs SSL or not.
@@ -749,7 +764,6 @@ class Transport(BaseTransport):
             host_and_port = self.current_host_and_port
 
         return host_and_port in self.__ssl_params
-
 
     def get_ssl(self, host_and_port=None):
         """

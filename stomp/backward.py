@@ -6,15 +6,17 @@ Basically where we have functions which differ between python 2 and 3, we provid
 and then Python-specific versions in backward2 and backward3.
 """
 
-if sys.hexversion >= 0x03000000: # Python 3+
+if sys.hexversion >= 0x03000000:  # Python 3+
     from stomp.backward3 import *
-else: # Python 2
+else:  # Python 2
     from stomp.backward2 import *
 
 
 def get_errno(e):
     """
     Return the errno of an exception, or the first argument if errno is not available.
+
+    :param e: the exception object
     """
     try:
         return e.errno
