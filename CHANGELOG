@@ -1,5 +1,7 @@
 Version 4.1.8
-
+ 
+ * Fix missing import (https://github.com/jasonrbriggs/stomp.py/issues/61)
+ 
 
 Version 4.1.7 
 
