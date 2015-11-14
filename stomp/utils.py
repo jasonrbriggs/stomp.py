@@ -17,7 +17,9 @@ def parse_headers(lines, offset=0):
     for header_line in lines[offset:]:
         header_match = HEADER_LINE_RE.match(header_line)
         if header_match:
-            headers[header_match.group('key')] = header_match.group('value')
+            key = header_match.group('key')
+            if key not in headers:
+                headers[key] = header_match.group('value')
     return headers
 
 def parse_frame(frame):
