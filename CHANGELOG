@@ -1,3 +1,15 @@
+Version 3.1.4 - Jul 2012
+
+ * Add receipt header to disconnect frame if not already present on a 1.1 connection
+
+
+Version 3.1.3 - May 2012
+
+ * Fix signature on override_threading method
+ * Fix for duplicate header handling
+ * Minor fix for version var
+
+
 Version 3.1.1 - Feb 2012
 
  * Fix for encoding problems (issue #34) [Jayson Vantuyl]

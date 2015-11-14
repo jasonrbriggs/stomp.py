@@ -533,13 +533,15 @@ class Connection(object):
         """
         Send a DISCONNECT frame to finish a connection
         """
+        if self.version >= 1.1 and 'receipt' not in headers:
+            headers['receipt'] = str(uuid.uuid4())
         try:
             self.__send_frame_helper('DISCONNECT', '', utils.merge_headers([self.__connect_headers, headers, keyword_headers]), [ ])
         except exception.NotConnectedException:
             _, e, _ = sys.exc_info()
             self.disconnect_socket()
             raise e
-        if self.version >= 1.1 and 'receipt' in headers:
+        if 'receipt' in headers:
             self.__disconnect_receipt = headers['receipt']
         else:
             self.disconnect_socket()
@@ -770,7 +772,7 @@ class Connection(object):
             sleep_time = send_sleep
         else:
             # sleep is the GCD of the send and receive times
-            sleep_time = gcd(send_sleep, receive_sleep) / 2
+            sleep_time = gcd(send_sleep, receive_sleep) / 2.0
             
         send_time = time.time()
         receive_time = time.time()

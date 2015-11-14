@@ -154,7 +154,10 @@ class StompCLI(Cmd, ConnectionListener):
         ''' % m)
      
     def do_quit(self, args):
-        self.conn.stop()
+        try:
+            self.conn.stop()
+        except:
+            pass
         sys.exit(0)
     do_exit = do_quit
     do_EOF = do_quit
