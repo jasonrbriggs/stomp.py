@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.split(__file__)[0])
 
 import connect, listener, exception
 
-__version__ = (3, 1, 4)
+__version__ = (3, 1, 6)
 Connection = connect.Connection
 ConnectionListener = listener.ConnectionListener
 StatsListener = listener.StatsListener

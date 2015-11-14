@@ -1,3 +1,19 @@
+Version 3.1.6 - Sep 2013
+
+ * Integrate fix for threading primitives issue (http://code.google.com/p/stomppy/issues/detail?id=53)
+ * Add vhost constructor arg 
+ * Change cli to __main__ (so you can run `python stomp` rather than `python stomp/cli.py`)
+ * Integrate interrupt patch (http://code.google.com/p/stomppy/issues/detail?id=48)
+ * Change test hosts and ports so that they're provided from the setup.py file
+ 
+
+
+Version 3.1.5 - Aug 2013
+
+ * Fix for gcd division error (http://code.google.com/p/stomppy/issues/detail?id=44)
+ * Fix bytes incompatibility issue in Python 3.3 (http://code.google.com/p/stomppy/issues/detail?id=51)
+
+
 Version 3.1.4 - Jul 2012
 
  * Add receipt header to disconnect frame if not already present on a 1.1 connection

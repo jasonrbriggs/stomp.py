@@ -453,7 +453,7 @@ def main():
 
 
 #
-# command line testing
+# command line access
 #
 if __name__ == '__main__':
     main()

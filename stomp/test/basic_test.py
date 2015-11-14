@@ -1,16 +1,18 @@
+import os
+import signal
 import time
 import unittest
 
 import stomp
 from stomp import exception
 
-from testutils import TestListener, TestStompServer
+from testutils import *
 
 
 class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)], 'admin', 'password')
+        conn = stomp.Connection(get_standard_host(), 'admin', 'password')
         listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
@@ -20,7 +22,7 @@ class TestBasicSend(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.stop()
        
     def testbasic(self):
         self.conn.subscribe(destination='/queue/test', ack='auto')
@@ -70,7 +72,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
         
     def testtimeout(self):
-        conn = stomp.Connection([('127.0.0.2', 60000)], timeout=5, reconnect_attempts_max=1)
+        conn = stomp.Connection([('203.0.113.100', 60000)], timeout=5, reconnect_attempts_max=1)
         conn.set_listener('', self.listener)
         
         try:
@@ -85,7 +87,7 @@ class TestBasicSend(unittest.TestCase):
     def testssl(self):
         try:
             import ssl
-            conn = stomp.Connection([('127.0.0.1', 61614), ('localhost', 61614)], 'admin', 'password', use_ssl = True)
+            conn = stomp.Connection(get_standard_ssl_host(), 'admin', 'password', use_ssl = True)
             conn.set_listener('', self.listener)
             conn.start()
             conn.connect(wait=True)
@@ -102,3 +104,30 @@ class TestBasicSend(unittest.TestCase):
         except:
             pass
 
+    def testchildinterrupt(self):
+        def childhandler(signum, frame):
+            print("received child signal")
+ 
+        oldhandler = signal.signal(signal.SIGCHLD, childhandler)
+ 
+        self.conn.subscribe(destination='/queue/test', ack='auto')
+ 
+        time.sleep(3)
+ 
+        self.conn.send('this is an interrupt test 1', destination='/queue/test')
+ 
+        print("causing signal by starting child process")
+        os.system("sleep 1")
+ 
+        time.sleep(1)
+ 
+        signal.signal(signal.SIGCHLD, oldhandler)
+        print("completed signal section")
+ 
+        self.conn.send('this is an interrupt test 2', destination='/queue/test')
+ 
+        time.sleep(3)
+ 
+        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
+        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assert_(self.conn.is_connected(), 'should still be connected to STOMP provider')

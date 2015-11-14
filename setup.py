@@ -11,6 +11,20 @@ except:
 
 import stomp
 
+
+def set_environ(name, value):
+    if name not in os.environ:
+        os.environ[name] = value
+
+set_environ('STD_HOST', '192.168.1.92')
+set_environ('STD_PORT', '62613')
+set_environ('STD_SSL_PORT', '62614')
+set_environ('RABBITMQ_HOST', '192.168.1.92')
+set_environ('RABBITMQ_PORT', '61613')
+set_environ('STOMPSERVER_HOST', '192.168.1.92')
+set_environ('STOMPSERVER_PORT', '63613')
+
+
 class TestCommand(Command):
     user_options = [ ('test=', 't', 'specific test to run') ]
 
@@ -48,6 +62,7 @@ def version():
     for num in stomp.__version__:
         s.append(str(num))
     return '.'.join(s)
+
 
 setup(
     name = 'stomp.py',

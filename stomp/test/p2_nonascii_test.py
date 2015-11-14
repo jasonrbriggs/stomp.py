@@ -1,7 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-
-
 import time
 import unittest
 
@@ -9,12 +7,12 @@ import base64
 
 import stomp
 
-from testutils import TestListener, TestStompServer
+from testutils import *
 
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)], 'admin', 'password')
+        conn = stomp.Connection(get_standard_host(), 'admin', 'password')
         listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
@@ -24,7 +22,7 @@ class TestNonAsciiSend(unittest.TestCase):
         
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect()
+            self.conn.stop()
        
     def test_send_nonascii(self):
         self.conn.subscribe(destination='/queue/test', ack='auto', id="1")

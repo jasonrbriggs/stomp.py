@@ -11,7 +11,7 @@ class TestRabbitMQSend(unittest.TestCase):
         pass
 
     def testbasic(self):
-        conn = stomp.Connection(get_rabbitmq_host(), 'guest', 'guest')
+        conn = stomp.Connection(get_stompserver_host())
         listener = TestListener()
         conn.set_listener('', listener)
         conn.start()

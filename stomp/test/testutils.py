@@ -1,9 +1,27 @@
-from stomp import ConnectionListener
+import os
 import socket
 import threading
-
 import logging
 log = logging.getLogger('testutils.py')
+
+from stomp import ConnectionListener
+
+
+def get_standard_host():
+    return [(os.environ['STD_HOST'], int(os.environ['STD_PORT']))]
+
+    
+def get_standard_ssl_host():
+    return [(os.environ['STD_HOST'], int(os.environ['STD_SSL_PORT']))]
+
+
+def get_rabbitmq_host():
+    return [(os.environ['RABBITMQ_HOST'], int(os.environ['RABBITMQ_PORT']))]
+    
+
+def get_stompserver_host():
+    return [(os.environ['STOMPSERVER_HOST'], int(os.environ['STOMPSERVER_PORT']))]
+    
 
 class TestListener(ConnectionListener):
     def __init__(self):
@@ -34,6 +52,23 @@ class TestListener(ConnectionListener):
     def on_heartbeat_timeout(self):
         log.debug('received heartbeat timeout')
         self.heartbeat_timeouts = self.heartbeat_timeouts + 1
+
+
+class PrintingListener(ConnectionListener):
+    def on_error(self, headers, message):
+        print('received an error: %s [%s]' % (message, headers))
+
+    def on_connecting(self, host_and_port):
+        print('connecting: %s %s' % (host_and_port[0], host_and_port[1]))
+
+    def on_disconnected(self):
+        print('disconnected')
+
+    def on_message(self, headers, message):
+        print('received a message: %s [%s]' % (message, headers))
+
+    def on_heartbeat_timeout(self):
+        log.debug('received heartbeat timeout')
 
 
 class TestStompServer(object):
