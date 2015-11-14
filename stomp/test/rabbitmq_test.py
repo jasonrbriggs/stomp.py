@@ -1,8 +1,9 @@
+import time
 import unittest
 
 import stomp
 
-from stomp.test.testutils import *
+from testutils import TestListener
 
 class TestRabbitMQSend(unittest.TestCase):
 
@@ -10,17 +11,17 @@ class TestRabbitMQSend(unittest.TestCase):
         pass
 
     def testbasic(self):
-        conn = stomp.Connection11(get_rabbitmq_host(), 'guest', 'guest')
-        listener = TestListener('123')
+        conn = stomp.Connection([('0.0.0.0', 61613), ('127.0.0.1', 61613)], 'guest', 'guest')
+        listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
         conn.connect(wait=True)
-        conn.subscribe(destination='/queue/test', id=1, ack='auto')
+        conn.subscribe(destination='/queue/test', ack='auto')
 
-        conn.send(body='this is a test', destination='/queue/test', receipt='123')
+        conn.send('this is a test', destination='/queue/test')
 
-        listener.wait_on_receipt()
-        conn.disconnect(receipt=None)
+        time.sleep(2)
+        conn.disconnect()
 
         self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(listener.messages == 1, 'should have received 1 message')

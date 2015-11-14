@@ -1,49 +1,44 @@
-import os
-import signal
 import time
 import unittest
 
 import stomp
 from stomp import exception
 
-from stomp.test.testutils import *
+from testutils import TestListener, TestStompServer
 
 
 class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host())
-        listener = TestListener('123')
+        conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)], 'admin', 'password')
+        listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
-        conn.connect('admin', 'password', wait=True)
+        conn.connect(wait=True)
         self.conn = conn
         self.listener = listener
-        self.timestamp = time.strftime('%Y%m%d%H%M%S')
-
+        
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect(receipt=None)
+            self.conn.disconnect()
+       
+    def testbasic(self):
+        self.conn.subscribe(destination='/queue/test', ack='auto')
 
-    def test_basic(self):
-        queuename = '/queue/test1-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='auto')
+        self.conn.send('this is a test', destination='/queue/test')
 
-        self.conn.send(body='this is a test', destination=queuename, receipt='123')
-
-        self.listener.wait_on_receipt()
+        time.sleep(3)
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
-
-    def test_commit(self):
-        queuename = '/queue/test2-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='auto')
+    
+    def testcommit(self):
+        self.conn.subscribe(destination='/queue/test', ack='auto')
         trans_id = self.conn.begin()
-        self.conn.send(body='this is a test1', destination=queuename, transaction=trans_id)
-        self.conn.send(body='this is a test2', destination=queuename, transaction=trans_id)
-        self.conn.send(body='this is a test3', destination=queuename, transaction=trans_id, receipt='123')
+        self.conn.send('this is a test1', destination='/queue/test', transaction=trans_id)
+        self.conn.send('this is a test2', destination='/queue/test', transaction=trans_id)
+        self.conn.send('this is a test3', destination='/queue/test', transaction=trans_id)
 
         time.sleep(3)
 
@@ -51,18 +46,17 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
 
         self.conn.commit(transaction = trans_id)
-        self.listener.wait_on_receipt()
+        time.sleep(3)
 
         self.assert_(self.listener.messages == 3, 'should have received 3 messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-    def test_abort(self):
-        queuename = '/queue/test3-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='auto')
+    def testabort(self):
+        self.conn.subscribe(destination='/queue/test', ack='auto')
         trans_id = self.conn.begin()
-        self.conn.send(body='this is a test1', destination=queuename, transaction=trans_id)
-        self.conn.send(body='this is a test2', destination=queuename, transaction=trans_id)
-        self.conn.send(body='this is a test3', destination=queuename, transaction=trans_id)
+        self.conn.send('this is a test1', destination='/queue/test', transaction=trans_id)
+        self.conn.send('this is a test2', destination='/queue/test', transaction=trans_id)
+        self.conn.send('this is a test3', destination='/queue/test', transaction=trans_id)
 
         time.sleep(3)
 
@@ -74,11 +68,11 @@ class TestBasicSend(unittest.TestCase):
 
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
-
-    def test_timeout(self):
-        conn = stomp.Connection([('192.0.2.0', 60000)], timeout=5, reconnect_attempts_max=1)
+        
+    def testtimeout(self):
+        conn = stomp.Connection([('127.0.0.2', 60000)], timeout=5, reconnect_attempts_max=1)
         conn.set_listener('', self.listener)
-
+        
         try:
             ms = time.time()
             conn.start()
@@ -88,134 +82,23 @@ class TestBasicSend(unittest.TestCase):
             ms = time.time() - ms
             self.assert_(ms > 5.0, 'connection timeout should have been at least 5 seconds')
 
-    def test_childinterrupt(self):
-        def childhandler(signum, frame):
-            print("received child signal")
-
-        oldhandler = signal.signal(signal.SIGCHLD, childhandler)
-
-        queuename = '/queue/test5-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='auto', receipt='123')
-
-        self.listener.wait_on_receipt()
-
-        self.conn.send(body='this is an interrupt test 1', destination=queuename)
-
-        print("causing signal by starting child process")
-        os.system("sleep 1")
-
-        time.sleep(1)
-
-        signal.signal(signal.SIGCHLD, oldhandler)
-        print("completed signal section")
-
-        self.conn.send(body='this is an interrupt test 2', destination=queuename, receipt='123')
-
-        self.listener.wait_on_receipt()
-
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
-        self.assert_(self.conn.is_connected(), 'should still be connected to STOMP provider')
-
-    def test_clientack(self):
-        queuename = '/queue/testclientack-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='client')
-
-        self.conn.send(body='this is a test', destination=queuename, receipt='123')
-
-        self.listener.wait_on_receipt()
-
-        (headers, _) = self.listener.get_latest_message()
-
-        message_id = headers['message-id']
-        subscription = headers['subscription']
-
-        self.conn.ack(message_id, subscription)
-
-    def test_clientnack(self):
-        queuename = '/queue/testclientnack-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='client')
-
-        self.conn.send(body='this is a test', destination=queuename, receipt='123')
-
-        self.listener.wait_on_receipt()
-
-        (headers, _) = self.listener.get_latest_message()
-
-        message_id = headers['message-id']
-        subscription = headers['subscription']
-
-        self.conn.nack(message_id, subscription)
-
-    def test_specialchars(self):
-        queuename = '/queue/testspecialchars-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='client')
-
-        hdrs = {
-            'special-1' : 'test with colon : test',
-            'special-2' : 'test with backslash \\ test',
-            'special-3' : 'test with newline \n'
-        }
-
-        self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
-
-        self.listener.wait_on_receipt()
-
-        (headers, _) = self.listener.get_latest_message()
-
-        _ = headers['message-id']
-        _ = headers['subscription']
-        self.assert_('special-1' in headers)
-        self.assertEqual('test with colon : test', headers['special-1'])
-        self.assert_('special-2' in headers)
-        self.assertEqual('test with backslash \\ test', headers['special-2'])
-        self.assert_('special-3' in headers)
-        self.assertEqual('test with newline \n', headers['special-3'])
-
-
-class TestConnectionErrors(unittest.TestCase):
-    def test_connect_wait_error(self):
-        conn = stomp.Connection(get_standard_host())
-        conn.start()
+    def testssl(self):
         try:
-            conn.connect('invalid', 'user', True)
-            self.fail("Shouldn't happen")
+            import ssl
+            conn = stomp.Connection([('127.0.0.1', 61614), ('localhost', 61614)], 'admin', 'password', use_ssl = True)
+            conn.set_listener('', self.listener)
+            conn.start()
+            conn.connect(wait=True)
+            conn.subscribe(destination='/queue/test', ack='auto')
+
+            conn.send('this is a test', destination='/queue/test')
+
+            time.sleep(3)
+            conn.disconnect()
+
+            self.assert_(self.listener.connections > 1, 'should have received 1 connection acknowledgement')
+            self.assert_(self.listener.messages == 1, 'should have received 1 message')
+            self.assert_(self.listener.errors == 0, 'should not have received any errors')
         except:
             pass
 
-    def test_connect_nowait_error(self):
-        conn = stomp.Connection(get_standard_host())
-        conn.start()
-        try:
-            conn.connect('invalid', 'user', False)
-            self.assert_(conn.is_connected() == False, 'Should not be connected')
-        except:
-            self.fail("Shouldn't happen")
-
-
-class TestIPV6Send(unittest.TestCase):
-    def setUp(self):
-        conn = stomp.Connection11(get_ipv6_host())
-        listener = TestListener('123')
-        conn.set_listener('', listener)
-        conn.start()
-        conn.connect('admin', 'password', wait=True)
-        self.conn = conn
-        self.listener = listener
-        self.timestamp = time.strftime('%Y%m%d%H%M%S')
-
-    def tearDown(self):
-        if self.conn:
-            self.conn.disconnect(receipt=None)
-
-    def test_ipv6(self):
-        queuename = '/queue/testipv6-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, id=1, ack='auto')
-
-        self.conn.send(body='this is a test', destination=queuename, receipt='123')
-
-        self.listener.wait_on_receipt()
-
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')

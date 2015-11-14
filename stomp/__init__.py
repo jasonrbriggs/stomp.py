@@ -1,54 +1,21 @@
-"""stomp.py provides connectivity to a message broker supporting the STOMP protocol. Protocol versions 1.0, 1.1 and 1.2 are supported.
+"""
+This provides connectivity to a message broker supporting the STOMP protocol. Both protocol
+versions 1.0 and 1.1 are supported.
 
-See the GITHUB project page for more information.
+See the project page for more information.
 
 Author: Jason R Briggs
 License: http://www.apache.org/licenses/LICENSE-2.0
-Project Page: https://github.com/jasonrbriggs/stomp.py
-
+Project Page: http://code.google.com/p/stomppy
 """
 
-import stomp.connect as connect, stomp.listener as listener
+import os
+import sys
+sys.path.insert(0, os.path.split(__file__)[0])
 
-__version__ = (4, 1, 9)
+import connect, listener, exception
 
-##
-# Alias for STOMP 1.0 connections.
-#
-Connection10 = connect.StompConnection10
-StompConnection10 = Connection10
-
-##
-# Alias for STOMP 1.1 connections.
-#
-Connection11 = connect.StompConnection11
-StompConnection11 = Connection11
-
-##
-# Alias for STOMP 1.2 connections.
-#
-Connection12 = connect.StompConnection12
-StompConnection12 = Connection12
-
-##
-# Default connection alias (STOMP 1.2).
-#
-Connection = connect.StompConnection11
-
-##
-# Access to the default connection listener.
-#
+__version__ = __version__ = (3, 1, 1)
+Connection = connect.Connection
 ConnectionListener = listener.ConnectionListener
-
-##
-# Access to the stats listener.
-#
 StatsListener = listener.StatsListener
-
-##
-# Access to the 'waiting' listener.
-WaitingListener = listener.WaitingListener
-
-##
-# Access to the printing listener
-PrintingListener = listener.PrintingListener

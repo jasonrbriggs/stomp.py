@@ -1,217 +1,3 @@
-Version 4.1.9
-
- *
-
-
-Version 4.1.8
- 
- * Fix missing import (https://github.com/jasonrbriggs/stomp.py/issues/61)
- * Code tidy up
- 
-
-Version 4.1.7 
-
- * Merge patches from Ville S:
-    * https://github.com/jasonrbriggs/stomp.py/pull/56
-    * https://github.com/jasonrbriggs/stomp.py/pull/57
- * Update source to tidy up documentation
- * Add sphinx generated documentation
- * Fix keepalive bug (https://github.com/jasonrbriggs/stomp.py/issues/60)
-
-
-Version 4.1.6 - Aug 2015
-
- * Generic exception catch on heartbeat send
- * Fix timeout (https://github.com/jasonrbriggs/stomp.py/issues/55)
- 
-
-Version 4.1.5 - Aug 2015
-
- * Remove incorrect \r escaping from 1.1 protocol
- * Merge patch from Ville S:
-     * https://github.com/jasonrbriggs/stomp.py/pull/52
-
-
-Version 4.1.4 - Aug 2015
-
- * Add --ssl option to command line tool
- * Disable CTRL-C in command line tool (when in interactive mode)
- * Add shutdown message to cli
-
-
-Version 4.1.3 - Aug 2015
-
- * Merge patches from Ville S:
-    * https://github.com/jasonrbriggs/stomp.py/pull/48 (Auto-send content-length when message body is present)
-    * https://github.com/jasonrbriggs/stomp.py/pull/49 (Unescape header names in addition to values)
-    * https://github.com/jasonrbriggs/stomp.py/pull/50 (Remove unnecessary code)
-
-
-Version 4.1.2 - Jul 2015
-
- * Merge patch from Ville S to fix coverage in setup (https://github.com/jasonrbriggs/stomp.py/pull/44)
- * Add Ville's change for None-check in backward3.decode (plus unit tests)
-
-
-Version 4.1.1 - Jul 2015
-
- * Merge patches from Ville S covering invalid module references for colors in the CLI, fixing an attribute error and correctly
-   invoking the python exe using sys.executable (https://github.com/jasonrbriggs/stomp.py/pull/41,
-   https://github.com/jasonrbriggs/stomp.py/pull/42, https://github.com/jasonrbriggs/stomp.py/pull/43)
-
-
-Version 4.1.0 - Jul 2015
-
- * Merge patch from George G (https://github.com/jasonrbriggs/stomp.py/pull/31) to fix binary message handling. Note that current
-   text-only behaviour is still the default (auto_decode=True on the connection), but will be switched to false in a future
-   release, before ultimately being removed.
- * Merge code cleanup patches from Ville S (https://github.com/jasonrbriggs/stomp.py/pull/35,
-   https://github.com/jasonrbriggs/stomp.py/pull/36)
- * Merge another code cleanup patch from Ville E (https://github.com/jasonrbriggs/stomp.py/pull/37)
-
-
-Version 4.0.16 - Apr 2015
-
- * Catch attribute error in SSL import (https://github.com/jasonrbriggs/stomp.py/issues/30)
- * Set default ssl version to TLSv1
-
-
-Version 4.0.15 - Mar 2015
-
- * Fix for type error in transport logging (https://github.com/jasonrbriggs/stomp.py/issues/29)
-
-
-Version 4.0.14 - Mar 2015
-
- * refactor transport to make providing new transports easier
- * fix bug in listener (https://github.com/jasonrbriggs/stomp.py/issues/26)
- * Merge Andre's logging changes
- * fix for issue #23 (https://github.com/jasonrbriggs/stomp.py/issues/23), stop stomp.py inserting into the path
-
-
-Version 4.0.12 - Jun 2014
-
- * Merge Chaskiel's patch for defaulting receipt headers
- * Fix defaulting for host_and_ports list
- * Fix exception handling in receiver loop
- * Tidy up logging
-
-
-Version 4.0.11 - Feb 2014
-
- * Merge Rafael's patches for specifying ssl settings as a separate method rather than constructor args
-   - https://github.com/jasonrbriggs/stomp.py/pull/6
-   - https://github.com/jasonrbriggs/stomp.py/pull/10
- * Fix for header escaping (as per https://github.com/jasonrbriggs/stomp.py/issues/9)
- * Move ip/ports for tests into setup.ini
-
-
-Version 4.0.10 - Jan 2014
-
- * Fix package info on setup (missing adapter package causes problems for command line client
-    - see https://github.com/jasonrbriggs/stomp.py/issues/7 for more info
-
-
-Version 4.0.9 - Jan 2014
-
- * Fix minor issue with backward uuid func
- * Fixes for error number handling
- * Fix for message listener return values
-
-
-Version 4.0.8 - Jan 2014
-
- * Fix return on get_listener method (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
-
-
-Version 4.0.7 - Jan 2014
-
- * Fix problem with heartbeat listener (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
- * Add alternate aliases for the connection classes
- * Add initial version multicast adapter (providing an interface to use the stomp.py API and send messages via multicast)
- 	- note: work in progress
-
-
-Version 4.0.6 - Dec 2013
-
- * Fix missing headers in connect func
- * Throw ConnectFailedException when a connection fails in the 1.2 protocol - if wait=True is set
-
-
-Version 4.0.5 - Nov 2013
-
- * Add command-line subscription listener. So you can do:
-     > stomp -H localhost -P 61613 -L /queue/test
- * Add verbose option to command-line client (verbose "on" by default, if "off", headers aren't written to stdout)
- * Fix problem with connect wait (should not wait if the connection fails)
- * Throw exception when the connect fails (only if wait=True)
- * Add PrintingListener (useful for debugging)
-
-
-Version 4.0.4 - Nov 2013
-
- * Fix ack/nack function inconsistencies in each protocol version (as per https://github.com/jasonrbriggs/stomp.py/issues/1)
-
-
-Version 4.0.3 - Nov 2013
-
- * Add script for cmd line access (so you can run `stomp -H localhost -P 61613` rather than python $PATH_TO_STOMP/stomp ....)
-
-
-Version 4.0.2 - Oct 2013
-
- * Fix minor error with 1.2 connections. Add basic unit tests for 1.0, and 1.2
-
-
-Version 4.0.1 - Oct 2013
-
- * Remove the 'transform' method/functionality, as this never went into the official spec. Clients who still want this should
-   implement themselves, using a listener (see https://github.com/jasonrbriggs/stomp.py/blob/master/stomp/test/misc_test.py for
-   an example)
- * Add support for STOMP 1.2 line endings
- * Enforce "host" header on 1.2 connect requests (note: should be enforced on 1.1 connections, but it seems rabbitmq connections
-   fail if host is set)
-
-
-Version 4.0.0 - Oct 2013
-
- * Separate protocol from transport mechanism, to improve the ability to support multiple protocol versions. Note: constructor
-   args are changing accordingly.
- * Add initial support for STOMP 1.2
- * Moved username and passcode params out of constructor and into the connect method. The basic connection process is therefore now:
-
-     > conn = stomp.Connection([('localhost', 61613)])
-     > conn.start()
-     > conn.connect('admin', 'password', wait=True)
-
-
-Version 3.1.6 - Sep 2013
-
- * Integrate fix for threading primitives issue (http://code.google.com/p/stomppy/issues/detail?id=53)
- * Add vhost constructor arg
- * Change cli to __main__ (so you can run `python stomp` rather than `python stomp/cli.py`)
- * Integrate interrupt patch (http://code.google.com/p/stomppy/issues/detail?id=48)
- * Change test hosts and ports so that they're provided from the setup.py file
-
-
-Version 3.1.5 - Aug 2013
-
- * Fix for gcd division error (http://code.google.com/p/stomppy/issues/detail?id=44)
- * Fix bytes incompatibility issue in Python 3.3 (http://code.google.com/p/stomppy/issues/detail?id=51)
-
-
-Version 3.1.4 - Jul 2012
-
- * Add receipt header to disconnect frame if not already present on a 1.1 connection
-
-
-Version 3.1.3 - May 2012
-
- * Fix signature on override_threading method
- * Fix for duplicate header handling
- * Minor fix for version var
-
-
 Version 3.1.1 - Feb 2012
 
  * Fix for encoding problems (issue #34) [Jayson Vantuyl]
@@ -234,6 +20,7 @@ Version 3.1.0 (beta 3) - Oct 2011
   * Add Linux TCP-Keepalive functionality, provided by Jayson Vantuyl
 
 
+
 Version 3.1.0 (beta 2) - Sep 2011
 
   * Various bug fixes in 1.1 code
@@ -242,11 +29,13 @@ Version 3.1.0 (beta 2) - Sep 2011
   * Updated unit test code for Apache Apollo
 
 
+
 Version 3.1.0 (beta 1) - Sep 2011
 
   * Initial support for STOMP Protocol 1.1
   * New version of CLI
   * Added disconnect receipt functionality
+
 
 
 Version 3.0.4 - Sep 2011
@@ -258,10 +47,12 @@ Version 3.0.4 - Sep 2011
   * Added facility to not send disconnect frame on disconnect (argument to disconnect function)
 
 
+
 Version 3.0.3 - Jan 2011
 
   * Fixes for python 2.4
   * Added config.dox to distribution
+
 
 
 Version 3.0.2 beta - Jun 2010
@@ -269,7 +60,18 @@ Version 3.0.2 beta - Jun 2010
   * Fix for localhost connection problem (issue #17)
 
 
+
 Version 3.0.1 beta - Apr 2010
 
   * Fixes for Oracle AQ bridge for Python3
   * Change to debian style changelog
+
+
+
+NOTES/ATTRIBUTION
+  * patch from Andreas Schobel
+  * patches from Julian Scheid of Rising Sun Pictures (http://open.rsp.com.au)
+  * patch from Fernando
+  * patches from Eugene Strulyov
+  * patch for SSL protocol from 'jmgdaniec'
+  * patches for Linux TCP Keepalive, provided by Jayson Vantuyl

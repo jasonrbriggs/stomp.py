@@ -1,8 +1,6 @@
-"""
-Python2-specific versions of various functions used by stomp.py
-"""
-
-NULL = '\x00'
+#
+# Functions for backwards compatibility
+#
 
 def input_prompt(prompt):
     """
@@ -10,34 +8,29 @@ def input_prompt(prompt):
     """
     return raw_input(prompt)
 
-
 def decode(byte_data):
-    """
-    Decode the byte data to a string - in the case of this Py2 version, we can't really do anything (Py3 differs).
-    """
     return byte_data # no way to know if it's unicode or not, so just pass through unmolested
 
-
 def encode(char_data):
-    """
-    Encode the parameter as a byte string.
-    """
     if type(char_data) is unicode:
         return char_data.encode('utf-8')
     else:
         return char_data
 
+def hasbyte(byte, byte_data):
+    return chr(byte) in byte_data
 
-def pack(pieces=[]):
-    """
-    Join a list of strings together (note: py3 version differs)
-    """
+def pack(pieces):
     return ''.join(pieces)
 
+NULL = '\x00'
 
-def join(chars=[]):
-    """
-    Join a list of characters into a string.
-    """
+def join(chars):
     return ''.join(chars)
 
+def getheader(headers, key):
+    return headers.getheader(key)
+
+def wrap_stringio(sio):
+    import codecs
+    return codecs.getwriter("utf8")(sio)        

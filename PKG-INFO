@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: stomp.py
+Version: 3.1.1
+Summary: Python STOMP client, supporting versions 1.0 and 1.1 of the protocol
+Home-page: http://code.google.com/p/stomppy
+Author: Jason R Briggs
+Author-email: jasonrbriggs@gmail.com
+License: Apache
+Description: UNKNOWN
+Platform: any

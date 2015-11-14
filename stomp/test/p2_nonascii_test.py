@@ -1,41 +1,43 @@
 # -*- coding: UTF-8 -*-
 
+
+
 import time
 import unittest
 
+import base64
+
 import stomp
 
-from stomp.test.testutils import *
+from testutils import TestListener, TestStompServer
 
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host())
-        listener = TestListener('123')
+        conn = stomp.Connection([('127.0.0.2', 61613), ('localhost', 61613)], 'admin', 'password')
+        listener = TestListener()
         conn.set_listener('', listener)
         conn.start()
-        conn.connect('admin', 'password', wait=True)
+        conn.connect(wait=True)
         self.conn = conn
         self.listener = listener
-        self.timestamp = time.strftime('%Y%m%d%H%M%S')
-
+        
     def tearDown(self):
         if self.conn:
-            self.conn.disconnect(receipt=None)
-
+            self.conn.disconnect()
+       
     def test_send_nonascii(self):
-        queuename = '/queue/p2nonasciitest-%s' % self.timestamp
-        self.conn.subscribe(destination=queuename, ack='auto', id="1")
+        self.conn.subscribe(destination='/queue/test', ack='auto', id="1")
 
         txt = u'марко'
-        self.conn.send(body=txt, destination=queuename, receipt='123')
+        self.conn.send(txt, destination='/queue/test')
 
-        self.listener.wait_on_receipt()
+        time.sleep(3)
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-        (_, msg) = self.listener.get_latest_message()
-        self.assertEquals(stomp.backward.encode(txt), msg)
-
+        msg = self.listener.message_list[0]
+        self.assertEquals(txt, msg.decode('utf-8'))
+        

@@ -1,6 +1,0 @@
-include LICENSE
-include CHANGELOG
-include *.conf
-include *.dox
-include stomp/test/*
-exclude stomp/test/*.pyc

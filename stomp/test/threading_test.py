@@ -9,17 +9,17 @@ import unittest
 
 import stomp
 
-from stomp.test.testutils import *
+from testutils import TestListener
 
 class MQ(object):
     def __init__(self):
-        self.connection = stomp.Connection(get_standard_host())
+        self.connection = stomp.Connection([('localhost', 61613)], 'admin', 'password')
         self.connection.set_listener('', None)
         self.connection.start()
-        self.connection.connect('admin', 'password', wait=True)
+        self.connection.connect(wait=True)
 
     def send(self, topic, msg, persistent='true', retry=False):
-        self.connection.send(destination="/topic/%s" % topic, body=msg,
+        self.connection.send(destination="/topic/%s" % topic, message=msg,
                              persistent=persistent)
 mq = MQ()
 
@@ -48,7 +48,7 @@ class TestThreading(unittest.TestCase):
                                  target=self.make_sender(i))
             t.setDaemon(1)
             self.threads.append(t)
-
+            
     def tearDown(self):
         for t in self.threads:
             if not t.isAlive:
@@ -66,7 +66,7 @@ class TestThreading(unittest.TestCase):
                 break
         print("Dead threads:", len(errs), "of", self.clients)
         etype = {}
-        for ec, _, _ in errs:
+        for ec, ev, tb in errs:
             if ec in etype:
                 etype[ec] = etype[ec] + 1
             else:
@@ -119,3 +119,4 @@ class TestThreading(unittest.TestCase):
             except Full:
                 assert False, "Failed: 'request' queue filled up"
                 print("passed")
+
