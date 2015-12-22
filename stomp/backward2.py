@@ -32,7 +32,7 @@ def pack(pieces=[]):
     """
     Join a list of strings together (note: py3 version differs)
     """
-    return ''.join(pieces)
+    return ''.join(encode(p) for p in pieces)
 
 
 def join(chars=[]):
