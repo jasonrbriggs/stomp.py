@@ -1,6 +1,7 @@
 Version 4.1.9
 
- *
+ * Merge patch from Pavel S:
+     * https://github.com/jasonrbriggs/stomp.py/pull/66
 
 
 Version 4.1.8
