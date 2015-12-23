@@ -132,7 +132,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_DISCONNECT, headers)
 
-    def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
+    def send(self, destination, body, content_type=None, headers={}, suppress_content_length=False, **keyword_headers):
         """
         Send a message to a destination.
         
@@ -140,6 +140,7 @@ class Protocol10(ConnectionListener):
         :param body: the content of the message
         :param content_type: the content type of the message
         :param headers: a map of any additional headers the broker requires
+        :param suppress_content_length: toggle off sending a content_length header
         :param keyword_headers: any additional headers the broker requires
         """
         assert destination is not None, "'destination' is required"
@@ -149,7 +150,7 @@ class Protocol10(ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if body and HDR_CONTENT_LENGTH not in headers:
+        if not suppress_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
@@ -344,7 +345,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_NACK, headers)
 
-    def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
+    def send(self, destination, body, content_type=None, headers={}, suppress_content_length=False, **keyword_headers):
         """
         Send a message to a destination in the messaging system (as per https://stomp.github.io/stomp-specification-1.2.html#SEND)
         
@@ -352,6 +353,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param body: the content of the message
         :param content_type: the MIME type of message 
         :param headers: additional headers to send in the message frame
+        :param suppress_content_length: toggle off sending a content_length header
         :param keyword_headers: any additional headers the broker requires
         """
         assert destination is not None, "'destination' is required"
@@ -361,7 +363,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if body and HDR_CONTENT_LENGTH not in headers:
+        if not suppress_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
