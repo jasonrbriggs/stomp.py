@@ -17,8 +17,9 @@ class Protocol10(ConnectionListener):
     
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
-    def __init__(self, transport):
+    def __init__(self, transport, suppress_content_length=False):
         self.transport = transport
+        self.suppress_content_length = suppress_content_length
         transport.set_listener('protocol-listener', self)
         self.version = '1.0'
 
@@ -149,7 +150,7 @@ class Protocol10(ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if body and HDR_CONTENT_LENGTH not in headers:
+        if not self.suppress_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
@@ -197,9 +198,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
     
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
-    def __init__(self, transport, heartbeats=(0, 0)):
+    def __init__(self, transport, heartbeats=(0, 0), suppress_content_length=False):
         HeartbeatListener.__init__(self, heartbeats)
         self.transport = transport
+        self.suppress_content_length = suppress_content_length
         transport.set_listener('protocol-listener', self)
         self.version = '1.1'
 
@@ -361,7 +363,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if body and HDR_CONTENT_LENGTH not in headers:
+        if not self.suppress_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
@@ -402,8 +404,8 @@ class Protocol12(Protocol11):
     
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
-    def __init__(self, transport, heartbeats=(0, 0)):
-        Protocol11.__init__(self, transport, heartbeats)
+    def __init__(self, transport, heartbeats=(0, 0), suppress_content_length=False):
+        Protocol11.__init__(self, transport, heartbeats, suppress_content_length)
         self.version = '1.2'
 
     def _escape_headers(self, headers):
