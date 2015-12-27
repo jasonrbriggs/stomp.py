@@ -17,8 +17,9 @@ class Protocol10(ConnectionListener):
     
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
-    def __init__(self, transport):
+    def __init__(self, transport, auto_content_length=True):
         self.transport = transport
+        self.auto_content_length = auto_content_length
         transport.set_listener('protocol-listener', self)
         self.version = '1.0'
 
@@ -132,7 +133,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_DISCONNECT, headers)
 
-    def send(self, destination, body, content_type=None, headers={}, suppress_content_length=False, **keyword_headers):
+    def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
         """
         Send a message to a destination.
         
@@ -140,7 +141,6 @@ class Protocol10(ConnectionListener):
         :param body: the content of the message
         :param content_type: the content type of the message
         :param headers: a map of any additional headers the broker requires
-        :param suppress_content_length: toggle off sending a content_length header
         :param keyword_headers: any additional headers the broker requires
         """
         assert destination is not None, "'destination' is required"
@@ -150,7 +150,7 @@ class Protocol10(ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if not suppress_content_length and body and HDR_CONTENT_LENGTH not in headers:
+        if self.auto_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
@@ -198,9 +198,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
     
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
-    def __init__(self, transport, heartbeats=(0, 0)):
+    def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True):
         HeartbeatListener.__init__(self, heartbeats)
         self.transport = transport
+        self.auto_content_length = auto_content_length
         transport.set_listener('protocol-listener', self)
         self.version = '1.1'
 
@@ -345,7 +346,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_NACK, headers)
 
-    def send(self, destination, body, content_type=None, headers={}, suppress_content_length=False, **keyword_headers):
+    def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
         """
         Send a message to a destination in the messaging system (as per https://stomp.github.io/stomp-specification-1.2.html#SEND)
         
@@ -353,7 +354,6 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param body: the content of the message
         :param content_type: the MIME type of message 
         :param headers: additional headers to send in the message frame
-        :param suppress_content_length: toggle off sending a content_length header
         :param keyword_headers: any additional headers the broker requires
         """
         assert destination is not None, "'destination' is required"
@@ -363,7 +363,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
         body = encode(body)
-        if not suppress_content_length and body and HDR_CONTENT_LENGTH not in headers:
+        if self.auto_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
@@ -404,8 +404,8 @@ class Protocol12(Protocol11):
     
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
     """
-    def __init__(self, transport, heartbeats=(0, 0)):
-        Protocol11.__init__(self, transport, heartbeats)
+    def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True):
+        Protocol11.__init__(self, transport, heartbeats, auto_content_length)
         self.version = '1.2'
 
     def _escape_headers(self, headers):

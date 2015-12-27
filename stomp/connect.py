@@ -67,14 +67,15 @@ class StompConnection10(BaseConnection, Protocol10):
                  ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  keepalive=None,
-                 auto_decode=True):
+                 auto_decode=True,
+                 auto_content_length=True):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
                               keepalive, None, auto_decode)
         BaseConnection.__init__(self, transport)
-        Protocol10.__init__(self, transport)
+        Protocol10.__init__(self, transport, auto_content_length)
 
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         """
@@ -113,14 +114,15 @@ class StompConnection11(BaseConnection, Protocol11):
                  heartbeats=(0, 0),
                  keepalive=None,
                  vhost=None,
-                 auto_decode=True):
+                 auto_decode=True,
+                 auto_content_length=True):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
                               keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
-        Protocol11.__init__(self, transport, heartbeats)
+        Protocol11.__init__(self, transport, heartbeats, auto_content_length)
 
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         """
@@ -159,14 +161,15 @@ class StompConnection12(BaseConnection, Protocol12):
                  heartbeats=(0, 0),
                  keepalive=None,
                  vhost=None,
-                 auto_decode=True):
+                 auto_decode=True,
+                 auto_content_length=True):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
                               keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
-        Protocol12.__init__(self, transport, heartbeats)
+        Protocol12.__init__(self, transport, heartbeats, auto_content_length)
 
     def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         """
