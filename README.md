@@ -36,3 +36,7 @@ Rafael Durán Casteñada
 Chaskiel Grundman  
 Ville Skyttä
 
+Build Status
+------------
+
+[![Build Status](https://travis-ci.org/jasonrbriggs/stomp.py.svg)](https://travis-ci.org/jasonrbriggs/stomp.py)
