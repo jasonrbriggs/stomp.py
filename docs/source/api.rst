@@ -9,7 +9,7 @@ The simplest way to establish a connection, assuming the message broker is runni
 
     >>> import stomp
     >>> c = stomp.Connection([('127.0.0.1', 62613)])
-    >>> c.start(); 
+    >>> c.start()
     >>> c.connect('admin', 'password', wait=True)
     
 By default this represents a STOMP 1.1 connection. You can request a specific version of the connection using one of the following::
@@ -52,14 +52,14 @@ To receive messages back from the messaging system, you need to setup some sort 
     >>> from stomp import *
     >>> c = Connection([('127.0.0.1', 62613)])
     >>> c.set_listener('', PrintingListener())
-    >>> c.start(); 
+    >>> c.start()
     >>> c.connect('admin', 'password', wait=True)
     on_connecting 127.0.0.1 62613
     on_send STOMP {'passcode': 'password', 'login': 'admin', 'accept-version': '1.2', 'host': '127.0.0.1'}
     on_connected {'server': 'apache-apollo/1.7.1', 'host-id': 'mybroker', 'session': 'mybroker-13e0', 'heart-beat': '100,10000', 'version': '1.2', 'user-id': 'admin'}
     >>> c.subscribe('/queue/test', 123)
     on_send SUBSCRIBE {'id': 123, 'ack': 'auto', 'destination': '/queue/test'}
-    >>> c.send('/queue/test' , 'a test message')
+    >>> c.send('/queue/test', 'a test message')
     on_send SEND {'content-length': 5, 'destination': '/queue/test'} b'a test message'
     >>> on_before_message {'destination': '/queue/test', 'message-id': 'mybroker-13e01', 'subscription': '123', 'ack': '2', 'content-length': '5'} a test message
     on_message {'destination': '/queue/test', 'message-id': 'mybroker-13e01', 'subscription': '123', 'ack': '2', 'content-length': '5'} a test message
