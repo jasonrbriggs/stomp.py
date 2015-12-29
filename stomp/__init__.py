@@ -31,7 +31,7 @@ Connection12 = connect.StompConnection12
 StompConnection12 = Connection12
 
 ##
-# Default connection alias (STOMP 1.2).
+# Default connection alias (STOMP 1.1).
 #
 Connection = connect.StompConnection11
 
