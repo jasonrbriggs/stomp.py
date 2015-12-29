@@ -59,7 +59,7 @@ class TestMessageTransform(unittest.TestCase):
         if self.conn:
             self.conn.disconnect(receipt=None)
 
-    def testTransform(self):
+    def test_transform(self):
         queuename = '/queue/testtransform-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
 

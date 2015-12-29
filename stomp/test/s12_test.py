@@ -1,5 +1,6 @@
 import time
 import unittest
+from unittest.mock import MagicMock, Mock
 
 import stomp
 from stomp import exception
@@ -23,7 +24,7 @@ class Test12Connect(unittest.TestCase):
         if self.conn:
             self.conn.disconnect(receipt=None)
 
-    def testsend12(self):
+    def test_send(self):
         queuename = '/queue/testsend12-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
 
@@ -35,7 +36,7 @@ class Test12Connect(unittest.TestCase):
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
 
-    def testclientack12(self):
+    def test_clientack(self):
         queuename = '/queue/testclientack12-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='client-individual')
 
@@ -49,7 +50,7 @@ class Test12Connect(unittest.TestCase):
 
         self.conn.ack(ack_id)
 
-    def testclientnack12(self):
+    def test_clientnack(self):
         queuename = '/queue/testclientnack12-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='client-individual')
 
@@ -63,7 +64,7 @@ class Test12Connect(unittest.TestCase):
 
         self.conn.nack(ack_id)
 
-    def testtimeout(self):
+    def test_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)
         try:
             server.start()
@@ -83,7 +84,7 @@ message: connection failed\x00''')
         finally:
             server.stop()
 
-    def test_specialchars12(self):
+    def test_specialchars(self):
         queuename = '/queue/testspecialchars12-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='client')
 
@@ -110,3 +111,16 @@ message: connection failed\x00''')
         self.assertEqual('test with newlines \n \n', headers['special-3'])
         self.assert_('special-4' in headers)
         self.assertEqual('test with carriage return \r', headers['special-4'])
+
+    def test_suppress_content_length(self):
+        queuename = '/queue/testspecialchars12-%s' % self.timestamp
+        self.conn = stomp.Connection12(get_standard_host(), auto_content_length=False)
+        self.conn.transport = Mock()
+        
+        self.conn.send(body='test', destination=queuename, receipt='123')
+        
+        args, kwargs = self.conn.transport.transmit.call_args
+        frame = args[0]
+        self.assert_('content-length' not in frame.headers)
+        
+        
