@@ -245,6 +245,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         Acknowledge 'consumption' of a message by id.
         
         :param id: identifier of the message
+        :param subscription: the subscription this message is associated with
         :param transaction: include the acknowledgement in the specified transaction
         """
         assert id is not None, "'id' is required"
@@ -336,8 +337,6 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param id: the unique id of the message to nack
         :param subscription: the subscription this message is associated with
         :param transaction: include this nack in a named transaction
-        :param headers: a map of any additional headers the broker requires
-        :param keyword_headers: any additional headers the broker requires
         """
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
@@ -391,6 +390,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         
         :param id: the unique identifier to unsubscribe from
         :param headers: additional headers to send with the unsubscribe
+        :param keyword_headers: any additional headers to send with the subscription
         """
         assert id is not None, "'id' is required"
         headers = utils.merge_headers([headers, keyword_headers])
