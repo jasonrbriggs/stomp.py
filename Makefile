@@ -26,6 +26,7 @@ test:
 	$(PYTHON) setup.py test
 
 travistests:
+	$(PYTHON) setup.py test --test=basic_test
 	$(PYTHON) setup.py test --test=ss_test
 	$(PYTHON) setup.py test --test=transport_test
 	$(PYTHON) setup.py test --test=utils_test

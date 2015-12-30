@@ -29,6 +29,13 @@ def get_standard_host():
     port = config.get('default', 'port')
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
+def get_standard_user():
+    user = config.get('default', 'user')
+    return get_environ('STD_USER') or user
+
+def get_standard_password():
+    password = config.get('default', 'password')
+    return get_environ('STD_PASSWORD') or password
 
 def get_ipv6_host():
     host = config.get('ipv6', 'host')
@@ -46,6 +53,14 @@ def get_rabbitmq_host():
     host = config.get('rabbitmq', 'host')
     port = config.get('rabbitmq', 'port')
     return [(get_environ('RABBITMQ_HOST') or host, int(get_environ('RABBITMQ_PORT') or port))]
+
+def get_rabbitmq_user():
+    user = config.get('rabbitmq', 'user')
+    return get_environ('RABBITMQ_USER') or user
+
+def get_rabbitmq_password():
+    password = config.get('rabbitmq', 'password')
+    return get_environ('RABBITMQ_PASSWORD') or password
 
 
 def get_stompserver_host():
