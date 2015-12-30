@@ -10,6 +10,9 @@ python:
   - "pypy3"
 services:
   - rabbitmq 
+env:
+  - RABBITMQ_HOST=localhost
+  - RABBITMQ_PORT=61613
 script:
   - python setup.py test --test=ss_test
   - python setup.py test --test=transport_test
