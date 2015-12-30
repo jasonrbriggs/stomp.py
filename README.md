@@ -35,6 +35,7 @@ Tatiana Al-Chueyr Martins
 Rafael Durán Casteñada  
 Chaskiel Grundman  
 Ville Skyttä
+Pavel Savchenko
 
 Build Status
 ------------
