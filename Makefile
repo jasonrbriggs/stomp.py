@@ -25,6 +25,13 @@ install:
 test:
 	$(PYTHON) setup.py test
 
+travistests:
+	$(PYTHON) setup.py test --test=ss_test
+	$(PYTHON) setup.py test --test=transport_test
+	$(PYTHON) setup.py test --test=utils_test
+	$(PYTHON) setup.py test --test=rabbitmq_test
+	$(PYTHON) setup.py piptest
+
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
 
