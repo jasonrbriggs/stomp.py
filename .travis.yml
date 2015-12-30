@@ -12,9 +12,9 @@ services:
   - rabbitmq 
 env:
   - RABBITMQ_HOST=localhost RABBITMQ_PORT=61613
+before_install:
+  - rabbitmq-plugins enable rabbitmq_stomp
 install:
   - pip install virtualenv-api
-before-script:
-  - rabbitmq-plugins enable rabbitmq_stomp
 script:
   - make travistests
