@@ -31,7 +31,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.conn.send(body='this is a test', destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
@@ -51,7 +51,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
 
         self.conn.commit(transaction = trans_id)
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assert_(self.listener.messages == 3, 'should have received 3 messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
@@ -111,7 +111,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.conn.send(body='this is an interrupt test 2', destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
