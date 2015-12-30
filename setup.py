@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 from distutils.core import setup, Command
 
@@ -38,7 +39,10 @@ class TestCommand(Command):
                 suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
         else:
             suite = unittest.TestLoader().loadTestsFromName('stomp.test.%s' % self.test)
-        unittest.TextTestRunner(verbosity=2).run(suite)
+        runner = unittest.TextTestRunner(verbosity=2)
+        res = runner.run(suite)
+        if len(res.errors) > 0 or len(res.failures) > 0:
+            sys.exit(1)
         
         if cov:
             cov.stop()
