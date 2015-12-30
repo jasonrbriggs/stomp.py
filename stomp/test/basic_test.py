@@ -123,7 +123,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.conn.send(body='this is a test', destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         (headers, _) = self.listener.get_latest_message()
 
@@ -138,7 +138,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.conn.send(body='this is a test', destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         (headers, _) = self.listener.get_latest_message()
 
@@ -159,7 +159,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         (headers, _) = self.listener.get_latest_message()
 
