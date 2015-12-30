@@ -52,6 +52,7 @@ class TestBasicSend(unittest.TestCase):
 
         self.conn.commit(transaction = trans_id)
         self.listener.wait_for_message()
+        time.sleep(3)
 
         self.assert_(self.listener.messages == 3, 'should have received 3 messages')
         self.assert_(self.listener.errors == 0, 'should not have received any errors')
