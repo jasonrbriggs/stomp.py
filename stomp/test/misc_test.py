@@ -9,9 +9,9 @@ from stomp.listener import *
 from stomp.test.testutils import *
 
 
-class TransformationListener(WaitingListener):
+class TransformationListener(TestListener):
     def __init__(self, receipt):
-        WaitingListener.__init__(self, receipt)
+        TestListener.__init__(self, receipt)
         self.message = None
 
     def on_before_message(self, headers, body):
@@ -40,6 +40,7 @@ class TransformationListener(WaitingListener):
                 return (headers, body)
 
     def on_message(self, headers, body):
+        TestListener.on_message(self, headers, body)
         self.message = body
 
 
