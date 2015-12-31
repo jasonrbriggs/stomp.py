@@ -50,7 +50,7 @@ class TestMessageTransform(unittest.TestCase):
         listener = TransformationListener('123')
         conn.set_listener('', listener)
         conn.start()
-        conn.connect('admin', 'password', wait=True)
+        conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener
         self.timestamp = time.strftime('%Y%m%d%H%M%S')

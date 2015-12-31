@@ -3,6 +3,14 @@ DESTDIR=/
 BUILDIR=$(CURDIR)/debian/stomppy
 PROJECT=stomp.py
 VERSION=3.0.1
+PYTHON_VERSION_FULL := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
+PYTHON_VERSION_MAJOR := $(word 1,${PYTHON_VERSION_FULL})
+
+ifeq ($(PYTHON_VERSION_MAJOR), 3)
+travistests: travistests-py3
+else
+travistests: travistests-py2
+endif
 
 all:
 	@echo "make source - Create source package"
@@ -29,11 +37,20 @@ travistests:
 	$(PYTHON) setup.py test --test=basic_test
 	$(PYTHON) setup.py test --test=s10_test
 	$(PYTHON) setup.py test --test=s11_test
+	$(PYTHON) setup.py test --test=misc_test
 	$(PYTHON) setup.py test --test=ss_test
 	$(PYTHON) setup.py test --test=transport_test
 	$(PYTHON) setup.py test --test=utils_test
 	$(PYTHON) setup.py test --test=rabbitmq_test
 	$(PYTHON) setup.py piptest
+
+travistests-py2:
+	$(PYTHON) setup.py test --test=p2_nonascii_test
+	$(PYTHON) setup.py test --test=p2_backward_test
+	
+travistests-py3:
+	$(PYTHON) setup.py test --test=p3_nonascii_test
+	$(PYTHON) setup.py test --test=p3_backward_test
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
