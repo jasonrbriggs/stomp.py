@@ -3,7 +3,9 @@ Version 4.1.9
  * Merge patches from Pavel S:
      * https://github.com/jasonrbriggs/stomp.py/pull/66
      * https://github.com/jasonrbriggs/stomp.py/pull/67
- 
+ * Minor logging change
+ * Various documentation updates
+
 
 Version 4.1.8
  
