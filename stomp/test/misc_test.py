@@ -74,7 +74,7 @@ class TestMessageTransform(unittest.TestCase):
     </entry>
 </map>''', destination=queuename, headers={'transformation':'jms-map-xml'}, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assert_(self.listener.message is not None, 'Did not receive a message')
         self.assert_(self.listener.message.__class__ == dict, 'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
