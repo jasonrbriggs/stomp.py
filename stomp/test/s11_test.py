@@ -45,7 +45,7 @@ class Test11Send(unittest.TestCase):
 
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-        listener.wait_on_receipt()
+        listener.wait_for_message()
         conn.disconnect(receipt=None)
 
         self.assert_(listener.connections >= 1, 'should have received 1 connection acknowledgement, was %s' % listener.connections)
