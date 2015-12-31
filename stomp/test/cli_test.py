@@ -9,11 +9,11 @@ header_re = re.compile(r'[^:]+:.*')
 
 from stomp.test.testutils import *
 
-username = 'admin'
-password = 'password'
+username = get_default_user()
+password = get_default_password()
 
-(host, port) = get_standard_host()[0]
-(sslhost, sslport) = get_standard_ssl_host()[0]
+(host, port) = get_default_host()[0]
+(sslhost, sslport) = get_default_ssl_host()[0]
 
 class TestStdin:
     pass

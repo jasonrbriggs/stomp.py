@@ -11,7 +11,7 @@ from stomp.test.testutils import *
 class Test12Connect(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection12(get_standard_host())
+        conn = stomp.Connection12(get_default_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
@@ -114,7 +114,7 @@ message: connection failed\x00''')
 
     def test_suppress_content_length(self):
         queuename = '/queue/testspecialchars12-%s' % self.timestamp
-        self.conn = stomp.Connection12(get_standard_host(), auto_content_length=False)
+        self.conn = stomp.Connection12(get_default_host(), auto_content_length=False)
         self.conn.transport = Mock()
         
         self.conn.send(body='test', destination=queuename, receipt='123')

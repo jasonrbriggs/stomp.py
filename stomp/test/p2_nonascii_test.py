@@ -10,7 +10,7 @@ from stomp.test.testutils import *
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host())
+        conn = stomp.Connection(get_default_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()

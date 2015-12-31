@@ -24,16 +24,16 @@ def get_environ(name):
     except:
         return None
 
-def get_standard_host():
+def get_default_host():
     host = config.get('default', 'host')
     port = config.get('default', 'port')
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
-def get_standard_user():
+def get_default_user():
     user = config.get('default', 'user')
     return get_environ('STD_USER') or user
 
-def get_standard_password():
+def get_default_password():
     password = config.get('default', 'password')
     return get_environ('STD_PASSWORD') or password
 
@@ -43,7 +43,7 @@ def get_ipv6_host():
     return [(get_environ('IPV6_HOST') or host, int(get_environ('IPV6_PORT') or port))]
     
 
-def get_standard_ssl_host():
+def get_default_ssl_host():
     host = config.get('default', 'host')
     port = config.get('default', 'ssl_port')
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_SSL_PORT') or port))]

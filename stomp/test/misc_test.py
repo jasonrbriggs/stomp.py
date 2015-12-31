@@ -46,7 +46,7 @@ class TransformationListener(WaitingListener):
 class TestMessageTransform(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host())
+        conn = stomp.Connection(get_default_host())
         listener = TransformationListener('123')
         conn.set_listener('', listener)
         conn.start()

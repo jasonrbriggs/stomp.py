@@ -13,7 +13,7 @@ from stomp.test.testutils import *
 
 class MQ(object):
     def __init__(self):
-        self.connection = stomp.Connection(get_standard_host())
+        self.connection = stomp.Connection(get_default_host())
         self.connection.set_listener('', None)
         self.connection.start()
         self.connection.connect('admin', 'password', wait=True)

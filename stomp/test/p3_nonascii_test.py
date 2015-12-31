@@ -10,7 +10,7 @@ from stomp.test.testutils import *
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_standard_host(), auto_decode = False)
+        conn = stomp.Connection(get_default_host(), auto_decode = False)
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
@@ -61,7 +61,7 @@ class TestNonAsciiSend(unittest.TestCase):
 
 class TestNonAsciiSendAutoEncoding(unittest.TestCase):
     def setUp(self):
-        conn = stomp.Connection(get_standard_host(), auto_decode = True)
+        conn = stomp.Connection(get_default_host(), auto_decode = True)
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()

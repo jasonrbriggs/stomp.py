@@ -11,25 +11,30 @@ import time
 import errno
 import warnings
 
-
 from io import BytesIO
 
 try:
     import ssl
     from ssl import SSLError
+
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLSv1
-except (ImportError,AttributeError): # python version < 2.6 without the backported ssl module
+except (ImportError, AttributeError):  # python version < 2.6 without the backported ssl module
     ssl = None
+
+
     class SSLError:
         pass
+
+
     DEFAULT_SSL_VERSION = None
 
 try:
     from socket import SOL_SOCKET, SO_KEEPALIVE
     from socket import SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
-    LINUX_KEEPALIVE_AVAIL=True
+
+    LINUX_KEEPALIVE_AVAIL = True
 except ImportError:
-    LINUX_KEEPALIVE_AVAIL=False
+    LINUX_KEEPALIVE_AVAIL = False
 
 import stomp.exception as exception
 import stomp.listener as listener
@@ -38,6 +43,7 @@ from stomp.backward import decode, encode, get_errno, pack
 from stomp.backwardsock import get_socket
 
 import logging
+
 log = logging.getLogger('stomp.py')
 
 
@@ -385,7 +391,7 @@ class BaseTransport(listener.Publisher):
                                     #
                                     break
                     result.append(frame)
-                    self.__recvbuf = self.__recvbuf[pos+1:]
+                    self.__recvbuf = self.__recvbuf[pos + 1:]
                 else:
                     break
         return result
@@ -481,8 +487,8 @@ class Transport(BaseTransport):
             for host_and_port in sorted_host_and_ports:
                 if utils.is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
-                    if (not ("127.0.0.1", port) in sorted_host_and_ports
-                            and not ("localhost", port) in sorted_host_and_ports):
+                    if (
+                    not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports)):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
         #
@@ -580,7 +586,6 @@ class Transport(BaseTransport):
         else:
             raise exception.NotConnectedException()
 
-
     def receive(self):
         try:
             return self.socket.recv(1024)
@@ -598,7 +603,7 @@ class Transport(BaseTransport):
         try:
             self.socket.close()
         except:
-            pass # ignore errors when attempting to close socket
+            pass  # ignore errors when attempting to close socket
         self.socket = None
         self.current_host_and_port = None
 
@@ -675,13 +680,13 @@ class Transport(BaseTransport):
                         else:
                             cert_validation = ssl.CERT_NONE
                         self.socket = ssl.wrap_socket(
-                            self.socket,
-                            keyfile=ssl_params['key_file'],
-                            certfile=ssl_params['cert_file'],
-                            cert_reqs=cert_validation,
-                            ca_certs=ssl_params['ca_certs'],
-                            ssl_version=ssl_params['ssl_version'])
-                        
+                                self.socket,
+                                keyfile=ssl_params['key_file'],
+                                certfile=ssl_params['cert_file'],
+                                cert_reqs=cert_validation,
+                                ca_certs=ssl_params['ca_certs'],
+                                ssl_version=ssl_params['ssl_version'])
+
                     self.socket.settimeout(self.__timeout)
 
                     if self.blocking is not None:
@@ -719,7 +724,6 @@ class Transport(BaseTransport):
 
         if not self.socket:
             raise exception.ConnectFailedException()
-
 
     def set_ssl(self,
                 for_hosts=[],

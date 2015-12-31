@@ -8,11 +8,11 @@ from stomp.test.testutils import *
 
 class Test11Send(unittest.TestCase):
     def test11(self):
-        conn = stomp.Connection(get_standard_host())
+        conn = stomp.Connection(get_default_host())
         tl = TestListener('123')
         conn.set_listener('', tl)
         conn.start()
-        conn.connect('admin', 'password', wait=True)
+        conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
 
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
@@ -35,11 +35,11 @@ class Test11Send(unittest.TestCase):
         wl.wait_on_receipt()
 
     def testheartbeat(self):
-        conn = stomp.Connection(get_standard_host(), heartbeats=(2000,3000))
+        conn = stomp.Connection(get_default_host(), heartbeats=(2000,3000))
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
-        conn.connect('admin', 'password', wait=True)
+        conn.connect(get_default_user(), get_default_password(), wait=True)
         self.assert_(conn.heartbeats[0] > 0)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
 

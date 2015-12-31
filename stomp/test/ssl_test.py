@@ -16,8 +16,8 @@ class TestSSL(unittest.TestCase):
         try:
             import ssl
             queuename = '/queue/test4-%s' % self.timestamp
-            conn = stomp.Connection(get_standard_ssl_host())
-            conn.set_ssl(get_standard_ssl_host())
+            conn = stomp.Connection(get_default_ssl_host())
+            conn.set_ssl(get_default_ssl_host())
             conn.set_listener('', self.listener)
             conn.start()
             conn.connect('admin', 'password', wait=True)
@@ -37,8 +37,8 @@ class TestSSL(unittest.TestCase):
 
 class TestSSLParams(unittest.TestCase):
     def setUp(self):
-        self.host1 = get_standard_ssl_host()[0]
-        self.host2 = get_standard_ssl_host()[0]
+        self.host1 = get_default_ssl_host()[0]
+        self.host2 = get_default_ssl_host()[0]
         self.transport = transport.Transport(host_and_ports=[
             self.host1,
             self.host2,
