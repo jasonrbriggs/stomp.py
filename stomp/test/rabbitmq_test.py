@@ -10,11 +10,11 @@ class TestRabbitMQSend(unittest.TestCase):
         pass
 
     def testbasic(self):
-        conn = stomp.Connection11(get_rabbitmq_host(), get_rabbitmq_user(), get_rabbitmq_password())
+        conn = stomp.Connection11(get_rabbitmq_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
-        conn.connect(wait=True)
+        conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
         conn.send(body='this is a test', destination='/queue/test', receipt='123')

@@ -30,19 +30,24 @@ source:
 install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
-test:
-	$(PYTHON) setup.py test
+test: travistests
+	$(PYTHON) setup.py test --test=cli_ssl_test
+	$(PYTHON) setup.py test --test=s12_test
+	$(PYTHON) setup.py test --test=stompserver_test
+	$(PYTHON) setup.py test --test=multicast_test
+	$(PYTHON) setup.py test --test=ssl_test
+	$(PYTHON) setup.py test --test=local_test
 
 travistests:
 	$(PYTHON) setup.py test --test=basic_test
+	$(PYTHON) setup.py test --test=ss_test
+	$(PYTHON) setup.py test --test=cli_test
 	$(PYTHON) setup.py test --test=s10_test
 	$(PYTHON) setup.py test --test=s11_test
+	$(PYTHON) setup.py test --test=rabbitmq_test
 	$(PYTHON) setup.py test --test=misc_test
-	$(PYTHON) setup.py test --test=ss_test
 	$(PYTHON) setup.py test --test=transport_test
 	$(PYTHON) setup.py test --test=utils_test
-	$(PYTHON) setup.py test --test=cli_test
-	$(PYTHON) setup.py test --test=rabbitmq_test
 	$(PYTHON) setup.py piptest
 
 travistests-py2:
