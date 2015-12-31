@@ -30,7 +30,7 @@ class TestNonAsciiSend(unittest.TestCase):
         txt = u'марко'
         self.conn.send(body=txt, destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 1, 'should have received 1 message')
