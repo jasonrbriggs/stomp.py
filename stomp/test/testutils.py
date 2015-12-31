@@ -1,4 +1,5 @@
 import os
+import re
 import socket
 import threading
 import logging
@@ -17,6 +18,7 @@ from stomp.backward import *
 config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 
+header_re = re.compile(r'[^:]+:.*')
 
 def get_environ(name):
     try:
@@ -162,3 +164,37 @@ class TestStompServer(object):
             pass
         self.stopped = True
         log.debug('Run loop completed')
+
+
+class TestStdin:
+    pass
+
+
+class TestStdout:
+    def __init__(self, test):
+        self.test = test
+        self.expects = []
+
+    def expect(self, txt):
+        self.expects.insert(0, re.compile(txt))
+
+    def write(self, txt):
+        txt = txt.rstrip()
+        if txt != '':
+            print(txt)
+        if txt == '>' or txt == '' or header_re.match(txt):
+            return
+        if len(self.expects) == 0:
+            self.test.fail('No expectations - actual "%s"' % txt)
+            return
+
+        for x in range(0, len(self.expects)):
+            chk = self.expects[x]
+            if chk.match(txt):
+                del self.expects[x]
+                return
+
+        self.test.fail('"%s" was not expected' % txt)
+
+    def flush(self):
+        pass

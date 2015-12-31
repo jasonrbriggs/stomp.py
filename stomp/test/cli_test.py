@@ -1,11 +1,10 @@
 import os
 import re
+import tempfile
 import time
 import unittest
 
 from stomp.__main__ import StompCLI
-
-header_re = re.compile(r'[^:]+:.*')
 
 from stomp.test.testutils import *
 
@@ -13,40 +12,19 @@ username = get_default_user()
 password = get_default_password()
 
 (host, port) = get_default_host()[0]
-(sslhost, sslport) = get_default_ssl_host()[0]
 
-class TestStdin:
-    pass
+test_text = '''subscribe /queue/testfile
+send /queue/testfile this is a test
+unsubscribe /queue/testfile'''
 
-class TestStdout:
-    def __init__(self, test):
-        self.test = test
-        self.expects = []
-
-    def expect(self, txt):
-        self.expects.insert(0, re.compile(txt))
-
-    def write(self, txt):
-        txt = txt.rstrip()
-        if txt != '':
-            print(txt)
-        if txt == '>' or txt == '' or header_re.match(txt):
-            return
-        if len(self.expects) == 0:
-            self.test.fail('No expectations - actual "%s"' % txt)
-            return
-
-        for x in range(0, len(self.expects)):
-            chk = self.expects[x]
-            if chk.match(txt):
-                del self.expects[x]
-                return
-
-        self.test.fail('"%s" was not expected' % txt)
-
-    def flush(self):
-        pass
-
+def create_test_file():
+    f = tempfile.NamedTemporaryFile('w', delete=False)
+    f.write('''subscribe /queue/testfile
+send /queue/testfile this is a test
+unsubscribe /queue/testfile''')
+    f.close()
+    return f
+    
 
 class TestCLI(unittest.TestCase):
 
@@ -94,6 +72,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def testsendfile(self):
+        f = create_test_file()
+        
         teststdin = TestStdin()
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
@@ -102,7 +82,7 @@ class TestCLI(unittest.TestCase):
 
         time.sleep(3)
 
-        cli.onecmd('sendfile /queue/testsendfile stomp/test/test.txt')
+        cli.onecmd('sendfile /queue/testsendfile %s' % f.name)
 
         time.sleep(3)
 
@@ -192,6 +172,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def testrun(self):
+        f = create_test_file()
+            
         teststdin = TestStdin()
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
@@ -204,11 +186,13 @@ class TestCLI(unittest.TestCase):
         teststdout.expect('this is a test')
         teststdout.expect('MESSAGE')
         teststdout.expect('Unsubscribing from "/queue/testfile"')
-        cli.onecmd('run stomp/test/test.txt')
+        cli.onecmd('run %s' % f.name)
         teststdout.expect('Shutting down, please wait')
         cli.onecmd('quit')
-
+        
     def testrunarg(self):
+        f = create_test_file()
+                
         teststdin = TestStdin()
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
@@ -222,26 +206,7 @@ class TestCLI(unittest.TestCase):
         teststdout.expect('MESSAGE')
         teststdout.expect('Unsubscribing from "/queue/testfile"')
 
-        cli.do_run('stomp/test/test.txt')
+        cli.do_run(f.name)
 
-    def testssl(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
-        teststdout.expect('CONNECTED')
-
-        cli = StompCLI(sslhost, sslport, username, password, '1.0', use_ssl=True, stdin=teststdin, stdout=teststdout)
-
-        time.sleep(3)
-
-        teststdout.expect('Subscribing to "/queue/testsubscribe" with acknowledge set to "auto", id set to "1"')
-        cli.onecmd('subscribe /queue/testsubscribe')
-        teststdout.expect('MESSAGE')
-        teststdout.expect('this is a test')
-        cli.onecmd('send /queue/testsubscribe this is a test')
-
-        time.sleep(3)
-
-        teststdout.expect('Unsubscribing from "/queue/testsubscribe"')
-        cli.onecmd('unsubscribe /queue/testsubscribe')
         teststdout.expect('Shutting down, please wait')
         cli.onecmd('quit')
