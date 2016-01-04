@@ -11,6 +11,7 @@ import stomp
 
 from stomp.test.testutils import *
 
+
 class MQ(object):
     def __init__(self):
         self.connection = stomp.Connection(get_default_host())
@@ -79,6 +80,7 @@ class TestThreading(unittest.TestCase):
         Q = self.Q
         Cmd = self.Cmd
         Error = self.Error
+
         def send(i=i, Q=Q, Cmd=Cmd, Error=Error):
             counter = 0
             print("%s starting" % i)
@@ -103,7 +105,7 @@ class TestThreading(unittest.TestCase):
                                 break
                         except Empty:
                             pass
-                        counter +=1
+                        counter += 1
             finally:
                 print("final", i, counter)
         return send

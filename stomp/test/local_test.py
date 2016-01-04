@@ -8,6 +8,7 @@ from stomp import exception
 
 from stomp.test.testutils import *
 
+
 class TestIPV6Send(unittest.TestCase):
     def setUp(self):
         conn = stomp.Connection11(get_ipv6_host())

@@ -17,6 +17,7 @@ test_text = '''subscribe /queue/testfile
 send /queue/testfile this is a test
 unsubscribe /queue/testfile'''
 
+
 def create_test_file():
     f = tempfile.NamedTemporaryFile('w', delete=False)
     f.write('''subscribe /queue/testfile
@@ -24,7 +25,7 @@ send /queue/testfile this is a test
 unsubscribe /queue/testfile''')
     f.close()
     return f
-    
+
 
 class TestCLI(unittest.TestCase):
 
@@ -73,7 +74,7 @@ class TestCLI(unittest.TestCase):
 
     def testsendfile(self):
         f = create_test_file()
-        
+
         teststdin = TestStdin()
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
@@ -173,7 +174,7 @@ class TestCLI(unittest.TestCase):
 
     def testrun(self):
         f = create_test_file()
-            
+
         teststdin = TestStdin()
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
@@ -189,10 +190,10 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('run %s' % f.name)
         teststdout.expect('Shutting down, please wait')
         cli.onecmd('quit')
-        
+
     def testrunarg(self):
         f = create_test_file()
-                
+
         teststdin = TestStdin()
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')

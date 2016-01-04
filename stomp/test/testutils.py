@@ -20,30 +20,35 @@ config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 
 header_re = re.compile(r'[^:]+:.*')
 
+
 def get_environ(name):
     try:
         return os.environ[name]
     except:
         return None
 
+
 def get_default_host():
     host = config.get('default', 'host')
     port = config.get('default', 'port')
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
+
 def get_default_user():
     user = config.get('default', 'user')
     return get_environ('STD_USER') or user
+
 
 def get_default_password():
     password = config.get('default', 'password')
     return get_environ('STD_PASSWORD') or password
 
+
 def get_ipv6_host():
     host = config.get('ipv6', 'host')
     port = config.get('ipv6', 'port')
     return [(get_environ('IPV6_HOST') or host, int(get_environ('IPV6_PORT') or port))]
-    
+
 
 def get_default_ssl_host():
     host = config.get('default', 'host')
@@ -56,9 +61,11 @@ def get_rabbitmq_host():
     port = config.get('rabbitmq', 'port')
     return [(get_environ('RABBITMQ_HOST') or host, int(get_environ('RABBITMQ_PORT') or port))]
 
+
 def get_rabbitmq_user():
     user = config.get('rabbitmq', 'user')
     return get_environ('RABBITMQ_USER') or user
+
 
 def get_rabbitmq_password():
     password = config.get('rabbitmq', 'password')
@@ -71,7 +78,7 @@ def get_stompserver_host():
     return [(get_environ('STOMPSERVER_HOST') or host, int(get_environ('STOMPSERVER_PORT') or port))]
 
 
-class TestListener(StatsListener,WaitingListener):
+class TestListener(StatsListener, WaitingListener):
     def __init__(self, receipt=None):
         StatsListener.__init__(self)
         WaitingListener.__init__(self, receipt)
@@ -95,7 +102,7 @@ class TestListener(StatsListener,WaitingListener):
         self.message_received = False
 
     def get_latest_message(self):
-        return self.message_list[len(self.message_list)-1]
+        return self.message_list[len(self.message_list) - 1]
 
 
 class TestStompServer(object):

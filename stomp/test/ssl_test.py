@@ -6,6 +6,7 @@ from stomp import transport
 
 from stomp.test.testutils import *
 
+
 class TestSSL(unittest.TestCase):
     def setUp(self):
         listener = TestListener('123')

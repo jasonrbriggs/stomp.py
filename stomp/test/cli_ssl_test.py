@@ -12,6 +12,7 @@ password = get_default_password()
 
 (sslhost, sslport) = get_default_ssl_host()[0]
 
+
 class TestSSLCLI(unittest.TestCase):
 
     def setUp(self):

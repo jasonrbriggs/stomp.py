@@ -50,7 +50,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
 
-        self.conn.commit(transaction = trans_id)
+        self.conn.commit(transaction=trans_id)
         self.listener.wait_for_message()
         time.sleep(3)
 
@@ -70,7 +70,7 @@ class TestBasicSend(unittest.TestCase):
         self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
 
-        self.conn.abort(transaction = trans_id)
+        self.conn.abort(transaction=trans_id)
         time.sleep(3)
 
         self.assert_(self.listener.messages == 0, 'should not have received any messages')
@@ -85,7 +85,7 @@ class TestBasicSend(unittest.TestCase):
             conn.start()
             self.fail("shouldn't happen")
         except exception.ConnectFailedException:
-            pass # success!
+            pass  # success!
             ms = time.time() - ms
             self.assert_(ms > 5.0, 'connection timeout should have been at least 5 seconds')
 
@@ -153,12 +153,12 @@ class TestBasicSend(unittest.TestCase):
         self.conn.subscribe(destination=queuename, id=1, ack='client')
 
         hdrs = {
-            'special-1' : 'test with colon : test',
-            'special-2' : 'test with backslash \\ test',
-            'special-3' : 'test with newline \n'
+            'special-1': 'test with colon : test',
+            'special-2': 'test with backslash \\ test',
+            'special-3': 'test with newline \n'
         }
 
-        self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
+        self.conn.send(body='this is a test', headers=hdrs, destination=queuename, receipt='123')
 
         self.listener.wait_for_message()
 
@@ -192,4 +192,3 @@ class TestConnectionErrors(unittest.TestCase):
             self.assert_(conn.is_connected() == False, 'Should not be connected')
         except:
             self.fail("Shouldn't happen")
-

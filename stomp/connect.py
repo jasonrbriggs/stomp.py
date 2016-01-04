@@ -15,7 +15,7 @@ class BaseConnection(Publisher):
     """
     Base class for all connection classes.
     """
-    
+
     def __init__(self, transport):
         self.transport = transport
 
@@ -138,7 +138,7 @@ class StompConnection11(BaseConnection, Protocol11):
 
 class StompConnection12(BaseConnection, Protocol12):
     """
-    Represents a 1.2 connection (comprising transport plus 1.2 protocol class). 
+    Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
     See :py:class:`stomp.transport.Transport` for details on the initialisation parameters.
     """
     def __init__(self,

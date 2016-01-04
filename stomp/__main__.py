@@ -10,7 +10,7 @@ import time
 from cmd import Cmd
 from optparse import OptionParser
 
-from stomp.connect import StompConnection10,StompConnection11,StompConnection12
+from stomp.connect import StompConnection10, StompConnection11, StompConnection12
 from stomp.listener import ConnectionListener, StatsListener
 from stomp.adapter.multicast import MulticastConnection
 import stomp.colors
@@ -166,12 +166,12 @@ class StompCLI(Cmd, ConnectionListener):
         oparams = "\n\t".join(optional)
 
         m = {
-            'hl' : stomp.colors.BOLD + stomp.colors.GREEN,
-            'nc' : stomp.colors.NO_COLOR,
-            'usage' : usage,
-            'description' : description,
-            'required' : rparams.rstrip(),
-            'optional' : oparams.rstrip()
+            'hl': stomp.colors.BOLD + stomp.colors.GREEN,
+            'nc': stomp.colors.NO_COLOR,
+            'usage': usage,
+            'description': description,
+            'required': rparams.rstrip(),
+            'optional': oparams.rstrip()
         }
 
         if rparams.rstrip() != '':
@@ -227,9 +227,9 @@ class StompCLI(Cmd, ConnectionListener):
 
     def help_subscribe(self):
         self.help('subscribe <destination> [ack]',
-            '''Register to listen to a given destination. Like send, the subscribe command requires a destination
+                  '''Register to listen to a given destination. Like send, the subscribe command requires a destination
 \theader indicating which destination to subscribe to. The ack parameter is optional, and defaults to
-\tauto.''', [ 'destination - the name to subscribe to' ], [ 'ack - how to handle acknowledgements for a message; either automatically (auto) or manually (client)' ])
+\tauto.''', ['destination - the name to subscribe to'], ['ack - how to handle acknowledgements for a message; either automatically (auto) or manually (client)'])
 
     def do_unsubscribe(self, args):
         args = args.split()
@@ -247,7 +247,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def help_unsubscribe(self):
         self.help('unsubscribe <destination>', 'Remove an existing subscription - so that the client no longer receive messages from that destination.',
-                [ 'destination - the name to unsubscribe from' ], [ 'ack - how to handle acknowledgements for a message; either automatically (auto) or manually (client)' ])
+                  ['destination - the name to unsubscribe from'], ['ack - how to handle acknowledgements for a message; either automatically (auto) or manually (client)'])
 
     def do_send(self, args):
         args = args.split()
@@ -269,7 +269,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def help_send(self):
         self.help('send <destination> <message>', 'Sends a message to a destination in the messaging system.',
-            [ 'destination - where to send the message', 'message - the content to send' ])
+                  ['destination - where to send the message', 'message - the content to send'])
 
     def do_sendrec(self, args):
         args = args.split()
@@ -283,7 +283,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def help_sendrec(self):
         self.help('sendrec <destination> <message>', 'Sends a message to a destination in the messaging system and blocks for receipt of the message.',
-                    [ 'destination - where to send the message', 'message - the content to send' ])
+                  ['destination - where to send the message', 'message - the content to send'])
 
     def do_sendreply(self, args):
         args = args.split()
@@ -294,7 +294,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def help_sendreply(self):
         self.help('sendreply <destination> <correlation-id> <message>', 'Sends a reply message to a destination in the messaging system.',
-                [ 'destination - where to send the message', 'correlation-id - the correlating identifier to send with the response', 'message - the content to send' ])
+                  ['destination - where to send the message', 'correlation-id - the correlating identifier to send with the response', 'message - the content to send'])
 
     def do_sendfile(self, args):
         args = args.split()
@@ -312,7 +312,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def help_sendfile(self):
         self.help('sendfile <destination> <filename>', 'Sends a file to a destination in the messaging system.',
-                [ 'destination - where to send the message', 'filename - the file to send' ])
+                  ['destination - where to send the message', 'filename - the file to send'])
 
     def do_version(self, args):
         self.__sysout('%s%s [Protocol version %s]%s' % (stomp.colors.BOLD, stomppy_version, self.conn.version, stomp.colors.NO_COLOR))
@@ -355,7 +355,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.help('ack <message-id> [subscription-id]', '''The command 'ack' is used to acknowledge consumption of a message from a subscription using client
 \tacknowledgment. When a client has issued a 'subscribe' with the ack flag set to client, any messages
 \treceived from that destination will not be considered to have been consumed (by the server) until
-\tthe message has been acknowledged.''', [ 'message-id - the id of the message being acknowledged' ], [ 'subscription-id the id of the subscription (only required for STOMP 1.1)' ] )
+\tthe message has been acknowledged.''', ['message-id - the id of the message being acknowledged'], ['subscription-id the id of the subscription (only required for STOMP 1.1)'])
 
     def do_nack(self, args):
         args = args.split()
@@ -364,21 +364,21 @@ class StompCLI(Cmd, ConnectionListener):
             return
 
         if not self.transaction_id:
-            self.conn.nack(headers = hdrs)
+            self.conn.nack(headers=hdrs)
         else:
-            self.conn.nack(headers = hdrs, transaction=self.transaction_id)
+            self.conn.nack(headers=hdrs, transaction=self.transaction_id)
 
     def help_nack(self):
         self.help('nack <message-id> [subscription]', '''The command 'nack' is used to acknowledge the failure of a message from a subscription using client
 \tacknowledgment. When a client has issued a 'subscribe' with the ack flag set to client, any messages
 \treceived from that destination will not be considered to have been consumed (by the server) until
-\tthe message has been acknowledged (ack or nack).''', [ 'message-id - the id of the message being acknowledged' ])
+\tthe message has been acknowledged (ack or nack).''', ['message-id - the id of the message being acknowledged'])
 
     def do_abort(self, args):
         if not self.transaction_id:
             self.__error("Not currently in a transaction")
         else:
-            self.conn.abort(transaction = self.transaction_id)
+            self.conn.abort(transaction=self.transaction_id)
             self.__sysout('Aborted transaction: %s' % self.transaction_id)
             self.transaction_id = None
     do_rollback = do_abort
@@ -443,6 +443,7 @@ class StompCLI(Cmd, ConnectionListener):
     def help_run(self):
         self.help('run <filename>', 'Execute commands in a specified file')
 
+
 def do_nothing_loop():
     while 1:
         time.sleep(1)
@@ -465,7 +466,7 @@ def main():
     parser.add_option('-H', '--host', type='string', dest='host', default='localhost',
                       help='Hostname or IP to connect to. Defaults to localhost if not specified.')
     parser.add_option('-P', '--port', type=int, dest='port', default=61613,
-                      help = 'Port providing stomp protocol connections. Defaults to 61613 if not specified.')
+                      help='Port providing stomp protocol connections. Defaults to 61613 if not specified.')
     parser.add_option('-U', '--user', type='string', dest='user', default=None,
                       help='Username for the connection')
     parser.add_option('-W', '--password', type='string', dest='password', default=None,
@@ -488,7 +489,7 @@ def main():
         verbose = True
     else:
         verbose = False
-        
+
     if options.ssl is None:
         options.ssl = False
 
@@ -498,7 +499,7 @@ def main():
         prompt = '> '
 
     st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose, options.ssl)
-    
+
     if options.listen:
         st.do_subscribe(options.listen)
         try:
@@ -515,7 +516,7 @@ def main():
         def signal_handler(signal, frame):
             pass
         signal.signal(signal.SIGINT, signal_handler)
-        
+
         try:
             try:
                 st.cmdloop()

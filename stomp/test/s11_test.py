@@ -6,6 +6,7 @@ from stomp import listener
 
 from stomp.test.testutils import *
 
+
 class Test11Send(unittest.TestCase):
     def test11(self):
         conn = stomp.Connection(get_default_host())
@@ -35,7 +36,7 @@ class Test11Send(unittest.TestCase):
         wl.wait_on_receipt()
 
     def testheartbeat(self):
-        conn = stomp.Connection(get_default_host(), heartbeats=(2000,3000))
+        conn = stomp.Connection(get_default_host(), heartbeats=(2000, 3000))
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
@@ -63,7 +64,7 @@ session: 1
 server: test
 heart-beat: 1000,1000\x00''')
 
-            conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats = (1000, 1000))
+            conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
             listener = TestListener()
             conn.set_listener('', listener)
             conn.start()

@@ -13,6 +13,7 @@ from stomp.test.testutils import *
 import logging
 log = logging.getLogger('ss_test.py')
 
+
 class TestWithStompServer(unittest.TestCase):
 
     def test_disconnect(self):

@@ -15,7 +15,7 @@ import stomp
 
 
 class TestCommand(Command):
-    user_options = [ ('test=', 't', 'specific test to run') ]
+    user_options = [('test=', 't', 'specific test to run')]
 
     def initialize_options(self):
         self.test = '*'
@@ -30,7 +30,7 @@ class TestCommand(Command):
             cov.start()
         except ImportError:
             cov = None
-        
+
         suite = unittest.TestSuite()
         if self.test == '*':
             print('Running all tests')
@@ -43,7 +43,7 @@ class TestCommand(Command):
         res = runner.run(suite)
         if len(res.errors) > 0 or len(res.failures) > 0:
             sys.exit(1)
-        
+
         if cov:
             cov.stop()
             cov.save()
@@ -51,8 +51,8 @@ class TestCommand(Command):
 
 
 class TestPipInstallCommand(Command):
-    user_options = [ ]
-    
+    user_options = []
+
     def initialize_options(self):
         pass
 
@@ -63,14 +63,14 @@ class TestPipInstallCommand(Command):
         if os.path.exists('tmp'):
             shutil.rmtree('tmp')
         os.mkdir('tmp')
-        
+
         from virtualenvapi.manage import VirtualEnvironment
         env = VirtualEnvironment('tmp/scratch')
-        env.install('stomp.py')            
-        
+        env.install('stomp.py')
+
 
 class DoxygenCommand(Command):
-    user_options = [ ]
+    user_options = []
 
     def initialize_options(self):
         pass
@@ -90,22 +90,22 @@ def version():
 
 
 setup(
-    name = 'stomp.py',
-    version = version(),
-    description = 'Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol',
-    license = 'Apache',
-    url = 'https://github.com/jasonrbriggs/stomp.py',
-    author = 'Jason R Briggs',
-    author_email = 'jasonrbriggs@gmail.com',
-    platforms = ['any'],
-    packages = ['stomp', 'stomp.adapter'],
-    cmdclass = { 'test' : TestCommand, 'docs' : DoxygenCommand, 'piptest' : TestPipInstallCommand },
-    scripts = ['./scripts/stomp'],
-    classifiers = [
+    name='stomp.py',
+    version=version(),
+    description='Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol',
+    license='Apache',
+    url='https://github.com/jasonrbriggs/stomp.py',
+    author='Jason R Briggs',
+    author_email='jasonrbriggs@gmail.com',
+    platforms=['any'],
+    packages=['stomp', 'stomp.adapter'],
+    cmdclass={'test': TestCommand, 'docs': DoxygenCommand, 'piptest': TestPipInstallCommand},
+    scripts=['./scripts/stomp'],
+    classifiers=[
          'Development Status :: 5 - Production/Stable',
          'Intended Audience :: Developers',
          'License :: OSI Approved :: Apache Software License',
          'Programming Language :: Python :: 2',
          'Programming Language :: Python :: 3'
-         ]
+    ]
 )

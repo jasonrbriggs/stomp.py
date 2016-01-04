@@ -397,7 +397,7 @@ class PrintingListener(ConnectionListener):
         print('on_heartbeat')
 
 
-class TestListener(StatsListener,WaitingListener):
+class TestListener(StatsListener, WaitingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
@@ -424,4 +424,4 @@ class TestListener(StatsListener,WaitingListener):
         self.message_received = False
 
     def get_latest_message(self):
-        return self.message_list[len(self.message_list)-1]
+        return self.message_list[len(self.message_list) - 1]

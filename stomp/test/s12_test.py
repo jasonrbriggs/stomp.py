@@ -89,13 +89,13 @@ message: connection failed\x00''')
         self.conn.subscribe(destination=queuename, id=1, ack='client')
 
         hdrs = {
-            'special-1' : 'test with colon : test',
-            'special-2' : 'test with backslash \\ test',
-            'special-3' : 'test with newlines \n \n',
-            'special-4' : 'test with carriage return \r'
+            'special-1': 'test with colon : test',
+            'special-2': 'test with backslash \\ test',
+            'special-3': 'test with newlines \n \n',
+            'special-4': 'test with carriage return \r'
         }
 
-        self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
+        self.conn.send(body='this is a test', headers=hdrs, destination=queuename, receipt='123')
 
         self.listener.wait_on_receipt()
 
@@ -116,11 +116,9 @@ message: connection failed\x00''')
         queuename = '/queue/testspecialchars12-%s' % self.timestamp
         self.conn = stomp.Connection12(get_default_host(), auto_content_length=False)
         self.conn.transport = Mock()
-        
+
         self.conn.send(body='test', destination=queuename, receipt='123')
-        
+
         args, kwargs = self.conn.transport.transmit.call_args
         frame = args[0]
         self.assert_('content-length' not in frame.headers)
-        
-        

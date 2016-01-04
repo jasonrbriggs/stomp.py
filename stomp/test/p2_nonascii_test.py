@@ -7,6 +7,7 @@ import stomp
 
 from stomp.test.testutils import *
 
+
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
@@ -38,4 +39,3 @@ class TestNonAsciiSend(unittest.TestCase):
 
         (_, msg) = self.listener.get_latest_message()
         self.assertEquals(stomp.backward.encode(txt), msg)
-

@@ -4,6 +4,7 @@ import stomp
 
 from stomp.test.testutils import *
 
+
 class TestRabbitMQSend(unittest.TestCase):
 
     def setUp(self):
