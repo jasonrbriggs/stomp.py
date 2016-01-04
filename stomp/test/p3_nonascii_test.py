@@ -7,10 +7,11 @@ import stomp
 
 from stomp.test.testutils import *
 
+
 class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_default_host(), auto_decode = False)
+        conn = stomp.Connection(get_default_host(), auto_decode=False)
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
@@ -32,16 +33,17 @@ class TestNonAsciiSend(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages >= 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages >= 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
         (_, msg) = self.listener.get_latest_message()
-        self.assertEquals(stomp.backward.encode(txt), msg)
+        self.assertEqual(stomp.backward.encode(txt), msg)
 
     def test_image_send(self):
         d = os.path.dirname(os.path.realpath(__file__))
-        img = open(os.path.join(d, 'test.gif'), 'rb').read()
+        with open(os.path.join(d, 'test.gif'), 'rb') as f:
+            img = f.read()
 
         queuename = '/queue/p3nonascii-image-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
@@ -50,18 +52,19 @@ class TestNonAsciiSend(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages >= 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages >= 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
         (_, msg) = self.listener.get_latest_message()
-        self.assertEquals(img, msg)
-        open(os.path.join(d, 'test-out.gif'), 'wb').write(img)
+        self.assertEqual(img, msg)
+        with open(os.path.join(d, 'test-out.gif'), 'wb') as f:
+            f.write(img)
 
 
 class TestNonAsciiSendAutoEncoding(unittest.TestCase):
     def setUp(self):
-        conn = stomp.Connection(get_default_host(), auto_decode = True)
+        conn = stomp.Connection(get_default_host(), auto_decode=True)
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
@@ -83,9 +86,9 @@ class TestNonAsciiSendAutoEncoding(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages >= 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages >= 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
         (_, msg) = self.listener.get_latest_message()
-        self.assertEquals(txt, msg)
+        self.assertEqual(txt, msg)

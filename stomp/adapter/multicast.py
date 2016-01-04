@@ -7,13 +7,14 @@ import socket
 import struct
 import uuid
 
-from stomp.transport import *
 from stomp.connect import BaseConnection
 from stomp.protocol import *
+from stomp.transport import *
 from stomp.utils import *
 
 MCAST_GRP = '224.1.1.1'
 MCAST_PORT = 5000
+
 
 class MulticastTransport(Transport):
     """
@@ -63,7 +64,7 @@ class MulticastTransport(Transport):
             frame_type = 'message'
             f.cmd = 'MESSAGE'
 
-        if frame_type in [ 'connected', 'message', 'receipt', 'error', 'heartbeat' ]:
+        if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
             if frame_type == 'message':
                 if f.headers['destination'] not in self.subscriptions.values():
                     return
@@ -85,26 +86,26 @@ class MulticastTransport(Transport):
 
 
 class MulticastConnection(BaseConnection, Protocol12):
-    def __init__(self, wait_on_receipt = False):
+    def __init__(self, wait_on_receipt=False):
         self.transport = MulticastTransport()
         self.transport.set_listener('mcast-listener', self)
-        self.transactions = { }
+        self.transactions = {}
         Protocol12.__init__(self, self.transport, (0, 0))
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
         pass
 
-    def subscribe(self, destination, id, ack = 'auto', headers = {}, **keyword_headers):
+    def subscribe(self, destination, id, ack='auto', headers={}, **keyword_headers):
         self.transport.subscriptions[id] = destination
 
-    def unsubscribe(self, id, headers = {}, **keyword_headers):
+    def unsubscribe(self, id, headers={}, **keyword_headers):
         del self.transport.subscriptions[id]
 
-    def disconnect(self, receipt = str(uuid.uuid4()), headers = {}, **keyword_headers):
+    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
-    def send_frame(self, cmd, headers = {}, body = ''):
+    def send_frame(self, cmd, headers={}, body=''):
         frame = utils.Frame(cmd, headers, body)
 
         if cmd == CMD_BEGIN:

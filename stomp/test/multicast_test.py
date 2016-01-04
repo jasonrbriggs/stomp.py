@@ -31,9 +31,9 @@ class TestMulticast(unittest.TestCase):
 
         self.listener.wait_on_receipt()
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
     def testunsubscribe(self):
         queuename = '/queue/test1-%s' % self.timestamp
@@ -43,9 +43,9 @@ class TestMulticast(unittest.TestCase):
 
         self.listener.wait_on_receipt()
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
         self.conn.unsubscribe(1)
 
@@ -53,7 +53,7 @@ class TestMulticast(unittest.TestCase):
 
         time.sleep(3)
 
-        self.assert_(self.listener.messages == 1, 'should have only received 1 message')
+        self.assertTrue(self.listener.messages == 1, 'should have only received 1 message')
 
     def testtransactions(self):
         queuename = '/queue/test1-%s' % self.timestamp
@@ -66,13 +66,13 @@ class TestMulticast(unittest.TestCase):
 
         time.sleep(1)
 
-        self.assert_(self.listener.messages == 0, 'should not have received any messages')
+        self.assertTrue(self.listener.messages == 0, 'should not have received any messages')
 
         self.conn.commit(trans_id)
 
         self.listener.wait_on_receipt()
 
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
 
         self.conn.begin(trans_id)
 
@@ -82,4 +82,4 @@ class TestMulticast(unittest.TestCase):
 
         time.sleep(3)
 
-        self.assert_(self.listener.messages == 1, 'should have only received 1 message')
+        self.assertTrue(self.listener.messages == 1, 'should have only received 1 message')
