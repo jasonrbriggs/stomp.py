@@ -31,9 +31,9 @@ class Test12Connect(unittest.TestCase):
 
         self.listener.wait_on_receipt()
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
     def test_clientack(self):
         queuename = '/queue/testclientack12-%s' % self.timestamp
@@ -102,13 +102,13 @@ message: connection failed\x00''')
 
         _ = headers['message-id']
         _ = headers['subscription']
-        self.assert_('special-1' in headers)
+        self.assertTrue('special-1' in headers)
         self.assertEqual('test with colon : test', headers['special-1'])
-        self.assert_('special-2' in headers)
+        self.assertTrue('special-2' in headers)
         self.assertEqual('test with backslash \\ test', headers['special-2'])
-        self.assert_('special-3' in headers)
+        self.assertTrue('special-3' in headers)
         self.assertEqual('test with newlines \n \n', headers['special-3'])
-        self.assert_('special-4' in headers)
+        self.assertTrue('special-4' in headers)
         self.assertEqual('test with carriage return \r', headers['special-4'])
 
     def test_suppress_content_length(self):
@@ -120,4 +120,4 @@ message: connection failed\x00''')
 
         args, kwargs = self.conn.transport.transmit.call_args
         frame = args[0]
-        self.assert_('content-length' not in frame.headers)
+        self.assertTrue('content-length' not in frame.headers)

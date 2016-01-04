@@ -74,7 +74,7 @@ heart-beat: 1000,1000\x00''')
 
                 time.sleep(5)
 
-            self.assert_(listener.connections >= 2, 'should have received 2 connection acknowledgements')
+            self.assertTrue(listener.connections >= 2, 'should have received 2 connection acknowledgements')
 
             time.sleep(2)
         finally:
