@@ -2,16 +2,16 @@ try:
     from exceptions import AssertionError
 except ImportError:
     pass
+import logging
 import sys
 import time
 import unittest
 
 import stomp
-
 from stomp.test.testutils import *
 
-import logging
 log = logging.getLogger('ss_test.py')
+
 
 class TestWithStompServer(unittest.TestCase):
 
@@ -74,7 +74,7 @@ heart-beat: 1000,1000\x00''')
 
                 time.sleep(5)
 
-            self.assert_(listener.connections >= 2, 'should have received 2 connection acknowledgements')
+            self.assertTrue(listener.connections >= 2, 'should have received 2 connection acknowledgements')
 
             time.sleep(2)
         finally:

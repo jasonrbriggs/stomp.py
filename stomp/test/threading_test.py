@@ -1,15 +1,15 @@
 try:
-    from queue import Queue, Empty, Full
+    from queue import Empty, Full, Queue
 except ImportError:
-    from Queue import Queue, Empty, Full
-import threading
+    from Queue import Empty, Full, Queue
 import sys
+import threading
 import time
 import unittest
 
 import stomp
-
 from stomp.test.testutils import *
+
 
 class MQ(object):
     def __init__(self):
@@ -79,6 +79,7 @@ class TestThreading(unittest.TestCase):
         Q = self.Q
         Cmd = self.Cmd
         Error = self.Error
+
         def send(i=i, Q=Q, Cmd=Cmd, Error=Error):
             counter = 0
             print("%s starting" % i)
@@ -103,7 +104,7 @@ class TestThreading(unittest.TestCase):
                                 break
                         except Empty:
                             pass
-                        counter +=1
+                        counter += 1
             finally:
                 print("final", i, counter)
         return send

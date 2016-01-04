@@ -33,5 +33,5 @@ def gcd(a, b):
     (Copied from the Python2.6 source Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved)
     """
     while b:
-        a, b = b, a%b
+        a, b = b, a % b
     return a

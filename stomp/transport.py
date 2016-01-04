@@ -1,6 +1,9 @@
 """Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual STOMP protocol
 """
 
+import errno
+from io import BytesIO
+import logging
 import math
 import random
 import re
@@ -8,10 +11,7 @@ import socket
 import sys
 import threading
 import time
-import errno
 import warnings
-
-from io import BytesIO
 
 try:
     import ssl
@@ -21,10 +21,8 @@ try:
 except (ImportError, AttributeError):  # python version < 2.6 without the backported ssl module
     ssl = None
 
-
-    class SSLError:
+    class SSLError(object):
         pass
-
 
     DEFAULT_SSL_VERSION = None
 
@@ -36,23 +34,22 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
-import stomp.exception as exception
-import stomp.listener as listener
-import stomp.utils as utils
 from stomp.backward import decode, encode, get_errno, pack
 from stomp.backwardsock import get_socket
+import stomp.exception as exception
+import stomp.listener
+import stomp.utils as utils
 
-import logging
 
 log = logging.getLogger('stomp.py')
 
 
-class BaseTransport(listener.Publisher):
+class BaseTransport(stomp.listener.Publisher):
     """
-    Base class for transport classes providing support for listeners, threading overrides, 
+    Base class for transport classes providing support for listeners, threading overrides,
     and anything else outside of actually establishing a network connection, sending and
     receiving of messages (so generally socket-agnostic functions).
-    
+
     :param wait_on_receipt: if a receipt is specified, then the send method should wait
         (block) for the server to respond with that receipt-id
         before continuing
@@ -111,7 +108,7 @@ class BaseTransport(listener.Publisher):
         """
         self.running = True
         self.attempt_connection()
-        _ = self.create_thread_fc(self.__receiver_loop)
+        self.create_thread_fc(self.__receiver_loop)
         self.notify('connecting')
 
     def stop(self):
@@ -141,7 +138,7 @@ class BaseTransport(listener.Publisher):
     def set_listener(self, name, listener):
         """
         Set a named listener to use with this connection.
-        See :py:class:`listener.ConnectionListener`
+        See :py:class:`stomp.listener.ConnectionListener`
 
         :param name: the name of the listener
         :param listener: the listener object
@@ -243,7 +240,8 @@ class BaseTransport(listener.Publisher):
         :param frame: the Frame object to transmit
         """
         for listener in self.listeners.values():
-            if not listener: continue
+            if not listener:
+                continue
             if not hasattr(listener, 'on_send'):
                 continue
             listener.on_send(frame)
@@ -401,7 +399,7 @@ class Transport(BaseTransport):
     """
     Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of
     the protocol.
-    
+
     :param host_and_ports: a list of (host, port) tuples.
     :param prefer_localhost: if True and the local host is mentioned in the (host,
         port) tuples, try to connect to this first
@@ -487,8 +485,7 @@ class Transport(BaseTransport):
             for host_and_port in sorted_host_and_ports:
                 if utils.is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
-                    if (
-                    not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports)):
+                    if not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
         #
@@ -624,7 +621,7 @@ class Transport(BaseTransport):
         if not ka:
             return
 
-        if ka == True:
+        if ka is True:
             ka_sig = 'auto'
             ka_args = ()
         else:
@@ -680,12 +677,12 @@ class Transport(BaseTransport):
                         else:
                             cert_validation = ssl.CERT_NONE
                         self.socket = ssl.wrap_socket(
-                                self.socket,
-                                keyfile=ssl_params['key_file'],
-                                certfile=ssl_params['cert_file'],
-                                cert_reqs=cert_validation,
-                                ca_certs=ssl_params['ca_certs'],
-                                ssl_version=ssl_params['ssl_version'])
+                            self.socket,
+                            keyfile=ssl_params['key_file'],
+                            certfile=ssl_params['cert_file'],
+                            cert_reqs=cert_validation,
+                            ca_certs=ssl_params['ca_certs'],
+                            ssl_version=ssl_params['ssl_version'])
 
                     self.socket.settimeout(self.__timeout)
 
@@ -739,7 +736,7 @@ class Transport(BaseTransport):
         :param for_hosts: hosts this SSL configuration should be applied to
         :param cert_file: the path to a X509 certificate
         :param key_file: the path to a X509 key file
-        :param ca_certs: the path to the a file containing CA certificates to validate the server against.  
+        :param ca_certs: the path to the a file containing CA certificates to validate the server against.
                          If this is not set, server side certificate validation is not done.
         :param cert_validator: function which performs extra validation on the client certificate, for example
                                checking the returned certificate has a commonName attribute equal to the
@@ -747,7 +744,7 @@ class Transport(BaseTransport):
                                The signature is: (OK, err_msg) = validation_function(cert, hostname)
                                where OK is a boolean, and cert is a certificate structure
                                as returned by ssl.SSLSocket.getpeercert()
-        :param ssl_version: SSL protocol to use for the connection. This should be one of the PROTOCOL_x 
+        :param ssl_version: SSL protocol to use for the connection. This should be one of the PROTOCOL_x
                             constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1
         """
         if not ssl:

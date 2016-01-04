@@ -3,6 +3,7 @@ import unittest
 
 import stomp
 
+
 class TestThreading(unittest.TestCase):
     def setUp(self):
         self.transport = stomp.transport.BaseTransport(None)

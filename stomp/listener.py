@@ -1,21 +1,20 @@
 """Various listeners for using with stomp.py connections.
 """
 
+import logging
 import sys
 import threading
 import time
 
+from stomp.constants import *
 import stomp.exception as exception
 import stomp.utils as utils
-from stomp.constants import *
-
 
 try:
     from fractions import gcd
 except ImportError:
     from backward import gcd
 
-import logging
 log = logging.getLogger('stomp.py')
 
 
@@ -397,7 +396,7 @@ class PrintingListener(ConnectionListener):
         print('on_heartbeat')
 
 
-class TestListener(StatsListener,WaitingListener):
+class TestListener(StatsListener, WaitingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
@@ -424,4 +423,4 @@ class TestListener(StatsListener,WaitingListener):
         self.message_received = False
 
     def get_latest_message(self):
-        return self.message_list[len(self.message_list)-1]
+        return self.message_list[len(self.message_list) - 1]

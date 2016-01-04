@@ -1,11 +1,10 @@
 import time
+import traceback
 import unittest
 import xml.dom.minidom
-import traceback
 
 import stomp
 from stomp.listener import *
-
 from stomp.test.testutils import *
 
 
@@ -27,7 +26,8 @@ class TransformationListener(TestListener):
                 for entryElem in rootElem.getElementsByTagName("entry"):
                     pair = []
                     for node in entryElem.childNodes:
-                        if not isinstance(node, xml.dom.minidom.Element): continue
+                        if not isinstance(node, xml.dom.minidom.Element):
+                            continue
                         pair.append(node.firstChild.nodeValue)
                     assert len(pair) == 2
                     entries[pair[0]] = pair[1]
@@ -73,11 +73,11 @@ class TestMessageTransform(unittest.TestCase):
         <string>city</string>
         <string>Belgrade</string>
     </entry>
-</map>''', destination=queuename, headers={'transformation':'jms-map-xml'}, receipt='123')
+</map>''', destination=queuename, headers={'transformation': 'jms-map-xml'}, receipt='123')
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.message is not None, 'Did not receive a message')
-        self.assert_(self.listener.message.__class__ == dict, 'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
-        self.assert_(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')
-        self.assert_(self.listener.message['city'] == 'Belgrade', 'Missing an expected dict element')
+        self.assertTrue(self.listener.message is not None, 'Did not receive a message')
+        self.assertTrue(self.listener.message.__class__ == dict, 'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
+        self.assertTrue(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')
+        self.assertTrue(self.listener.message['city'] == 'Belgrade', 'Missing an expected dict element')

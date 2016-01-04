@@ -33,9 +33,9 @@ class TestBasicSend(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
     def test_commit(self):
         queuename = '/queue/test2-%s' % self.timestamp
@@ -47,15 +47,15 @@ class TestBasicSend(unittest.TestCase):
 
         time.sleep(3)
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 0, 'should not have received any messages')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 0, 'should not have received any messages')
 
-        self.conn.commit(transaction = trans_id)
+        self.conn.commit(transaction=trans_id)
         self.listener.wait_for_message()
         time.sleep(3)
 
-        self.assert_(self.listener.messages == 3, 'should have received 3 messages')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.messages == 3, 'should have received 3 messages')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
     def test_abort(self):
         queuename = '/queue/test3-%s' % self.timestamp
@@ -67,14 +67,14 @@ class TestBasicSend(unittest.TestCase):
 
         time.sleep(3)
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 0, 'should not have received any messages')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 0, 'should not have received any messages')
 
-        self.conn.abort(transaction = trans_id)
+        self.conn.abort(transaction=trans_id)
         time.sleep(3)
 
-        self.assert_(self.listener.messages == 0, 'should not have received any messages')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.messages == 0, 'should not have received any messages')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
     def test_timeout(self):
         conn = stomp.Connection([('192.0.2.0', 60000)], timeout=5, reconnect_attempts_max=1)
@@ -85,9 +85,9 @@ class TestBasicSend(unittest.TestCase):
             conn.start()
             self.fail("shouldn't happen")
         except exception.ConnectFailedException:
-            pass # success!
+            pass  # success!
             ms = time.time() - ms
-            self.assert_(ms > 5.0, 'connection timeout should have been at least 5 seconds')
+            self.assertTrue(ms > 5.0, 'connection timeout should have been at least 5 seconds')
 
     def test_childinterrupt(self):
         def childhandler(signum, frame):
@@ -114,9 +114,9 @@ class TestBasicSend(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
-        self.assert_(self.conn.is_connected(), 'should still be connected to STOMP provider')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgment')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.conn.is_connected(), 'should still be connected to STOMP provider')
 
     def test_clientack(self):
         queuename = '/queue/testclientack-%s' % self.timestamp
@@ -153,12 +153,12 @@ class TestBasicSend(unittest.TestCase):
         self.conn.subscribe(destination=queuename, id=1, ack='client')
 
         hdrs = {
-            'special-1' : 'test with colon : test',
-            'special-2' : 'test with backslash \\ test',
-            'special-3' : 'test with newline \n'
+            'special-1': 'test with colon : test',
+            'special-2': 'test with backslash \\ test',
+            'special-3': 'test with newline \n'
         }
 
-        self.conn.send(body='this is a test', headers = hdrs, destination=queuename, receipt='123')
+        self.conn.send(body='this is a test', headers=hdrs, destination=queuename, receipt='123')
 
         self.listener.wait_for_message()
 
@@ -166,11 +166,11 @@ class TestBasicSend(unittest.TestCase):
 
         _ = headers['message-id']
         _ = headers['subscription']
-        self.assert_('special-1' in headers)
+        self.assertTrue('special-1' in headers)
         self.assertEqual('test with colon : test', headers['special-1'])
-        self.assert_('special-2' in headers)
+        self.assertTrue('special-2' in headers)
         self.assertEqual('test with backslash \\ test', headers['special-2'])
-        self.assert_('special-3' in headers)
+        self.assertTrue('special-3' in headers)
         self.assertEqual('test with newline \n', headers['special-3'])
 
 
@@ -189,7 +189,6 @@ class TestConnectionErrors(unittest.TestCase):
         conn.start()
         try:
             conn.connect('invalid', 'user', False)
-            self.assert_(conn.is_connected() == False, 'Should not be connected')
+            self.assertFalse(conn.is_connected(), 'Should not be connected')
         except:
             self.fail("Shouldn't happen")
-

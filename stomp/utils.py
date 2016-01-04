@@ -198,10 +198,10 @@ def length(s):
     return 0
 
 
-class Frame:
+class Frame(object):
     """
     A STOMP frame (or message).
-    
+
     :param cmd: the protocol command
     :param headers: a map of headers for the frame
     :param body: the content of the frame.

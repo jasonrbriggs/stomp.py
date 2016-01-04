@@ -30,9 +30,9 @@ class Test10Connect(unittest.TestCase):
 
         self.listener.wait_for_message()
 
-        self.assert_(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(self.listener.messages == 1, 'should have received 1 message')
-        self.assert_(self.listener.errors == 0, 'should not have received any errors')
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
     def testclientack10(self):
         queuename = '/queue/testclientack10-%s' % self.timestamp

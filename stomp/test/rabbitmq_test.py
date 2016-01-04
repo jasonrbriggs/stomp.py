@@ -4,6 +4,7 @@ import stomp
 
 from stomp.test.testutils import *
 
+
 class TestRabbitMQSend(unittest.TestCase):
 
     def setUp(self):
@@ -22,8 +23,6 @@ class TestRabbitMQSend(unittest.TestCase):
         listener.wait_on_receipt()
         conn.disconnect(receipt=None)
 
-        self.assert_(listener.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assert_(listener.messages == 1, 'should have received 1 message')
-        self.assert_(listener.errors == 0, 'should not have received any errors')
-
-
+        self.assertTrue(listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(listener.messages == 1, 'should have received 1 message')
+        self.assertTrue(listener.errors == 0, 'should not have received any errors')
