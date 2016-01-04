@@ -1,10 +1,9 @@
 import time
 import unittest
-from unittest.mock import MagicMock, Mock
+from unittest.mock import Mock
 
 import stomp
 from stomp import exception
-
 from stomp.test.testutils import *
 
 

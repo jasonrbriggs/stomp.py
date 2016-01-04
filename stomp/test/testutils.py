@@ -1,19 +1,18 @@
-import os
-import re
-import socket
-import threading
-import logging
-log = logging.getLogger('testutils.py')
-
 try:
     from configparser import RawConfigParser
 except ImportError:
     from ConfigParser import RawConfigParser
-
+import logging
+import os
+import re
+import socket
+import threading
 
 from stomp import StatsListener, WaitingListener
 from stomp.backward import *
 
+
+log = logging.getLogger('testutils.py')
 
 config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))

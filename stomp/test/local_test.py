@@ -1,11 +1,7 @@
-import os
-import signal
 import time
 import unittest
 
 import stomp
-from stomp import exception
-
 from stomp.test.testutils import *
 
 

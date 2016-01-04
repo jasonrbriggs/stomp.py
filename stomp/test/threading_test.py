@@ -1,14 +1,13 @@
 try:
-    from queue import Queue, Empty, Full
+    from queue import Empty, Full, Queue
 except ImportError:
-    from Queue import Queue, Empty, Full
-import threading
+    from Queue import Empty, Full, Queue
 import sys
+import threading
 import time
 import unittest
 
 import stomp
-
 from stomp.test.testutils import *
 
 

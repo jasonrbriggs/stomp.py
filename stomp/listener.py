@@ -1,21 +1,20 @@
 """Various listeners for using with stomp.py connections.
 """
 
+import logging
 import sys
 import threading
 import time
 
+from stomp.constants import *
 import stomp.exception as exception
 import stomp.utils as utils
-from stomp.constants import *
-
 
 try:
     from fractions import gcd
 except ImportError:
     from backward import gcd
 
-import logging
 log = logging.getLogger('stomp.py')
 
 

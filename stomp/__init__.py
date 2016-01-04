@@ -8,7 +8,8 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 
 """
 
-import stomp.connect as connect, stomp.listener as listener
+import stomp.connect as connect
+import stomp.listener as listener
 
 __version__ = (4, 1, 9)
 

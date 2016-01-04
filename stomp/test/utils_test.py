@@ -1,7 +1,7 @@
 import unittest
 
-from stomp.utils import *
 from stomp.backward import *
+from stomp.utils import *
 
 
 class TestUtils(unittest.TestCase):

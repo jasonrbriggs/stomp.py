@@ -1,7 +1,4 @@
-import os
 import sys
-
-import stomp.test
 
 __all__ = ['basic_test', 'ss_test', 'cli_test', 'cli_ssl_test', 's10_test',
            's11_test', 's12_test', 'rabbitmq_test', 'stompserver_test',

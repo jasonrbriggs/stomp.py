@@ -2,15 +2,14 @@ try:
     from exceptions import AssertionError
 except ImportError:
     pass
+import logging
 import sys
 import time
 import unittest
 
 import stomp
-
 from stomp.test.testutils import *
 
-import logging
 log = logging.getLogger('ss_test.py')
 
 

@@ -1,11 +1,8 @@
-import os
-import re
 import tempfile
 import time
 import unittest
 
 from stomp.__main__ import StompCLI
-
 from stomp.test.testutils import *
 
 username = get_default_user()

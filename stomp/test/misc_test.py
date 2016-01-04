@@ -1,11 +1,10 @@
 import time
+import traceback
 import unittest
 import xml.dom.minidom
-import traceback
 
 import stomp
 from stomp.listener import *
-
 from stomp.test.testutils import *
 
 

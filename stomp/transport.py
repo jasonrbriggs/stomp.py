@@ -1,6 +1,9 @@
 """Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual STOMP protocol
 """
 
+import errno
+from io import BytesIO
+import logging
 import math
 import random
 import re
@@ -8,10 +11,7 @@ import socket
 import sys
 import threading
 import time
-import errno
 import warnings
-
-from io import BytesIO
 
 try:
     import ssl
@@ -34,18 +34,17 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
-import stomp.exception as exception
-import stomp.listener as listener
-import stomp.utils as utils
 from stomp.backward import decode, encode, get_errno, pack
 from stomp.backwardsock import get_socket
+import stomp.exception as exception
+import stomp.listener
+import stomp.utils as utils
 
-import logging
 
 log = logging.getLogger('stomp.py')
 
 
-class BaseTransport(listener.Publisher):
+class BaseTransport(stomp.listener.Publisher):
     """
     Base class for transport classes providing support for listeners, threading overrides,
     and anything else outside of actually establishing a network connection, sending and
@@ -139,7 +138,7 @@ class BaseTransport(listener.Publisher):
     def set_listener(self, name, listener):
         """
         Set a named listener to use with this connection.
-        See :py:class:`listener.ConnectionListener`
+        See :py:class:`stomp.listener.ConnectionListener`
 
         :param name: the name of the listener
         :param listener: the listener object

@@ -1,13 +1,12 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-
 import uuid
 
-from stomp.exception import ConnectFailedException
-from stomp.listener import *
 from stomp.backward import encode
 from stomp.constants import *
+from stomp.exception import ConnectFailedException
+from stomp.listener import *
 import stomp.utils as utils
 
 

@@ -3,17 +3,17 @@
 """
 
 import base64
+from cmd import Cmd
+from optparse import OptionParser
 import os
 import sys
 import time
 
-from cmd import Cmd
-from optparse import OptionParser
-
-from stomp.connect import StompConnection10, StompConnection11, StompConnection12
-from stomp.listener import ConnectionListener, StatsListener
 from stomp.adapter.multicast import MulticastConnection
 import stomp.colors
+from stomp.connect import StompConnection10, StompConnection11, StompConnection12
+from stomp.listener import ConnectionListener, StatsListener
+
 sys.path.append('.')
 import stomp
 

@@ -1,17 +1,16 @@
+from distutils.core import Command, setup
+import logging.config
 import os
-import sys
 import shutil
-from distutils.core import setup, Command
-
+import sys
 import unittest
 
-import logging.config
+import stomp
+
 try:
     logging.config.fileConfig('stomp.log.conf')
 except:
     pass
-
-import stomp
 
 
 class TestCommand(Command):
