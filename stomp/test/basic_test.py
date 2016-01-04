@@ -189,6 +189,6 @@ class TestConnectionErrors(unittest.TestCase):
         conn.start()
         try:
             conn.connect('invalid', 'user', False)
-            self.assert_(conn.is_connected() == False, 'Should not be connected')
+            self.assert_(not conn.is_connected(), 'Should not be connected')
         except:
             self.fail("Shouldn't happen")

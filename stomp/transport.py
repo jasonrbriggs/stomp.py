@@ -108,7 +108,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         self.running = True
         self.attempt_connection()
-        _ = self.create_thread_fc(self.__receiver_loop)
+        self.create_thread_fc(self.__receiver_loop)
         self.notify('connecting')
 
     def stop(self):
@@ -621,7 +621,7 @@ class Transport(BaseTransport):
         if not ka:
             return
 
-        if ka == True:
+        if ka is True:
             ka_sig = 'auto'
             ka_args = ()
         else:
