@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 import stomp
 from stomp import exception
+from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 

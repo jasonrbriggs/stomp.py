@@ -3,7 +3,7 @@ import unittest
 import uuid
 
 from stomp.adapter.multicast import MulticastConnection
-
+from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 

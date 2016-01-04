@@ -5,7 +5,7 @@ import unittest
 
 import stomp
 from stomp import exception
-
+from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 
