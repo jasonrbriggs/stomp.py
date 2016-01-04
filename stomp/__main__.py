@@ -124,9 +124,8 @@ class StompCLI(Cmd, ConnectionListener):
                 fname = '%s.%s' % (headers['filename'], int(time.time()))
             else:
                 fname = headers['filename']
-            f = open(fname, 'wb')
-            f.write(content)
-            f.close()
+            with open(fname, 'wb') as f:
+                f.write(content)
             self.__print_async("MESSAGE", headers, "Saved file: %s" % fname)
         else:
             self.__print_async("MESSAGE", headers, body)
@@ -303,7 +302,8 @@ class StompCLI(Cmd, ConnectionListener):
         elif not os.path.exists(args[1]):
             self.__error('File %s does not exist' % args[1])
         else:
-            s = open(args[1], mode='rb').read()
+            with open(args[1], mode='rb') as f:
+                s = f.read()
             msg = base64.b64encode(s).decode()
             if not self.transaction_id:
                 self.conn.send(args[0], msg, filename=args[1])
@@ -436,7 +436,8 @@ class StompCLI(Cmd, ConnectionListener):
         elif not os.path.exists(args[0]):
             self.__error("File %s was not found" % args[0])
         else:
-            lines = open(args[0]).read().split('\n')
+            with open(args[0]) as f:
+                lines = f.read().split('\n')
             for line in lines:
                 self.onecmd(line)
 

@@ -42,7 +42,8 @@ class TestNonAsciiSend(unittest.TestCase):
 
     def test_image_send(self):
         d = os.path.dirname(os.path.realpath(__file__))
-        img = open(os.path.join(d, 'test.gif'), 'rb').read()
+        with open(os.path.join(d, 'test.gif'), 'rb') as f:
+            img = f.read()
 
         queuename = '/queue/p3nonascii-image-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
@@ -57,7 +58,8 @@ class TestNonAsciiSend(unittest.TestCase):
 
         (_, msg) = self.listener.get_latest_message()
         self.assertEquals(img, msg)
-        open(os.path.join(d, 'test-out.gif'), 'wb').write(img)
+        with open(os.path.join(d, 'test-out.gif'), 'wb') as f:
+            f.write(img)
 
 
 class TestNonAsciiSendAutoEncoding(unittest.TestCase):

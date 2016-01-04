@@ -19,11 +19,10 @@ unsubscribe /queue/testfile'''
 
 
 def create_test_file():
-    f = tempfile.NamedTemporaryFile('w', delete=False)
-    f.write('''subscribe /queue/testfile
+    with tempfile.NamedTemporaryFile('w', delete=False) as f:
+        f.write('''subscribe /queue/testfile
 send /queue/testfile this is a test
 unsubscribe /queue/testfile''')
-    f.close()
     return f
 
 
