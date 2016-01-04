@@ -2,8 +2,7 @@ import time
 import unittest
 
 import stomp
-from stomp import listener
-
+from stomp.listener import TestListener, WaitingListener
 from stomp.test.testutils import *
 
 
@@ -26,7 +25,7 @@ class Test11Send(unittest.TestCase):
 
         conn.unsubscribe(destination='/queue/test', id=1)
 
-        wl = listener.WaitingListener('DISCONNECT1')
+        wl = WaitingListener('DISCONNECT1')
         conn.set_listener('waiting', wl)
 
         # stomp1.1 disconnect with receipt

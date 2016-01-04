@@ -3,7 +3,7 @@ import unittest
 
 import stomp
 from stomp import transport
-
+from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 

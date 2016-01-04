@@ -8,6 +8,7 @@ import time
 import unittest
 
 import stomp
+from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 log = logging.getLogger('ss_test.py')
