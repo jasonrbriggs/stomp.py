@@ -198,7 +198,7 @@ def length(s):
     return 0
 
 
-class Frame:
+class Frame(object):
     """
     A STOMP frame (or message).
 

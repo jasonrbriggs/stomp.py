@@ -21,7 +21,7 @@ try:
 except (ImportError, AttributeError):  # python version < 2.6 without the backported ssl module
     ssl = None
 
-    class SSLError:
+    class SSLError(object):
         pass
 
     DEFAULT_SSL_VERSION = None

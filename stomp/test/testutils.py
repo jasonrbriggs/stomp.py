@@ -172,11 +172,11 @@ class TestStompServer(object):
         log.debug('Run loop completed')
 
 
-class TestStdin:
+class TestStdin(object):
     pass
 
 
-class TestStdout:
+class TestStdout(object):
     def __init__(self, test):
         self.test = test
         self.expects = []

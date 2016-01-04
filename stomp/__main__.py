@@ -29,7 +29,7 @@ except ImportError:
     from backward import uuid
 
 
-class SubscriptionInfo:
+class SubscriptionInfo(object):
     """
     Used to store info about a subscription.
     """
