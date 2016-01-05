@@ -17,7 +17,7 @@ class Test11Send(unittest.TestCase):
 
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
-        tl.wait_on_receipt()
+        tl.wait_for_message()
 
         self.assertTrue(tl.connections == 1, 'should have received 1 connection acknowledgement')
         self.assertTrue(tl.messages >= 1, 'should have received at least 1 message')
