@@ -35,3 +35,9 @@ def gcd(a, b):
     while b:
         a, b = b, a % b
     return a
+
+
+try:
+    from time import monotonic
+except ImportError:  # Python < 3.3/3.5
+    from time import time as monotonic

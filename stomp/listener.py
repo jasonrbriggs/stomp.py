@@ -6,6 +6,7 @@ import sys
 import threading
 import time
 
+from stomp.backward import monotonic
 from stomp.constants import *
 import stomp.exception as exception
 import stomp.utils as utils
@@ -155,7 +156,7 @@ class HeartbeatListener(ConnectionListener):
         self.connected = False
         self.running = False
         self.heartbeats = heartbeats
-        self.received_heartbeat = time.time()
+        self.received_heartbeat = monotonic()
         self.heartbeat_thread = None
 
     def on_connected(self, headers, body):
@@ -167,7 +168,7 @@ class HeartbeatListener(ConnectionListener):
         :param headers: headers in the connection message
         :param body: the message body
         """
-        self.received_heartbeat = time.time()
+        self.received_heartbeat = monotonic()
         if 'heart-beat' in headers.keys():
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0, 0):
@@ -199,13 +200,13 @@ class HeartbeatListener(ConnectionListener):
         :param body: the message content
         """
         # reset the heartbeat for any received message
-        self.received_heartbeat = time.time()
+        self.received_heartbeat = monotonic()
 
     def on_heartbeat(self):
         """
         Reset the last received time whenever a heartbeat message is received.
         """
-        self.received_heartbeat = time.time()
+        self.received_heartbeat = monotonic()
 
     def on_send(self, frame):
         """
@@ -221,12 +222,12 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        send_time = time.time()
+        send_time = monotonic()
 
         while self.running:
             time.sleep(self.sleep_time)
 
-            now = time.time()
+            now = monotonic()
 
             if now - send_time > self.send_sleep:
                 send_time = now
