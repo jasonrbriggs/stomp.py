@@ -6,15 +6,11 @@ import sys
 import threading
 import time
 
-from stomp.backward import monotonic
+from stomp.backward import gcd, monotonic
 from stomp.constants import *
 import stomp.exception as exception
 import stomp.utils as utils
 
-try:
-    from fractions import gcd
-except ImportError:
-    from backward import gcd
 
 log = logging.getLogger('stomp.py')
 
