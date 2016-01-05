@@ -8,6 +8,7 @@ import time
 import unittest
 
 import stomp
+from stomp.backward import monotonic
 from stomp.test.testutils import *
 
 
@@ -112,8 +113,8 @@ class TestThreading(unittest.TestCase):
     def test_threads_dont_wedge(self):
         for t in self.threads:
             t.start()
-        start = time.time()
-        while time.time() - start < self.runfor:
+        start = monotonic()
+        while monotonic() - start < self.runfor:
             try:
                 self.Q.put(1, False)
                 time.sleep(1.0)

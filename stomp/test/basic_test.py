@@ -5,6 +5,7 @@ import unittest
 
 import stomp
 from stomp import exception
+from stomp.backward import monotonic
 from stomp.listener import TestListener
 from stomp.test.testutils import *
 
@@ -81,12 +82,12 @@ class TestBasicSend(unittest.TestCase):
         conn.set_listener('', self.listener)
 
         try:
-            ms = time.time()
+            ms = monotonic()
             conn.start()
             self.fail("shouldn't happen")
         except exception.ConnectFailedException:
             pass  # success!
-            ms = time.time() - ms
+            ms = monotonic() - ms
             self.assertTrue(ms > 5.0, 'connection timeout should have been at least 5 seconds')
 
     def test_childinterrupt(self):

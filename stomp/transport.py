@@ -34,7 +34,7 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
-from stomp.backward import decode, encode, get_errno, pack
+from stomp.backward import decode, encode, get_errno, monotonic, pack
 from stomp.backwardsock import get_socket
 import stomp.exception as exception
 import stomp.listener
@@ -711,9 +711,9 @@ class Transport(BaseTransport):
                                       ((self.__reconnect_sleep_initial / (1.0 + self.__reconnect_sleep_increase))
                                        * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
                                   * (1.0 + random.random() * self.__reconnect_sleep_jitter))
-                sleep_end = time.time() + sleep_duration
+                sleep_end = monotonic() + sleep_duration
                 log.debug("Sleeping for %.1f seconds before attempting reconnect", sleep_duration)
-                while self.running and time.time() < sleep_end:
+                while self.running and monotonic() < sleep_end:
                     time.sleep(0.2)
 
                 if sleep_duration < self.__reconnect_sleep_max:
