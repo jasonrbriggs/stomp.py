@@ -116,20 +116,18 @@ class BaseTransport(stomp.listener.Publisher):
         Stop the connection. Performs a clean shutdown by waiting for the
         receiver thread to exit.
         """
-        self.__receiver_thread_exit_condition.acquire()
-        while not self.__receiver_thread_exited:
-            self.__receiver_thread_exit_condition.wait()
-        self.__receiver_thread_exit_condition.release()
+        with self.__receiver_thread_exit_condition:
+            while not self.__receiver_thread_exited:
+                self.__receiver_thread_exit_condition.wait()
 
     def is_connected(self):
         return self.connected
 
     def set_connected(self, connected):
-        self.__connect_wait_condition.acquire()
-        self.connected = connected
-        if connected:
-            self.__connect_wait_condition.notify()
-        self.__connect_wait_condition.release()
+        with self.__connect_wait_condition:
+            self.connected = connected
+            if connected:
+                self.__connect_wait_condition.notify()
 
     #
     # Manage objects listening to incoming frames
@@ -185,12 +183,9 @@ class BaseTransport(stomp.listener.Publisher):
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
             receipt = headers['receipt-id']
-            self.__send_wait_condition.acquire()
-            try:
+            with self.__send_wait_condition:
                 self.__receipts[receipt] = None
                 self.__send_wait_condition.notify()
-            finally:
-                self.__send_wait_condition.release()
 
             # received a stomp 1.1+ disconnect receipt
             if receipt == self.__disconnect_receipt:
@@ -221,10 +216,9 @@ class BaseTransport(stomp.listener.Publisher):
                 continue
 
             if frame_type == 'error' and not self.connected:
-                self.__connect_wait_condition.acquire()
-                self.connection_error = True
-                self.__connect_wait_condition.notify()
-                self.__connect_wait_condition.release()
+                with self.__connect_wait_condition:
+                    self.connection_error = True
+                    self.__connect_wait_condition.notify()
 
             notify_func = getattr(listener, 'on_%s' % frame_type)
             rtn = notify_func(headers, body)
@@ -298,10 +292,9 @@ class BaseTransport(stomp.listener.Publisher):
             wait_time = timeout / 10.0
         else:
             wait_time = None
-        self.__connect_wait_condition.acquire()
-        while not self.is_connected() and not self.connection_error:
-            self.__connect_wait_condition.wait(wait_time)
-        self.__connect_wait_condition.release()
+        with self.__connect_wait_condition:
+            while not self.is_connected() and not self.connection_error:
+                self.__connect_wait_condition.wait(wait_time)
 
     def __receiver_loop(self):
         """
@@ -331,10 +324,9 @@ class BaseTransport(stomp.listener.Publisher):
                 finally:
                     self.cleanup()
         finally:
-            self.__receiver_thread_exit_condition.acquire()
-            self.__receiver_thread_exited = True
-            self.__receiver_thread_exit_condition.notifyAll()
-            self.__receiver_thread_exit_condition.release()
+            with self.__receiver_thread_exit_condition:
+                self.__receiver_thread_exited = True
+                self.__receiver_thread_exit_condition.notifyAll()
             log.info("Receiver loop ended")
 
     def __read(self):
@@ -571,11 +563,8 @@ class Transport(BaseTransport):
     def send(self, encoded_frame):
         if self.socket is not None:
             try:
-                self.__socket_semaphore.acquire()
-                try:
+                with self.__socket_semaphore:
                     self.socket.sendall(encoded_frame)
-                finally:
-                    self.__socket_semaphore.release()
             except Exception:
                 _, e, _ = sys.exc_info()
                 log.error("Error sending frame", exc_info=1)
