@@ -24,17 +24,20 @@ def get_errno(e):
         return e.args[0]
 
 
-def gcd(a, b):
-    """Calculate the Greatest Common Divisor of a and b.
+try:
+    from fractions import gcd
+except ImportError:
+    def gcd(a, b):
+        """Calculate the Greatest Common Divisor of a and b.
 
-    Unless b==0, the result will have the same sign as b (so that when
-    b is divided by it, the result comes out positive).
+        Unless b==0, the result will have the same sign as b (so that when
+        b is divided by it, the result comes out positive).
 
-    (Copied from the Python2.6 source Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved)
-    """
-    while b:
-        a, b = b, a % b
-    return a
+        (Copied from the Python2.6 source Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved)
+        """
+        while b:
+            a, b = b, a % b
+        return a
 
 
 try:
