@@ -242,9 +242,10 @@ class BaseTransport(stomp.listener.Publisher):
         for listener in self.listeners.values():
             if not listener:
                 continue
-            if not hasattr(listener, 'on_send'):
+            try:
+                listener.on_send(frame)
+            except AttributeError:
                 continue
-            listener.on_send(frame)
 
         lines = utils.convert_frame_to_lines(frame)
 
