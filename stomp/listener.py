@@ -158,7 +158,6 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeats = heartbeats
         self.received_heartbeat = None
         self.heartbeat_thread = None
-        self.start_time = None
 
     def on_connected(self, headers, body):
         """
@@ -169,7 +168,6 @@ class HeartbeatListener(ConnectionListener):
         :param headers: headers in the connection message
         :param body: the message body
         """
-        self.start_time = monotonic()
         if 'heart-beat' in headers.keys():
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0, 0):
@@ -177,6 +175,11 @@ class HeartbeatListener(ConnectionListener):
 
                 # receive gets an additional grace of 50%
                 self.receive_sleep = (self.heartbeats[1] / 1000) * 1.5
+
+                # Setup an initial grace period
+                if self.receive_sleep != 0:
+                    self.received_heartbeat = monotonic() + \
+                        2 * self.receive_sleep
 
                 if self.send_sleep == 0:
                     self.sleep_time = self.receive_sleep
@@ -230,7 +233,7 @@ class HeartbeatListener(ConnectionListener):
 
             now = monotonic()
 
-            if now - send_time > self.send_sleep:
+            if self.send_sleep != 0 and now - send_time > self.send_sleep:
                 send_time = now
                 log.debug("Sending a heartbeat message at %s", now)
                 try:
@@ -241,11 +244,7 @@ class HeartbeatListener(ConnectionListener):
                     _, e, _ = sys.exc_info()
                     log.debug("Unable to send heartbeat, due to: %s" % e)
 
-            if self.received_heartbeat is None:
-                # Initialise the received heartbeat after an initial delay
-                if (now - self.start_time) > (2 * self.receive_sleep):
-                    self.received_heartbeat = now
-            else:
+            if self.receive_sleep != 0:
                 diff_receive = now - self.received_heartbeat
 
                 if diff_receive > self.receive_sleep:
