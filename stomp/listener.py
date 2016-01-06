@@ -201,9 +201,7 @@ class HeartbeatListener(ConnectionListener):
         :param body: the message content
         """
         # reset the heartbeat for any received message
-        # as long as we've had an actual heartbeat
-        if self.received_heartbeat is not None:
-            self.received_heartbeat = monotonic()
+        self.received_heartbeat = monotonic()
 
     def on_heartbeat(self):
         """
