@@ -175,8 +175,8 @@ class HeartbeatListener(ConnectionListener):
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
-                # receive gets an additional threshold of 2 additional seconds
-                self.receive_sleep = (self.heartbeats[1] / 1000) + 2
+                # receive gets an additional grace of 50%
+                self.receive_sleep = (self.heartbeats[1] / 1000) * 1.5
 
                 if self.send_sleep == 0:
                     self.sleep_time = self.receive_sleep
