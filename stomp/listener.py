@@ -169,7 +169,7 @@ class HeartbeatListener(ConnectionListener):
         :param body: the message body
         """
         self.received_heartbeat = monotonic()
-        if 'heart-beat' in headers.keys():
+        if 'heart-beat' in headers:
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000

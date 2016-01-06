@@ -363,7 +363,7 @@ class BaseTransport(stomp.listener.Publisher):
         fastbuf.close()
         result = []
 
-        if len(self.__recvbuf) > 0 and self.running:
+        if self.__recvbuf and self.running:
             while True:
                 pos = self.__recvbuf.find(b'\x00')
 

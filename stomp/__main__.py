@@ -85,8 +85,8 @@ class StompCLI(Cmd, ConnectionListener):
         self.__sysout("\r  \r", end='')
         if self.verbose:
             self.__sysout(frame_type)
-            for header_key in headers.keys():
-                self.__sysout('%s: %s' % (header_key, headers[header_key]))
+            for k, v in headers.items():
+                self.__sysout('%s: %s' % (k, v))
         if self.prompt != '':
             self.__sysout('')
         self.__sysout(body)
@@ -236,7 +236,7 @@ class StompCLI(Cmd, ConnectionListener):
             self.__error('Expecting: unsubscribe <destination>')
             return
 
-        if args[0] not in self.__subscriptions.keys():
+        if args[0] not in self.__subscriptions:
             self.__sysout('Subscription %s not found' % args[0])
             return
 
