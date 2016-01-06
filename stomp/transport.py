@@ -206,18 +206,16 @@ class BaseTransport(stomp.listener.Publisher):
         for listener in self.listeners.values():
             if not listener:
                 continue
-            if not hasattr(listener, 'on_%s' % frame_type):
+
+            notify_func = getattr(listener, 'on_%s' % frame_type, None)
+            if not notify_func:
                 log.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
-
+            if frame_type in ('heartbeat', 'disconnected'):
+                notify_func()
+                continue
             if frame_type == 'connecting':
-                listener.on_connecting(self.current_host_and_port)
-                continue
-            elif frame_type == 'disconnected':
-                listener.on_disconnected()
-                continue
-            elif frame_type == 'heartbeat':
-                listener.on_heartbeat()
+                notify_func(self.current_host_and_port)
                 continue
 
             if frame_type == 'error' and not self.connected:
@@ -226,7 +224,6 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__connect_wait_condition.notify()
                 self.__connect_wait_condition.release()
 
-            notify_func = getattr(listener, 'on_%s' % frame_type)
             rtn = notify_func(headers, body)
             if rtn:
                 (headers, body) = rtn
