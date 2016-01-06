@@ -61,7 +61,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     # Used to parse the STOMP "content-length" header lines,
     #
-    __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
+    __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
     def __init__(self, wait_on_receipt, auto_decode=True):
         self.__recvbuf = b''
@@ -372,7 +372,7 @@ class BaseTransport(stomp.listener.Publisher):
                     frame = self.__recvbuf[0:pos]
                     preamble_end = frame.find(b'\n\n')
                     if preamble_end >= 0:
-                        content_length_match = BaseTransport.__content_length_re.search(decode(frame[0:preamble_end]))
+                        content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
                             content_offset = preamble_end + 2
