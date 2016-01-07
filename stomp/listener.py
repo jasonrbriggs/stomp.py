@@ -252,7 +252,6 @@ class HeartbeatListener(ConnectionListener):
                     log.warn("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s", diff_receive, now, self.received_heartbeat)
                     self.transport.disconnect_socket()
                     self.transport.set_connected(False)
-                    self.running = False
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
 
