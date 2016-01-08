@@ -152,7 +152,7 @@ class HeartbeatListener(ConnectionListener):
         self.connected = False
         self.running = False
         self.heartbeats = heartbeats
-        self.received_heartbeat = monotonic()
+        self.received_heartbeat = None
         self.heartbeat_thread = None
 
     def on_connected(self, headers, body):
@@ -164,14 +164,18 @@ class HeartbeatListener(ConnectionListener):
         :param headers: headers in the connection message
         :param body: the message body
         """
-        self.received_heartbeat = monotonic()
         if 'heart-beat' in headers:
             self.heartbeats = utils.calculate_heartbeats(headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
-                # receive gets an additional threshold of 2 additional seconds
-                self.receive_sleep = (self.heartbeats[1] / 1000) + 2
+                # receive gets an additional grace of 50%
+                self.receive_sleep = (self.heartbeats[1] / 1000) * 1.5
+
+                # Setup an initial grace period
+                if self.receive_sleep != 0:
+                    self.received_heartbeat = monotonic() + \
+                        2 * self.receive_sleep
 
                 if self.send_sleep == 0:
                     self.sleep_time = self.receive_sleep
@@ -225,7 +229,7 @@ class HeartbeatListener(ConnectionListener):
 
             now = monotonic()
 
-            if now - send_time > self.send_sleep:
+            if self.send_sleep != 0 and now - send_time > self.send_sleep:
                 send_time = now
                 log.debug("Sending a heartbeat message at %s", now)
                 try:
@@ -236,14 +240,12 @@ class HeartbeatListener(ConnectionListener):
                     _, e, _ = sys.exc_info()
                     log.debug("Unable to send heartbeat, due to: %s" % e)
 
-            diff_receive = now - self.received_heartbeat
+            if self.receive_sleep != 0:
+                diff_receive = now - self.received_heartbeat
 
-            if diff_receive > self.receive_sleep:
-                diff_heartbeat = now - self.received_heartbeat
-                if diff_heartbeat > self.receive_sleep:
+                if diff_receive > self.receive_sleep:
                     # heartbeat timeout
-                    log.info("Heartbeat timeout: diff_receive=%s, diff_heartbeat=%s, time=%s, lastrec=%s", diff_receive, diff_heartbeat, now, self.received_heartbeat)
-                    self.received_heartbeat = now
+                    log.warn("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s", diff_receive, now, self.received_heartbeat)
                     self.transport.disconnect_socket()
                     self.transport.set_connected(False)
                     for listener in self.transport.listeners.values():
