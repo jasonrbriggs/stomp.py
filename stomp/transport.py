@@ -61,7 +61,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     # Used to parse the STOMP "content-length" header lines,
     #
-    __content_length_re = re.compile('^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
+    __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
     def __init__(self, wait_on_receipt, auto_decode=True):
         self.__recvbuf = b''
@@ -201,18 +201,16 @@ class BaseTransport(stomp.listener.Publisher):
         for listener in self.listeners.values():
             if not listener:
                 continue
-            if not hasattr(listener, 'on_%s' % frame_type):
+
+            notify_func = getattr(listener, 'on_%s' % frame_type, None)
+            if not notify_func:
                 log.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
-
+            if frame_type in ('heartbeat', 'disconnected'):
+                notify_func()
+                continue
             if frame_type == 'connecting':
-                listener.on_connecting(self.current_host_and_port)
-                continue
-            elif frame_type == 'disconnected':
-                listener.on_disconnected()
-                continue
-            elif frame_type == 'heartbeat':
-                listener.on_heartbeat()
+                notify_func(self.current_host_and_port)
                 continue
 
             if frame_type == 'error' and not self.connected:
@@ -220,7 +218,6 @@ class BaseTransport(stomp.listener.Publisher):
                     self.connection_error = True
                     self.__connect_wait_condition.notify()
 
-            notify_func = getattr(listener, 'on_%s' % frame_type)
             rtn = notify_func(headers, body)
             if rtn:
                 (headers, body) = rtn
@@ -236,9 +233,10 @@ class BaseTransport(stomp.listener.Publisher):
         for listener in self.listeners.values():
             if not listener:
                 continue
-            if not hasattr(listener, 'on_send'):
+            try:
+                listener.on_send(frame)
+            except AttributeError:
                 continue
-            listener.on_send(frame)
 
         lines = utils.convert_frame_to_lines(frame)
 
@@ -355,7 +353,7 @@ class BaseTransport(stomp.listener.Publisher):
         fastbuf.close()
         result = []
 
-        if len(self.__recvbuf) > 0 and self.running:
+        if self.__recvbuf and self.running:
             while True:
                 pos = self.__recvbuf.find(b'\x00')
 
@@ -363,7 +361,7 @@ class BaseTransport(stomp.listener.Publisher):
                     frame = self.__recvbuf[0:pos]
                     preamble_end = frame.find(b'\n\n')
                     if preamble_end >= 0:
-                        content_length_match = BaseTransport.__content_length_re.search(decode(frame[0:preamble_end]))
+                        content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
                             content_offset = preamble_end + 2
