@@ -271,19 +271,17 @@ class WaitingListener(ConnectionListener):
         :param body: the message content
         """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
-            self.condition.acquire()
-            self.received = True
-            self.condition.notify()
-            self.condition.release()
+            with self.condition:
+                self.received = True
+                self.condition.notify()
 
     def wait_on_receipt(self):
         """
         Wait until we receive a message receipt.
         """
-        self.condition.acquire()
-        while not self.received:
-            self.condition.wait()
-        self.condition.release()
+        with self.condition:
+            while not self.received:
+                self.condition.wait()
         self.received = False
 
 
@@ -411,16 +409,14 @@ class TestListener(StatsListener, WaitingListener):
     def on_message(self, headers, message):
         StatsListener.on_message(self, headers, message)
         self.message_list.append((headers, message))
-        self.message_condition.acquire()
-        self.message_received = True
-        self.message_condition.notify()
-        self.message_condition.release()
+        with self.message_condition:
+            self.message_received = True
+            self.message_condition.notify()
 
     def wait_for_message(self):
-        self.message_condition.acquire()
-        while not self.message_received:
-            self.message_condition.wait()
-        self.message_condition.release()
+        with self.message_condition:
+            while not self.message_received:
+                self.message_condition.wait()
         self.message_received = False
 
     def get_latest_message(self):
