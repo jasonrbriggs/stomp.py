@@ -33,11 +33,13 @@ class TestCommand(Command):
         suite = unittest.TestSuite()
         if self.test == '*':
             print('Running all tests')
-            import stomp.test
-            for tst in stomp.test.__all__:
-                suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
+            tests = stomp.test.__all__
         else:
-            suite = unittest.TestLoader().loadTestsFromName('stomp.test.%s' % self.test)
+            tests = self.test.split(',')        
+        import stomp.test
+        for tst in tests:
+            suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
+
         runner = unittest.TextTestRunner(verbosity=2)
         res = runner.run(suite)
         if len(res.errors) > 0 or len(res.failures) > 0:
