@@ -5,7 +5,7 @@ from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 
-class TestRabbitMQSend(unittest.TestCase):
+class TestStompServerSend(unittest.TestCase):
 
     def setUp(self):
         pass
