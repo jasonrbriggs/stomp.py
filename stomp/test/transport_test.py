@@ -4,7 +4,7 @@ import unittest
 import stomp
 
 
-class TestThreading(unittest.TestCase):
+class TestTransport(unittest.TestCase):
     def setUp(self):
         self.transport = stomp.transport.BaseTransport(None)
 
