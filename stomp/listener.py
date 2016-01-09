@@ -202,6 +202,18 @@ class HeartbeatListener(ConnectionListener):
         # reset the heartbeat for any received message
         self.received_heartbeat = monotonic()
 
+    def on_receipt(self, *_):
+        """
+        Reset the last received time whenever a receipt is received.
+        """
+        self.received_heartbeat = monotonic()
+
+    def on_error(self, *_):
+        """
+        Reset the last received time whenever an error is received.
+        """
+        self.received_heartbeat = monotonic()
+
     def on_heartbeat(self):
         """
         Reset the last received time whenever a heartbeat message is received.
