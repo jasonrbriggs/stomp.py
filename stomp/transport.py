@@ -359,12 +359,13 @@ class BaseTransport(stomp.listener.Publisher):
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
-                    preamble_end = frame.find(b'\n\n')
-                    if preamble_end >= 0:
+                    preamble_end_match = utils.PREAMBLE_END_RE.search(frame)
+                    if preamble_end_match:
+                        preamble_end = preamble_end_match.start()
                         content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
-                            content_offset = preamble_end + 2
+                            content_offset = preamble_end_match.end()
                             frame_size = content_offset + content_length
                             if frame_size > len(frame):
                                 #
