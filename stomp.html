@@ -57,15 +57,6 @@
 <div class="section" id="module-stomp.backward">
 <span id="stomp-backward-module"></span><h2>stomp.backward module<a class="headerlink" href="#module-stomp.backward" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="stomp.backward.gcd">
-<code class="descclassname">stomp.backward.</code><code class="descname">gcd</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward.gcd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the Greatest Common Divisor of a and b.</p>
-<p>Unless b==0, the result will have the same sign as b (so that when
-b is divided by it, the result comes out positive).</p>
-<p>(Copied from the Python2.6 source Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved)</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="stomp.backward.get_errno">
 <code class="descclassname">stomp.backward.</code><code class="descname">get_errno</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward.get_errno" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the errno of an exception, or the first argument if errno is not available.</p>
@@ -284,7 +275,7 @@ b is divided by it, the result comes out positive).</p>
 See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 <dl class="method">
 <dt id="stomp.connect.StompConnection10.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='44d99424-ede8-48b6-ad86-a3fced6a4139'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='b9ea19c6-15e4-4a1f-a5b2-b2eb14bb957f'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the protocol disconnection, and then stop the transport itself.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -311,7 +302,7 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 <dl class="method">
 <dt id="stomp.connect.StompConnection11.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='3d11ac9b-5995-46f6-a32b-cbe5928e0835'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='74a59b00-8bb8-4f8e-978b-01d267a168aa'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the protocol disconnection, and then stop the transport itself.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -334,11 +325,11 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <dt id="stomp.connect.StompConnection12">
 <em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
-<p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class). 
+<p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
 See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 <dl class="method">
 <dt id="stomp.connect.StompConnection12.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='25636d63-00d0-48ae-8535-1e6e82fea80e'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='13c088b9-a968-40be-aba9-ac471ecf3fea'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the protocol disconnection, and then stop the transport itself.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -587,6 +578,12 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="stomp.listener.HeartbeatListener.on_error">
+<code class="descname">on_error</code><span class="sig-paren">(</span><em>*_</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the last received time whenever an error is received.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the last received time whenever a heartbeat message is received.</p>
@@ -608,6 +605,12 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.HeartbeatListener.on_receipt">
+<code class="descname">on_receipt</code><span class="sig-paren">(</span><em>*_</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_receipt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the last received time whenever a receipt is received.</p>
 </dd></dl>
 
 <dl class="method">
@@ -975,7 +978,7 @@ a unique transaction id will be generated)</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol10.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='6d4fe386-b308-4eff-924d-2663c88cdd4f'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='4352de3e-c4b7-4c71-90dc-68a5462695a5'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disconnect from the server.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1045,7 +1048,7 @@ through the underlying transport:</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>destination</strong> &#8211; the topic or queue to subscribe to</li>
 <li><strong>id</strong> &#8211; a unique id to represent the subscription</li>
-<li><strong>ack</strong> &#8211; acknowledgement mode, either auto, client, or client-individual 
+<li><strong>ack</strong> &#8211; acknowledgement mode, either auto, client, or client-individual
 (see <a class="reference external" href="http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header">http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header</a>)
 for more information</li>
 <li><strong>headers</strong> &#8211; a map of any additional headers the broker requires</li>
@@ -1188,7 +1191,7 @@ a unique transaction id will be generated)</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol11.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='06ac251a-9fb1-4863-8c09-adac663e749a'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='453d2aa5-3d3e-4f24-abce-04ff4baa4f87'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disconnect from the server.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1381,7 +1384,7 @@ through the underlying transport:</p>
 <dt id="stomp.transport.BaseTransport">
 <em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">BaseTransport</code><span class="sig-paren">(</span><em>wait_on_receipt</em>, <em>auto_decode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.Publisher</span></code></a></p>
-<p>Base class for transport classes providing support for listeners, threading overrides, 
+<p>Base class for transport classes providing support for listeners, threading overrides,
 and anything else outside of actually establishing a network connection, sending and
 receiving of messages (so generally socket-agnostic functions).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1520,7 +1523,7 @@ The thread which is returned should be started (ready to run)</p>
 <dt id="stomp.transport.BaseTransport.set_listener">
 <code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport.set_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a named listener to use with this connection.
-See <code class="xref py py-class docutils literal"><span class="pre">listener.ConnectionListener</span></code></p>
+See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1694,7 +1697,7 @@ exception if the SSL module can&#8217;t be found.</p>
 <li><strong>for_hosts</strong> &#8211; hosts this SSL configuration should be applied to</li>
 <li><strong>cert_file</strong> &#8211; the path to a X509 certificate</li>
 <li><strong>key_file</strong> &#8211; the path to a X509 key file</li>
-<li><strong>ca_certs</strong> &#8211; the path to the a file containing CA certificates to validate the server against.  
+<li><strong>ca_certs</strong> &#8211; the path to the a file containing CA certificates to validate the server against.
 If this is not set, server side certificate validation is not done.</li>
 <li><strong>cert_validator</strong> &#8211; function which performs extra validation on the client certificate, for example
 checking the returned certificate has a commonName attribute equal to the
@@ -1702,7 +1705,7 @@ hostname (to avoid man in the middle attacks).
 The signature is: (OK, err_msg) = validation_function(cert, hostname)
 where OK is a boolean, and cert is a certificate structure
 as returned by ssl.SSLSocket.getpeercert()</li>
-<li><strong>ssl_version</strong> &#8211; SSL protocol to use for the connection. This should be one of the PROTOCOL_x 
+<li><strong>ssl_version</strong> &#8211; SSL protocol to use for the connection. This should be one of the PROTOCOL_x
 constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1</li>
 </ul>
 </td>
@@ -1784,6 +1787,11 @@ own thread creation.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="stomp.utils.escape">
+<code class="descclassname">stomp.utils.</code><code class="descname">escape</code><span class="sig-paren">(</span><em>regex</em>, <em>replacements</em>, <em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.escape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="stomp.utils.is_localhost">
