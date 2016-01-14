@@ -1,4 +1,13 @@
-Version 4.1.9
+Version 4.2.0
+
+ * Bug fix for header escaping (https://github.com/jasonrbriggs/stomp.py/issues/82)
+ * Merge patches from Ville S:
+     * https://github.com/jasonrbriggs/stomp.py/pull/79
+     * https://github.com/jasonrbriggs/stomp.py/pull/80
+     * https://github.com/jasonrbriggs/stomp.py/pull/81
+ 
+
+Version 4.1.9 - Jan 2016
 
  * Merge patches from Pavel S:
      * https://github.com/jasonrbriggs/stomp.py/pull/66
@@ -14,13 +23,13 @@ Version 4.1.9
      * https://github.com/jasonrbriggs/stomp.py/pull/78
      
 
-Version 4.1.8
+Version 4.1.8 - Nov 2015
  
  * Fix missing import (https://github.com/jasonrbriggs/stomp.py/issues/61)
  * Code tidy up
  
 
-Version 4.1.7 
+Version 4.1.7 - Nov 2015
 
  * Merge patches from Ville S:
     * https://github.com/jasonrbriggs/stomp.py/pull/56
