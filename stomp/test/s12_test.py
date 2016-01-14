@@ -1,6 +1,6 @@
 import time
 import unittest
-from unittest.mock import Mock
+from mock import Mock
 
 import stomp
 from stomp import exception
