@@ -272,10 +272,18 @@
 <em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection10</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol10" title="stomp.protocol.Protocol10"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol10</span></code></a></p>
 <p>Represents a 1.0 connection (comprising transport plus 1.0 protocol class).
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on other initialisation parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>auto_content_length</strong> &#8211; automatically calculate the content length (defaulted to True), and set the header accordingly.</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="stomp.connect.StompConnection10.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='b9ea19c6-15e4-4a1f-a5b2-b2eb14bb957f'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='d03f7c64-9bea-4fdb-845d-3bc35b66beec'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the protocol disconnection, and then stop the transport itself.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -300,9 +308,17 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
 <p>Represents a 1.1 connection (comprising transport plus 1.1 protocol class)
 See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>auto_content_length</strong> &#8211; automatically calculate the content length (defaulted to True), and set the header accordingly.</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="stomp.connect.StompConnection11.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='74a59b00-8bb8-4f8e-978b-01d267a168aa'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='632f003e-c56b-4c25-bd09-f8f95f89ff1d'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the protocol disconnection, and then stop the transport itself.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -327,9 +343,17 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
 <p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
 See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>auto_content_length</strong> &#8211; automatically calculate the content length (defaulted to True), and set the header accordingly.</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="stomp.connect.StompConnection12.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='13c088b9-a968-40be-aba9-ac471ecf3fea'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='be847345-fe14-429c-a3e8-2b6b32d215d9'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the protocol disconnection, and then stop the transport itself.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -978,7 +1002,7 @@ a unique transaction id will be generated)</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol10.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='4352de3e-c4b7-4c71-90dc-68a5462695a5'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='f51ecb3e-4032-42ce-8c6c-ce91fae7ade9'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disconnect from the server.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1191,7 +1215,7 @@ a unique transaction id will be generated)</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol11.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='453d2aa5-3d3e-4f24-abce-04ff4baa4f87'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.disconnect" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt='8c6e0525-4b3f-48a8-8a69-14f33a7b0467'</em>, <em>headers={}</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.disconnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disconnect from the server.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
