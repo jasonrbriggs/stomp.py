@@ -84,6 +84,7 @@ def _unescape_header(matchobj):
     escaped = matchobj.group(0)
     unescaped = _HEADER_UNESCAPES.get(escaped)
     if not unescaped:
+        # TODO: unknown escapes MUST be treated as fatal protocol error per spec
         unescaped = escaped
     return unescaped
 
