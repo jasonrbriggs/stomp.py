@@ -27,9 +27,13 @@ class TestUtils(unittest.TestCase):
             r'h1:foo\c\\bar  ',
             r'h1:2nd h1 ignored -- not a must, but allowed and that is how we behave ATM',
             r'h\c2:baz\r\nquux',
+            r'h3:\\n\\c',
         ]
-        self.assertEqual(
-            {'h1': r'foo:\bar  ', 'h:2': 'baz\r\nquux'}, parse_headers(lines))
+        self.assertEqual({
+            'h1': r'foo:\bar  ',
+            'h:2': 'baz\r\nquux',
+            'h3': r'\n\c',
+        }, parse_headers(lines))
 
     def test_calculate_heartbeats(self):
         chb = (3000, 5000)

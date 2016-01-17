@@ -72,6 +72,21 @@ def is_localhost(host_and_port):
         return 2
 
 
+_HEADER_ESCAPES = {
+    '\r': '\\r',
+    '\n': '\\n',
+    ':': '\\c',
+    '\\': '\\\\',
+}
+_HEADER_UNESCAPES = dict((value, key) for (key, value) in _HEADER_ESCAPES.items())
+
+def _unescape_header(matchobj):
+    escaped = matchobj.group(0)
+    unescaped = _HEADER_UNESCAPES.get(escaped)
+    if not unescaped:
+        unescaped = escaped
+    return unescaped
+
 def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
@@ -84,10 +99,10 @@ def parse_headers(lines, offset=0):
         header_match = HEADER_LINE_RE.match(header_line)
         if header_match:
             key = header_match.group('key')
-            key = key.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
+            key = re.sub(r'\\.', _unescape_header, key)
             if key not in headers:
                 value = header_match.group('value')
-                value = value.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
+                value = re.sub(r'\\.', _unescape_header, value)
                 headers[key] = value
     return headers
 
