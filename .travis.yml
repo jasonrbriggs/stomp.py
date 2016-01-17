@@ -16,7 +16,5 @@ env:
 install:
   - sudo rabbitmq-plugins enable rabbitmq_stomp
   - pip install virtualenv-api
-  - pip install funcsigs
-  - pip install mock
 script:
   - make travistests

@@ -1,7 +1,6 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-import re
 import uuid
 
 from stomp.backward import encode
@@ -10,27 +9,6 @@ from stomp.exception import ConnectFailedException
 from stomp.listener import *
 import stomp.utils as utils
 
-PROTOCOL_11_ESCAPE_RE = re.compile(r'\\c|\\n|:|\n|\\{1,2}')
-PROTOCOL_11_REPLACEMENTS = {
-    '\\\\' : '\\\\',
-    '\\' : '\\\\',
-    ':' : '\\c',
-    '\n' : '\\n',
-    '\\c' : '\\c',
-    '\\n' : '\\n'
-}
-
-PROTOCOL_12_ESCAPE_RE = re.compile(r'\\r|\\c|\\n|:|\n|\r|\\{1,2}')
-PROTOCOL_12_REPLACEMENTS = {
-    '\\\\' : '\\\\',
-    '\\' : '\\\\',
-    ':' : '\\c',
-    '\n' : '\\n',
-    '\r' : '\\r',
-    '\\c' : '\\c',
-    '\\n' : '\\n',
-    '\\r' : '\\r'
-}
 
 class Protocol10(ConnectionListener):
     """
@@ -228,7 +206,11 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
     def _escape_headers(self, headers):
         for key, val in headers.items():
-            headers[key] = utils.escape(PROTOCOL_11_ESCAPE_RE, PROTOCOL_11_REPLACEMENTS, val)
+            try:
+                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c')
+            except:
+                pass
+            headers[key] = val
 
     def send_frame(self, cmd, headers={}, body=''):
         """
@@ -427,7 +409,11 @@ class Protocol12(Protocol11):
 
     def _escape_headers(self, headers):
         for key, val in headers.items():
-            headers[key] = utils.escape(PROTOCOL_12_ESCAPE_RE, PROTOCOL_12_REPLACEMENTS, val)
+            try:
+                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c').replace('\r', '\\r')
+            except:
+                pass
+            headers[key] = val
 
     def ack(self, id, transaction=None):
         """

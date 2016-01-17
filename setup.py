@@ -6,7 +6,6 @@ import sys
 import unittest
 
 import stomp
-import stomp.test
 
 try:
     logging.config.fileConfig('stomp.log.conf')
@@ -34,10 +33,10 @@ class TestCommand(Command):
         suite = unittest.TestSuite()
         if self.test == '*':
             print('Running all tests')
-            import stomp
             tests = stomp.test.__all__
         else:
-            tests = self.test.split(',')
+            tests = self.test.split(',')        
+        import stomp.test
         for tst in tests:
             suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
 

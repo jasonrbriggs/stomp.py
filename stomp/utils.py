@@ -213,18 +213,3 @@ class Frame(object):
 
     def __str__(self):
         return '{cmd=%s,headers=[%s],body=%s}' % (self.cmd, self.headers, self.body)
-
-
-def escape(regex, replacements, s):
-    try:
-        mat = regex.search(s)
-        if not mat:
-            return s
-
-        start = s[0:mat.start()]
-        match = s[mat.start():mat.end()]
-        if match in replacements:
-            match = replacements[match]
-        return start + match + escape(regex, replacements, s[mat.end():])
-    except:
-        return s
