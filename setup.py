@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from distutils.core import Command, setup
 import logging.config
 import os
