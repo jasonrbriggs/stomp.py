@@ -74,7 +74,7 @@ class MulticastTransport(Transport):
             receipt_frame = Frame('RECEIPT', {'receipt-id': f.headers['receipt']})
             lines = convert_frame_to_lines(receipt_frame)
             self.send(encode(pack(lines)))
-        log.debug("Received frame: %r, headers=%r, body=%r" % (f.cmd, f.headers, f.body))
+        log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
 
     def stop(self):
         self.running = False

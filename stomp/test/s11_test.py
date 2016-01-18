@@ -74,7 +74,7 @@ heart-beat: 1000,1000\x00''')
             server.running = False
         except Exception:
             _, e, _ = sys.exc_info()
-            log.error("Error: %s" % e)
+            log.error("Error: %s", e)
         finally:
             server.stop()
 
