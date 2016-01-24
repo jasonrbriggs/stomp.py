@@ -149,7 +149,6 @@ class HeartbeatListener(ConnectionListener):
     Listener used to handle STOMP heartbeating.
     """
     def __init__(self, heartbeats):
-        self.connected = False
         self.running = False
         self.heartbeats = heartbeats
         self.received_heartbeat = None
