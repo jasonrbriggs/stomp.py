@@ -5,6 +5,7 @@
 import base64
 from cmd import Cmd
 from optparse import OptionParser
+import json
 import os
 import sys
 import time
@@ -298,21 +299,31 @@ class StompCLI(Cmd, ConnectionListener):
     def do_sendfile(self, args):
         args = args.split()
         if len(args) < 2:
-            self.__error('Expecting: sendfile <destination> <filename>')
+            self.__error('Expecting: sendfile <destination> <filename> [headers.json]')
         elif not os.path.exists(args[1]):
             self.__error('File %s does not exist' % args[1])
         else:
+            headers = {}
+            if len(args) == 3:
+                if not os.path.exists(args[2]):
+                    self.__error('File %s does not exist' % args[2])
+                    return
+                self.__sysout("Loading %s" % args[2])
+                with open(args[2], mode='rb') as jf:
+                    headers = json.load(jf)
+                    self.__sysout('Using headers %s' % str(headers))
+
             with open(args[1], mode='rb') as f:
                 s = f.read()
             msg = base64.b64encode(s).decode()
             if not self.transaction_id:
-                self.conn.send(args[0], msg, filename=args[1])
+                self.conn.send(args[0], msg, filename=args[1], headers=headers)
             else:
-                self.conn.send(args[0], msg, filename=args[1], transaction=self.transaction_id)
+                self.conn.send(args[0], msg, filename=args[1], headers=headers, transaction=self.transaction_id)
 
     def help_sendfile(self):
-        self.help('sendfile <destination> <filename>', 'Sends a file to a destination in the messaging system.',
-                  ['destination - where to send the message', 'filename - the file to send'])
+        self.help('sendfile <destination> <filename> [headers.json]', 'Sends a file to a destination in the messaging system.',
+                  ['destination - where to send the message', 'filename - the file to send', 'headers.json - json map with headers to send'])
 
     def do_version(self, args):
         self.__sysout('%s%s [Protocol version %s]%s' % (stomp.colors.BOLD, stomppy_version, self.conn.version, stomp.colors.NO_COLOR))
