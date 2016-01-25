@@ -188,6 +188,7 @@ class HeartbeatListener(ConnectionListener):
                 self.running = True
                 if self.heartbeat_thread is None:
                     self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
+                    self.heartbeat_thread.name = "StompHeartbeat%s" % getattr(self.heartbeat_thread, "name", "Thread")
 
     def on_disconnected(self):
         self.running = False
