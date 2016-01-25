@@ -250,7 +250,7 @@ class HeartbeatListener(ConnectionListener):
                     log.debug("Lost connection, unable to send heartbeat")
                 except Exception:
                     _, e, _ = sys.exc_info()
-                    log.debug("Unable to send heartbeat, due to: %s" % e)
+                    log.debug("Unable to send heartbeat, due to: %s", e)
 
             if self.receive_sleep != 0:
                 diff_receive = now - self.received_heartbeat

@@ -53,7 +53,7 @@ heart-beat: 1000,1000\x00''')
                 _, e, _ = sys.exc_info()
                 if e.__class__ == AssertionError:
                     self.fail(str(e))
-                log.debug('stopping conn after expected exception %s' % e)
+                log.debug('stopping conn after expected exception %s', e)
                 # lost connection, now restart the server
                 try:
                     conn.disconnect(receipt=None)
