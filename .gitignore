@@ -19,6 +19,10 @@ lib
 lib64
 __pycache__
 
+# VIM
+.*.swp
+.*.un~
+
 # Installer logs
 pip-log.txt
 
