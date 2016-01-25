@@ -2,9 +2,12 @@ Version 4.2.0
 
  * Bug fix for header escaping (https://github.com/jasonrbriggs/stomp.py/issues/82)
  * Merge patches from Ville S:
-     * https://github.com/jasonrbriggs/stomp.py/pull/79
-     * https://github.com/jasonrbriggs/stomp.py/pull/80
-     * https://github.com/jasonrbriggs/stomp.py/pull/81
+     * heartbeats - set received timestamp on receipt and error too (https://github.com/jasonrbriggs/stomp.py/pull/79)
+     * test class name fixes (https://github.com/jasonrbriggs/stomp.py/pull/80)
+     * support \r\n\r\n preamble end on content-length search (https://github.com/jasonrbriggs/stomp.py/pull/81)
+     * on-demand logging message expansion (https://github.com/jasonrbriggs/stomp.py/pull/85)
+ * Merge patch from Mikael V:
+     * add header support in CLI (https://github.com/jasonrbriggs/stomp.py/pull/86)
  
 
 Version 4.1.9 - Jan 2016
