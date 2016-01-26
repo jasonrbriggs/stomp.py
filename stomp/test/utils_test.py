@@ -11,16 +11,20 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(2, is_localhost(('192.168.1.92', 8000)))
 
     def test_convert_frame_to_lines(self):
-        f = Frame('SEND', {'header1': 'value1', 'headerNone': None}, 'this is the body')
+        f = Frame('SEND', {
+            'header1': 'value1',
+            'headerNone': None,
+            ' no ': ' trimming ',
+        }, 'this is the body')
 
         lines = convert_frame_to_lines(f)
 
         s = pack(lines)
 
         if sys.hexversion >= 0x03000000:
-            self.assertEqual(bytearray('SEND\nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
+            self.assertEqual(bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
         else:
-            self.assertEqual('SEND\nheader1:value1\n\nthis is the body\x00', s)
+            self.assertEqual('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', s)
 
     def test_parse_headers(self):
         lines = [
@@ -29,12 +33,14 @@ class TestUtils(unittest.TestCase):
             r'h\c2:baz\r\nquux',
             r'h3:\\n\\c',
             r'against-spec:\t',  # should actually raise or something, we're against spec here ATM
+            r' foo : bar',
         ]
         self.assertEqual({
             'h1': r'foo:\bar  ',
             'h:2': 'baz\r\nquux',
             'h3': r'\n\c',
             'against-spec': r'\t',
+            ' foo ': ' bar',
         }, parse_headers(lines))
 
     def test_calculate_heartbeats(self):
