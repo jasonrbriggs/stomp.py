@@ -165,11 +165,11 @@ class BaseTransport(stomp.listener.Publisher):
         if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
             if frame_type == 'message':
                 (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
-            self.notify(frame_type, f.headers, f.body)
             if log.isEnabledFor(logging.DEBUG):
                 log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
                 log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, utils.length(f.body))
+            self.notify(frame_type, f.headers, f.body)
         else:
             log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
 
