@@ -276,6 +276,7 @@ class HeartbeatListener(ConnectionListener):
                     self.transport.set_connected(False)
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
+        self.heartbeat_thread = None
 
 
 class WaitingListener(ConnectionListener):
