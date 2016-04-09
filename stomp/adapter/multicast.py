@@ -117,7 +117,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         elif cmd == CMD_COMMIT:
             trans = headers[HDR_TRANSACTION]
             if trans not in self.transactions:
-                self.notify('error', {}, 'Transaction % not started' % trans)
+                self.notify('error', {}, 'Transaction %s not started' % trans)
             else:
                 for f in self.transactions[trans]:
                     self.transport.transmit(f)
