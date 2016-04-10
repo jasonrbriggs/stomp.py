@@ -539,7 +539,7 @@ class Transport(BaseTransport):
                     # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
                     #
                     _, e, _ = sys.exc_info()
-                    log.warn(e)
+                    log.warning(e)
             elif hasattr(socket, 'SHUT_RDWR'):
                 try:
                     self.socket.shutdown(socket.SHUT_RDWR)
@@ -547,7 +547,7 @@ class Transport(BaseTransport):
                     _, e, _ = sys.exc_info()
                     # ignore when socket already closed
                     if get_errno(e) != errno.ENOTCONN:
-                        log.warn("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+                        log.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
@@ -557,7 +557,7 @@ class Transport(BaseTransport):
                 self.socket.close()
             except socket.error:
                 _, e, _ = sys.exc_info()
-                log.warn("Unable to close socket because of error '%s'", e)
+                log.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
 
     def send(self, encoded_frame):
