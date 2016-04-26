@@ -224,6 +224,8 @@ class BaseTransport(stomp.listener.Publisher):
                 (headers, body) = rtn
         if rtn:
             return rtn
+        else:
+            return (headers, body)
 
     def transmit(self, frame):
         """
