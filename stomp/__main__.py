@@ -44,7 +44,7 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See :py:class:`stomp.connect.StompConnection11`
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, use_ssl=False, stdin=sys.stdin, stdout=sys.stdout):
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, use_ssl=False, heartbeats=(0, 0), stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
         self.prompt = prompt
@@ -55,9 +55,9 @@ class StompCLI(Cmd, ConnectionListener):
         if ver == '1.0':
             self.conn = StompConnection10([(host, port)], wait_on_receipt=True)
         elif ver == '1.1':
-            self.conn = StompConnection11([(host, port)], wait_on_receipt=True)
+            self.conn = StompConnection11([(host, port)], wait_on_receipt=True, heartbeats=heartbeats)
         elif ver == '1.2':
-            self.conn = StompConnection12([(host, port)], wait_on_receipt=True)
+            self.conn = StompConnection12([(host, port)], wait_on_receipt=True, heartbeats=heartbeats)
         elif ver == 'multicast':
             self.conn = MulticastConnection()
         else:
@@ -493,6 +493,8 @@ def main():
                       help='Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
     parser.add_option('--ssl', action='callback', callback=optional_arg(True), dest='ssl',
                       help='Enable SSL connection')
+    parser.add_option('--heartbeats', type='string', dest='heartbeats', default="0,0",
+                      help='Heartbeats to request when connecting with protocol >= 1.1, two comma separated integers.')
 
     parser.set_defaults()
     (options, _) = parser.parse_args()
@@ -510,7 +512,9 @@ def main():
     else:
         prompt = '> '
 
-    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose, options.ssl)
+    heartbeats = tuple(map(int, options.heartbeats.split(",")))
+
+    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose, options.ssl, heartbeats)
 
     if options.listen:
         st.do_subscribe(options.listen)
