@@ -198,7 +198,6 @@ class BaseTransport(stomp.listener.Publisher):
         elif frame_type == 'disconnected':
             self.set_connected(False)
 
-        rtn = None
         for listener in self.listeners.values():
             if not listener:
                 continue
@@ -222,10 +221,7 @@ class BaseTransport(stomp.listener.Publisher):
             rtn = notify_func(headers, body)
             if rtn:
                 (headers, body) = rtn
-        if rtn:
-            return rtn
-        else:
-            return (headers, body)
+        return (headers, body)
 
     def transmit(self, frame):
         """
