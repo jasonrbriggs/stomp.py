@@ -1,4 +1,4 @@
-Version 4.1.10
+Version 4.1.10 - Apr 2016
 
  * Bug fix for header escaping (https://github.com/jasonrbriggs/stomp.py/issues/82)
  * Merge patches from Ville S:
@@ -9,8 +9,10 @@ Version 4.1.10
      * bump connect error logging level to warning (https://github.com/jasonrbriggs/stomp.py/pull/87)
      * assign names to heartbeat and receiver threads (https://github.com/jasonrbriggs/stomp.py/pull/88)
      * remove unused HeartbeatListener.connected (https://github.com/jasonrbriggs/stomp.py/pull/89)
+     * support for heartbeats on CLI (https://github.com/jasonrbriggs/stomp.py/pull/100)
  * Merge patch from Mikael V:
      * add header support in CLI (https://github.com/jasonrbriggs/stomp.py/pull/86)
+ * Bug fix for on_before_message error (https://github.com/jasonrbriggs/stomp.py/issues/99)
  
 
 Version 4.1.9 - Jan 2016
