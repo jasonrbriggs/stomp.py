@@ -118,18 +118,18 @@ class Protocol10(ConnectionListener):
             if self.transport.connection_error:
                 raise ConnectFailedException()
 
-    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers={}, **keyword_headers):
         """
         Disconnect from the server.
 
         :param receipt: the receipt to use (once the server acknowledges that receipt, we're
-            officially disconnected)
+            officially disconnected; optional - if not specified a unique receipt id will
+            be generated)
         :param headers: a map of any additional headers the broker requires
         :param keyword_headers: any additional headers the broker requires
         """
         headers = utils.merge_headers([headers, keyword_headers])
-        if receipt:
-            headers[HDR_RECEIPT] = receipt
+        headers[HDR_RECEIPT] = receipt or str(uuid.uuid4())
         self.send_frame(CMD_DISCONNECT, headers)
 
     def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
@@ -315,18 +315,18 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             if self.transport.connection_error:
                 raise ConnectFailedException()
 
-    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers={}, **keyword_headers):
         """
         Disconnect from the server.
 
         :param receipt: the receipt to use (once the server acknowledges that receipt, we're
-            officially disconnected)
+            officially disconnected; optional - if not specified a unique receipt id will
+            be generated)
         :param headers: a map of any additional headers the broker requires
         :param keyword_headers: any additional headers the broker requires
         """
         headers = utils.merge_headers([headers, keyword_headers])
-        if receipt:
-            headers[HDR_RECEIPT] = receipt
+        headers[HDR_RECEIPT] = receipt or str(uuid.uuid4())
         self.send_frame(CMD_DISCONNECT, headers)
 
     def nack(self, id, subscription, transaction=None):
