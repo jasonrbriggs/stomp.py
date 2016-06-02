@@ -225,6 +225,8 @@ class HeartbeatListener(ConnectionListener):
 
     def __update_heartbeat(self):
         # Honour any grace that has been already included
+        if self.received_heartbeat is None:
+            return
         now = monotonic()
         if now > self.received_heartbeat:
             self.received_heartbeat = now
