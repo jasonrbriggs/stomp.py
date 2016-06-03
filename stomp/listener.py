@@ -6,7 +6,7 @@ import sys
 import threading
 import time
 
-from stomp.backward import gcd, monotonic
+from stomp.backward import monotonic
 from stomp.constants import *
 import stomp.exception as exception
 import stomp.utils as utils
@@ -153,6 +153,7 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeats = heartbeats
         self.received_heartbeat = None
         self.heartbeat_thread = None
+        self.next_outbound_heartbeat = None
 
     def on_connected(self, headers, body):
         """
@@ -171,23 +172,15 @@ class HeartbeatListener(ConnectionListener):
                 # receive gets an additional grace of 50%
                 self.receive_sleep = (self.heartbeats[1] / 1000) * 1.5
 
-                # Setup an initial grace period
-                if self.receive_sleep != 0:
-                    self.received_heartbeat = monotonic() + \
-                        2 * self.receive_sleep
-
-                if self.send_sleep == 0:
-                    self.sleep_time = self.receive_sleep
-                elif self.receive_sleep == 0:
-                    self.sleep_time = self.send_sleep
-                else:
-                    # sleep is the GCD of the send and receive times
-                    self.sleep_time = gcd(self.send_sleep, self.receive_sleep) / 2.0
+                # Give grace of receiving the first heartbeat
+                self.received_heartbeat = monotonic() + self.receive_sleep
 
                 self.running = True
                 if self.heartbeat_thread is None:
-                    self.heartbeat_thread = utils.default_create_thread(self.__heartbeat_loop)
-                    self.heartbeat_thread.name = "StompHeartbeat%s" % getattr(self.heartbeat_thread, "name", "Thread")
+                    self.heartbeat_thread = utils.default_create_thread(
+                        self.__heartbeat_loop)
+                    self.heartbeat_thread.name = "StompHeartbeat%s" % \
+                        getattr(self.heartbeat_thread, "name", "Thread")
 
     def on_disconnected(self):
         self.running = False
@@ -200,25 +193,25 @@ class HeartbeatListener(ConnectionListener):
         :param body: the message content
         """
         # reset the heartbeat for any received message
-        self.received_heartbeat = monotonic()
+        self.__update_heartbeat()
 
     def on_receipt(self, *_):
         """
         Reset the last received time whenever a receipt is received.
         """
-        self.received_heartbeat = monotonic()
+        self.__update_heartbeat()
 
     def on_error(self, *_):
         """
         Reset the last received time whenever an error is received.
         """
-        self.received_heartbeat = monotonic()
+        self.__update_heartbeat()
 
     def on_heartbeat(self):
         """
         Reset the last received time whenever a heartbeat message is received.
         """
-        self.received_heartbeat = monotonic()
+        self.__update_heartbeat()
 
     def on_send(self, frame):
         """
@@ -230,19 +223,42 @@ class HeartbeatListener(ConnectionListener):
             if self.heartbeats != (0, 0):
                 frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
 
+    def __update_heartbeat(self):
+        # Honour any grace that has been already included
+        if self.received_heartbeat is None:
+            return
+        now = monotonic()
+        if now > self.received_heartbeat:
+            self.received_heartbeat = now
+
     def __heartbeat_loop(self):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        send_time = monotonic()
+        now = monotonic()
+
+        # Setup the initial due time for the outbound heartbeat
+        if self.send_sleep != 0:
+            self.next_outbound_heartbeat = now + self.send_sleep
 
         while self.running:
-            time.sleep(self.sleep_time)
+            now = monotonic()
+
+            next_events = []
+            if self.next_outbound_heartbeat is not None:
+                next_events.append(self.next_outbound_heartbeat-now)
+            if self.receive_sleep != 0:
+                next_events.append(self.received_heartbeat + self.receive_sleep
+                                   - now)
+            sleep_time = min(next_events)
+            if sleep_time > 0:
+                time.sleep(sleep_time)
 
             now = monotonic()
 
-            if self.send_sleep != 0 and now - send_time > self.send_sleep:
-                send_time = now
+            if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
+                self.next_outbound_heartbeat = now + self.send_sleep
+
                 log.debug("Sending a heartbeat message at %s", now)
                 try:
                     self.transport.transmit(utils.Frame(None, {}, None))
@@ -262,6 +278,7 @@ class HeartbeatListener(ConnectionListener):
                     self.transport.set_connected(False)
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
+        self.heartbeat_thread = None
 
 
 class WaitingListener(ConnectionListener):
