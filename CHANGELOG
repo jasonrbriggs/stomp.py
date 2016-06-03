@@ -1,3 +1,9 @@
+Version 4.1.12 - 
+
+ * Merge patch from Nigel S, improving heartbeat accuracy (https://github.com/jasonrbriggs/stomp.py/pull/95)
+ * Merge patch from Ville S, fixing receipt id generation (https://github.com/jasonrbriggs/stomp.py/pull/102)
+
+
 Version 4.1.11 - Apr 2016
 
  * Minor tidy up (missed from prior release)
