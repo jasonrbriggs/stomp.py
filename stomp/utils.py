@@ -110,10 +110,7 @@ def parse_headers(lines, offset=0):
 
 def parse_frame(frame):
     """
-    Parse a STOMP frame into a (frame_type, headers, body) tuple,
-    where frame_type is the frame type as a string (e.g. MESSAGE),
-    headers is a map containing all header key/value pairs, and
-    body is a string containing the frame's payload.
+    Parse a STOMP frame into a Frame object.
 
     :param frame: the frame received from the server (as a string)
     """
