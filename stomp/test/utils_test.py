@@ -55,3 +55,26 @@ class TestUtils(unittest.TestCase):
         self.assertEqual((0, 10000), calculate_heartbeats(shb, chb))
         chb = (0, 0)
         self.assertEqual((0, 0), calculate_heartbeats(shb, chb))
+
+    def test_parse_frame(self):
+        # heartbeat
+        f = parse_frame(b'\x0a')
+        self.assertEqual(str(f), str(Frame('heartbeat')))
+        # oddball/broken
+        f = parse_frame(b'FOO')
+        self.assertEqual(str(f), str(Frame('FOO', body=b'')))
+        # empty body
+        f = parse_frame(b'RECEIPT\nreceipt-id:message-12345\n\n')
+        self.assertEqual(str(f), str(Frame('RECEIPT', {'receipt-id': 'message-12345'}, b'')))
+        # no headers
+        f = parse_frame(b'ERROR\n\n')
+        self.assertEqual(str(f), str(Frame('ERROR', body=b'')))
+        # regular, different linefeeds
+        for lf in b'\n', b'\r\n':
+            f = parse_frame(
+                b'MESSAGE' + lf +
+                b'content-type:text/plain' + lf +
+                lf +
+                b'hello world!'
+            )
+            self.assertEqual(str(f), str(Frame('MESSAGE', {'content-type': 'text/plain'}, b'hello world!')))

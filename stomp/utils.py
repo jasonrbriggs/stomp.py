@@ -120,14 +120,15 @@ def parse_frame(frame):
         return f
 
     mat = PREAMBLE_END_RE.search(frame)
-    preamble_end = -1
     if mat:
         preamble_end = mat.start()
-    if preamble_end == -1:
+        body_start = mat.end()
+    else:
         preamble_end = len(frame)
+        body_start = preamble_end
     preamble = decode(frame[0:preamble_end])
     preamble_lines = LINE_END_RE.split(preamble)
-    f.body = frame[preamble_end + 2:]
+    f.body = frame[body_start:]
 
     # Skip any leading newlines
     first_line = 0
