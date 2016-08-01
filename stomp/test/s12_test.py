@@ -33,7 +33,7 @@ class Test12Connect(unittest.TestCase):
 
         self.conn.send(body='this is a test using protocol 1.2', destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
@@ -100,7 +100,7 @@ message: connection failed\x00''')
 
         self.conn.send(body='this is a test', headers=hdrs, destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         (headers, _) = self.listener.get_latest_message()
 
