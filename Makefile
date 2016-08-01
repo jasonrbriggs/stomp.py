@@ -4,7 +4,7 @@ BUILDIR=$(CURDIR)/debian/stomppy
 PROJECT=stomp.py
 VERSION=3.0.1
 PYTHON_VERSION_FULL := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
-PYTHON_VERSION_MAJOR := $(word 1,${PYTHON_VERSION_FULL})
+PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0])")
 
 ifeq ($(PYTHON_VERSION_MAJOR), 3)
 travistests: travistests-py3
