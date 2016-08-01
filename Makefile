@@ -39,7 +39,7 @@ travistests:
 
 travistests-py2:
 	$(PYTHON) setup.py test --test=p2_nonascii_test,p2_backward_test
-	
+
 travistests-py3:
 	$(PYTHON) setup.py test --test=p3_nonascii_test,p3_backward_test
 
