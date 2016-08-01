@@ -16,15 +16,30 @@ class BaseConnection(Publisher):
     """
 
     def __init__(self, transport):
+        """
+        :param transport:
+        """
         self.transport = transport
 
     def set_listener(self, name, lstnr):
+        """
+        :param str name:
+        :param ConnectionListener lstnr:
+        """
         self.transport.set_listener(name, lstnr)
 
     def remove_listener(self, name):
+        """
+        :param str name:
+        """
         self.transport.remove_listener(name)
 
     def get_listener(self, name):
+        """
+        :param str name:
+
+        :rtype: ConnectionListener
+        """
         return self.transport.get_listener(name)
 
     def start(self):
@@ -34,6 +49,9 @@ class BaseConnection(Publisher):
         self.transport.stop()
 
     def is_connected(self):
+        """
+        :rtype: bool
+        """
         return self.transport.is_connected()
 
     def set_ssl(self, *args, **kwargs):
@@ -80,8 +98,8 @@ class StompConnection10(BaseConnection, Protocol10):
         """
         Call the protocol disconnection, and then stop the transport itself.
 
-        :param receipt: the receipt to use with the disconnect
-        :param headers: a map of any additional headers to send with the disconnection
+        :param str receipt: the receipt to use with the disconnect
+        :param dict headers: a map of any additional headers to send with the disconnection
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol10.disconnect(self, receipt, headers, **keyword_headers)
@@ -127,8 +145,8 @@ class StompConnection11(BaseConnection, Protocol11):
         """
         Call the protocol disconnection, and then stop the transport itself.
 
-        :param receipt: the receipt to use with the disconnect
-        :param headers: a map of any additional headers to send with the disconnection
+        :param str receipt: the receipt to use with the disconnect
+        :param dict headers: a map of any additional headers to send with the disconnection
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
@@ -174,8 +192,8 @@ class StompConnection12(BaseConnection, Protocol12):
         """
         Call the protocol disconnection, and then stop the transport itself.
 
-        :param receipt: the receipt to use with the disconnect
-        :param headers: a map of any additional headers to send with the disconnection
+        :param str receipt: the receipt to use with the disconnect
+        :param dict headers: a map of any additional headers to send with the disconnection
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)

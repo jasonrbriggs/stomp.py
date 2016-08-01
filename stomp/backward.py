@@ -16,7 +16,7 @@ def get_errno(e):
     """
     Return the errno of an exception, or the first argument if errno is not available.
 
-    :param e: the exception object
+    :param Exception e: the exception object
     """
     try:
         return e.errno
