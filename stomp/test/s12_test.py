@@ -1,6 +1,9 @@
 import time
 import unittest
-from unittest.mock import Mock
+try:
+    from unittest.mock import Mock
+except ImportError:
+    from mock import Mock
 
 import stomp
 from stomp import exception
