@@ -84,7 +84,7 @@ class Protocol10(ConnectionListener):
 
     def commit(self, transaction=None, headers={}, **keyword_headers):
         """
-        Commit a transcation.
+        Commit a transaction.
 
         :param str transaction: the identifier for the transaction
         :param dict headers: a map of any additional headers the broker requires
@@ -286,7 +286,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
     def commit(self, transaction=None, headers={}, **keyword_headers):
         """
-        Commit a transcation.
+        Commit a transaction.
 
         :param str transaction: the identifier for the transaction
         :param dict headers: a map of any additional headers the broker requires
