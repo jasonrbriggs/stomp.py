@@ -1,4 +1,4 @@
-PYTHON=`which python`
+PYTHON:=`which python`
 DESTDIR=/
 BUILDIR=$(CURDIR)/debian/stomppy
 PROJECT=stomp.py
