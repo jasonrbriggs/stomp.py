@@ -447,4 +447,4 @@ class TestListener(StatsListener, WaitingListener):
         self.message_received = False
 
     def get_latest_message(self):
-        return self.message_list[len(self.message_list) - 1]
+        return self.message_list[-1]
