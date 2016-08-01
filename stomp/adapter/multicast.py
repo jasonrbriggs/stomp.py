@@ -5,7 +5,6 @@ Obviously not a typical message broker, but convenient if you don't have a broke
 
 import socket
 import struct
-import uuid
 
 from stomp.connect import BaseConnection
 from stomp.protocol import *
@@ -101,7 +100,7 @@ class MulticastConnection(BaseConnection, Protocol12):
     def unsubscribe(self, id, headers={}, **keyword_headers):
         del self.transport.subscriptions[id]
 
-    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers={}, **keyword_headers):
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
