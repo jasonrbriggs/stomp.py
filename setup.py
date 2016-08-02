@@ -7,12 +7,13 @@ import shutil
 import sys
 import unittest
 
-import stomp
-
 try:
     logging.config.fileConfig('stomp.log.conf')
 except:
     pass
+
+# Import this after configuring logging
+import stomp
 
 
 class TestCommand(Command):
