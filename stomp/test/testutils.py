@@ -32,6 +32,14 @@ def get_default_host():
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
 
+def get_default_vhost():
+    try:
+        vhost = config.get('default', 'vhost')
+    except:
+        vhost = None
+    return get_environ('STD_VHOST') or vhost
+
+
 def get_default_user():
     user = config.get('default', 'user')
     return get_environ('STD_USER') or user

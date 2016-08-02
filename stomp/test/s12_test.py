@@ -1,6 +1,9 @@
 import time
 import unittest
-from unittest.mock import Mock
+try:
+    from unittest.mock import Mock
+except ImportError:
+    from mock import Mock
 
 import stomp
 from stomp import exception
@@ -11,7 +14,7 @@ from stomp.test.testutils import *
 class Test12Connect(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection12(get_default_host())
+        conn = stomp.Connection12(get_default_host(), vhost=get_default_vhost())
         listener = TestListener('123')
         conn.set_listener('', listener)
         conn.start()
@@ -30,7 +33,7 @@ class Test12Connect(unittest.TestCase):
 
         self.conn.send(body='this is a test using protocol 1.2', destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assertTrue(self.listener.messages == 1, 'should have received 1 message')
@@ -97,7 +100,7 @@ message: connection failed\x00''')
 
         self.conn.send(body='this is a test', headers=hdrs, destination=queuename, receipt='123')
 
-        self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         (headers, _) = self.listener.get_latest_message()
 
@@ -114,7 +117,7 @@ message: connection failed\x00''')
 
     def test_suppress_content_length(self):
         queuename = '/queue/testspecialchars12-%s' % self.timestamp
-        self.conn = stomp.Connection12(get_default_host(), auto_content_length=False)
+        self.conn = stomp.Connection12(get_default_host(), vhost=get_default_vhost(), auto_content_length=False)
         self.conn.transport = Mock()
 
         self.conn.send(body='test', destination=queuename, receipt='123')
