@@ -254,9 +254,9 @@ class BaseTransport(stomp.listener.Publisher):
         packed_frame = pack(lines)
 
         if log.isEnabledFor(logging.DEBUG):
-            log.debug("Sending frame %s", lines)
+            log.debug("Sending frame: %s", lines)
         else:
-            log.info("Sending frame cmd=%r headers=%r", frame.cmd, frame.headers)
+            log.info("Sending frame: %r, headers=%r", frame.cmd or "heartbeat", frame.headers)
 
         self.send(encode(packed_frame))
 

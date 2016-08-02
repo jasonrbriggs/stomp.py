@@ -217,13 +217,16 @@ class HeartbeatListener(ConnectionListener):
 
     def on_send(self, frame):
         """
-        Add the heartbeat header to the frame when connecting.
+        Add the heartbeat header to the frame when connecting, and bump
+        next outbound heartbeat timestamp.
 
         :param Frame frame: the Frame object
         """
         if frame.cmd == CMD_CONNECT or frame.cmd == CMD_STOMP:
             if self.heartbeats != (0, 0):
                 frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
+        if self.next_outbound_heartbeat is not None:
+            self.next_outbound_heartbeat = monotonic() + self.send_sleep
 
     def __update_heartbeat(self):
         # Honour any grace that has been already included
@@ -259,8 +262,6 @@ class HeartbeatListener(ConnectionListener):
             now = monotonic()
 
             if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
-                self.next_outbound_heartbeat = now + self.send_sleep
-
                 log.debug("Sending a heartbeat message at %s", now)
                 try:
                     self.transport.transmit(utils.Frame(None, {}, None))
