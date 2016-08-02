@@ -50,7 +50,7 @@ def default_create_thread(callback):
     Default thread creation - used to create threads when the client doesn't want to provide their
     own thread creation.
 
-    :param callback: the callback function provided to threading.Thread
+    :param function callback: the callback function provided to threading.Thread
     """
     thread = threading.Thread(None, callback)
     thread.daemon = True  # Don't let thread prevent termination
@@ -63,7 +63,9 @@ def is_localhost(host_and_port):
     Return 1 if the specified host+port is a member of the 'localhost' list of hosts, 2 if not (predominately used
     as a sort key.
 
-    :param host_and_port: tuple containing host (string) and port (number)
+    :param (str,int) host_and_port: tuple containing host and port
+
+    :rtype: int
     """
     (host, _) = host_and_port
     if host in LOCALHOST_NAMES:
@@ -92,8 +94,10 @@ def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
 
-    :param lines: the lines received in the message response
-    :param offset: the starting line number
+    :param list(str) lines: the lines received in the message response
+    :param int offset: the starting line number
+
+    :rtype: dict(str,str)
     """
     headers = {}
     for header_line in lines[offset:]:
@@ -112,7 +116,9 @@ def parse_frame(frame):
     """
     Parse a STOMP frame into a Frame object.
 
-    :param frame: the frame received from the server (as a string)
+    :param bytes frame: the frame received from the server (as a byte string)
+
+    :rtype: Frame
     """
     f = Frame()
     if frame == b'\x0a':
@@ -148,7 +154,9 @@ def merge_headers(header_map_list):
     """
     Helper function for combining multiple header maps into one.
 
-    :param header_map_list: list of maps
+    :param list(dict) header_map_list: list of maps
+
+    :rtype: dict
     """
     headers = {}
     for header_map in header_map_list:
@@ -161,8 +169,10 @@ def calculate_heartbeats(shb, chb):
     Given a heartbeat string from the server, and a heartbeat tuple from the client,
     calculate what the actual heartbeat settings should be.
 
-    :param shb: server heartbeat numbers
-    :param chb: client heartbeat numbers
+    :param (str,str) shb: server heartbeat numbers
+    :param (int,int) chb: client heartbeat numbers
+
+    :rtype: (int,int)
     """
     (sx, sy) = shb
     (cx, cy) = chb
@@ -179,7 +189,9 @@ def convert_frame_to_lines(frame):
     """
     Convert a frame to a list of lines separated by newlines.
 
-    :param frame: the Frame object to convert
+    :param Frame frame: the Frame object to convert
+
+    :rtype: list(str)
     """
     lines = []
     if frame.cmd:
@@ -205,7 +217,9 @@ def length(s):
     """
     Null (none) safe length function.
 
-    :param s: the string to return length of (None allowed)
+    :param str s: the string to return length of (None allowed)
+
+    :rtype: int
     """
     if s is not None:
         return len(s)
@@ -216,8 +230,8 @@ class Frame(object):
     """
     A STOMP frame (or message).
 
-    :param cmd: the protocol command
-    :param headers: a map of headers for the frame
+    :param str cmd: the protocol command
+    :param dict headers: a map of headers for the frame
     :param body: the content of the frame.
     """
     def __init__(self, cmd=None, headers={}, body=None):

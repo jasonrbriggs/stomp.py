@@ -9,7 +9,9 @@ def input_prompt(prompt):
     """
     Get user input
 
-    :param prompt: the prompt to display to the user
+    :param str prompt: the prompt to display to the user
+
+    :rtype: str
     """
     return input(prompt)
 
@@ -18,7 +20,9 @@ def decode(byte_data):
     """
     Decode the byte data to a string if not None.
 
-    :param byte_data: the data to decode
+    :param bytes byte_data: the data to decode
+
+    :rtype: str
     """
     if byte_data is None:
         return None
@@ -30,6 +34,8 @@ def encode(char_data):
     Encode the parameter as a byte string.
 
     :param char_data: the data to encode
+
+    :rtype: bytes
     """
     if type(char_data) is str:
         return char_data.encode()
@@ -43,7 +49,9 @@ def pack(pieces=[]):
     """
     Join a list of strings together.
 
-    :param pieces: list of strings
+    :param list pieces: list of strings
+
+    :rtype: bytes
     """
     encoded_pieces = (encode(piece) for piece in pieces)
     return b''.join(encoded_pieces)
@@ -53,6 +61,8 @@ def join(chars=[]):
     """
     Join a list of characters into a string.
 
-    :param chars: list of chars
+    :param bytes chars: list of chars
+
+    :rtype: str
     """
     return b''.join(chars).decode()

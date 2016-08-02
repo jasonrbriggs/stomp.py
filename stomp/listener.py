@@ -24,8 +24,8 @@ class Publisher(object):
         """
         Set a named listener to use with this connection. See :py:class:`stomp.listener.ConnectionListener`
 
-        :param name: the name of the listener
-        :param listener: the listener object
+        :param str name: the name of the listener
+        :param ConnectionListener listener: the listener object
         """
         pass
 
@@ -33,7 +33,7 @@ class Publisher(object):
         """
         Remove a listener.
 
-        :param name: the name of the listener to remove
+        :param str name: the name of the listener to remove
         """
         pass
 
@@ -41,7 +41,9 @@ class Publisher(object):
         """
         Return the named listener.
 
-        :param name: the listener to return
+        :param str name: the listener to return
+
+        :rtype: ConnectionListener
         """
         return None
 
@@ -59,7 +61,7 @@ class ConnectionListener(object):
         protocol level. For this, you need to invoke the "connect"
         method on the connection.
 
-        :param host_and_port: a tuple containing the host name and port number to which the connection
+        :param (str,int) host_and_port: a tuple containing the host name and port number to which the connection
             has been established.
         """
         pass
@@ -70,7 +72,7 @@ class ConnectionListener(object):
         received (after a connection has been established or
         re-established).
 
-        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param dict headers: a dictionary containing all headers sent by the server as key/value pairs.
         :param body: the frame's payload. This is usually empty for CONNECTED frames.
         """
         pass
@@ -95,7 +97,7 @@ class ConnectionListener(object):
         Called by the STOMP connection before a message is returned to the client app. Returns a tuple
         containing the headers and body (so that implementing listeners can pre-process the content).
 
-        :param headers: the message headers
+        :param dict headers: the message headers
         :param body: the message body
         """
         return headers, body
@@ -104,7 +106,7 @@ class ConnectionListener(object):
         """
         Called by the STOMP connection when a MESSAGE frame is received.
 
-        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param dict headers: a dictionary containing all headers sent by the server as key/value pairs.
         :param body: the frame's payload - the message body.
         """
         pass
@@ -115,7 +117,7 @@ class ConnectionListener(object):
         received, sent by the server if requested by the client using
         the 'receipt' header.
 
-        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param dict headers: a dictionary containing all headers sent by the server as key/value pairs.
         :param body: the frame's payload. This is usually empty for RECEIPT frames.
         """
         pass
@@ -124,7 +126,7 @@ class ConnectionListener(object):
         """
         Called by the STOMP connection when an ERROR frame is received.
 
-        :param headers: a dictionary containing all headers sent by the server as key/value pairs.
+        :param dict headers: a dictionary containing all headers sent by the server as key/value pairs.
         :param body: the frame's payload - usually a detailed error description.
         """
         pass
@@ -133,7 +135,7 @@ class ConnectionListener(object):
         """
         Called by the STOMP connection when it is in the process of sending a message
 
-        :param frame: the frame to be sent
+        :param Frame frame: the frame to be sent
         """
         pass
 
@@ -161,7 +163,7 @@ class HeartbeatListener(ConnectionListener):
         heartbeat numbers (based on what the server sent and what was specified by the client) - if the heartbeats
         are not 0, we start up the heartbeat loop accordingly.
 
-        :param headers: headers in the connection message
+        :param dict headers: headers in the connection message
         :param body: the message body
         """
         if 'heart-beat' in headers:
@@ -189,7 +191,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Reset the last received time whenever a message is received.
 
-        :param headers: headers in the message
+        :param dict headers: headers in the message
         :param body: the message content
         """
         # reset the heartbeat for any received message
@@ -217,7 +219,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Add the heartbeat header to the frame when connecting.
 
-        :param frame: the Frame object
+        :param Frame frame: the Frame object
         """
         if frame.cmd == CMD_CONNECT or frame.cmd == CMD_STOMP:
             if self.heartbeats != (0, 0):
@@ -286,6 +288,9 @@ class WaitingListener(ConnectionListener):
     A listener which waits for a specific receipt to arrive.
     """
     def __init__(self, receipt):
+        """
+        :param str receipt:
+        """
         self.condition = threading.Condition()
         self.receipt = receipt
         self.received = False
@@ -294,7 +299,7 @@ class WaitingListener(ConnectionListener):
         """
         If the receipt id can be found in the headers, then notify the waiting thread.
 
-        :param headers: headers in the message
+        :param dict headers: headers in the message
         :param body: the message content
         """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
@@ -341,7 +346,7 @@ class StatsListener(ConnectionListener):
         """
         Increment the error count. See :py:meth:`ConnectionListener.on_error`
 
-        :param headers: headers in the message
+        :param dict headers: headers in the message
         :param body: the message content
         """
         log.info("received an error %s [%s]", body, headers)
@@ -351,7 +356,7 @@ class StatsListener(ConnectionListener):
         """
         Increment the connection count. See :py:meth:`ConnectionListener.on_connecting`
 
-        :param host_and_port: the host and port as a tuple
+        :param (str,int) host_and_port: the host and port as a tuple
         """
         log.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
@@ -360,7 +365,7 @@ class StatsListener(ConnectionListener):
         """
         Increment the message received count. See :py:meth:`ConnectionListener.on_message`
 
-        :param headers: headers in the message
+        :param dict headers: headers in the message
         :param body: the message content
         """
         self.messages += 1
@@ -368,6 +373,8 @@ class StatsListener(ConnectionListener):
     def on_send(self, frame):
         """
         Increment the send count. See :py:meth:`ConnectionListener.on_send`
+
+        :param Frame frame:
         """
         self.messages_sent += 1
 
@@ -391,9 +398,16 @@ Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.error
 
 class PrintingListener(ConnectionListener):
     def on_connecting(self, host_and_port):
+        """
+        :param (str,int) host_and_port:
+        """
         print('on_connecting %s %s' % host_and_port)
 
     def on_connected(self, headers, body):
+        """
+        :param dict headers:
+        :param body:
+        """
         print('on_connected %s %s' % (headers, body))
 
     def on_disconnected(self):
@@ -403,19 +417,38 @@ class PrintingListener(ConnectionListener):
         print('on_heartbeat_timeout')
 
     def on_before_message(self, headers, body):
+        """
+        :param dict headers:
+        :param body:
+        """
         print('on_before_message %s %s' % (headers, body))
         return headers, body
 
     def on_message(self, headers, body):
+        """
+        :param dict headers:
+        :param body:
+        """
         print('on_message %s %s' % (headers, body))
 
     def on_receipt(self, headers, body):
+        """
+        :param dict headers:
+        :param body:
+        """
         print('on_receipt %s %s' % (headers, body))
 
     def on_error(self, headers, body):
+        """
+        :param dict headers:
+        :param body:
+        """
         print('on_error %s %s' % (headers, body))
 
     def on_send(self, frame):
+        """
+        :param Frame frame:
+        """
         print('on_send %s %s %s' % (frame.cmd, frame.headers, frame.body))
 
     def on_heartbeat(self):
@@ -427,6 +460,9 @@ class TestListener(StatsListener, WaitingListener):
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
     def __init__(self, receipt=None):
+        """
+        :param str receipt:
+        """
         StatsListener.__init__(self)
         WaitingListener.__init__(self, receipt)
         self.message_list = []
@@ -434,6 +470,10 @@ class TestListener(StatsListener, WaitingListener):
         self.message_received = False
 
     def on_message(self, headers, message):
+        """
+        :param dict headers:
+        :param message:
+        """
         StatsListener.on_message(self, headers, message)
         self.message_list.append((headers, message))
         with self.message_condition:

@@ -44,16 +44,24 @@ class MulticastTransport(Transport):
     def send(self, encoded_frame):
         """
         Send an encoded frame through the mcast socket.
+
+        :param bytes encoded_frame:
         """
         self.socket.sendto(encoded_frame, (MCAST_GRP, MCAST_PORT))
 
     def receive(self):
         """
         Receive 1024 bytes from the multicast receiver socket.
+
+        :rtype: bytes
         """
         return self.receiver_socket.recv(1024)
 
     def process_frame(self, f, frame_str):
+        """
+        :param Frame f: Frame object
+        :param bytes frame_str: Raw frame content
+        """
         frame_type = f.cmd.lower()
 
         if frame_type in ['disconnect']:
@@ -86,25 +94,57 @@ class MulticastTransport(Transport):
 
 class MulticastConnection(BaseConnection, Protocol12):
     def __init__(self, wait_on_receipt=False):
+        """
+        :param bool wait_on_receipt:
+        """
         self.transport = MulticastTransport()
         self.transport.set_listener('mcast-listener', self)
         self.transactions = {}
         Protocol12.__init__(self, self.transport, (0, 0))
 
     def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+        """
+        :param str username:
+        :param str passcode:
+        :param bool wait:
+        :param dict headers:
+        :param keyword_headers:
+        """
         pass
 
     def subscribe(self, destination, id, ack='auto', headers={}, **keyword_headers):
+        """
+        :param str destination:
+        :param str id:
+        :param str ack:
+        :param dict headers:
+        :param keyword_headers:
+        """
         self.transport.subscriptions[id] = destination
 
     def unsubscribe(self, id, headers={}, **keyword_headers):
+        """
+        :param str id:
+        :param dict headers:
+        :param keyword_headers:
+        """
         del self.transport.subscriptions[id]
 
     def disconnect(self, receipt=None, headers={}, **keyword_headers):
+        """
+        :param str receipt:
+        :param dict headers:
+        :param keyword_headers:
+        """
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
     def send_frame(self, cmd, headers={}, body=''):
+        """
+        :param str cmd:
+        :param dict headers:
+        :param body:
+        """
         frame = utils.Frame(cmd, headers, body)
 
         if cmd == CMD_BEGIN:
