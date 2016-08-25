@@ -28,7 +28,7 @@ class Protocol10(ConnectionListener):
     def send_frame(self, cmd, headers={}, body=''):
         """
         Encode and send a stomp frame
-        through the underlying transport:
+        through the underlying transport.
 
         :param str cmd: the protocol command
         :param dict headers: a map of headers to include in the frame
