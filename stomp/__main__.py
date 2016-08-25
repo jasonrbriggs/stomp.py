@@ -158,7 +158,7 @@ class StompCLI(Cmd, ConnectionListener):
     def emptyline(self):
         pass
 
-    def help(self, usage, description, required=[], optional=[]):
+    def help(self, usage, description, required=(), optional=()):
         required.insert(0, '')
         rparams = "\n\t".join(required)
 

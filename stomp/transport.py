@@ -736,7 +736,7 @@ class Transport(BaseTransport):
             raise exception.ConnectFailedException()
 
     def set_ssl(self,
-                for_hosts=[],
+                for_hosts=(),
                 key_file=None,
                 cert_file=None,
                 ca_certs=None,

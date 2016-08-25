@@ -234,9 +234,9 @@ class Frame(object):
     :param dict headers: a map of headers for the frame
     :param body: the content of the frame.
     """
-    def __init__(self, cmd=None, headers={}, body=None):
+    def __init__(self, cmd=None, headers=None, body=None):
         self.cmd = cmd
-        self.headers = headers
+        self.headers = headers if headers is not None else {}
         self.body = body
 
     def __str__(self):

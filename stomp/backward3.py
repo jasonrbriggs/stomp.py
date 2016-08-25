@@ -45,9 +45,9 @@ def encode(char_data):
         raise TypeError('message should be a string or bytes')
 
 
-def pack(pieces=[]):
+def pack(pieces=()):
     """
-    Join a list of strings together.
+    Join a sequence of strings together.
 
     :param list pieces: list of strings
 
@@ -57,9 +57,9 @@ def pack(pieces=[]):
     return b''.join(encoded_pieces)
 
 
-def join(chars=[]):
+def join(chars=()):
     """
-    Join a list of characters into a string.
+    Join a sequence of characters into a string.
 
     :param bytes chars: list of chars
 

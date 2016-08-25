@@ -78,3 +78,7 @@ class TestUtils(unittest.TestCase):
                 b'hello world!'
             )
             self.assertEqual(str(f), str(Frame('MESSAGE', {'content-type': 'text/plain'}, b'hello world!')))
+
+    def test_clean_default_headers(self):
+        Frame().headers['foo'] = 'bar'
+        self.assertEqual(Frame().headers, {})
