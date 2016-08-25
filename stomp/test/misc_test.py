@@ -78,6 +78,7 @@ class TestMessageTransform(unittest.TestCase):
         self.listener.wait_for_message()
 
         self.assertTrue(self.listener.message is not None, 'Did not receive a message')
-        self.assertTrue(self.listener.message.__class__ == dict, 'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
+        self.assertTrue(self.listener.message.__class__ == dict,
+                        'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
         self.assertTrue(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')
         self.assertTrue(self.listener.message['city'] == 'Belgrade', 'Missing an expected dict element')

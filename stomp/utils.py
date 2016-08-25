@@ -8,7 +8,7 @@ import threading
 from stomp.backward import decode, NULL
 
 
-## List of all host names (unqualified, fully-qualified, and IP
+# List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
 # and external interfaces).  This is used for determining
 # preferred targets.
@@ -82,6 +82,7 @@ _HEADER_ESCAPES = {
 }
 _HEADER_UNESCAPES = dict((value, key) for (key, value) in _HEADER_ESCAPES.items())
 
+
 def _unescape_header(matchobj):
     escaped = matchobj.group(0)
     unescaped = _HEADER_UNESCAPES.get(escaped)
@@ -89,6 +90,7 @@ def _unescape_header(matchobj):
         # TODO: unknown escapes MUST be treated as fatal protocol error per spec
         unescaped = escaped
     return unescaped
+
 
 def parse_headers(lines, offset=0):
     """

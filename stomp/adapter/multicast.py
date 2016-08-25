@@ -1,6 +1,7 @@
 """Multicast transport for stomp.py.
 
-Obviously not a typical message broker, but convenient if you don't have a broker, but still want to use stomp.py methods.
+Obviously not a typical message broker, but convenient if you don't have a broker, but still want to use stomp.py
+methods.
 """
 
 import socket
@@ -20,7 +21,8 @@ class MulticastTransport(Transport):
     Transport over multicast connections rather than using a broker.
     """
     def __init__(self):
-        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False, DEFAULT_SSL_VERSION, None, None, None)
+        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False,
+                           DEFAULT_SSL_VERSION, None, None, None)
         self.subscriptions = {}
         self.current_host_and_port = (MCAST_GRP, MCAST_PORT)
 

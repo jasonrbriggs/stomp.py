@@ -48,10 +48,12 @@ class Test11Send(unittest.TestCase):
         listener.wait_for_message()
         conn.disconnect(receipt=None)
 
-        self.assertTrue(listener.connections >= 1, 'should have received 1 connection acknowledgement, was %s' % listener.connections)
+        self.assertTrue(listener.connections >= 1,
+                        'should have received 1 connection acknowledgement, was %s' % listener.connections)
         self.assertTrue(listener.messages >= 1, 'should have received 1 message, was %s' % listener.messages)
         self.assertTrue(listener.errors == 0, 'should not have received any errors, was %s' % listener.errors)
-        self.assertTrue(listener.heartbeat_timeouts == 0, 'should not have received a heartbeat timeout, was %s' % listener.heartbeat_timeouts)
+        self.assertTrue(listener.heartbeat_timeouts == 0,
+                        'should not have received a heartbeat timeout, was %s' % listener.heartbeat_timeouts)
 
     def testheartbeat_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)

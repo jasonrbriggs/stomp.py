@@ -44,7 +44,8 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See :py:class:`stomp.connect.StompConnection11`
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True, use_ssl=False, heartbeats=(0, 0), stdin=sys.stdin, stdout=sys.stdout):
+    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True,
+                 use_ssl=False, heartbeats=(0, 0), stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
         self.prompt = prompt
@@ -159,11 +160,8 @@ class StompCLI(Cmd, ConnectionListener):
         pass
 
     def help(self, usage, description, required=(), optional=()):
-        required.insert(0, '')
-        rparams = "\n\t".join(required)
-
-        optional.insert(0, '')
-        oparams = "\n\t".join(optional)
+        rparams = "\n\t" + "\n\t".join(required)
+        oparams = "\n\t" + "\n\t".join(optional)
 
         m = {
             'hl': stomp.colors.BOLD + stomp.colors.GREEN,
@@ -282,7 +280,8 @@ class StompCLI(Cmd, ConnectionListener):
             self.conn.send(args[0], ' '.join(args[1:]), transaction=self.transaction_id, receipt=receipt_id)
 
     def help_sendrec(self):
-        self.help('sendrec <destination> <message>', 'Sends a message to a destination in the messaging system and blocks for receipt of the message.',
+        self.help('sendrec <destination> <message>',
+                  'Sends a message to a destination in the messaging system and blocks for receipt of the message.',
                   ['destination - where to send the message', 'message - the content to send'])
 
     def do_sendreply(self, args):
@@ -293,8 +292,11 @@ class StompCLI(Cmd, ConnectionListener):
             self.conn.send(args[0], "%s\n" % ' '.join(args[2:]), headers={'correlation-id': args[1]})
 
     def help_sendreply(self):
-        self.help('sendreply <destination> <correlation-id> <message>', 'Sends a reply message to a destination in the messaging system.',
-                  ['destination - where to send the message', 'correlation-id - the correlating identifier to send with the response', 'message - the content to send'])
+        self.help('sendreply <destination> <correlation-id> <message>',
+                  'Sends a reply message to a destination in the messaging system.',
+                  ['destination - where to send the message',
+                   'correlation-id - the correlating identifier to send with the response',
+                   'message - the content to send'])
 
     def do_sendfile(self, args):
         args = args.split()
@@ -322,11 +324,14 @@ class StompCLI(Cmd, ConnectionListener):
                 self.conn.send(args[0], msg, filename=args[1], headers=headers, transaction=self.transaction_id)
 
     def help_sendfile(self):
-        self.help('sendfile <destination> <filename> [headers.json]', 'Sends a file to a destination in the messaging system.',
-                  ['destination - where to send the message', 'filename - the file to send', 'headers.json - json map with headers to send'])
+        self.help('sendfile <destination> <filename> [headers.json]',
+                  'Sends a file to a destination in the messaging system.',
+                  ['destination - where to send the message', 'filename - the file to send',
+                   'headers.json - json map with headers to send'])
 
     def do_version(self, args):
-        self.__sysout('%s%s [Protocol version %s]%s' % (stomp.colors.BOLD, stomppy_version, self.conn.version, stomp.colors.NO_COLOR))
+        self.__sysout('%s%s [Protocol version %s]%s' %
+                      (stomp.colors.BOLD, stomppy_version, self.conn.version, stomp.colors.NO_COLOR))
     do_ver = do_version
 
     def help_version(self):
@@ -514,7 +519,8 @@ def main():
 
     heartbeats = tuple(map(int, options.heartbeats.split(",")))
 
-    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose, options.ssl, heartbeats)
+    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose,
+                  options.ssl, heartbeats)
 
     if options.listen:
         st.do_subscribe(options.listen)
