@@ -50,9 +50,7 @@ class BaseTransport(stomp.listener.Publisher):
     and anything else outside of actually establishing a network connection, sending and
     receiving of messages (so generally socket-agnostic functions).
 
-    :param bool wait_on_receipt: if a receipt is specified, then the send method should wait
-        (block) for the server to respond with that receipt-id
-        before continuing
+    :param bool wait_on_receipt: deprecated, ignored
     :param bool auto_decode: automatically decode message responses as strings, rather than
         leaving them as bytes. This preserves the behaviour as of version 4.0.16.
         (To be defaulted to False as of the next release)
@@ -63,7 +61,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
-    def __init__(self, wait_on_receipt, auto_decode=True):
+    def __init__(self, wait_on_receipt=False, auto_decode=True):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -71,7 +69,6 @@ class BaseTransport(stomp.listener.Publisher):
         self.connected = False
         self.connection_error = False
         self.__receipts = {}
-        self.__wait_on_receipt = wait_on_receipt
         self.current_host_and_port = None
 
         # flag used when we receive the disconnect receipt
@@ -437,7 +434,7 @@ class Transport(BaseTransport):
     :param ssl_cert_validator: deprecated, see :py:meth:`set_ssl`
     :param ssl_version: deprecated, see :py:meth:`set_ssl`
     :param timeout: the timeout value to use when connecting the stomp socket
-    :param bool wait_on_receipt:
+    :param bool wait_on_receipt: deprecated, ignored
     :param keepalive: some operating systems support sending the occasional heart
         beat packets to detect when a connection fails.  This
         parameter can either be set set to a boolean to turn on the
