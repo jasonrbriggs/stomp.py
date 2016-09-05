@@ -39,9 +39,9 @@ def encode(char_data):
         return char_data
 
 
-def pack(pieces=[]):
+def pack(pieces=()):
     """
-    Join a list of strings together (note: py3 version differs)
+    Join a sequence of strings together (note: py3 version differs)
 
     :param list pieces:
 
@@ -50,9 +50,9 @@ def pack(pieces=[]):
     return ''.join(encode(p) for p in pieces)
 
 
-def join(chars=[]):
+def join(chars=()):
     """
-    Join a list of characters into a string.
+    Join a sequence of characters into a string.
 
     :param bytes chars:
 

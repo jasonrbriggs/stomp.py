@@ -69,7 +69,7 @@ class TestThreading(unittest.TestCase):
         etype = {}
         for ec, _, _ in errs:
             if ec in etype:
-                etype[ec] = etype[ec] + 1
+                etype[ec] += 1
             else:
                 etype[ec] = 1
         for k in sorted(etype.keys()):

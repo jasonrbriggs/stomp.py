@@ -17,7 +17,7 @@ class BaseConnection(Publisher):
 
     def __init__(self, transport):
         """
-        :param transport:
+        :param Transport transport:
         """
         self.transport = transport
 
