@@ -356,6 +356,7 @@ class BaseTransport(stomp.listener.Publisher):
                     log.debug("socket read interrupted, restarting")
                     continue
             except Exception:
+                log.debug("socket read error", exc_info=True)
                 c = b''
             if len(c) == 0:
                 raise exception.ConnectionClosedException()
