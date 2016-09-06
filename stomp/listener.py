@@ -337,6 +337,8 @@ class StatsListener(ConnectionListener):
         self.messages_sent = 0
         # The number of heartbeat timeouts
         self.heartbeat_timeouts = 0
+        # The number of heartbeats
+        self.heartbeat_count = 0
 
     def on_disconnected(self):
         """
@@ -388,6 +390,12 @@ class StatsListener(ConnectionListener):
         log.debug("received heartbeat timeout")
         self.heartbeat_timeouts += 1
 
+    def on_heartbeat(self):
+        """
+        Increment the heartbeat count. See :py:meth:`ConnectionListener.on_heartbeat`
+        """
+        self.heartbeat_count += 1
+
     def __str__(self):
         """
         Return a string containing the current statistics (messages sent and received,
@@ -396,7 +404,8 @@ class StatsListener(ConnectionListener):
         return '''Connections: %s
 Messages sent: %s
 Messages received: %s
-Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.errors)
+Heartbeats received: %s
+Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.heartbeat_count, self.errors)
 
 
 class PrintingListener(ConnectionListener):
