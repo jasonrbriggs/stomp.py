@@ -25,10 +25,12 @@ class TestWithStompServer(unittest.TestCase):
 
     def test_disconnect(self):
         self.server.add_frame('''CONNECTED
-version: 1.1
-session: 1
-server: test
-heart-beat: 1000,1000\x00''')
+version:1.1
+session:1
+server:test
+heart-beat:1000,1000
+
+\x00''')
 
         conn = stomp.Connection([('127.0.0.1', 60000)])
         listener = TestListener()
@@ -66,10 +68,12 @@ heart-beat: 1000,1000\x00''')
             time.sleep(2)
 
             self.server.add_frame('''CONNECTED
-version: 1.1
-session: 1
-server: test
-heart-beat: 1000,1000\x00''')
+version:1.1
+session:1
+server:test
+heart-beat:1000,1000
+
+\x00''')
 
             self.server.start()
 
@@ -91,10 +95,12 @@ heart-beat: 1000,1000\x00''')
         # Trailing optional EOLs in a frame
 
         self.server.add_frame('''CONNECTED
-version: 1.1
-session: 1
-server: test
-heart-beat: 1000,1000\x00''' + '\n\n\n')
+version:1.1
+session:1
+server:test
+heart-beat:1000,1000
+
+\x00''' + '\n\n\n')
         expected_heartbeat_count = 0
 
         conn = stomp.Connection([('127.0.0.1', 60000)])

@@ -60,10 +60,12 @@ class Test11Send(unittest.TestCase):
         server.start()
         try:
             server.add_frame('''CONNECTED
-version: 1.1
-session: 1
-server: test
-heart-beat: 1000,1000\x00''')
+version:1.1
+session:1
+server:test
+heart-beat:1000,1000
+
+\x00''')
 
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
             listener = TestListener()
