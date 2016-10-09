@@ -62,6 +62,12 @@ def get_default_ssl_host():
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_SSL_PORT') or port))]
 
 
+def get_sni_ssl_host():
+    host = config.get('sni', 'host')
+    port = config.get('sni', 'ssl_port')
+    return [(get_environ('SNI_HOST') or host, int(get_environ('SNI_SSL_PORT') or port))]
+
+
 def get_rabbitmq_host():
     host = config.get('rabbitmq', 'host')
     port = config.get('rabbitmq', 'port')

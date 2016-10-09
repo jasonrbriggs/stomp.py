@@ -689,13 +689,31 @@ class Transport(BaseTransport):
                             cert_validation = ssl.CERT_REQUIRED
                         else:
                             cert_validation = ssl.CERT_NONE
-                        self.socket = ssl.wrap_socket(
-                            self.socket,
-                            keyfile=ssl_params['key_file'],
-                            certfile=ssl_params['cert_file'],
-                            cert_reqs=cert_validation,
-                            ca_certs=ssl_params['ca_certs'],
-                            ssl_version=ssl_params['ssl_version'])
+                        try:
+                            tls_context = ssl.create_default_context(cafile=ssl_params['ca_certs'])
+                        except AttributeError:
+                            tls_context = None
+                        if tls_context:
+                            # Wrap the socket for TLS
+                            certfile = ssl_params['cert_file']
+                            keyfile = ssl_params['key_file']
+                            if certfile and not keyfile:
+                                keyfile = certfile
+                            if certfile:
+                                tls_context.load_cert_chain(certfile, keyfile)
+                            if cert_validation is None or cert_validation == ssl.CERT_NONE:
+                                tls_context.check_hostname = False
+                            tls_context.verify_mode = cert_validation
+                            self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
+                        else:
+                            # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
+                            self.socket = ssl.wrap_socket(
+                                self.socket,
+                                keyfile=ssl_params['key_file'],
+                                certfile=ssl_params['cert_file'],
+                                cert_reqs=cert_validation,
+                                ca_certs=ssl_params['ca_certs'],
+                                ssl_version=ssl_params['ssl_version'])
 
                     self.socket.settimeout(self.__timeout)
 
