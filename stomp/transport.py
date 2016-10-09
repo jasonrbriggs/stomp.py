@@ -357,12 +357,21 @@ class BaseTransport(stomp.listener.Publisher):
                 c = b''
             if len(c) == 0:
                 raise exception.ConnectionClosedException()
+            if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
+                #
+                # EOL to an empty receive buffer: treat as heartbeat.
+                # Note that this may misdetect an optional EOL at end of frame as heartbeat in case the
+                # previous receive() got a complete frame whose NUL at end of frame happened to be the
+                # last byte of that read. But that should be harmless in practice.
+                #
+                fastbuf.close()
+                return [c]
             fastbuf.write(c)
             if b'\x00' in c:
+                #
+                # Possible end of frame
+                #
                 break
-            elif c == b'\x0a':
-                # heartbeat (special case)
-                return [c, ]
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
@@ -394,7 +403,13 @@ class BaseTransport(stomp.listener.Publisher):
                                     #
                                     break
                     result.append(frame)
-                    self.__recvbuf = self.__recvbuf[pos + 1:]
+                    pos += 1
+                    #
+                    # Ignore optional EOLs at end of frame
+                    #
+                    while self.__recvbuf[pos:pos + 1] == b'\x0a':
+                        pos += 1
+                    self.__recvbuf = self.__recvbuf[pos:]
                 else:
                     break
         return result
