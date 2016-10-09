@@ -25,7 +25,7 @@ class Protocol10(ConnectionListener):
         transport.set_listener('protocol-listener', self)
         self.version = '1.0'
 
-    def send_frame(self, cmd, headers={}, body=''):
+    def send_frame(self, cmd, headers=None, body=''):
         """
         Encode and send a stomp frame
         through the underlying transport.
@@ -37,7 +37,7 @@ class Protocol10(ConnectionListener):
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 
-    def abort(self, transaction, headers={}, **keyword_headers):
+    def abort(self, transaction, headers=None, **keyword_headers):
         """
         Abort a transaction.
 
@@ -63,7 +63,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ACK, headers)
 
-    def begin(self, transaction=None, headers={}, **keyword_headers):
+    def begin(self, transaction=None, headers=None, **keyword_headers):
         """
         Begin a transaction.
 
@@ -82,7 +82,7 @@ class Protocol10(ConnectionListener):
         self.send_frame(CMD_BEGIN, headers)
         return transaction
 
-    def commit(self, transaction=None, headers={}, **keyword_headers):
+    def commit(self, transaction=None, headers=None, **keyword_headers):
         """
         Commit a transaction.
 
@@ -95,7 +95,7 @@ class Protocol10(ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_COMMIT, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
         """
         Start a connection.
 
@@ -122,7 +122,7 @@ class Protocol10(ConnectionListener):
             if self.transport.connection_error:
                 raise ConnectFailedException()
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Disconnect from the server.
 
@@ -136,7 +136,7 @@ class Protocol10(ConnectionListener):
         headers[HDR_RECEIPT] = receipt or str(uuid.uuid4())
         self.send_frame(CMD_DISCONNECT, headers)
 
-    def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
+    def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
         """
         Send a message to a destination.
 
@@ -157,7 +157,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
-    def subscribe(self, destination, id=None, ack='auto', headers={}, **keyword_headers):
+    def subscribe(self, destination, id=None, ack='auto', headers=None, **keyword_headers):
         """
         Subscribe to a destination.
 
@@ -177,7 +177,7 @@ class Protocol10(ConnectionListener):
         headers[HDR_ACK] = ack
         self.send_frame(CMD_SUBSCRIBE, headers)
 
-    def unsubscribe(self, destination=None, id=None, headers={}, **keyword_headers):
+    def unsubscribe(self, destination=None, id=None, headers=None, **keyword_headers):
         """
         Unsubscribe from a destination by either id or the destination name.
 
@@ -223,7 +223,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
                 pass
             headers[key] = val
 
-    def send_frame(self, cmd, headers={}, body=''):
+    def send_frame(self, cmd, headers=None, body=''):
         """
         Encode and send a stomp frame
         through the underlying transport:
@@ -233,11 +233,13 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param body: the content of the message
         """
         if cmd != CMD_CONNECT:
+            if headers is None:
+                headers = {}
             self._escape_headers(headers)
         frame = utils.Frame(cmd, headers, body)
         self.transport.transmit(frame)
 
-    def abort(self, transaction, headers={}, **keyword_headers):
+    def abort(self, transaction, headers=None, **keyword_headers):
         """
         Abort a transaction.
 
@@ -265,7 +267,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ACK, headers)
 
-    def begin(self, transaction=None, headers={}, **keyword_headers):
+    def begin(self, transaction=None, headers=None, **keyword_headers):
         """
         Begin a transaction.
 
@@ -284,7 +286,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.send_frame(CMD_BEGIN, headers)
         return transaction
 
-    def commit(self, transaction=None, headers={}, **keyword_headers):
+    def commit(self, transaction=None, headers=None, **keyword_headers):
         """
         Commit a transaction.
 
@@ -297,7 +299,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_COMMIT, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
         """
         Start a connection.
 
@@ -327,7 +329,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             if self.transport.connection_error:
                 raise ConnectFailedException()
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Disconnect from the server.
 
@@ -356,7 +358,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_NACK, headers)
 
-    def send(self, destination, body, content_type=None, headers={}, **keyword_headers):
+    def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
         """
         Send a message to a destination in the messaging system (as per https://stomp.github.io/stomp-specification-1.2.html#SEND)
 
@@ -377,7 +379,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
-    def subscribe(self, destination, id, ack='auto', headers={}, **keyword_headers):
+    def subscribe(self, destination, id, ack='auto', headers=None, **keyword_headers):
         """
         Subscribe to a destination
 
@@ -395,7 +397,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_ACK] = ack
         self.send_frame(CMD_SUBSCRIBE, headers)
 
-    def unsubscribe(self, id, headers={}, **keyword_headers):
+    def unsubscribe(self, id, headers=None, **keyword_headers):
         """
         Unsubscribe from a destination by its unique identifier
 
@@ -460,7 +462,7 @@ class Protocol12(Protocol11):
             headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_NACK, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
         """
         Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
 

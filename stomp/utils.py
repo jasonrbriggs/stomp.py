@@ -162,7 +162,8 @@ def merge_headers(header_map_list):
     """
     headers = {}
     for header_map in header_map_list:
-        headers.update(header_map)
+        if header_map:
+            headers.update(header_map)
     return headers
 
 

@@ -94,7 +94,7 @@ class StompConnection10(BaseConnection, Protocol10):
         BaseConnection.__init__(self, transport)
         Protocol10.__init__(self, transport, auto_content_length)
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
 
@@ -141,7 +141,7 @@ class StompConnection11(BaseConnection, Protocol11):
         BaseConnection.__init__(self, transport)
         Protocol11.__init__(self, transport, heartbeats, auto_content_length)
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
 
@@ -188,7 +188,7 @@ class StompConnection12(BaseConnection, Protocol12):
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats, auto_content_length)
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
 

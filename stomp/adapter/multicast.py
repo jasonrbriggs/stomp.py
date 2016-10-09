@@ -104,7 +104,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         self.transactions = {}
         Protocol12.__init__(self, self.transport, (0, 0))
 
-    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
         """
         :param str username:
         :param str passcode:
@@ -114,7 +114,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         """
         pass
 
-    def subscribe(self, destination, id, ack='auto', headers={}, **keyword_headers):
+    def subscribe(self, destination, id, ack='auto', headers=None, **keyword_headers):
         """
         :param str destination:
         :param str id:
@@ -124,7 +124,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         """
         self.transport.subscriptions[id] = destination
 
-    def unsubscribe(self, id, headers={}, **keyword_headers):
+    def unsubscribe(self, id, headers=None, **keyword_headers):
         """
         :param str id:
         :param dict headers:
@@ -132,7 +132,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         """
         del self.transport.subscriptions[id]
 
-    def disconnect(self, receipt=None, headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         :param str receipt:
         :param dict headers:
@@ -141,12 +141,14 @@ class MulticastConnection(BaseConnection, Protocol12):
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
-    def send_frame(self, cmd, headers={}, body=''):
+    def send_frame(self, cmd, headers=None, body=''):
         """
         :param str cmd:
         :param dict headers:
         :param body:
         """
+        if headers is None:
+            headers = {}
         frame = utils.Frame(cmd, headers, body)
 
         if cmd == CMD_BEGIN:
