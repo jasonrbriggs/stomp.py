@@ -2,6 +2,7 @@ PYTHON:=`which python`
 DESTDIR=/
 PROJECT=stomp.py
 PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0])")
+PLATFORM := $(shell uname)
 
 ifeq ($(PYTHON_VERSION_MAJOR), 3)
 travistests: travistests-py3
@@ -60,6 +61,8 @@ haproxy:
 
 clean:
 	$(PYTHON) setup.py clean
-	$(MAKE) -f $(CURDIR)/debian/rules clean
+    ifeq  ($(PLATFORM),Linux)
+        $(MAKE) -f $(CURDIR)/debian/rules clean
+    endif
 	rm -rf build/ MANIFEST
 	find . -name '*.pyc' -delete

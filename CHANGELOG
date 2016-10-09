@@ -1,7 +1,17 @@
-Version 4.1.12 - 
+Version 4.1.13 - 
+
+
+
+Version 4.1.12 - Oct 2016
 
  * Merge patch from Nigel S, improving heartbeat accuracy (https://github.com/jasonrbriggs/stomp.py/pull/95)
- * Merge patch from Ville S, fixing receipt id generation (https://github.com/jasonrbriggs/stomp.py/pull/102)
+ * Merge various patches from Ville S (including):
+    * fixing receipt id generation (https://github.com/jasonrbriggs/stomp.py/pull/102)
+    * generate disconnect receipt ids (https://github.com/jasonrbriggs/stomp.py/pull/108)
+    * don't send unnecessary heartbeats (https://github.com/jasonrbriggs/stomp.py/pull/113)
+    * fix misdetection of heartbeats (https://github.com/jasonrbriggs/stomp.py/pull/120)
+ * Merge patch from Hugh P, adding SNI support (https://github.com/jasonrbriggs/stomp.py/pull/124)
+ * Fix for heartbeat calculation error (https://github.com/jasonrbriggs/stomp.py/pull/125)
 
 
 Version 4.1.11 - Apr 2016
