@@ -61,8 +61,8 @@ haproxy:
 
 clean:
 	$(PYTHON) setup.py clean
-    ifeq  ($(PLATFORM),Linux)
-        $(MAKE) -f $(CURDIR)/debian/rules clean
-    endif
+	ifeq  ($(PLATFORM),Linux)
+		$(MAKE) -f $(CURDIR)/debian/rules clean
+	endif
 	rm -rf build/ MANIFEST
 	find . -name '*.pyc' -delete
