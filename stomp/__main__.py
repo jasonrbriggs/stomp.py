@@ -54,11 +54,11 @@ class StompCLI(Cmd, ConnectionListener):
         self.passcode = passcode
         self.__quit = False
         if ver == '1.0':
-            self.conn = StompConnection10([(host, port)], wait_on_receipt=True)
+            self.conn = StompConnection10([(host, port)])
         elif ver == '1.1':
-            self.conn = StompConnection11([(host, port)], wait_on_receipt=True, heartbeats=heartbeats)
+            self.conn = StompConnection11([(host, port)], heartbeats=heartbeats)
         elif ver == '1.2':
-            self.conn = StompConnection12([(host, port)], wait_on_receipt=True, heartbeats=heartbeats)
+            self.conn = StompConnection12([(host, port)], heartbeats=heartbeats)
         elif ver == 'multicast':
             self.conn = MulticastConnection()
         else:

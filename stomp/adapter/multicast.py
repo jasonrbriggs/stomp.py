@@ -97,7 +97,7 @@ class MulticastTransport(Transport):
 class MulticastConnection(BaseConnection, Protocol12):
     def __init__(self, wait_on_receipt=False):
         """
-        :param bool wait_on_receipt:
+        :param bool wait_on_receipt: deprecated, ignored
         """
         self.transport = MulticastTransport()
         self.transport.set_listener('mcast-listener', self)
