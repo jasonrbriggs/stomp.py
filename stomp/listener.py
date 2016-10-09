@@ -252,10 +252,11 @@ class HeartbeatListener(ConnectionListener):
 
             next_events = []
             if self.next_outbound_heartbeat is not None:
-                next_events.append(self.next_outbound_heartbeat-now)
+                next_events.append(self.next_outbound_heartbeat - now)
             if self.receive_sleep != 0:
-                next_events.append(self.received_heartbeat + self.receive_sleep
-                                   - now)
+                t = self.received_heartbeat + self.receive_sleep - now
+                if t > 0:
+                    next_events.append(t)
             sleep_time = min(next_events)
             if sleep_time > 0:
                 time.sleep(sleep_time)
