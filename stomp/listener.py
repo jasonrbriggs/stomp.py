@@ -338,6 +338,8 @@ class StatsListener(ConnectionListener):
         self.messages_sent = 0
         # The number of heartbeat timeouts
         self.heartbeat_timeouts = 0
+        # The number of heartbeats
+        self.heartbeat_count = 0
 
     def on_disconnected(self):
         """
@@ -389,6 +391,12 @@ class StatsListener(ConnectionListener):
         log.debug("received heartbeat timeout")
         self.heartbeat_timeouts += 1
 
+    def on_heartbeat(self):
+        """
+        Increment the heartbeat count. See :py:meth:`ConnectionListener.on_heartbeat`
+        """
+        self.heartbeat_count += 1
+
     def __str__(self):
         """
         Return a string containing the current statistics (messages sent and received,
@@ -397,7 +405,8 @@ class StatsListener(ConnectionListener):
         return '''Connections: %s
 Messages sent: %s
 Messages received: %s
-Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.errors)
+Heartbeats received: %s
+Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.heartbeat_count, self.errors)
 
 
 class PrintingListener(ConnectionListener):
@@ -472,6 +481,8 @@ class TestListener(StatsListener, WaitingListener):
         self.message_list = []
         self.message_condition = threading.Condition()
         self.message_received = False
+        self.heartbeat_condition = threading.Condition()
+        self.heartbeat_received = False
 
     def on_message(self, headers, message):
         """
@@ -492,3 +503,15 @@ class TestListener(StatsListener, WaitingListener):
 
     def get_latest_message(self):
         return self.message_list[-1]
+
+    def on_heartbeat(self):
+        StatsListener.on_heartbeat(self)
+        with self.heartbeat_condition:
+            self.heartbeat_received = True
+            self.heartbeat_condition.notify()
+
+    def wait_for_heartbeat(self):
+        with self.heartbeat_condition:
+            while not self.heartbeat_received:
+                self.heartbeat_condition.wait()
+        self.heartbeat_received = False
