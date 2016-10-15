@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from distutils.core import Command, setup
+from distutils.core import Command
+from setuptools import setup
 import logging.config
 import os
 import shutil

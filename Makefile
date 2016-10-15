@@ -60,9 +60,12 @@ haproxy:
 	/usr/sbin/haproxy -f stomp/test/haproxy.cfg
 
 clean:
+ifeq ($(PLATFORM),Linux)
+	$(MAKE) -f $(CURDIR)/debian/rules clean
+endif
 	$(PYTHON) setup.py clean
-	ifeq  ($(PLATFORM),Linux)
-		$(MAKE) -f $(CURDIR)/debian/rules clean
-	endif
-	rm -rf build/ MANIFEST
+	rm -rf build/ MANIFEST dist/
 	find . -name '*.pyc' -delete
+
+release:
+	$(PYTHON) setup.py clean install sdist bdist_wheel upload
