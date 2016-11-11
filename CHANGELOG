@@ -1,6 +1,7 @@
-Version 4.1.13 - 
+Version 4.1.15 - Nov 2016
 
  * Minor change to release wheel
+ * Note: rolled forward releases to try to fix issue 132 (https://github.com/jasonrbriggs/stomp.py/issues/132)
 
 
 Version 4.1.12 - Oct 2016
