@@ -39,7 +39,7 @@ class TestCommand(Command):
             print('Running all tests')
             tests = stomp.test.__all__
         else:
-            tests = self.test.split(',')        
+            tests = self.test.split(',')
         import stomp.test
         for tst in tests:
             suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
