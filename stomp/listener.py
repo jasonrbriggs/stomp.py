@@ -173,10 +173,11 @@ class HeartbeatListener(ConnectionListener):
                 self.send_sleep = self.heartbeats[0] / 1000
 
                 # receive gets an additional grace of 50%
-                self.receive_sleep = (self.heartbeats[1] / 1000) * 1.5
+                self.receive_sleep = (self.heartbeats[1] / 1000)
+                self.receive_sleep_grace = self.receive_sleep * 1.5
 
                 # Give grace of receiving the first heartbeat
-                self.received_heartbeat = monotonic() + self.receive_sleep
+                self.received_heartbeat = monotonic() + self.receive_sleep_grace
 
                 self.running = True
                 if self.heartbeat_thread is None:
@@ -276,7 +277,7 @@ class HeartbeatListener(ConnectionListener):
             if self.receive_sleep != 0:
                 diff_receive = now - self.received_heartbeat
 
-                if diff_receive > self.receive_sleep:
+                if diff_receive > self.receive_sleep_grace:
                     # heartbeat timeout
                     log.warning("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
                                 diff_receive, now, self.received_heartbeat)
