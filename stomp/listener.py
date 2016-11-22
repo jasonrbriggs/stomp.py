@@ -156,6 +156,9 @@ class HeartbeatListener(ConnectionListener):
         self.received_heartbeat = None
         self.heartbeat_thread = None
         self.next_outbound_heartbeat = None
+        self.send_sleep = 0
+        self.receive_sleep = 0
+        self.receive_sleep_grace = 0
 
     def on_connected(self, headers, body):
         """
