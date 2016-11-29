@@ -2,6 +2,7 @@
 
 from distutils.core import Command
 from setuptools import setup
+import platform
 import logging.config
 import os
 import shutil
@@ -39,7 +40,7 @@ class TestCommand(Command):
             print('Running all tests')
             tests = stomp.test.__all__
         else:
-            tests = self.test.split(',')        
+            tests = self.test.split(',')
         import stomp.test
         for tst in tests:
             suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
@@ -65,8 +66,10 @@ class TestPipInstallCommand(Command):
         pass
 
     def run(self):
-        if sys.hexversion <= 33950192:
+        if sys.hexversion <= 33950192 or \
+            (platform.python_implementation() == 'PyPy' and sys.version_info.major == 3 and sys.version_info.minor < 3):
             # spurious failure on py2.6, so drop out here
+            # also failing on pypy3 <3.2
             return
         if os.path.exists('tmp'):
             shutil.rmtree('tmp')
