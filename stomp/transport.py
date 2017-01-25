@@ -710,10 +710,11 @@ class Transport(BaseTransport):
                             # Wrap the socket for TLS
                             certfile = ssl_params['cert_file']
                             keyfile = ssl_params['key_file']
+                            password = ssl_params['password']
                             if certfile and not keyfile:
                                 keyfile = certfile
                             if certfile:
-                                tls_context.load_cert_chain(certfile, keyfile)
+                                tls_context.load_cert_chain(certfile, keyfile, password)
                             if cert_validation is None or cert_validation == ssl.CERT_NONE:
                                 tls_context.check_hostname = False
                             tls_context.verify_mode = cert_validation
@@ -772,7 +773,8 @@ class Transport(BaseTransport):
                 cert_file=None,
                 ca_certs=None,
                 cert_validator=None,
-                ssl_version=DEFAULT_SSL_VERSION):
+                ssl_version=DEFAULT_SSL_VERSION,
+                password=None):
         """
         Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
         exception if the SSL module can't be found.
@@ -799,7 +801,8 @@ class Transport(BaseTransport):
                                                 cert_file=cert_file,
                                                 ca_certs=ca_certs,
                                                 cert_validator=cert_validator,
-                                                ssl_version=ssl_version)
+                                                ssl_version=ssl_version,
+                                                password=password)
 
     def __need_ssl(self, host_and_port=None):
         """
