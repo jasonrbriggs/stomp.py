@@ -22,6 +22,8 @@ class MQ(object):
     def send(self, topic, msg, persistent='true', retry=False):
         self.connection.send(destination="/topic/%s" % topic, body=msg,
                              persistent=persistent)
+
+
 mq = MQ()
 
 
