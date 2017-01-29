@@ -12,7 +12,7 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 import stomp.connect as connect
 import stomp.listener as listener
 
-__version__ = (4, 1, 15)
+__version__ = (4, 1, 16)
 
 ##
 # Alias for STOMP 1.0 connections.
