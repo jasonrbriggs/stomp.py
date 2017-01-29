@@ -263,6 +263,10 @@ class HeartbeatListener(ConnectionListener):
 
             now = monotonic()
 
+            if not self.transport.is_connected():
+                time.sleep(self.send_sleep)
+                continue
+
             if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
                 log.debug("Sending a heartbeat message at %s", now)
                 try:
@@ -280,8 +284,9 @@ class HeartbeatListener(ConnectionListener):
                     # heartbeat timeout
                     log.warning("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
                                 diff_receive, now, self.received_heartbeat)
-                    self.transport.disconnect_socket()
                     self.transport.set_connected(False)
+                    self.transport.disconnect_socket()
+                    self.transport.stop()
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
         self.heartbeat_thread = None
