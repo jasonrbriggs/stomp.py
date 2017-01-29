@@ -317,6 +317,8 @@ class BaseTransport(stomp.listener.Publisher):
 
                         for frame in frames:
                             f = utils.parse_frame(frame)
+                            if f is None:
+                                continue
                             if self.__auto_decode:
                                 f.body = decode(f.body)
                             self.process_frame(f, frame)
@@ -590,6 +592,7 @@ class Transport(BaseTransport):
                 _, e, _ = sys.exc_info()
                 log.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
+        self.socket = None
 
     def send(self, encoded_frame):
         """

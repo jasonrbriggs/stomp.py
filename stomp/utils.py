@@ -136,12 +136,16 @@ def parse_frame(frame):
         body_start = preamble_end
     preamble = decode(frame[0:preamble_end])
     preamble_lines = LINE_END_RE.split(preamble)
+    preamble_len = len(preamble_lines)
     f.body = frame[body_start:]
 
     # Skip any leading newlines
     first_line = 0
-    while first_line < len(preamble_lines) and len(preamble_lines[first_line]) == 0:
+    while first_line < preamble_len and len(preamble_lines[first_line]) == 0:
         first_line += 1
+
+    if first_line >= preamble_len:
+        return None
 
     # Extract frame type/command
     f.cmd = preamble_lines[first_line]
