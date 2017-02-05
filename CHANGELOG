@@ -1,7 +1,27 @@
+Version 4.1.16 - Jan 2017
+
+ * bug fix for heartbeat timeout (https://github.com/jasonrbriggs/stomp.py/issues/129)
+ * handle error with invalid/empty frames
+
+
 Version 4.1.15 - Nov 2016
 
  * Minor change to release wheel
  * Note: rolled forward releases to try to fix issue 132 (https://github.com/jasonrbriggs/stomp.py/issues/132)
+
+
+Version 4.1.14 - Nov 2016
+
+ * Minor changes for ssl testing (update: now removed)
+
+
+Version 4.1.13 - Oct 2016
+
+ * Minor change to release wheel
+ * Add proxy testing to makefile
+ * Tidy up method parameters
+ * Tidy up documentation
+ * Improvement to heartbeat handling
 
 
 Version 4.1.12 - Oct 2016
