@@ -1,3 +1,8 @@
+Version 4.1.17 -
+
+ * Add support for password callback (https://github.com/jasonrbriggs/stomp.py/pull/140)
+
+
 Version 4.1.16 - Jan 2017
 
  * bug fix for heartbeat timeout (https://github.com/jasonrbriggs/stomp.py/issues/129)

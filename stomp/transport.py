@@ -713,7 +713,7 @@ class Transport(BaseTransport):
                             # Wrap the socket for TLS
                             certfile = ssl_params['cert_file']
                             keyfile = ssl_params['key_file']
-                            password = ssl_params['password']
+                            password = ssl_params.get('password')
                             if certfile and not keyfile:
                                 keyfile = certfile
                             if certfile:
