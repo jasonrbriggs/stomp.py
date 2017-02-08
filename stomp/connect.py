@@ -54,6 +54,9 @@ class BaseConnection(Publisher):
         """
         return self.transport.is_connected()
 
+    def set_receipt(self, receipt_id, value):
+        self.transport.set_receipt(receipt_id, value)
+
     def set_ssl(self, *args, **kwargs):
         self.transport.set_ssl(*args, **kwargs)
 
