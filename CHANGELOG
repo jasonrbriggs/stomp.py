@@ -1,6 +1,9 @@
 Version 4.1.17 -
 
  * Add support for password callback (https://github.com/jasonrbriggs/stomp.py/pull/140)
+ * Add disconnect receipt handling for better notification of disconnects
+ * Error handling for null frames
+ * Stop raising exceptions in the receiver loop, if a connection has been disconnected
 
 
 Version 4.1.16 - Jan 2017
