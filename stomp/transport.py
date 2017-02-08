@@ -36,6 +36,7 @@ except ImportError:
 
 from stomp.backward import decode, encode, get_errno, monotonic, pack
 from stomp.backwardsock import get_socket
+from stomp.constants import *
 import stomp.exception as exception
 import stomp.listener
 import stomp.utils as utils
@@ -133,6 +134,12 @@ class BaseTransport(stomp.listener.Publisher):
             if connected:
                 self.__connect_wait_condition.notify()
 
+    def set_receipt(self, receipt_id, value):
+        if value:
+            self.__receipts[receipt_id] = value
+        elif receipt_id in self.__receipts:
+            del self.__receipts[receipt_id]
+
     #
     # Manage objects listening to incoming frames
     #
@@ -193,13 +200,17 @@ class BaseTransport(stomp.listener.Publisher):
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
             receipt = headers['receipt-id']
+            receipt_value = self.__receipts.get(receipt)
             with self.__send_wait_condition:
-                self.__receipts[receipt] = None
+                self.set_receipt(receipt, None)
                 self.__send_wait_condition.notify()
 
             # received a stomp 1.1+ disconnect receipt
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
+
+            if receipt_value == CMD_DISCONNECT:
+                self.set_connected(False)
 
         elif frame_type == 'connected':
             self.set_connected(True)
@@ -357,7 +368,7 @@ class BaseTransport(stomp.listener.Publisher):
             except Exception:
                 log.debug("socket read error", exc_info=True)
                 c = b''
-            if len(c) == 0:
+            if c is None or len(c) == 0:
                 raise exception.ConnectionClosedException()
             if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
                 #
@@ -593,6 +604,7 @@ class Transport(BaseTransport):
                 log.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
+        self.notify('disconnected')
 
     def send(self, encoded_frame):
         """
@@ -620,7 +632,8 @@ class Transport(BaseTransport):
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
                 log.debug("socket read interrupted, restarting")
                 raise exception.InterruptedException()
-            raise
+            if self.is_connected():
+                raise
 
     def cleanup(self):
         """

@@ -10,6 +10,9 @@ from stomp.listener import *
 import stomp.utils as utils
 
 
+log = logging.getLogger('stomp.py')
+
+
 class Protocol10(ConnectionListener):
     """
     Represents version 1.0 of the protocol (see https://stomp.github.io/stomp-specification-1.0.html).
@@ -132,8 +135,13 @@ class Protocol10(ConnectionListener):
         :param dict headers: a map of any additional headers the broker requires
         :param keyword_headers: any additional headers the broker requires
         """
+        if not self.transport.is_connected():
+            log.debug('Not sending disconnect, already disconnected')
+            return
         headers = utils.merge_headers([headers, keyword_headers])
-        headers[HDR_RECEIPT] = receipt or str(uuid.uuid4())
+        rec = receipt or str(uuid.uuid4())
+        headers[HDR_RECEIPT] = rec
+        self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
 
     def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
@@ -339,8 +347,13 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param dict headers: a map of any additional headers the broker requires
         :param keyword_headers: any additional headers the broker requires
         """
+        if not self.transport.is_connected():
+            log.debug('Not sending disconnect, already disconnected')
+            return
         headers = utils.merge_headers([headers, keyword_headers])
-        headers[HDR_RECEIPT] = receipt or str(uuid.uuid4())
+        rec = receipt or str(uuid.uuid4())
+        headers[HDR_RECEIPT] = rec
+        self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
 
     def nack(self, id, subscription, transaction=None):
