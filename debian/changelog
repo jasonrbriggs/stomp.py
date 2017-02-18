@@ -1,3 +1,10 @@
+stomp.py (4.1.13) UNRELEASED; urgency=low
+
+  * New upstream version 4.1.13
+  * Update Debian Packaging
+
+ -- Jason R Briggs <jasonrbriggs@gmail.com>  Thu, 03 Nov 2016 09:57:34 +0100
+
 stomp.py (3.1.1) stable; urgency=low
 
   * Fix for encoding problems (issue #34) [Jayson Vantuyl]

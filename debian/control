@@ -1,14 +1,25 @@
 Source: stomp.py
 Section: python
 Priority: optional
-Maintainer: Jason R Briggs
-Build-Depends: debhelper (>=7.0.0), python-support (>= 0.6), cdbs (>= 0.4.49)
-Standards-Version: 3.8.3.0
+Maintainer: Jason R Briggs <jasonrbriggs@gmail.com>
+X-Python-Version: >= 2.5
+X-Python3-Version: >= 3.2
+Build-Depends: debhelper ( >=9 ), dh-python, python-all, python-setuptools, python3-all, python3-setuptools
+Standards-Version: 3.9.7
 
-Package: stomp.py
+Package: python-stomp.py
 Architecture: all
-Homepage: https://github.com/jasonrbriggs/stomp.py
-XB-Python-Version: ${python:Versions}
 Depends: ${misc:Depends}, ${python:Depends}
-Description: Stomp client support for Python
- Stomp client support for Python
+Homepage: https://github.com/jasonrbriggs/stomp.py
+Description: Stomp client support for Python 2
+ STOMP is the Simple (or Streaming) Text Orientated Messaging Protocol.
+ This library provides Python 2 client support.
+
+Package: python3-stomp.py
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Homepage: https://github.com/jasonrbriggs/stomp.py
+Description: Stomp client support for Python 3 (Python 3)
+ STOMP is the Simple (or Streaming) Text Orientated Messaging Protocol.
+ This library provides Python3 client support.
+
