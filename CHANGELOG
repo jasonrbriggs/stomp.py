@@ -1,4 +1,9 @@
-Version 4.1.17 -
+Version 4.1.18 -
+
+ *
+
+
+Version 4.1.17 - Feb 2017
 
  * Add support for password callback (https://github.com/jasonrbriggs/stomp.py/pull/140)
  * Add disconnect receipt handling for better notification of disconnects
