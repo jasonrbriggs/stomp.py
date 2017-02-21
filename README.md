@@ -19,10 +19,8 @@ stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org
 For more info on setting up a test server (using virtualbox), contact the developer.
 
 
-Contributors
-------------
-
-_(If you've contributed code to stomp.py and your name is missing from this list, let me know)_
+Contributors (pre-github)
+-------------------------
 
 Julian Scheid ([Rising Sun Pictures](http://open.rsp.com.au/))  
 Andreas Schobel  
@@ -37,6 +35,7 @@ Rafael Durán Casteñada
 Chaskiel Grundman  
 Ville Skyttä  
 Pavel Savchenko  
+
 
 Project Status
 --------------
