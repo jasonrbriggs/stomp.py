@@ -7,9 +7,8 @@ python:
   - "3.4"
   - "3.5"
   - "pypy-5.4"
-  - "pypy3"
 services:
-  - rabbitmq 
+  - rabbitmq
 addons:
   apt:
     packages:
