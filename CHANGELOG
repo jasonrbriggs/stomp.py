@@ -1,6 +1,6 @@
 Version 4.1.18 -
 
- *
+ * Strip passcode from log messages
 
 
 Version 4.1.17 - Feb 2017
@@ -69,7 +69,7 @@ Version 4.1.10 - Apr 2016
  * Merge patch from Mikael V:
      * add header support in CLI (https://github.com/jasonrbriggs/stomp.py/pull/86)
  * Bug fix for on_before_message error (https://github.com/jasonrbriggs/stomp.py/issues/99)
- 
+
 
 Version 4.1.9 - Jan 2016
 
@@ -85,13 +85,13 @@ Version 4.1.9 - Jan 2016
      * misc small improvements (https://github.com/jasonrbriggs/stomp.py/pull/77)
  * Merge patch from nigelsim to improve heartbeat handling for ActiveMQ:
      * heartbeat flexibility to support ActiveMQ (https://github.com/jasonrbriggs/stomp.py/pull/78)
-     
+
 
 Version 4.1.8 - Nov 2015
- 
+
  * Fix missing import (https://github.com/jasonrbriggs/stomp.py/issues/61)
  * Code tidy up
- 
+
 
 Version 4.1.7 - Nov 2015
 
@@ -107,7 +107,7 @@ Version 4.1.6 - Aug 2015
 
  * Generic exception catch on heartbeat send
  * Fix timeout (https://github.com/jasonrbriggs/stomp.py/issues/55)
- 
+
 
 Version 4.1.5 - Aug 2015
 

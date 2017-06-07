@@ -1,6 +1,7 @@
 """General utility functions.
 """
 
+import copy
 import re
 import socket
 import threading
@@ -169,6 +170,14 @@ def merge_headers(header_map_list):
         if header_map:
             headers.update(header_map)
     return headers
+
+
+def clean_headers(headers):
+    rtn = headers
+    if 'passcode' in headers:
+        rtn = copy.copy(headers)
+        rtn['passcode'] = '********'
+    return rtn
 
 
 def calculate_heartbeats(shb, chb):
