@@ -4,7 +4,6 @@
 
 import base64
 from cmd import Cmd
-from optparse import OptionParser
 import json
 import os
 import sys
@@ -466,71 +465,85 @@ def do_nothing_loop():
         time.sleep(1)
 
 
-def optional_arg(arg_default):
-    def func(option, opt_str, value, parser):
-        if parser.rargs and not parser.rargs[0].startswith('-'):
-            val = parser.rargs[0]
-            parser.rargs.pop(0)
-        else:
-            val = arg_default
-        setattr(parser.values, option.dest, val)
-    return func
+def parse_args():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-H', '--host', type=str, default='localhost',
+        help='Hostname or IP to connect to. '
+        'Defaults to localhost if not specified.')
+    parser.add_argument(
+        '-P', '--port', type=int, default=61613,
+        help='Port providing stomp protocol connections. '
+        'Defaults to 61613 if not specified.')
+    parser.add_argument(
+        '-U', '--user', type=str, default=None,
+        help='Username for the connection')
+    parser.add_argument(
+        '-W', '--password', type=str, default=None,
+        help='Password for the connection')
+    parser.add_argument(
+        '-F', '--file', type=str, dest='filename',
+        help='File containing commands to be executed, '
+        'instead of prompting from the command prompt.')
+    parser.add_argument(
+        '-S', '--stomp', type=str, default='1.1',
+        help='Set the STOMP protocol version.')
+    parser.add_argument(
+        '-L', '--listen', type=str, default=None,
+        help='Listen for messages on a queue/destination')
+    parser.add_argument(
+        "-V", "--verbose", nargs='*',
+        help='Verbose logging "on", "off" or simply --verbose '
+        '(if "on" present, full headers from stomp server responses are printed)')
+    parser.add_argument(
+        '--ssl', action='store_true', help='Enable SSL connection')
+    parser.add_argument(
+        '--heartbeats', type=str, default="0,0",
+        help='Heartbeats to request when connecting with protocol >= 1.1, '
+        'two comma separated integers.')
+
+    args = parser.parse_args()
+    # Temporary handling of old and new --verbose flag
+    # Transitionning from --verbose on | --verbose off
+    # to the flag --verbose
+    # Temporarily we use nargs='*', to keep compatibility
+    # but we'll use action='store_true' later.
+    if args.verbose == ['on']:
+        import warnings
+        warnings.simplefilter('default')
+        warnings.warn("You should simply use the --verbose flag, without 'on'",
+                      DeprecationWarning)
+        args.verbose = True
+    elif args.verbose == []:
+        args.verbose = True
+    else:
+        args.verbose = False
+    return args
 
 
 def main():
-    parser = OptionParser(version=stomppy_version)
+    args = parse_args()
 
-    parser.add_option('-H', '--host', type='string', dest='host', default='localhost',
-                      help='Hostname or IP to connect to. Defaults to localhost if not specified.')
-    parser.add_option('-P', '--port', type=int, dest='port', default=61613,
-                      help='Port providing stomp protocol connections. Defaults to 61613 if not specified.')
-    parser.add_option('-U', '--user', type='string', dest='user', default=None,
-                      help='Username for the connection')
-    parser.add_option('-W', '--password', type='string', dest='password', default=None,
-                      help='Password for the connection')
-    parser.add_option('-F', '--file', type='string', dest='filename',
-                      help='File containing commands to be executed, instead of prompting from the command prompt.')
-    parser.add_option('-S', '--stomp', type='string', dest='stomp', default='1.1',
-                      help='Set the STOMP protocol version.')
-    parser.add_option('-L', '--listen', type='string', dest='listen', default=None,
-                      help='Listen for messages on a queue/destination')
-    parser.add_option("-V", "--verbose", dest="verbose", default='on',
-                      help='Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
-    parser.add_option('--ssl', action='callback', callback=optional_arg(True), dest='ssl',
-                      help='Enable SSL connection')
-    parser.add_option('--heartbeats', type='string', dest='heartbeats', default="0,0",
-                      help='Heartbeats to request when connecting with protocol >= 1.1, two comma separated integers.')
-
-    parser.set_defaults()
-    (options, _) = parser.parse_args()
-
-    if options.verbose == 'on':
-        verbose = True
-    else:
-        verbose = False
-
-    if options.ssl is None:
-        options.ssl = False
-
-    if options.listen:
+    if args.listen:
         prompt = ''
     else:
         prompt = '> '
 
-    heartbeats = tuple(map(int, options.heartbeats.split(",")))
+    heartbeats = tuple(map(int, args.heartbeats.split(",")))
 
-    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose,
-                  options.ssl, heartbeats)
+    st = StompCLI(args.host, args.port, args.user, args.password, args.stomp, prompt, args.verbose,
+                  args.ssl, heartbeats)
 
-    if options.listen:
-        st.do_subscribe(options.listen)
+    if args.listen:
+        st.do_subscribe(args.listen)
         try:
             while 1:
                 time.sleep(10)
         except:
             print("\n")
-    elif options.filename:
-        st.do_run(options.filename)
+    elif args.filename:
+        st.do_run(args.filename)
     else:
         # disable CTRL-C, since can't guarantee correct handling of disconnect
         import signal
