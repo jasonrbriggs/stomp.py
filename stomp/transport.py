@@ -312,10 +312,8 @@ class BaseTransport(stomp.listener.Publisher):
         else:
             wait_time = None
         with self.__connect_wait_condition:
-            while self.running and not self.is_connected() and not self.connection_error:
+            while not self.is_connected() and not self.connection_error:
                 self.__connect_wait_condition.wait(wait_time)
-        if not self.running or not self.is_connected():
-            raise exception.ConnectFailedException()
 
     def __receiver_loop(self):
         """
@@ -351,8 +349,6 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notifyAll()
             log.info("Receiver loop ended")
-            with self.__connect_wait_condition:
-                self.__connect_wait_condition.notifyAll()
 
     def __read(self):
         """

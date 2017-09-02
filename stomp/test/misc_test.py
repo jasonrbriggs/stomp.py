@@ -4,12 +4,8 @@ import unittest
 import xml.dom.minidom
 
 import stomp
-from stomp.exception import *
 from stomp.listener import *
 from stomp.test.testutils import *
-
-
-log = logging.getLogger('stomp.py')
 
 
 class TransformationListener(TestListener):
@@ -86,31 +82,3 @@ class TestMessageTransform(unittest.TestCase):
                         'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
         self.assertTrue(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')
         self.assertTrue(self.listener.message['city'] == 'Belgrade', 'Missing an expected dict element')
-
-
-class TestNoResponseConnectionKill(unittest.TestCase):
-    def setUp(self):
-        self.server = TestStompServer('127.0.0.1', 60000)
-        self.server.start()
-        self.timeout_thread = threading.Thread(name='shutdown test server', target=self.timeout_server)
-
-    def timeout_server(self):
-        time.sleep(3)
-        log.info('Stopping server')
-        self.server.running = False
-        self.server.stop()
-
-    def test_noresponse(self):
-        try:
-            conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
-            listener = TestListener()
-            conn.set_listener('', listener)
-            conn.start()
-            self.timeout_thread.start()
-            conn.connect(wait=True)
-            self.fail("Shouldn't happen")
-        except ConnectFailedException:
-            log.info('Received connect failed - test success')
-        except Exception:
-            self.fail("Shouldn't happen")
-
