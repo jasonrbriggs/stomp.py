@@ -337,12 +337,12 @@ class BaseTransport(stomp.listener.Publisher):
                             self.process_frame(f, frame)
                 except exception.ConnectionClosedException:
                     if self.running:
-                        self.notify('disconnected')
                         #
                         # Clear out any half-received messages after losing connection
                         #
                         self.__recvbuf = b''
                         self.running = False
+                        self.notify('disconnected')
                     break
                 finally:
                     self.cleanup()
@@ -351,6 +351,7 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notifyAll()
             log.info("Receiver loop ended")
+            self.notify('receiver_loop_completed')
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
 
