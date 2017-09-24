@@ -36,12 +36,12 @@ class TestCommand(Command):
             cov = None
 
         suite = unittest.TestSuite()
+        import stomp.test
         if self.test == '*':
             print('Running all tests')
             tests = stomp.test.__all__
         else:
             tests = self.test.split(',')
-        import stomp.test
         for tst in tests:
             suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
 
