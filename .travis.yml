@@ -18,7 +18,7 @@ env:
 install:
   - sudo service stompserver stop
   - sudo rabbitmq-plugins enable rabbitmq_stomp
-  - sudo sed -i -e s/61613/$STOMPSERVER_PORT/ /etc/stompserver.conf
+  - sudo sed -i -e s/61613/$STOMPSERVER_PORT/ /etc/stompserver/stompserver.conf
   - sudo service stompserver start
   - pip install virtualenv-api
 script:
