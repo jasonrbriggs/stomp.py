@@ -111,7 +111,11 @@ setup(
     platforms=['any'],
     packages=['stomp', 'stomp.adapter'],
     cmdclass={'test': TestCommand, 'docs': DoxygenCommand, 'piptest': TestPipInstallCommand},
-    scripts=['./scripts/stomp'],
+    entry_points={
+        'console_scripts': [
+            'stomp = stomp.__main__:main',
+        ],
+    },
     classifiers=[
          'Development Status :: 5 - Production/Stable',
          'Intended Audience :: Developers',

@@ -1,6 +1,6 @@
 Version 4.1.19 -
 
- *
+ * Replace custom script by setuptools' entry_point for creating the executable
 
 
 Version 4.1.18 -
