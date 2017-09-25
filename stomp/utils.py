@@ -1,6 +1,7 @@
 """General utility functions.
 """
 
+import copy
 import re
 import socket
 import threading
@@ -8,7 +9,7 @@ import threading
 from stomp.backward import decode, NULL
 
 
-## List of all host names (unqualified, fully-qualified, and IP
+# List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
 # and external interfaces).  This is used for determining
 # preferred targets.
@@ -50,7 +51,7 @@ def default_create_thread(callback):
     Default thread creation - used to create threads when the client doesn't want to provide their
     own thread creation.
 
-    :param callback: the callback function provided to threading.Thread
+    :param function callback: the callback function provided to threading.Thread
     """
     thread = threading.Thread(None, callback)
     thread.daemon = True  # Don't let thread prevent termination
@@ -63,7 +64,9 @@ def is_localhost(host_and_port):
     Return 1 if the specified host+port is a member of the 'localhost' list of hosts, 2 if not (predominately used
     as a sort key.
 
-    :param host_and_port: tuple containing host (string) and port (number)
+    :param (str,int) host_and_port: tuple containing host and port
+
+    :rtype: int
     """
     (host, _) = host_and_port
     if host in LOCALHOST_NAMES:
@@ -72,34 +75,53 @@ def is_localhost(host_and_port):
         return 2
 
 
+_HEADER_ESCAPES = {
+    '\r': '\\r',
+    '\n': '\\n',
+    ':': '\\c',
+    '\\': '\\\\',
+}
+_HEADER_UNESCAPES = dict((value, key) for (key, value) in _HEADER_ESCAPES.items())
+
+
+def _unescape_header(matchobj):
+    escaped = matchobj.group(0)
+    unescaped = _HEADER_UNESCAPES.get(escaped)
+    if not unescaped:
+        # TODO: unknown escapes MUST be treated as fatal protocol error per spec
+        unescaped = escaped
+    return unescaped
+
+
 def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
 
-    :param lines: the lines received in the message response
-    :param offset: the starting line number
+    :param list(str) lines: the lines received in the message response
+    :param int offset: the starting line number
+
+    :rtype: dict(str,str)
     """
     headers = {}
     for header_line in lines[offset:]:
         header_match = HEADER_LINE_RE.match(header_line)
         if header_match:
             key = header_match.group('key')
-            key = key.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
+            key = re.sub(r'\\.', _unescape_header, key)
             if key not in headers:
                 value = header_match.group('value')
-                value = value.replace('\\n', '\n').replace('\\r', '\r').replace('\\\\', '\\').replace('\\c', ':')
+                value = re.sub(r'\\.', _unescape_header, value)
                 headers[key] = value
     return headers
 
 
 def parse_frame(frame):
     """
-    Parse a STOMP frame into a (frame_type, headers, body) tuple,
-    where frame_type is the frame type as a string (e.g. MESSAGE),
-    headers is a map containing all header key/value pairs, and
-    body is a string containing the frame's payload.
+    Parse a STOMP frame into a Frame object.
 
-    :param frame: the frame received from the server (as a string)
+    :param bytes frame: the frame received from the server (as a byte string)
+
+    :rtype: Frame
     """
     f = Frame()
     if frame == b'\x0a':
@@ -107,19 +129,24 @@ def parse_frame(frame):
         return f
 
     mat = PREAMBLE_END_RE.search(frame)
-    preamble_end = -1
     if mat:
         preamble_end = mat.start()
-    if preamble_end == -1:
+        body_start = mat.end()
+    else:
         preamble_end = len(frame)
+        body_start = preamble_end
     preamble = decode(frame[0:preamble_end])
     preamble_lines = LINE_END_RE.split(preamble)
-    f.body = frame[preamble_end + 2:]
+    preamble_len = len(preamble_lines)
+    f.body = frame[body_start:]
 
     # Skip any leading newlines
     first_line = 0
-    while first_line < len(preamble_lines) and len(preamble_lines[first_line]) == 0:
+    while first_line < preamble_len and len(preamble_lines[first_line]) == 0:
         first_line += 1
+
+    if first_line >= preamble_len:
+        return None
 
     # Extract frame type/command
     f.cmd = preamble_lines[first_line]
@@ -134,12 +161,23 @@ def merge_headers(header_map_list):
     """
     Helper function for combining multiple header maps into one.
 
-    :param header_map_list: list of maps
+    :param list(dict) header_map_list: list of maps
+
+    :rtype: dict
     """
     headers = {}
     for header_map in header_map_list:
-        headers.update(header_map)
+        if header_map:
+            headers.update(header_map)
     return headers
+
+
+def clean_headers(headers):
+    rtn = headers
+    if 'passcode' in headers:
+        rtn = copy.copy(headers)
+        rtn['passcode'] = '********'
+    return rtn
 
 
 def calculate_heartbeats(shb, chb):
@@ -147,8 +185,10 @@ def calculate_heartbeats(shb, chb):
     Given a heartbeat string from the server, and a heartbeat tuple from the client,
     calculate what the actual heartbeat settings should be.
 
-    :param shb: server heartbeat numbers
-    :param chb: client heartbeat numbers
+    :param (str,str) shb: server heartbeat numbers
+    :param (int,int) chb: client heartbeat numbers
+
+    :rtype: (int,int)
     """
     (sx, sy) = shb
     (cx, cy) = chb
@@ -165,7 +205,9 @@ def convert_frame_to_lines(frame):
     """
     Convert a frame to a list of lines separated by newlines.
 
-    :param frame: the Frame object to convert
+    :param Frame frame: the Frame object to convert
+
+    :rtype: list(str)
     """
     lines = []
     if frame.cmd:
@@ -191,7 +233,9 @@ def length(s):
     """
     Null (none) safe length function.
 
-    :param s: the string to return length of (None allowed)
+    :param str s: the string to return length of (None allowed)
+
+    :rtype: int
     """
     if s is not None:
         return len(s)
@@ -202,13 +246,13 @@ class Frame(object):
     """
     A STOMP frame (or message).
 
-    :param cmd: the protocol command
-    :param headers: a map of headers for the frame
+    :param str cmd: the protocol command
+    :param dict headers: a map of headers for the frame
     :param body: the content of the frame.
     """
-    def __init__(self, cmd=None, headers={}, body=None):
+    def __init__(self, cmd=None, headers=None, body=None):
         self.cmd = cmd
-        self.headers = headers
+        self.headers = headers if headers is not None else {}
         self.body = body
 
     def __str__(self):

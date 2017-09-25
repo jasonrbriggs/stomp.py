@@ -22,6 +22,8 @@ class MQ(object):
     def send(self, topic, msg, persistent='true', retry=False):
         self.connection.send(destination="/topic/%s" % topic, body=msg,
                              persistent=persistent)
+
+
 mq = MQ()
 
 
@@ -69,7 +71,7 @@ class TestThreading(unittest.TestCase):
         etype = {}
         for ec, _, _ in errs:
             if ec in etype:
-                etype[ec] = etype[ec] + 1
+                etype[ec] += 1
             else:
                 etype[ec] = 1
         for k in sorted(etype.keys()):

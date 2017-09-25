@@ -4,9 +4,9 @@ import unittest
 import stomp
 
 
-class TestThreading(unittest.TestCase):
+class TestTransport(unittest.TestCase):
     def setUp(self):
-        self.transport = stomp.transport.BaseTransport(None)
+        self.transport = stomp.transport.BaseTransport()
 
     def test_process_frame_unknown_command_empty_body(self):
         fr = stomp.utils.Frame('test', {}, None)

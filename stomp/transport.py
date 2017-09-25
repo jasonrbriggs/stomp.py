@@ -36,6 +36,7 @@ except ImportError:
 
 from stomp.backward import decode, encode, get_errno, monotonic, pack
 from stomp.backwardsock import get_socket
+from stomp.constants import *
 import stomp.exception as exception
 import stomp.listener
 import stomp.utils as utils
@@ -50,10 +51,8 @@ class BaseTransport(stomp.listener.Publisher):
     and anything else outside of actually establishing a network connection, sending and
     receiving of messages (so generally socket-agnostic functions).
 
-    :param wait_on_receipt: if a receipt is specified, then the send method should wait
-        (block) for the server to respond with that receipt-id
-        before continuing
-    :param auto_decode: automatically decode message responses as strings, rather than
+    :param bool wait_on_receipt: deprecated, ignored
+    :param bool auto_decode: automatically decode message responses as strings, rather than
         leaving them as bytes. This preserves the behaviour as of version 4.0.16.
         (To be defaulted to False as of the next release)
     """
@@ -63,7 +62,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
-    def __init__(self, wait_on_receipt, auto_decode=True):
+    def __init__(self, wait_on_receipt=False, auto_decode=True):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -71,7 +70,6 @@ class BaseTransport(stomp.listener.Publisher):
         self.connected = False
         self.connection_error = False
         self.__receipts = {}
-        self.__wait_on_receipt = wait_on_receipt
         self.current_host_and_port = None
 
         # flag used when we receive the disconnect receipt
@@ -92,7 +90,7 @@ class BaseTransport(stomp.listener.Publisher):
         setting this to a function with a single argument (which is the receiver loop callback).
         The thread which is returned should be started (ready to run)
 
-        :param create_thread_fc: single argument function for creating a thread
+        :param function create_thread_fc: single argument function for creating a thread
         """
         self.create_thread_fc = create_thread_fc
 
@@ -108,7 +106,8 @@ class BaseTransport(stomp.listener.Publisher):
         """
         self.running = True
         self.attempt_connection()
-        self.create_thread_fc(self.__receiver_loop)
+        receiver_thread = self.create_thread_fc(self.__receiver_loop)
+        receiver_thread.name = "StompReceiver%s" % getattr(receiver_thread, "name", "Thread")
         self.notify('connecting')
 
     def stop(self):
@@ -121,13 +120,25 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exit_condition.wait()
 
     def is_connected(self):
+        """
+        :rtype: bool
+        """
         return self.connected
 
     def set_connected(self, connected):
+        """
+        :param bool connected:
+        """
         with self.__connect_wait_condition:
             self.connected = connected
             if connected:
                 self.__connect_wait_condition.notify()
+
+    def set_receipt(self, receipt_id, value):
+        if value:
+            self.__receipts[receipt_id] = value
+        elif receipt_id in self.__receipts:
+            del self.__receipts[receipt_id]
 
     #
     # Manage objects listening to incoming frames
@@ -138,8 +149,8 @@ class BaseTransport(stomp.listener.Publisher):
         Set a named listener to use with this connection.
         See :py:class:`stomp.listener.ConnectionListener`
 
-        :param name: the name of the listener
-        :param listener: the listener object
+        :param str name: the name of the listener
+        :param ConnectionListener listener: the listener object
         """
         self.listeners[name] = listener
 
@@ -147,7 +158,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Remove a listener according to the specified name
 
-        :param name: the name of the listener to remove
+        :param str name: the name of the listener to remove
         """
         del self.listeners[name]
 
@@ -155,20 +166,26 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Return the named listener
 
-        :param name: the listener to return
+        :param str name: the listener to return
+
+        :rtype: ConnectionListener
         """
         return self.listeners.get(name)
 
     def process_frame(self, f, frame_str):
+        """
+        :param Frame f: Frame object
+        :param bytes frame_str: raw frame content
+        """
         frame_type = f.cmd.lower()
         if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
             if frame_type == 'message':
                 (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
-            self.notify(frame_type, f.headers, f.body)
             if log.isEnabledFor(logging.DEBUG):
                 log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
                 log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, utils.length(f.body))
+            self.notify(frame_type, f.headers, f.body)
         else:
             log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
 
@@ -176,20 +193,24 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Utility function for notifying listeners of incoming and outgoing messages
 
-        :param frame_type: the type of message
-        :param headers: the map of headers associated with the message
+        :param str frame_type: the type of message
+        :param dict headers: the map of headers associated with the message
         :param body: the content of the message
         """
         if frame_type == 'receipt':
             # logic for wait-on-receipt notification
             receipt = headers['receipt-id']
+            receipt_value = self.__receipts.get(receipt)
             with self.__send_wait_condition:
-                self.__receipts[receipt] = None
+                self.set_receipt(receipt, None)
                 self.__send_wait_condition.notify()
 
             # received a stomp 1.1+ disconnect receipt
             if receipt == self.__disconnect_receipt:
                 self.disconnect_socket()
+
+            if receipt_value == CMD_DISCONNECT:
+                self.set_connected(False)
 
         elif frame_type == 'connected':
             self.set_connected(True)
@@ -197,7 +218,6 @@ class BaseTransport(stomp.listener.Publisher):
         elif frame_type == 'disconnected':
             self.set_connected(False)
 
-        rtn = None
         for listener in self.listeners.values():
             if not listener:
                 continue
@@ -221,14 +241,13 @@ class BaseTransport(stomp.listener.Publisher):
             rtn = notify_func(headers, body)
             if rtn:
                 (headers, body) = rtn
-        if rtn:
-            return rtn
+        return (headers, body)
 
     def transmit(self, frame):
         """
         Convert a frame object to a frame string and transmit to the server.
 
-        :param frame: the Frame object to transmit
+        :param Frame frame: the Frame object to transmit
         """
         for listener in self.listeners.values():
             if not listener:
@@ -243,9 +262,9 @@ class BaseTransport(stomp.listener.Publisher):
         packed_frame = pack(lines)
 
         if log.isEnabledFor(logging.DEBUG):
-            log.debug("Sending frame %s", lines)
+            log.debug("Sending frame: %s", lines)
         else:
-            log.info("Sending frame cmd=%r headers=%r", frame.cmd, frame.headers)
+            log.info("Sending frame: %r, headers=%r", frame.cmd or "heartbeat", utils.clean_headers(frame.headers))
 
         self.send(encode(packed_frame))
 
@@ -253,13 +272,15 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Send an encoded frame over this transport (to be implemented in subclasses)
 
-        :param encoded_frame: a Frame object which has been encoded for transmission
+        :param bytes encoded_frame: a Frame object which has been encoded for transmission
         """
         pass
 
     def receive(self):
         """
         Receive a chunk of data (to be implemented in subclasses)
+
+        :rtype: bytes
         """
         pass
 
@@ -284,15 +305,17 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Wait until we've established a connection with the server.
 
-        :param timeout: how long to wait
+        :param float timeout: how long to wait, in seconds
         """
         if timeout is not None:
             wait_time = timeout / 10.0
         else:
             wait_time = None
         with self.__connect_wait_condition:
-            while not self.is_connected() and not self.connection_error:
+            while self.running and not self.is_connected() and not self.connection_error:
                 self.__connect_wait_condition.wait(wait_time)
+        if not self.running or not self.is_connected():
+            raise exception.ConnectFailedException()
 
     def __receiver_loop(self):
         """
@@ -307,17 +330,19 @@ class BaseTransport(stomp.listener.Publisher):
 
                         for frame in frames:
                             f = utils.parse_frame(frame)
+                            if f is None:
+                                continue
                             if self.__auto_decode:
                                 f.body = decode(f.body)
                             self.process_frame(f, frame)
                 except exception.ConnectionClosedException:
                     if self.running:
-                        self.notify('disconnected')
                         #
                         # Clear out any half-received messages after losing connection
                         #
                         self.__recvbuf = b''
                         self.running = False
+                        self.notify('disconnected')
                     break
                 finally:
                     self.cleanup()
@@ -326,10 +351,16 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notifyAll()
             log.info("Receiver loop ended")
+            self.notify('receiver_loop_completed')
+            with self.__connect_wait_condition:
+                self.__connect_wait_condition.notifyAll()
 
     def __read(self):
         """
         Read the next frame(s) from the socket.
+
+        :return: list of frames read
+        :rtype: list(bytes)
         """
         fastbuf = BytesIO()
         while self.running:
@@ -340,15 +371,25 @@ class BaseTransport(stomp.listener.Publisher):
                     log.debug("socket read interrupted, restarting")
                     continue
             except Exception:
+                log.debug("socket read error", exc_info=True)
                 c = b''
-            if len(c) == 0:
+            if c is None or len(c) == 0:
                 raise exception.ConnectionClosedException()
+            if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
+                #
+                # EOL to an empty receive buffer: treat as heartbeat.
+                # Note that this may misdetect an optional EOL at end of frame as heartbeat in case the
+                # previous receive() got a complete frame whose NUL at end of frame happened to be the
+                # last byte of that read. But that should be harmless in practice.
+                #
+                fastbuf.close()
+                return [c]
             fastbuf.write(c)
             if b'\x00' in c:
+                #
+                # Possible end of frame
+                #
                 break
-            elif c == b'\x0a':
-                # heartbeat (special case)
-                return [c, ]
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
@@ -359,12 +400,13 @@ class BaseTransport(stomp.listener.Publisher):
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
-                    preamble_end = frame.find(b'\n\n')
-                    if preamble_end >= 0:
+                    preamble_end_match = utils.PREAMBLE_END_RE.search(frame)
+                    if preamble_end_match:
+                        preamble_end = preamble_end_match.start()
                         content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
                         if content_length_match:
                             content_length = int(content_length_match.group('value'))
-                            content_offset = preamble_end + 2
+                            content_offset = preamble_end_match.end()
                             frame_size = content_offset + content_length
                             if frame_size > len(frame):
                                 #
@@ -379,7 +421,13 @@ class BaseTransport(stomp.listener.Publisher):
                                     #
                                     break
                     result.append(frame)
-                    self.__recvbuf = self.__recvbuf[pos + 1:]
+                    pos += 1
+                    #
+                    # Ignore optional EOLs at end of frame
+                    #
+                    while self.__recvbuf[pos:pos + 1] == b'\x0a':
+                        pos += 1
+                    self.__recvbuf = self.__recvbuf[pos:]
                 else:
                     break
         return result
@@ -390,43 +438,44 @@ class Transport(BaseTransport):
     Represents a STOMP client 'transport'. Effectively this is the communications mechanism without the definition of
     the protocol.
 
-    :param host_and_ports: a list of (host, port) tuples.
-    :param prefer_localhost: if True and the local host is mentioned in the (host,
+    :param list((str,int)) host_and_ports: a list of (host, port) tuples
+    :param bool prefer_localhost: if True and the local host is mentioned in the (host,
         port) tuples, try to connect to this first
-    :param try_loopback_connect: if True and the local host is found in the host
+    :param bool try_loopback_connect: if True and the local host is found in the host
         tuples, try connecting to it using loopback interface
         (127.0.0.1)
-    :param reconnect_sleep_initial: initial delay in seconds to wait before reattempting
+    :param float reconnect_sleep_initial: initial delay in seconds to wait before reattempting
         to establish a connection if connection to any of the
         hosts fails.
-    :param reconnect_sleep_increase: factor by which the sleep delay is increased after
+    :param float reconnect_sleep_increase: factor by which the sleep delay is increased after
         each connection attempt. For example, 0.5 means
         to wait 50% longer than before the previous attempt,
         1.0 means wait twice as long, and 0.0 means keep
         the delay constant.
-    :param reconnect_sleep_max: maximum delay between connection attempts, regardless
+    :param float reconnect_sleep_max: maximum delay between connection attempts, regardless
         of the reconnect_sleep_increase.
-    :param reconnect_sleep_jitter: random additional time to wait (as a percentage of
+    :param float reconnect_sleep_jitter: random additional time to wait (as a percentage of
         the time determined using the previous parameters)
         between connection attempts in order to avoid
         stampeding. For example, a value of 0.1 means to wait
         an extra 0%-10% (randomly determined) of the delay
         calculated using the previous three parameters.
-    :param reconnect_attempts_max: maximum attempts to reconnect
-    :param use_ssl: deprecated, see :py:meth:`set_ssl`
+    :param int reconnect_attempts_max: maximum attempts to reconnect
+    :param bool use_ssl: deprecated, see :py:meth:`set_ssl`
     :param ssl_cert_file: deprecated, see :py:meth:`set_ssl`
     :param ssl_key_file: deprecated, see :py:meth:`set_ssl`
     :param ssl_ca_certs: deprecated, see :py:meth:`set_ssl`
     :param ssl_cert_validator: deprecated, see :py:meth:`set_ssl`
     :param ssl_version: deprecated, see :py:meth:`set_ssl`
     :param timeout: the timeout value to use when connecting the stomp socket
+    :param bool wait_on_receipt: deprecated, ignored
     :param keepalive: some operating systems support sending the occasional heart
         beat packets to detect when a connection fails.  This
         parameter can either be set set to a boolean to turn on the
         default keepalive options for your OS, or as a tuple of
         values, which also enables keepalive packets, but specifies
         options specific to your OS implementation
-    :param vhost: specify a virtual hostname to provide in the 'host' header of the connection
+    :param str vhost: specify a virtual hostname to provide in the 'host' header of the connection
     """
 
     def __init__(self,
@@ -513,6 +562,8 @@ class Transport(BaseTransport):
     def is_connected(self):
         """
         Return true if the socket managed by this connection is connected
+
+        :rtype: bool
         """
         try:
             return self.socket is not None and self.socket.getsockname()[1] != 0 and BaseTransport.is_connected(self)
@@ -537,7 +588,7 @@ class Transport(BaseTransport):
                     # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
                     #
                     _, e, _ = sys.exc_info()
-                    log.warn(e)
+                    log.warning(e)
             elif hasattr(socket, 'SHUT_RDWR'):
                 try:
                     self.socket.shutdown(socket.SHUT_RDWR)
@@ -545,7 +596,7 @@ class Transport(BaseTransport):
                     _, e, _ = sys.exc_info()
                     # ignore when socket already closed
                     if get_errno(e) != errno.ENOTCONN:
-                        log.warn("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+                        log.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
@@ -555,10 +606,15 @@ class Transport(BaseTransport):
                 self.socket.close()
             except socket.error:
                 _, e, _ = sys.exc_info()
-                log.warn("Unable to close socket because of error '%s'", e)
+                log.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
+        self.socket = None
+        self.notify('disconnected')
 
     def send(self, encoded_frame):
+        """
+        :param bytes encoded_frame:
+        """
         if self.socket is not None:
             try:
                 with self.__socket_semaphore:
@@ -571,6 +627,9 @@ class Transport(BaseTransport):
             raise exception.NotConnectedException()
 
     def receive(self):
+        """
+        :rtype: bytes
+        """
         try:
             return self.socket.recv(1024)
         except socket.error:
@@ -578,7 +637,8 @@ class Transport(BaseTransport):
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
                 log.debug("socket read interrupted, restarting")
                 raise exception.InterruptedException()
-            raise
+            if self.is_connected():
+                raise
 
     def cleanup(self):
         """
@@ -663,13 +723,32 @@ class Transport(BaseTransport):
                             cert_validation = ssl.CERT_REQUIRED
                         else:
                             cert_validation = ssl.CERT_NONE
-                        self.socket = ssl.wrap_socket(
-                            self.socket,
-                            keyfile=ssl_params['key_file'],
-                            certfile=ssl_params['cert_file'],
-                            cert_reqs=cert_validation,
-                            ca_certs=ssl_params['ca_certs'],
-                            ssl_version=ssl_params['ssl_version'])
+                        try:
+                            tls_context = ssl.create_default_context(cafile=ssl_params['ca_certs'])
+                        except AttributeError:
+                            tls_context = None
+                        if tls_context:
+                            # Wrap the socket for TLS
+                            certfile = ssl_params['cert_file']
+                            keyfile = ssl_params['key_file']
+                            password = ssl_params.get('password')
+                            if certfile and not keyfile:
+                                keyfile = certfile
+                            if certfile:
+                                tls_context.load_cert_chain(certfile, keyfile, password)
+                            if cert_validation is None or cert_validation == ssl.CERT_NONE:
+                                tls_context.check_hostname = False
+                            tls_context.verify_mode = cert_validation
+                            self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
+                        else:
+                            # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
+                            self.socket = ssl.wrap_socket(
+                                self.socket,
+                                keyfile=ssl_params['key_file'],
+                                certfile=ssl_params['cert_file'],
+                                cert_reqs=cert_validation,
+                                ca_certs=ssl_params['ca_certs'],
+                                ssl_version=ssl_params['ssl_version'])
 
                     self.socket.settimeout(self.__timeout)
 
@@ -691,7 +770,7 @@ class Transport(BaseTransport):
                 except socket.error:
                     self.socket = None
                     connect_count += 1
-                    log.info("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
+                    log.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
@@ -710,12 +789,13 @@ class Transport(BaseTransport):
             raise exception.ConnectFailedException()
 
     def set_ssl(self,
-                for_hosts=[],
+                for_hosts=(),
                 key_file=None,
                 cert_file=None,
                 ca_certs=None,
                 cert_validator=None,
-                ssl_version=DEFAULT_SSL_VERSION):
+                ssl_version=DEFAULT_SSL_VERSION,
+                password=None):
         """
         Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
         exception if the SSL module can't be found.
@@ -742,11 +822,14 @@ class Transport(BaseTransport):
                                                 cert_file=cert_file,
                                                 ca_certs=ca_certs,
                                                 cert_validator=cert_validator,
-                                                ssl_version=ssl_version)
+                                                ssl_version=ssl_version,
+                                                password=password)
 
     def __need_ssl(self, host_and_port=None):
         """
         Whether current host needs SSL or not.
+
+        :param (str,int) host_and_port: the host/port pair to check, default current_host_and_port
         """
         if not host_and_port:
             host_and_port = self.current_host_and_port
@@ -757,7 +840,7 @@ class Transport(BaseTransport):
         """
         Get SSL params for the given host.
 
-        :param host_and_port: the host/port pair we want SSL params for, default current_host_port
+        :param (str,int) host_and_port: the host/port pair we want SSL params for, default current_host_and_port
         """
         if not host_and_port:
             host_and_port = self.current_host_and_port

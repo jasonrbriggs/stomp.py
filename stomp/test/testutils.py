@@ -32,6 +32,14 @@ def get_default_host():
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_PORT') or port))]
 
 
+def get_default_vhost():
+    try:
+        vhost = config.get('default', 'vhost')
+    except:
+        vhost = None
+    return get_environ('STD_VHOST') or vhost
+
+
 def get_default_user():
     user = config.get('default', 'user')
     return get_environ('STD_USER') or user
@@ -52,6 +60,12 @@ def get_default_ssl_host():
     host = config.get('default', 'host')
     port = config.get('default', 'ssl_port')
     return [(get_environ('STD_HOST') or host, int(get_environ('STD_SSL_PORT') or port))]
+
+
+def get_sni_ssl_host():
+    host = config.get('sni', 'host')
+    port = config.get('sni', 'ssl_port')
+    return [(get_environ('SNI_HOST') or host, int(get_environ('SNI_SSL_PORT') or port))]
 
 
 def get_rabbitmq_host():

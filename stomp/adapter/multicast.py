@@ -1,11 +1,11 @@
 """Multicast transport for stomp.py.
 
-Obviously not a typical message broker, but convenient if you don't have a broker, but still want to use stomp.py methods.
+Obviously not a typical message broker, but convenient if you don't have a broker, but still want to use stomp.py
+methods.
 """
 
 import socket
 import struct
-import uuid
 
 from stomp.connect import BaseConnection
 from stomp.protocol import *
@@ -21,7 +21,8 @@ class MulticastTransport(Transport):
     Transport over multicast connections rather than using a broker.
     """
     def __init__(self):
-        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False, DEFAULT_SSL_VERSION, None, None, None)
+        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False,
+                           DEFAULT_SSL_VERSION, None, None, None)
         self.subscriptions = {}
         self.current_host_and_port = (MCAST_GRP, MCAST_PORT)
 
@@ -45,16 +46,24 @@ class MulticastTransport(Transport):
     def send(self, encoded_frame):
         """
         Send an encoded frame through the mcast socket.
+
+        :param bytes encoded_frame:
         """
         self.socket.sendto(encoded_frame, (MCAST_GRP, MCAST_PORT))
 
     def receive(self):
         """
         Receive 1024 bytes from the multicast receiver socket.
+
+        :rtype: bytes
         """
         return self.receiver_socket.recv(1024)
 
     def process_frame(self, f, frame_str):
+        """
+        :param Frame f: Frame object
+        :param bytes frame_str: Raw frame content
+        """
         frame_type = f.cmd.lower()
 
         if frame_type in ['disconnect']:
@@ -74,7 +83,7 @@ class MulticastTransport(Transport):
             receipt_frame = Frame('RECEIPT', {'receipt-id': f.headers['receipt']})
             lines = convert_frame_to_lines(receipt_frame)
             self.send(encode(pack(lines)))
-        log.debug("Received frame: %r, headers=%r, body=%r" % (f.cmd, f.headers, f.body))
+        log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
 
     def stop(self):
         self.running = False
@@ -87,25 +96,59 @@ class MulticastTransport(Transport):
 
 class MulticastConnection(BaseConnection, Protocol12):
     def __init__(self, wait_on_receipt=False):
+        """
+        :param bool wait_on_receipt: deprecated, ignored
+        """
         self.transport = MulticastTransport()
         self.transport.set_listener('mcast-listener', self)
         self.transactions = {}
         Protocol12.__init__(self, self.transport, (0, 0))
 
-    def connect(self, username=None, passcode=None, wait=False, headers={}, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
+        """
+        :param str username:
+        :param str passcode:
+        :param bool wait:
+        :param dict headers:
+        :param keyword_headers:
+        """
         pass
 
-    def subscribe(self, destination, id, ack='auto', headers={}, **keyword_headers):
+    def subscribe(self, destination, id, ack='auto', headers=None, **keyword_headers):
+        """
+        :param str destination:
+        :param str id:
+        :param str ack:
+        :param dict headers:
+        :param keyword_headers:
+        """
         self.transport.subscriptions[id] = destination
 
-    def unsubscribe(self, id, headers={}, **keyword_headers):
+    def unsubscribe(self, id, headers=None, **keyword_headers):
+        """
+        :param str id:
+        :param dict headers:
+        :param keyword_headers:
+        """
         del self.transport.subscriptions[id]
 
-    def disconnect(self, receipt=str(uuid.uuid4()), headers={}, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
+        """
+        :param str receipt:
+        :param dict headers:
+        :param keyword_headers:
+        """
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
-    def send_frame(self, cmd, headers={}, body=''):
+    def send_frame(self, cmd, headers=None, body=''):
+        """
+        :param str cmd:
+        :param dict headers:
+        :param body:
+        """
+        if headers is None:
+            headers = {}
         frame = utils.Frame(cmd, headers, body)
 
         if cmd == CMD_BEGIN:
@@ -117,7 +160,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         elif cmd == CMD_COMMIT:
             trans = headers[HDR_TRANSACTION]
             if trans not in self.transactions:
-                self.notify('error', {}, 'Transaction % not started' % trans)
+                self.notify('error', {}, 'Transaction %s not started' % trans)
             else:
                 for f in self.transactions[trans]:
                     self.transport.transmit(f)

@@ -1,16 +1,21 @@
-from distutils.core import Command, setup
+#!/usr/bin/env python
+
+from distutils.core import Command
+from setuptools import setup
+import platform
 import logging.config
 import os
 import shutil
 import sys
 import unittest
 
-import stomp
-
 try:
     logging.config.fileConfig('stomp.log.conf')
 except:
     pass
+
+# Import this after configuring logging
+import stomp
 
 
 class TestCommand(Command):
@@ -31,13 +36,15 @@ class TestCommand(Command):
             cov = None
 
         suite = unittest.TestSuite()
+        import stomp.test
         if self.test == '*':
             print('Running all tests')
-            import stomp.test
-            for tst in stomp.test.__all__:
-                suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
+            tests = stomp.test.__all__
         else:
-            suite = unittest.TestLoader().loadTestsFromName('stomp.test.%s' % self.test)
+            tests = self.test.split(',')
+        for tst in tests:
+            suite.addTests(unittest.TestLoader().loadTestsFromName('stomp.test.%s' % tst))
+
         runner = unittest.TextTestRunner(verbosity=2)
         res = runner.run(suite)
         if len(res.errors) > 0 or len(res.failures) > 0:
@@ -59,6 +66,11 @@ class TestPipInstallCommand(Command):
         pass
 
     def run(self):
+        if sys.hexversion <= 33950192 or \
+            (platform.python_implementation() == 'PyPy' and sys.version_info.major == 3 and sys.version_info.minor < 3):
+            # spurious failure on py2.6, so drop out here
+            # also failing on pypy3 <3.2
+            return
         if os.path.exists('tmp'):
             shutil.rmtree('tmp')
         os.mkdir('tmp')

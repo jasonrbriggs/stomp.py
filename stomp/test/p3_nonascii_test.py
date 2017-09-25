@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+import filecmp
 import time
 import unittest
 
@@ -42,7 +43,8 @@ class TestNonAsciiSend(unittest.TestCase):
 
     def test_image_send(self):
         d = os.path.dirname(os.path.realpath(__file__))
-        with open(os.path.join(d, 'test.gif'), 'rb') as f:
+        srcname = os.path.join(d, 'test.gif')
+        with open(srcname, 'rb') as f:
             img = f.read()
 
         queuename = '/queue/p3nonascii-image-%s' % self.timestamp
@@ -58,10 +60,38 @@ class TestNonAsciiSend(unittest.TestCase):
 
         (_, msg) = self.listener.get_latest_message()
         self.assertEqual(img, msg)
-        with open(os.path.join(d, 'test-out.gif'), 'wb') as f:
+        destname = os.path.join(d, 'test-out.gif')
+        with open(destname, 'wb') as f:
             f.write(img)
+            
+        self.assertTrue(filecmp.cmp(srcname, destname))
+        
+    def test_image_send(self):
+        d = os.path.dirname(os.path.realpath(__file__))
+        srcname = os.path.join(d, 'test.gif.gz')
+        with open(srcname, 'rb') as f:
+            img = f.read()
 
+        queuename = '/queue/p3nonascii-image-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
+        self.conn.send(body=img, destination=queuename, receipt='123')
+
+        self.listener.wait_for_message()
+
+        self.assertTrue(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages >= 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
+
+        (_, msg) = self.listener.get_latest_message()
+        self.assertEqual(img, msg)
+        destname = os.path.join(d, 'test-out.gif.gz')
+        with open(destname, 'wb') as f:
+            f.write(img)
+            
+        self.assertTrue(filecmp.cmp(srcname, destname))
+
+       
 class TestNonAsciiSendAutoEncoding(unittest.TestCase):
     def setUp(self):
         conn = stomp.Connection(get_default_host(), auto_decode=True)

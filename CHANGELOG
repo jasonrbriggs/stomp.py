@@ -1,25 +1,108 @@
-Version 4.1.9
+Version 4.1.19 -
+
+ *
+
+
+Version 4.1.18 -
+
+ * Strip passcode from log messages
+
+
+Version 4.1.17 - Feb 2017
+
+ * Add support for password callback (https://github.com/jasonrbriggs/stomp.py/pull/140)
+ * Add disconnect receipt handling for better notification of disconnects
+ * Error handling for null frames
+ * Stop raising exceptions in the receiver loop, if a connection has been disconnected
+
+
+Version 4.1.16 - Jan 2017
+
+ * bug fix for heartbeat timeout (https://github.com/jasonrbriggs/stomp.py/issues/129)
+ * handle error with invalid/empty frames
+
+
+Version 4.1.15 - Nov 2016
+
+ * Minor change to release wheel
+ * Note: rolled forward releases to try to fix issue 132 (https://github.com/jasonrbriggs/stomp.py/issues/132)
+
+
+Version 4.1.14 - Nov 2016
+
+ * Minor changes for ssl testing (update: now removed)
+
+
+Version 4.1.13 - Oct 2016
+
+ * Minor change to release wheel
+ * Add proxy testing to makefile
+ * Tidy up method parameters
+ * Tidy up documentation
+ * Improvement to heartbeat handling
+
+
+Version 4.1.12 - Oct 2016
+
+ * Merge patch from Nigel S, improving heartbeat accuracy (https://github.com/jasonrbriggs/stomp.py/pull/95)
+ * Merge various patches from Ville S (including):
+    * fixing receipt id generation (https://github.com/jasonrbriggs/stomp.py/pull/102)
+    * generate disconnect receipt ids (https://github.com/jasonrbriggs/stomp.py/pull/108)
+    * don't send unnecessary heartbeats (https://github.com/jasonrbriggs/stomp.py/pull/113)
+    * fix misdetection of heartbeats (https://github.com/jasonrbriggs/stomp.py/pull/120)
+ * Merge patch from Hugh P, adding SNI support (https://github.com/jasonrbriggs/stomp.py/pull/124)
+ * Fix for heartbeat calculation error (https://github.com/jasonrbriggs/stomp.py/pull/125)
+
+
+Version 4.1.11 - Apr 2016
+
+ * Minor tidy up (missed from prior release)
+
+
+Version 4.1.10 - Apr 2016
+
+ * Bug fix for header escaping (https://github.com/jasonrbriggs/stomp.py/issues/82)
+ * Merge patches from Ville S:
+     * heartbeats - set received timestamp on receipt and error too (https://github.com/jasonrbriggs/stomp.py/pull/79)
+     * test class name fixes (https://github.com/jasonrbriggs/stomp.py/pull/80)
+     * support \r\n\r\n preamble end on content-length search (https://github.com/jasonrbriggs/stomp.py/pull/81)
+     * on-demand logging message expansion (https://github.com/jasonrbriggs/stomp.py/pull/85)
+     * bump connect error logging level to warning (https://github.com/jasonrbriggs/stomp.py/pull/87)
+     * assign names to heartbeat and receiver threads (https://github.com/jasonrbriggs/stomp.py/pull/88)
+     * remove unused HeartbeatListener.connected (https://github.com/jasonrbriggs/stomp.py/pull/89)
+     * support for heartbeats on CLI (https://github.com/jasonrbriggs/stomp.py/pull/100)
+ * Merge patch from Mikael V:
+     * add header support in CLI (https://github.com/jasonrbriggs/stomp.py/pull/86)
+ * Bug fix for on_before_message error (https://github.com/jasonrbriggs/stomp.py/issues/99)
+
+
+Version 4.1.9 - Jan 2016
 
  * Merge patches from Pavel S:
-     * https://github.com/jasonrbriggs/stomp.py/pull/66
-     * https://github.com/jasonrbriggs/stomp.py/pull/67
+     * support mixed string and bytes as input (https://github.com/jasonrbriggs/stomp.py/pull/66)
+     * toggle sending of `content-length` header (https://github.com/jasonrbriggs/stomp.py/pull/67)
  * Minor logging change
  * Various documentation updates
- * Merge patch from Ville S:
-     * https://github.com/jasonrbriggs/stomp.py/pull/74
-     
+ * Merge code improvement patches from Ville S:
+     * use time.monotonic for timekeeping where available (https://github.com/jasonrbriggs/stomp.py/pull/74)
+     * define gcd compat only where needed (https://github.com/jasonrbriggs/stomp.py/pull/75)
+     * handle locking with "with" (https://github.com/jasonrbriggs/stomp.py/pull/76)
+     * misc small improvements (https://github.com/jasonrbriggs/stomp.py/pull/77)
+ * Merge patch from nigelsim to improve heartbeat handling for ActiveMQ:
+     * heartbeat flexibility to support ActiveMQ (https://github.com/jasonrbriggs/stomp.py/pull/78)
 
-Version 4.1.8
- 
+
+Version 4.1.8 - Nov 2015
+
  * Fix missing import (https://github.com/jasonrbriggs/stomp.py/issues/61)
  * Code tidy up
- 
 
-Version 4.1.7 
+
+Version 4.1.7 - Nov 2015
 
  * Merge patches from Ville S:
-    * https://github.com/jasonrbriggs/stomp.py/pull/56
-    * https://github.com/jasonrbriggs/stomp.py/pull/57
+    * use constants more (https://github.com/jasonrbriggs/stomp.py/pull/56)
+    * do not send headers with None values (https://github.com/jasonrbriggs/stomp.py/pull/57)
  * Update source to tidy up documentation
  * Add sphinx generated documentation
  * Fix keepalive bug (https://github.com/jasonrbriggs/stomp.py/issues/60)
@@ -29,13 +112,13 @@ Version 4.1.6 - Aug 2015
 
  * Generic exception catch on heartbeat send
  * Fix timeout (https://github.com/jasonrbriggs/stomp.py/issues/55)
- 
+
 
 Version 4.1.5 - Aug 2015
 
  * Remove incorrect \r escaping from 1.1 protocol
  * Merge patch from Ville S:
-     * https://github.com/jasonrbriggs/stomp.py/pull/52
+     * don't ship *.pyc (https://github.com/jasonrbriggs/stomp.py/pull/52)
 
 
 Version 4.1.4 - Aug 2015
@@ -48,9 +131,9 @@ Version 4.1.4 - Aug 2015
 Version 4.1.3 - Aug 2015
 
  * Merge patches from Ville S:
-    * https://github.com/jasonrbriggs/stomp.py/pull/48 (Auto-send content-length when message body is present)
-    * https://github.com/jasonrbriggs/stomp.py/pull/49 (Unescape header names in addition to values)
-    * https://github.com/jasonrbriggs/stomp.py/pull/50 (Remove unnecessary code)
+    * auto-send content-length when message body is present (https://github.com/jasonrbriggs/stomp.py/pull/48)
+    * unescape header names in addition to values (https://github.com/jasonrbriggs/stomp.py/pull/49)
+    * remove unnecessary code (https://github.com/jasonrbriggs/stomp.py/pull/50)
 
 
 Version 4.1.2 - Jul 2015
@@ -127,12 +210,12 @@ Version 4.0.9 - Jan 2014
 
 Version 4.0.8 - Jan 2014
 
- * Fix return on get_listener method (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
+ * Fix return on get_listener method (https://github.com/jasonrbriggs/stomp.py/issues/4)
 
 
 Version 4.0.7 - Jan 2014
 
- * Fix problem with heartbeat listener (see https://github.com/jasonrbriggs/stomp.py/issues/4 for more info)
+ * Fix problem with heartbeat listener (https://github.com/jasonrbriggs/stomp.py/issues/4)
  * Add alternate aliases for the connection classes
  * Add initial version multicast adapter (providing an interface to use the stomp.py API and send messages via multicast)
  	- note: work in progress

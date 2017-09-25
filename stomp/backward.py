@@ -16,28 +16,12 @@ def get_errno(e):
     """
     Return the errno of an exception, or the first argument if errno is not available.
 
-    :param e: the exception object
+    :param Exception e: the exception object
     """
     try:
         return e.errno
     except AttributeError:
         return e.args[0]
-
-
-try:
-    from fractions import gcd
-except ImportError:
-    def gcd(a, b):
-        """Calculate the Greatest Common Divisor of a and b.
-
-        Unless b==0, the result will have the same sign as b (so that when
-        b is divided by it, the result comes out positive).
-
-        (Copied from the Python2.6 source Copyright (c) 2001-2011 Python Software Foundation; All Rights Reserved)
-        """
-        while b:
-            a, b = b, a % b
-        return a
 
 
 try:

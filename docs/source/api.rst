@@ -135,3 +135,55 @@ Stomp.py supports graceful shutdown/disconnections through a receipt parameter (
     on_receipt {'receipt-id': '825a5cd6-9e3c-4a72-8051-72348a94f5ce'}
     on_disconnected    
 
+
+Dealing with disconnects
+------------------------
+
+You can use a listener to deal with connection failures, and gracefully reconnect.  Consider the below 'server' code:
+
+.. code-block:: python
+
+    import os
+    import time
+    import stomp
+
+    def connect_and_subscribe(conn):
+        conn.start()
+        conn.connect('guest', 'guest', wait=True)
+        conn.subscribe(destination='/queue/test', id=1, ack='auto')
+
+    class MyListener(stomp.ConnectionListener):
+        def __init__(self, conn):
+            self.conn = conn
+    
+        def on_error(self, headers, message):
+            print('received an error "%s"' % message)
+
+        def on_message(self, headers, message):
+            print('received a message "%s"' % message)
+            for x in range(10):
+                print(x)
+                time.sleep(1)
+            print('processed message')
+        
+        def on_disconnected(self):
+            print('disconnected')
+            connect_and_subscribe(self.conn)
+
+    conn = stomp.Connection([('localhost', 62613)], heartbeats=(4000, 4000))
+    conn.set_listener('', MyListener(conn))
+    connect_and_subscribe(conn)
+    time.sleep(60)
+    conn.disconnect()
+    
+The listener in this code has an, arguably broken, message handler (on_message) which takes longer to process than the heartbeat time of 4 seconds (4000); resulting in a heartbeat timeout when a message is received, and a subsequent disconnect. The on_disconnected method then reconnects and continues processing. You can test the results of this by running the above code, and sending a message using the following 'client':
+
+
+.. code-block:: python
+
+    import stomp
+    conn = stomp.Connection([('localhost', 62613)])
+    conn.start()
+    conn.connect('guest', 'guest', wait=True)
+    conn.send('/queue/test', 'test message')
+    

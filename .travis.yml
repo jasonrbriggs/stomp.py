@@ -3,18 +3,23 @@ language: python
 python:
   - "2.6"
   - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
   - "3.5"
-  - "pypy"
-  - "pypy3"
+  - "pypy-5.4"
 services:
-  - rabbitmq 
+  - rabbitmq
+addons:
+  apt:
+    packages:
+      - stompserver
 env:
-  - RABBITMQ_HOST=localhost RABBITMQ_PORT=61613 RABBITMQ_USER=guest RABBITMQ_PASSWORD=guest STD_HOST=localhost STD_PORT=61613 STD_USER=guest STD_PASSWORD=guest
+  - RABBITMQ_HOST=localhost RABBITMQ_PORT=61613 RABBITMQ_USER=guest RABBITMQ_PASSWORD=guest STOMPSERVER_HOST=localhost STOMPSERVER_PORT=63613 STD_HOST=localhost STD_PORT=61613 STD_USER=guest STD_PASSWORD=guest STD_VHOST=/
 install:
+  - sudo service stompserver stop
   - sudo rabbitmq-plugins enable rabbitmq_stomp
+  - sudo sed -i -e s/61613/$STOMPSERVER_PORT/ /etc/stompserver/stompserver.conf
+  - sudo service stompserver start
   - pip install virtualenv-api
 script:
   - make travistests

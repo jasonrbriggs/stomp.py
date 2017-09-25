@@ -1,10 +1,8 @@
-PYTHON=`which python`
+PYTHON:=`which python`
 DESTDIR=/
-BUILDIR=$(CURDIR)/debian/stomppy
 PROJECT=stomp.py
-VERSION=3.0.1
-PYTHON_VERSION_FULL := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
-PYTHON_VERSION_MAJOR := $(word 1,${PYTHON_VERSION_FULL})
+PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0])")
+PLATFORM := $(shell uname)
 
 ifeq ($(PYTHON_VERSION_MAJOR), 3)
 travistests: travistests-py3
@@ -31,32 +29,17 @@ install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
 test: travistests
-	$(PYTHON) setup.py test --test=cli_ssl_test
-	$(PYTHON) setup.py test --test=s12_test
-	$(PYTHON) setup.py test --test=stompserver_test
-	$(PYTHON) setup.py test --test=multicast_test
-	$(PYTHON) setup.py test --test=ssl_test
-	$(PYTHON) setup.py test --test=local_test
+	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,local_test
 
 travistests:
-	$(PYTHON) setup.py test --test=basic_test
-	$(PYTHON) setup.py test --test=ss_test
-	$(PYTHON) setup.py test --test=cli_test
-	$(PYTHON) setup.py test --test=s10_test
-	$(PYTHON) setup.py test --test=s11_test
-	$(PYTHON) setup.py test --test=rabbitmq_test
-	$(PYTHON) setup.py test --test=misc_test
-	$(PYTHON) setup.py test --test=transport_test
-	$(PYTHON) setup.py test --test=utils_test
+	$(PYTHON) setup.py test --test=basic_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test
 	$(PYTHON) setup.py piptest
 
 travistests-py2:
-	$(PYTHON) setup.py test --test=p2_nonascii_test
-	$(PYTHON) setup.py test --test=p2_backward_test
-	
+	$(PYTHON) setup.py test --test=p2_nonascii_test,p2_backward_test
+
 travistests-py3:
-	$(PYTHON) setup.py test --test=p3_nonascii_test
-	$(PYTHON) setup.py test --test=p3_backward_test
+	$(PYTHON) setup.py test --test=p3_nonascii_test,p3_backward_test
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
@@ -69,9 +52,20 @@ builddeb:
 	# build the package
 	dpkg-buildpackage -i -I -rfakeroot
 
+haproxy:
+	openssl req -x509 -newkey rsa:2048 -keyout tmp/key1.pem -out tmp/cert1.pem -days 365 -nodes -subj "/CN=my.example.org"
+	openssl req -x509 -newkey rsa:2048 -keyout tmp/key2.pem -out tmp/cert2.pem -days 365 -nodes -subj "/CN=my.example.com"
+	cat tmp/cert1.pem tmp/key1.pem > tmp/myorg.pem
+	cat tmp/cert2.pem tmp/key2.pem > tmp/mycom.pem
+	/usr/sbin/haproxy -f stomp/test/haproxy.cfg
+
 clean:
-	$(PYTHON) setup.py clean
+ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
-	rm -rf build/ MANIFEST
+endif
+	$(PYTHON) setup.py clean
+	rm -rf build/ MANIFEST dist/
 	find . -name '*.pyc' -delete
 
+release:
+	$(PYTHON) setup.py clean install sdist bdist_wheel upload

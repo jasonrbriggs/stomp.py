@@ -86,6 +86,24 @@ class TestCLI(unittest.TestCase):
         teststdout.expect('Shutting down, please wait')
         cli.onecmd('quit')
 
+    def testsendfileheaders(self):
+        f = create_test_file()
+
+        teststdin = TestStdin()
+        teststdout = TestStdout(self)
+        teststdout.expect('CONNECTED')
+
+        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
+
+        time.sleep(3)
+
+        cli.onecmd('sendfile /queue/testsendfile %s { "custom" : "header" }' % f.name)
+
+        time.sleep(3)
+
+        teststdout.expect('Shutting down, please wait')
+        cli.onecmd('quit')
+
     def testabort(self):
         teststdin = TestStdin()
         teststdout = TestStdout(self)
