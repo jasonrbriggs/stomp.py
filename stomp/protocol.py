@@ -53,7 +53,7 @@ class Protocol10(ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ABORT, headers)
 
-    def ack(self, id, transaction=None):
+    def ack(self, id, transaction=None, receipt=None):
         """
         Acknowledge 'consumption' of a message by id.
 
@@ -64,6 +64,8 @@ class Protocol10(ConnectionListener):
         headers = {HDR_MESSAGE_ID: id}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
+        if receipt:
+            headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_ACK, headers)
 
     def begin(self, transaction=None, headers=None, **keyword_headers):
@@ -260,7 +262,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_ABORT, headers)
 
-    def ack(self, id, subscription, transaction=None):
+    def ack(self, id, subscription, transaction=None, receipt=None):
         """
         Acknowledge 'consumption' of a message by id.
 
@@ -273,6 +275,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers = {HDR_MESSAGE_ID: id, HDR_SUBSCRIPTION: subscription}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
+        if receipt:
+            headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_ACK, headers)
 
     def begin(self, transaction=None, headers=None, **keyword_headers):
@@ -356,7 +360,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
 
-    def nack(self, id, subscription, transaction=None):
+    def nack(self, id, subscription, transaction=None, receipt=None):
         """
         Let the server know that a message was not consumed.
 
@@ -369,6 +373,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers = {HDR_MESSAGE_ID: id, HDR_SUBSCRIPTION: subscription}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
+        if receipt:
+            headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_NACK, headers)
 
     def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
@@ -449,7 +455,7 @@ class Protocol12(Protocol11):
                 pass
             headers[key] = val
 
-    def ack(self, id, transaction=None):
+    def ack(self, id, transaction=None, receipt=None):
         """
         Acknowledge 'consumption' of a message by id.
 
@@ -460,9 +466,11 @@ class Protocol12(Protocol11):
         headers = {HDR_ID: id}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
+        if receipt:
+            headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_ACK, headers)
 
-    def nack(self, id, transaction=None):
+    def nack(self, id, transaction=None, receipt=None):
         """
         Let the server know that a message was not consumed.
 
@@ -473,6 +481,8 @@ class Protocol12(Protocol11):
         headers = {HDR_ID: id}
         if transaction:
             headers[HDR_TRANSACTION] = transaction
+        if receipt:
+            headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_NACK, headers)
 
     def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
