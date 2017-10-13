@@ -116,7 +116,7 @@ class BaseTransport(stomp.listener.Publisher):
         receiver thread to exit.
         """
         with self.__receiver_thread_exit_condition:
-            while not self.__receiver_thread_exited:
+            while not self.__receiver_thread_exited and self.is_connected():
                 self.__receiver_thread_exit_condition.wait()
 
     def is_connected(self):
