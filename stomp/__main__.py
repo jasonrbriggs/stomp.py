@@ -1,5 +1,28 @@
-"""The stomp.py command line client (used for testing or simple STOMP command scripting).
+"""
+Stomp.py command-line client
 
+Usage: stomp [options]
+
+Options:
+  --version                 Show the version number and exit
+  -h, --help                Show this help message and exit
+  -H <host>, --host=<port>  Hostname or IP address to connect to. [default: localhost]
+  -P <port>, --port=<port>  Port providing stomp protocol connections. [default: 61613]
+  -U <user>, --user=<user>  Username for the connection
+  -W <password>, --password=<password>
+                            Password for the connection
+  -F <filename>, --file=<filename>
+                            File containing commands to be executed, instead of
+                            prompting from the command prompt.
+  -S <protocol version>, --protocol=<protocol version>
+                            Set the STOMP protocol version (1.0, 1.1, 1.2) [default: 1.1]
+  -L <queue>, --listen=<queue>
+                            Listen for messages on a queue/destination
+  -V, --verbose             Verbose logging "on" or "off" (if on, full headers
+                            from stomp server responses are printed)
+  --ssl                     Enable SSL connection
+  --heartbeats=<heartbeats> Heartbeats to request when connecting with protocol >=
+                            1.1 (two comma separated integers required) [default: 0,0]
 """
 
 import base64
@@ -7,8 +30,11 @@ from cmd import Cmd
 from optparse import OptionParser
 import json
 import os
+import re
 import sys
 import time
+
+from docopt import docopt
 
 from stomp.adapter.multicast import MulticastConnection
 import stomp.colors
@@ -18,11 +44,9 @@ from stomp.listener import ConnectionListener, StatsListener
 sys.path.append('.')
 import stomp
 
+version_string = '%s.%s.%s' % stomp.__version__
 
-##
-# Command-line version string
-#
-stomppy_version = 'Stomp.py Version %s.%s.%s' % stomp.__version__
+heartbeat_pattern = re.compile(r'[0-9]+,[0-9]+')
 
 try:
     import uuid
@@ -331,7 +355,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_version(self, args):
         self.__sysout('%s%s [Protocol version %s]%s' %
-                      (stomp.colors.BOLD, stomppy_version, self.conn.version, stomp.colors.NO_COLOR))
+                      (stomp.colors.BOLD, version_string, self.conn.version, stomp.colors.NO_COLOR))
     do_ver = do_version
 
     def help_version(self):
@@ -478,59 +502,31 @@ def optional_arg(arg_default):
 
 
 def main():
-    parser = OptionParser(version=stomppy_version)
+    arguments = docopt(__doc__, version=version_string)
 
-    parser.add_option('-H', '--host', type='string', dest='host', default='localhost',
-                      help='Hostname or IP to connect to. Defaults to localhost if not specified.')
-    parser.add_option('-P', '--port', type=int, dest='port', default=61613,
-                      help='Port providing stomp protocol connections. Defaults to 61613 if not specified.')
-    parser.add_option('-U', '--user', type='string', dest='user', default=None,
-                      help='Username for the connection')
-    parser.add_option('-W', '--password', type='string', dest='password', default=None,
-                      help='Password for the connection')
-    parser.add_option('-F', '--file', type='string', dest='filename',
-                      help='File containing commands to be executed, instead of prompting from the command prompt.')
-    parser.add_option('-S', '--stomp', type='string', dest='stomp', default='1.1',
-                      help='Set the STOMP protocol version.')
-    parser.add_option('-L', '--listen', type='string', dest='listen', default=None,
-                      help='Listen for messages on a queue/destination')
-    parser.add_option("-V", "--verbose", dest="verbose", default='on',
-                      help='Verbose logging "on" or "off" (if on, full headers from stomp server responses are printed)')
-    parser.add_option('--ssl', action='callback', callback=optional_arg(True), dest='ssl',
-                      help='Enable SSL connection')
-    parser.add_option('--heartbeats', type='string', dest='heartbeats', default="0,0",
-                      help='Heartbeats to request when connecting with protocol >= 1.1, two comma separated integers.')
-
-    parser.set_defaults()
-    (options, _) = parser.parse_args()
-
-    if options.verbose == 'on':
-        verbose = True
-    else:
-        verbose = False
-
-    if options.ssl is None:
-        options.ssl = False
-
-    if options.listen:
+    if arguments['--listen'] is not None:
         prompt = ''
     else:
         prompt = '> '
 
-    heartbeats = tuple(map(int, options.heartbeats.split(",")))
+    if not heartbeat_pattern.match(arguments['--heartbeats']):
+        print('Invalid heartbeats, expecting cx,cy')
+        sys.exit(1)
 
-    st = StompCLI(options.host, options.port, options.user, options.password, options.stomp, prompt, verbose,
-                  options.ssl, heartbeats)
+    heartbeats = tuple(map(int, arguments['--heartbeats'].split(",")))
 
-    if options.listen:
-        st.do_subscribe(options.listen)
+    st = StompCLI(arguments['--host'], arguments['--port'], arguments['--user'], arguments['--password'], arguments['--protocol'],
+        prompt, arguments['--verbose'], arguments['--ssl'], heartbeats)
+
+    if arguments['--listen'] is not None:
+        st.do_subscribe(arguments['--listen'])
         try:
             while 1:
                 time.sleep(10)
         except:
             print("\n")
-    elif options.filename:
-        st.do_run(options.filename)
+    elif arguments['--file'] is not None:
+        st.do_run(arguments['--file'])
     else:
         # disable CTRL-C, since can't guarantee correct handling of disconnect
         import signal
