@@ -21,5 +21,6 @@ install:
   - sudo sed -i -e s/61613/$STOMPSERVER_PORT/ /etc/stompserver/stompserver.conf
   - sudo service stompserver start
   - pip install virtualenv-api
+  - pip install docopt
 script:
   - make travistests
