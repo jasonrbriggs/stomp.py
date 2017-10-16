@@ -3,6 +3,7 @@ Version 4.1.19 -
  * Replace custom script by setuptools' entry_point for creating the executable
  * Stop waiting for protocol answers when the connection has been closed
  * Add check for is_connected on transport.stop
+ * Change command-line tool to use docopt
 
 
 Version 4.1.18 -
