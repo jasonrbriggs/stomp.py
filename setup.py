@@ -109,6 +109,7 @@ setup(
     author='Jason R Briggs',
     author_email='jasonrbriggs@gmail.com',
     platforms=['any'],
+    install_requires = ['docopt>=0.6.2'],
     packages=['stomp', 'stomp.adapter'],
     cmdclass={'test': TestCommand, 'docs': DoxygenCommand, 'piptest': TestPipInstallCommand},
     entry_points={
