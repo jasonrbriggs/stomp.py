@@ -27,7 +27,6 @@ Options:
 
 import base64
 from cmd import Cmd
-from optparse import OptionParser
 import json
 import os
 import re
