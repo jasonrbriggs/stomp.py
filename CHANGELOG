@@ -1,17 +1,17 @@
 Version 4.1.20 -
 
- *
+ * Tidy up API (remove need for start/stop methods on the connection)
 
 
 Version 4.1.19 -
 
- * Replace custom script by setuptools' entry_point for creating the executable
+ * Replace custom script with setuptools' entry_point for creating the executable
  * Stop waiting for protocol answers when the connection has been closed
  * Add check for is_connected on transport.stop
  * Change command-line tool to use docopt
 
 
-Version 4.1.18 -
+Version 4.1.18 - Sep 2017
 
  * Strip passcode from log messages
 
