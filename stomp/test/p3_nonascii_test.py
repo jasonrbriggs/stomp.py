@@ -15,7 +15,6 @@ class TestNonAsciiSend(unittest.TestCase):
         conn = stomp.Connection(get_default_host(), auto_decode=False)
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener
@@ -63,9 +62,9 @@ class TestNonAsciiSend(unittest.TestCase):
         destname = os.path.join(d, 'test-out.gif')
         with open(destname, 'wb') as f:
             f.write(img)
-            
+
         self.assertTrue(filecmp.cmp(srcname, destname))
-        
+
     def test_image_send(self):
         d = os.path.dirname(os.path.realpath(__file__))
         srcname = os.path.join(d, 'test.gif.gz')
@@ -88,16 +87,15 @@ class TestNonAsciiSend(unittest.TestCase):
         destname = os.path.join(d, 'test-out.gif.gz')
         with open(destname, 'wb') as f:
             f.write(img)
-            
+
         self.assertTrue(filecmp.cmp(srcname, destname))
 
-       
+
 class TestNonAsciiSendAutoEncoding(unittest.TestCase):
     def setUp(self):
         conn = stomp.Connection(get_default_host(), auto_decode=True)
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener

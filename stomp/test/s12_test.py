@@ -17,7 +17,6 @@ class Test12Connect(unittest.TestCase):
         conn = stomp.Connection12(get_default_host(), vhost=get_default_vhost())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener
@@ -78,7 +77,6 @@ message: connection failed\x00''')
             conn = stomp.Connection12([('127.0.0.1', 60000)])
             listener = TestListener()
             conn.set_listener('', listener)
-            conn.start()
             try:
                 conn.connect(wait=True)
                 self.fail("shouldn't happen")

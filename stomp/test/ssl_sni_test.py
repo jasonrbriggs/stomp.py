@@ -31,7 +31,6 @@ class TestSNIMQSend(unittest.TestCase):
         conn.set_ssl(get_sni_ssl_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')
 

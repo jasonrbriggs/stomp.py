@@ -14,7 +14,6 @@ class TestNonAsciiSend(unittest.TestCase):
         conn = stomp.Connection(get_default_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener

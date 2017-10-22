@@ -35,7 +35,6 @@ heart-beat:1000,1000
         conn = stomp.Connection([('127.0.0.1', 60000)])
         listener = TestListener()
         conn.set_listener('', listener)
-        conn.start()
         conn.connect()
 
         time.sleep(2)
@@ -77,7 +76,6 @@ heart-beat:1000,1000
 
             self.server.start()
 
-            conn.start()
             conn.connect()
 
             time.sleep(5)
@@ -106,7 +104,6 @@ heart-beat:1000,1000
         conn = stomp.Connection([('127.0.0.1', 60000)])
         listener = TestListener()
         conn.set_listener('', listener)
-        conn.start()
         conn.connect()
 
         time.sleep(2)

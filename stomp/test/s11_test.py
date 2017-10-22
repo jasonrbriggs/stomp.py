@@ -11,7 +11,6 @@ class Test11Send(unittest.TestCase):
         conn = stomp.Connection(get_default_host())
         tl = TestListener('123')
         conn.set_listener('', tl)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
 
@@ -38,7 +37,6 @@ class Test11Send(unittest.TestCase):
         conn = stomp.Connection(get_default_host(), heartbeats=(2000, 3000))
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.assertTrue(conn.heartbeats[0] > 0)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
@@ -70,7 +68,6 @@ heart-beat:1000,1000
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
             listener = TestListener()
             conn.set_listener('', listener)
-            conn.start()
             conn.connect()
 
             time.sleep(5)

@@ -14,7 +14,6 @@ class TestRabbitMQSend(unittest.TestCase):
         conn = stomp.Connection11(get_rabbitmq_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')
 

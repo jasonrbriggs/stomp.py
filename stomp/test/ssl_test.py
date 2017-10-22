@@ -20,7 +20,6 @@ class TestSSL(unittest.TestCase):
             conn = stomp.Connection(get_default_ssl_host())
             conn.set_ssl(get_default_ssl_host())
             conn.set_listener('', self.listener)
-            conn.start()
             conn.connect('admin', 'password', wait=True)
             conn.subscribe(destination=queuename, id=1, ack='auto')
 

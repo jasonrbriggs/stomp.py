@@ -16,7 +16,6 @@ class TestBasicSend(unittest.TestCase):
         conn = stomp.Connection(get_default_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener
@@ -83,7 +82,7 @@ class TestBasicSend(unittest.TestCase):
 
         try:
             ms = monotonic()
-            conn.start()
+            conn.connect("test", "test")
             self.fail("shouldn't happen")
         except exception.ConnectFailedException:
             pass  # success!
@@ -178,7 +177,6 @@ class TestBasicSend(unittest.TestCase):
 class TestConnectionErrors(unittest.TestCase):
     def test_connect_wait_error(self):
         conn = stomp.Connection(get_default_host())
-        conn.start()
         try:
             conn.connect('invalid', 'user', True)
             self.fail("Shouldn't happen")
@@ -187,7 +185,6 @@ class TestConnectionErrors(unittest.TestCase):
 
     def test_connect_nowait_error(self):
         conn = stomp.Connection(get_default_host())
-        conn.start()
         try:
             conn.connect('invalid', 'user', False)
             self.assertFalse(conn.is_connected(), 'Should not be connected')

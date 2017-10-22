@@ -13,7 +13,6 @@ class TestMulticast(unittest.TestCase):
         conn = MulticastConnection()
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect()
         self.conn = conn
         self.listener = listener

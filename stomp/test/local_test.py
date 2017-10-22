@@ -11,7 +11,6 @@ class TestIPV6Send(unittest.TestCase):
         conn = stomp.Connection11(get_ipv6_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect('admin', 'password', wait=True)
         self.conn = conn
         self.listener = listener
