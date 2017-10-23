@@ -53,5 +53,5 @@ Pavel Savchenko
 Project Status
 --------------
 
-[![PyPI version](https://badge.fury.io/py/stomp.py.svg)](https://badge.fury.io/py/stomp.py)
+[![PyPI version](https://badge.fury.io/py/stomp.py.svg)](https://badge.fury.io/py/stomp.py)  
 [![Build Status](https://travis-ci.org/jasonrbriggs/stomp.py.svg)](https://travis-ci.org/jasonrbriggs/stomp.py)
