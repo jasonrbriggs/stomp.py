@@ -43,10 +43,16 @@ class BaseConnection(Publisher):
         return self.transport.get_listener(name)
 
     def start(self):
-        self.transport.start()
+        """
+        Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)
+        """
+        pass
 
     def stop(self):
-        self.transport.stop()
+        """
+        Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)
+        """
+        pass
 
     def is_connected(self):
         """
@@ -97,6 +103,10 @@ class StompConnection10(BaseConnection, Protocol10):
         BaseConnection.__init__(self, transport)
         Protocol10.__init__(self, transport, auto_content_length)
 
+    def connect(self, *args, **kwargs):
+        self.transport.start()
+        Protocol10.connect(self, *args, **kwargs)
+
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
@@ -144,6 +154,10 @@ class StompConnection11(BaseConnection, Protocol11):
         BaseConnection.__init__(self, transport)
         Protocol11.__init__(self, transport, heartbeats, auto_content_length)
 
+    def connect(self, *args, **kwargs):
+        self.transport.start()
+        Protocol11.connect(self, *args, **kwargs)
+
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
@@ -190,6 +204,10 @@ class StompConnection12(BaseConnection, Protocol12):
                               keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats, auto_content_length)
+
+    def connect(self, *args, **kwargs):
+        self.transport.start()
+        Protocol12.connect(self, *args, **kwargs)
 
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """

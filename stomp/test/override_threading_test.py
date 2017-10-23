@@ -28,7 +28,6 @@ class ReconnectListener(TestListener):
         if self.conn:
             c = self.conn
             self.conn = None
-            c.start()
             c.connect(get_default_user(), get_default_password(), wait=True)
             c.disconnect()
 
@@ -42,7 +41,6 @@ class TestThreadingOverride(unittest.TestCase):
 
         listener = ReconnectListener(conn)
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
         self.listener = listener
@@ -62,6 +60,5 @@ class TestThreadingOverride(unittest.TestCase):
 
         self.conn.disconnect(receipt=None)
 
-        self.conn.start()
         self.conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn.disconnect()

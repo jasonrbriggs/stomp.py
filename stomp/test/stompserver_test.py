@@ -14,7 +14,6 @@ class TestStompServerSend(unittest.TestCase):
         conn = stomp.Connection10(get_stompserver_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.start()
         conn.connect(wait=True)
         conn.subscribe(destination='/queue/test', ack='auto')
 
