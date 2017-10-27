@@ -1,6 +1,7 @@
 Version 4.1.20 -
 
  * Tidy up API (remove need for start/stop methods on the connection)
+ * Make updating listeners thread-safe (https://github.com/jasonrbriggs/stomp.py/pull/174)
 
 
 Version 4.1.19 -
