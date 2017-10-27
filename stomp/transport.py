@@ -78,6 +78,7 @@ class BaseTransport(stomp.listener.Publisher):
         # function for creating threads used by the connection
         self.create_thread_fc = utils.default_create_thread
 
+        self.__listeners_change_condition = threading.Condition()
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
         self.__send_wait_condition = threading.Condition()
@@ -152,7 +153,8 @@ class BaseTransport(stomp.listener.Publisher):
         :param str name: the name of the listener
         :param ConnectionListener listener: the listener object
         """
-        self.listeners[name] = listener
+        with self.__listeners_change_condition:
+            self.listeners[name] = listener
 
     def remove_listener(self, name):
         """
@@ -160,7 +162,8 @@ class BaseTransport(stomp.listener.Publisher):
 
         :param str name: the name of the listener to remove
         """
-        del self.listeners[name]
+        with self.__listeners_change_condition:
+            del self.listeners[name]
 
     def get_listener(self, name):
         """
@@ -218,30 +221,31 @@ class BaseTransport(stomp.listener.Publisher):
         elif frame_type == 'disconnected':
             self.set_connected(False)
 
-        for listener in self.listeners.values():
-            if not listener:
-                continue
+        with self.__listeners_change_condition:
+            for listener in self.listeners.values():
+                if not listener:
+                    continue
 
-            notify_func = getattr(listener, 'on_%s' % frame_type, None)
-            if not notify_func:
-                log.debug("listener %s has no method on_%s", listener, frame_type)
-                continue
-            if frame_type in ('heartbeat', 'disconnected'):
-                notify_func()
-                continue
-            if frame_type == 'connecting':
-                notify_func(self.current_host_and_port)
-                continue
+                notify_func = getattr(listener, 'on_%s' % frame_type, None)
+                if not notify_func:
+                    log.debug("listener %s has no method on_%s", listener, frame_type)
+                    continue
+                if frame_type in ('heartbeat', 'disconnected'):
+                    notify_func()
+                    continue
+                if frame_type == 'connecting':
+                    notify_func(self.current_host_and_port)
+                    continue
 
-            if frame_type == 'error' and not self.connected:
-                with self.__connect_wait_condition:
-                    self.connection_error = True
-                    self.__connect_wait_condition.notify()
+                if frame_type == 'error' and not self.connected:
+                    with self.__connect_wait_condition:
+                        self.connection_error = True
+                        self.__connect_wait_condition.notify()
 
-            rtn = notify_func(headers, body)
-            if rtn:
-                (headers, body) = rtn
-        return (headers, body)
+                rtn = notify_func(headers, body)
+                if rtn:
+                    (headers, body) = rtn
+            return (headers, body)
 
     def transmit(self, frame):
         """
@@ -249,13 +253,14 @@ class BaseTransport(stomp.listener.Publisher):
 
         :param Frame frame: the Frame object to transmit
         """
-        for listener in self.listeners.values():
-            if not listener:
-                continue
-            try:
-                listener.on_send(frame)
-            except AttributeError:
-                continue
+        with self.__listeners_change_condition:
+            for listener in self.listeners.values():
+                if not listener:
+                    continue
+                try:
+                    listener.on_send(frame)
+                except AttributeError:
+                    continue
 
         lines = utils.convert_frame_to_lines(frame)
 
