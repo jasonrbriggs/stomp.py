@@ -214,7 +214,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
     :param transport:
     :param (int,int) heartbeats:
     :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
-    :param int heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
+    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
         HeartbeatListener.__init__(self, heartbeats)
@@ -441,7 +441,7 @@ class Protocol12(Protocol11):
     :param transport:
     :param (int,int) heartbeats:
     :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
-    :param int heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
+    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
         Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
