@@ -794,7 +794,7 @@ class Transport(BaseTransport):
             raise exception.ConnectFailedException()
 
     def set_ssl(self,
-                for_hosts=(),
+                for_hosts=[],
                 key_file=None,
                 cert_file=None,
                 ca_certs=None,
@@ -805,7 +805,7 @@ class Transport(BaseTransport):
         Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
         exception if the SSL module can't be found.
 
-        :param for_hosts: hosts this SSL configuration should be applied to
+        :param for_hosts: a list of tuples describing hosts this SSL configuration should be applied to
         :param cert_file: the path to a X509 certificate
         :param key_file: the path to a X509 key file
         :param ca_certs: the path to the a file containing CA certificates to validate the server against.
