@@ -172,8 +172,10 @@ class HeartbeatListener(ConnectionListener):
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
-                # receive gets an additional grace of 50%
-                self.receive_sleep = (self.heartbeats[1] / 1000) * 1.5
+                # by default, receive gets an additional grace of 50%
+                # set a different heart-beat-receive-scale when creating the connection to override that
+                self.receive_sleep = (self.heartbeats[1] / 1000) * self.heart_beat_receive_scale
+                log.debug("Setting receive_sleep to %s", self.receive_sleep)
 
                 # Give grace of receiving the first heartbeat
                 self.received_heartbeat = monotonic() + self.receive_sleep

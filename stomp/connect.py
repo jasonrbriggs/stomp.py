@@ -145,14 +145,15 @@ class StompConnection11(BaseConnection, Protocol11):
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
-                 auto_content_length=True):
+                 auto_content_length=True,
+                 heart_beat_receive_scale=1.5):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
                               keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
-        Protocol11.__init__(self, transport, heartbeats, auto_content_length)
+        Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
 
     def connect(self, *args, **kwargs):
         self.transport.start()
@@ -196,14 +197,15 @@ class StompConnection12(BaseConnection, Protocol12):
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
-                 auto_content_length=True):
+                 auto_content_length=True,
+                 heart_beat_receive_scale=1.5):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
                               keepalive, vhost, auto_decode)
         BaseConnection.__init__(self, transport)
-        Protocol12.__init__(self, transport, heartbeats, auto_content_length)
+        Protocol12.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
 
     def connect(self, *args, **kwargs):
         self.transport.start()
