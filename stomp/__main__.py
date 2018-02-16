@@ -72,6 +72,7 @@ class StompCLI(Cmd, ConnectionListener):
                  use_ssl=False, heartbeats=(0, 0), stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
+        self.__start = True
         self.prompt = prompt
         self.verbose = verbose
         self.user = user
@@ -100,7 +101,6 @@ class StompCLI(Cmd, ConnectionListener):
             self.nversion = 1.0
         self.__subscriptions = {}
         self.__subscription_id = 1
-        self.__start = True
 
     def __print_async(self, frame_type, headers, body):
         """
