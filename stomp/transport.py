@@ -481,6 +481,7 @@ class Transport(BaseTransport):
         values, which also enables keepalive packets, but specifies
         options specific to your OS implementation
     :param str vhost: specify a virtual hostname to provide in the 'host' header of the connection
+    :param int recv_bytes: the number of bytes to use when calling recv
     """
 
     def __init__(self,
@@ -502,7 +503,8 @@ class Transport(BaseTransport):
                  timeout=None,
                  keepalive=None,
                  vhost=None,
-                 auto_decode=True
+                 auto_decode=True,
+                 recv_bytes=1024
                  ):
         BaseTransport.__init__(self, wait_on_receipt, auto_decode)
 
@@ -563,6 +565,7 @@ class Transport(BaseTransport):
 
         self.__keepalive = keepalive
         self.vhost = vhost
+        self.__recv_bytes = recv_bytes
 
     def is_connected(self):
         """
@@ -636,7 +639,7 @@ class Transport(BaseTransport):
         :rtype: bytes
         """
         try:
-            return self.socket.recv(1024)
+            return self.socket.recv(self.__recv_bytes)
         except socket.error:
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):

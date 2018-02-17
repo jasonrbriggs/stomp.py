@@ -94,7 +94,8 @@ class StompConnection10(BaseConnection, Protocol10):
                  timeout=None,
                  keepalive=None,
                  auto_decode=True,
-                 auto_content_length=True):
+                 auto_content_length=True,
+                 recv_bytes=1024):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
@@ -146,7 +147,8 @@ class StompConnection11(BaseConnection, Protocol11):
                  vhost=None,
                  auto_decode=True,
                  auto_content_length=True,
-                 heart_beat_receive_scale=1.5):
+                 heart_beat_receive_scale=1.5,
+                 recv_byte=1024):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
@@ -198,7 +200,8 @@ class StompConnection12(BaseConnection, Protocol12):
                  vhost=None,
                  auto_decode=True,
                  auto_content_length=True,
-                 heart_beat_receive_scale=1.5):
+                 heart_beat_receive_scale=1.5,
+                 recv_bytes=1024):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
