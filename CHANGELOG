@@ -1,10 +1,9 @@
-
-
 Version 4.1.20 -
 
  * Tidy up API (remove need for start/stop methods on the connection)
  * Make updating listeners thread-safe (https://github.com/jasonrbriggs/stomp.py/pull/174)
  * Merge patch from Scott W for configuring grace period for heartbeat timeouts (https://github.com/jasonrbriggs/stomp.py/pull/180)
+ * Fix ack/nack in CLI
 
 
 Version 4.1.19 -

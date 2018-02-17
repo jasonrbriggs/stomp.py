@@ -32,6 +32,7 @@ import os
 import re
 import sys
 import time
+from functools import partial
 
 from docopt import docopt
 
@@ -71,6 +72,7 @@ class StompCLI(Cmd, ConnectionListener):
                  use_ssl=False, heartbeats=(0, 0), stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
+        self.__start = True
         self.prompt = prompt
         self.verbose = verbose
         self.user = user
@@ -107,18 +109,27 @@ class StompCLI(Cmd, ConnectionListener):
         """
         if self.__quit:
             return
-        self.__sysout("\r  \r", end='')
         if self.verbose:
             self.__sysout(frame_type)
             for k, v in headers.items():
                 self.__sysout('%s: %s' % (k, v))
+        else:
+            if 'message-id' in headers:
+                self.__sysout('message-id: %s' % headers['message-id'])
+            if 'subscription' in headers:
+                self.__sysout('subscription: %s' % headers['subscription'])
         if self.prompt != '':
             self.__sysout('')
         self.__sysout(body)
-        self.__sysout(self.prompt, end='')
+        if not self.__start:
+            self.__sysout(self.prompt, end='')
+        else:
+            self.__start = False
         self.stdout.flush()
 
     def __sysout(self, msg, end="\n"):
+        if self.__quit:
+            return
         self.stdout.write(str(msg) + end)
 
     def __error(self, msg, end="\n"):
@@ -128,6 +139,7 @@ class StompCLI(Cmd, ConnectionListener):
         """
         See :py:meth:`ConnectionListener.on_connecting`
         """
+        pass
 
     def on_disconnected(self):
         """
@@ -143,6 +155,7 @@ class StompCLI(Cmd, ConnectionListener):
         Special case: if the header 'filename' is present, the content is written out
         as a file
         """
+        self.__sysout('')
         if 'filename' in headers:
             content = base64.b64decode(body.encode())
             if os.path.exists(headers['filename']):
@@ -172,6 +185,10 @@ class StompCLI(Cmd, ConnectionListener):
         See :py:meth:`ConnectionListener.on_connected`
         """
         self.__print_async("CONNECTED", headers, body)
+
+    def on_send(self, frame):
+        if self.verbose:
+            self.__sysout("Sending %s" % str(frame))
 
     def help_help(self):
         self.__sysout('Quick help on commands')
@@ -361,7 +378,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.help('version', 'Display the version of the client')
     help_ver = help_version
 
-    def check_ack_nack(self, cmd, args):
+    def check_ack_nack(self, acknackfunc, args):
         if self.nversion >= 1.2 and len(args) < 1:
             self.__error("Expecting: %s <ack-id>" % cmd)
             return None
@@ -372,23 +389,21 @@ class StompCLI(Cmd, ConnectionListener):
             self.__error("Expecting: %s <message-id>" % cmd)
             return None
 
-        if len(args) == 1:
-            return (args[0], None)
+        if self.nversion == 1.1:
+            return partial(acknackfunc, args[0], args[1])
         else:
-            return (args[0], args[1])
+            return partial(acknackfunc, args[0])
 
     def do_ack(self, args):
         args = args.split()
-        hdrs = self.check_ack_nack('ack', args)
-        if hdrs is None:
+        func = self.check_ack_nack(self.conn.ack, args)
+        if func is None:
             return
 
-        (message_id, subscription_id) = hdrs
-
         if not self.transaction_id:
-            self.conn.ack(message_id, subscription_id)
+            func()
         else:
-            self.conn.ack(message_id, subscription_id, transaction=self.transaction_id)
+            func(transaction=self.transaction_id)
 
     def help_ack(self):
         self.help('ack <message-id> [subscription-id]', '''The command 'ack' is used to acknowledge consumption of a message from a subscription using client
@@ -398,14 +413,14 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_nack(self, args):
         args = args.split()
-        hdrs = self.check_ack_nack('nack', args)
-        if hdrs is None:
+        func = self.check_ack_nack(self.conn.nack, args)
+        if func is None:
             return
 
         if not self.transaction_id:
-            self.conn.nack(headers=hdrs)
+            func()
         else:
-            self.conn.nack(headers=hdrs, transaction=self.transaction_id)
+            func(transaction=self.transaction_id)
 
     def help_nack(self):
         self.help('nack <message-id> [subscription]', '''The command 'nack' is used to acknowledge the failure of a message from a subscription using client
