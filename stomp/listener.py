@@ -145,7 +145,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_receiver_loop_completed(self):
+    def on_receiver_loop_completed(self, headers, body):
         """
         Called when the connection receiver_loop has finished.
         """
