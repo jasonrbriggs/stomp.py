@@ -145,6 +145,12 @@ class ConnectionListener(object):
         """
         pass
 
+    def on_receiver_loop_completed(self):
+        """
+        Called when the connection receiver_loop has finished.
+        """
+        pass
+
 
 class HeartbeatListener(ConnectionListener):
     """
