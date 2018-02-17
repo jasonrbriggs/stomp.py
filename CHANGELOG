@@ -4,6 +4,7 @@ Version 4.1.20 -
  * Make updating listeners thread-safe (https://github.com/jasonrbriggs/stomp.py/pull/174)
  * Merge patch from Scott W for configuring grace period for heartbeat timeouts (https://github.com/jasonrbriggs/stomp.py/pull/180)
  * Fix ack/nack in CLI
+ * Add missing on_receiver_loop_completed handler to ConnectionListener
 
 
 Version 4.1.19 -
