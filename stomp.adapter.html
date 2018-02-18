@@ -1,26 +1,15 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>stomp.adapter package &#8212; Stomp 4.1.17 documentation</title>
-    
+    <title>stomp.adapter package &#8212; Stomp 4.1.20 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '4.1.17',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -32,8 +21,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
+  </head><body>
   
 
     <div class="document">
@@ -49,12 +37,12 @@
 <div class="section" id="module-stomp.adapter.multicast">
 <span id="stomp-adapter-multicast-module"></span><h2>stomp.adapter.multicast module<a class="headerlink" href="#module-stomp.adapter.multicast" title="Permalink to this headline">¶</a></h2>
 <p>Multicast transport for stomp.py.</p>
-<p>Obviously not a typical message broker, but convenient if you don&#8217;t have a broker, but still want to use stomp.py
+<p>Obviously not a typical message broker, but convenient if you don’t have a broker, but still want to use stomp.py
 methods.</p>
 <dl class="class">
 <dt id="stomp.adapter.multicast.MulticastConnection">
 <em class="property">class </em><code class="descclassname">stomp.adapter.multicast.</code><code class="descname">MulticastConnection</code><span class="sig-paren">(</span><em>wait_on_receipt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="stomp.html#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="stomp.html#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
 <dl class="method">
 <dt id="stomp.adapter.multicast.MulticastConnection.connect">
 <code class="descname">connect</code><span class="sig-paren">(</span><em>username=None</em>, <em>passcode=None</em>, <em>wait=False</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.connect" title="Permalink to this definition">¶</a></dt>
@@ -63,11 +51,11 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) &#8211; </li>
-<li><strong>passcode</strong> (<em>str</em>) &#8211; </li>
-<li><strong>wait</strong> (<em>bool</em>) &#8211; </li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>keyword_headers</strong> &#8211; </li>
+<li><strong>username</strong> (<em>str</em>) – </li>
+<li><strong>passcode</strong> (<em>str</em>) – </li>
+<li><strong>wait</strong> (<em>bool</em>) – </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>keyword_headers</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -83,9 +71,9 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) &#8211; </li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>keyword_headers</strong> &#8211; </li>
+<li><strong>receipt</strong> (<em>str</em>) – </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>keyword_headers</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -101,9 +89,9 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cmd</strong> (<em>str</em>) &#8211; </li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>body</strong> &#8211; </li>
+<li><strong>cmd</strong> (<em>str</em>) – </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>body</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -119,11 +107,11 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) &#8211; </li>
-<li><strong>id</strong> (<em>str</em>) &#8211; </li>
-<li><strong>ack</strong> (<em>str</em>) &#8211; </li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>keyword_headers</strong> &#8211; </li>
+<li><strong>destination</strong> (<em>str</em>) – </li>
+<li><strong>id</strong> (<em>str</em>) – </li>
+<li><strong>ack</strong> (<em>str</em>) – </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>keyword_headers</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -139,9 +127,9 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; </li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>keyword_headers</strong> &#8211; </li>
+<li><strong>id</strong> (<em>str</em>) – </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>keyword_headers</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -154,7 +142,7 @@ methods.</p>
 <dl class="class">
 <dt id="stomp.adapter.multicast.MulticastTransport">
 <em class="property">class </em><code class="descclassname">stomp.adapter.multicast.</code><code class="descname">MulticastTransport</code><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a></p>
 <p>Transport over multicast connections rather than using a broker.</p>
 <dl class="method">
 <dt id="stomp.adapter.multicast.MulticastTransport.attempt_connection">
@@ -170,8 +158,8 @@ methods.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>f</strong> (<a class="reference internal" href="stomp.html#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; Frame object</li>
-<li><strong>frame_str</strong> (<em>bytes</em>) &#8211; Raw frame content</li>
+<li><strong>f</strong> (<a class="reference internal" href="stomp.html#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – Frame object</li>
+<li><strong>frame_str</strong> (<em>bytes</em>) – Raw frame content</li>
 </ul>
 </td>
 </tr>
@@ -201,7 +189,7 @@ methods.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) – </td>
 </tr>
 </tbody>
 </table>
@@ -210,7 +198,9 @@ methods.</p>
 <dl class="method">
 <dt id="stomp.adapter.multicast.MulticastTransport.stop">
 <code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.stop" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Stop the connection. Performs a clean shutdown by waiting for the
+receiver thread to exit.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -252,12 +242,14 @@ methods.</p>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -268,8 +260,8 @@ methods.</p>
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/stomp.adapter.rst.txt"

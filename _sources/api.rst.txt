@@ -91,11 +91,11 @@ Use the client or client-individual acknowledgement parameter (see `here <https:
     >>> conn.subscribe('/queue/test', id=4, ack='client')
     on_before_message {'message-id': 'mybroker-14aa2', 'destination': '/queue/test', 'subscription': '4', 'content-length': '14'} test message 1
     on_message {'message-id': 'mybroker-14aa2', 'destination': '/queue/test', 'subscription': '4', 'content-length': '14'} test message 1
-    >>> conn.ack('mybroker-14aa2', 2)
+    >>> conn.ack('mybroker-14aa2', 4)
     
     on_before_message {'message-id': 'mybroker-14ab2', 'destination': '/queue/test', 'subscription': '4', 'content-length': '14'} test message 2
     on_message {'message-id': 'mybroker-14ab2', 'destination': '/queue/test', 'subscription': '4', 'content-length': '14'} test message 2
-    >>> conn.nack('mybroker-14ab2', 2)
+    >>> conn.nack('mybroker-14ab2', 4)
 
 
 Transactions

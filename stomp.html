@@ -1,26 +1,15 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>stomp package &#8212; Stomp 4.1.17 documentation</title>
-    
+    <title>stomp package &#8212; Stomp 4.1.20 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '4.1.17',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -32,8 +21,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body role="document">
+  </head><body>
   
 
     <div class="document">
@@ -69,7 +57,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>e</strong> (<em>Exception</em>) &#8211; the exception object</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>e</strong> (<em>Exception</em>) – the exception object</td>
 </tr>
 </tbody>
 </table>
@@ -82,12 +70,12 @@
 <dl class="function">
 <dt id="stomp.backward2.decode">
 <code class="descclassname">stomp.backward2.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode the byte data to a string - in the case of this Py2 version, we can&#8217;t really do anything (Py3 differs).</p>
+<dd><p>Decode the byte data to a string - in the case of this Py2 version, we can’t really do anything (Py3 differs).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
@@ -103,7 +91,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
 </tr>
@@ -133,7 +121,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Rtype str:</th><td class="field-body"></td>
 </tr>
@@ -149,7 +137,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
 </tr>
@@ -169,7 +157,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) &#8211; the data to decode</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) – the data to decode</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
@@ -185,7 +173,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> &#8211; the data to encode</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> – the data to encode</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
 </tr>
@@ -201,7 +189,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prompt</strong> (<em>str</em>) &#8211; the prompt to display to the user</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prompt</strong> (<em>str</em>) – the prompt to display to the user</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
@@ -217,7 +205,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) &#8211; list of chars</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) – list of chars</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
@@ -233,7 +221,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) &#8211; list of strings</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) – list of strings</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
 </tr>
@@ -247,8 +235,28 @@
 <p>Networking functions to support backwards compatibility.</p>
 <p>Distinct from the backward(2/3) functions to handle ipv6 changes between Python versions 2.5 and 2.6.</p>
 </div>
-<div class="section" id="stomp-backwardsock25-module">
-<h2>stomp.backwardsock25 module<a class="headerlink" href="#stomp-backwardsock25-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-stomp.backwardsock25">
+<span id="stomp-backwardsock25-module"></span><h2>stomp.backwardsock25 module<a class="headerlink" href="#module-stomp.backwardsock25" title="Permalink to this headline">¶</a></h2>
+<p>Python2.5 (and lower) specific versions of various networking (ipv6) functions used by stomp.py</p>
+<dl class="function">
+<dt id="stomp.backwardsock25.get_socket">
+<code class="descclassname">stomp.backwardsock25.</code><code class="descname">get_socket</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backwardsock25.get_socket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a socket.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>host</strong> (<em>str</em>) – the hostname to connect to</li>
+<li><strong>port</strong> (<em>int</em>) – the port number to connect to</li>
+<li><strong>timeout</strong> – if specified, set the socket timeout</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-stomp.backwardsock26">
 <span id="stomp-backwardsock26-module"></span><h2>stomp.backwardsock26 module<a class="headerlink" href="#module-stomp.backwardsock26" title="Permalink to this headline">¶</a></h2>
@@ -262,9 +270,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> (<em>str</em>) &#8211; the hostname to connect to</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; the port number to connect to</li>
-<li><strong>timeout</strong> &#8211; if specified, set the socket timeout</li>
+<li><strong>host</strong> (<em>str</em>) – the hostname to connect to</li>
+<li><strong>port</strong> (<em>int</em>) – the port number to connect to</li>
+<li><strong>timeout</strong> – if specified, set the socket timeout</li>
 </ul>
 </td>
 </tr>
@@ -275,7 +283,7 @@
 </div>
 <div class="section" id="module-stomp.colors">
 <span id="stomp-colors-module"></span><h2>stomp.colors module<a class="headerlink" href="#module-stomp.colors" title="Permalink to this headline">¶</a></h2>
-<p>Color &#8216;constants&#8217; used by the command line client.</p>
+<p>Color ‘constants’ used by the command line client.</p>
 </div>
 <div class="section" id="module-stomp.connect">
 <span id="stomp-connect-module"></span><h2>stomp.connect module<a class="headerlink" href="#module-stomp.connect" title="Permalink to this headline">¶</a></h2>
@@ -286,7 +294,7 @@
 <dl class="class">
 <dt id="stomp.connect.BaseConnection">
 <em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">BaseConnection</code><span class="sig-paren">(</span><em>transport</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.Publisher</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.Publisher</span></code></a></p>
 <p>Base class for all connection classes.</p>
 <dl class="method">
 <dt id="stomp.connect.BaseConnection.get_listener">
@@ -295,7 +303,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener">ConnectionListener</a></td>
 </tr>
@@ -328,7 +336,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – </td>
 </tr>
 </tbody>
 </table>
@@ -342,8 +350,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; </li>
-<li><strong>lstnr</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) &#8211; </li>
+<li><strong>name</strong> (<em>str</em>) – </li>
+<li><strong>lstnr</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) – </li>
 </ul>
 </td>
 </tr>
@@ -364,21 +372,44 @@
 <dl class="method">
 <dt id="stomp.connect.BaseConnection.start">
 <code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="stomp.connect.BaseConnection.stop">
 <code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.stop" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="stomp.connect.StompConnection10">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection10</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol10" title="stomp.protocol.Protocol10"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol10</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection10</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol10" title="stomp.protocol.Protocol10"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol10</span></code></a></p>
 <p>Represents a 1.0 connection (comprising transport plus 1.0 protocol class).
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+<dl class="method">
+<dt id="stomp.connect.StompConnection10.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>username</strong> (<em>str</em>) – the username to connect with</li>
+<li><strong>passcode</strong> (<em>str</em>) – the password used to authenticate with</li>
+<li><strong>wait</strong> (<em>bool</em>) – if True, wait for the connection to be established/acknowledged</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="stomp.connect.StompConnection10.disconnect">
 <code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt=None</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.disconnect" title="Permalink to this definition">¶</a></dt>
@@ -388,9 +419,9 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) &#8211; the receipt to use with the disconnect</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers to send with the disconnection</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the disconnection</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt to use with the disconnect</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the disconnection</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the disconnection</li>
 </ul>
 </td>
 </tr>
@@ -402,10 +433,31 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 
 <dl class="class">
 <dt id="stomp.connect.StompConnection11">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection11</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection11</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_byte=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
 <p>Represents a 1.1 connection (comprising transport plus 1.1 protocol class)
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+<dl class="method">
+<dt id="stomp.connect.StompConnection11.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>username</strong> (<em>str</em>) – the username to connect with</li>
+<li><strong>passcode</strong> (<em>str</em>) – the password used to authenticate with</li>
+<li><strong>wait</strong> (<em>bool</em>) – if True, wait for the connection to be established/acknowledged</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="stomp.connect.StompConnection11.disconnect">
 <code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt=None</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.disconnect" title="Permalink to this definition">¶</a></dt>
@@ -415,9 +467,9 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) &#8211; the receipt to use with the disconnect</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers to send with the disconnection</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the disconnection</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt to use with the disconnect</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the disconnection</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the disconnection</li>
 </ul>
 </td>
 </tr>
@@ -429,10 +481,31 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 
 <dl class="class">
 <dt id="stomp.connect.StompConnection12">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
 <p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+<dl class="method">
+<dt id="stomp.connect.StompConnection12.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>username</strong> (<em>str</em>) – optionally specify the login user</li>
+<li><strong>passcode</strong> (<em>str</em>) – optionally specify the user password</li>
+<li><strong>wait</strong> (<em>bool</em>) – wait for the connection to complete before returning</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="stomp.connect.StompConnection12.disconnect">
 <code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt=None</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.disconnect" title="Permalink to this definition">¶</a></dt>
@@ -442,9 +515,9 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) &#8211; the receipt to use with the disconnect</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers to send with the disconnection</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the disconnection</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt to use with the disconnect</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the disconnection</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the disconnection</li>
 </ul>
 </td>
 </tr>
@@ -465,7 +538,7 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <dl class="exception">
 <dt id="stomp.exception.ConnectFailedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">ConnectFailedException</code><a class="headerlink" href="#stomp.exception.ConnectFailedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised by Connection.attempt_connection when reconnection attempts
 have exceeded Connection.__reconnect_attempts_max.</p>
 </dd></dl>
@@ -473,7 +546,7 @@ have exceeded Connection.__reconnect_attempts_max.</p>
 <dl class="exception">
 <dt id="stomp.exception.ConnectionClosedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">ConnectionClosedException</code><a class="headerlink" href="#stomp.exception.ConnectionClosedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised in the receiver thread when the connection has been closed
 by the server.</p>
 </dd></dl>
@@ -481,21 +554,21 @@ by the server.</p>
 <dl class="exception">
 <dt id="stomp.exception.InterruptedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">InterruptedException</code><a class="headerlink" href="#stomp.exception.InterruptedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised by receive when data read is interrupted.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="stomp.exception.NotConnectedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">NotConnectedException</code><a class="headerlink" href="#stomp.exception.NotConnectedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised when there is currently no server connection.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="stomp.exception.StompException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">StompException</code><a class="headerlink" href="#stomp.exception.StompException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Common exception class. All specific stomp.py exceptions are subclasses
 of StompException, allowing the library user to catch all current and
 future library exceptions.</p>
@@ -508,7 +581,7 @@ future library exceptions.</p>
 <dl class="class">
 <dt id="stomp.listener.ConnectionListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">ConnectionListener</code><a class="headerlink" href="#stomp.listener.ConnectionListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class should be used as a base class for objects registered
 using Connection.set_listener().</p>
 <dl class="method">
@@ -521,8 +594,8 @@ containing the headers and body (so that implementing listeners can pre-process 
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; the message headers</li>
-<li><strong>body</strong> &#8211; the message body</li>
+<li><strong>headers</strong> (<em>dict</em>) – the message headers</li>
+<li><strong>body</strong> – the message body</li>
 </ul>
 </td>
 </tr>
@@ -541,8 +614,8 @@ re-established).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a dictionary containing all headers sent by the server as key/value pairs.</li>
-<li><strong>body</strong> &#8211; the frame&#8217;s payload. This is usually empty for CONNECTED frames.</li>
+<li><strong>headers</strong> (<em>dict</em>) – a dictionary containing all headers sent by the server as key/value pairs.</li>
+<li><strong>body</strong> – the frame’s payload. This is usually empty for CONNECTED frames.</li>
 </ul>
 </td>
 </tr>
@@ -556,13 +629,13 @@ re-established).</p>
 <dd><p>Called by the STOMP connection once a TCP/IP connection to the
 STOMP server has been established or re-established. Note that
 at this point, no connection has been established on the STOMP
-protocol level. For this, you need to invoke the &#8220;connect&#8221;
+protocol level. For this, you need to invoke the “connect”
 method on the connection.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em></em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; a tuple containing the host name and port number to which the connection
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – a tuple containing the host name and port number to which the connection
 has been established.</td>
 </tr>
 </tbody>
@@ -586,8 +659,8 @@ the connection until it has been reestablished.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a dictionary containing all headers sent by the server as key/value pairs.</li>
-<li><strong>body</strong> &#8211; the frame&#8217;s payload - usually a detailed error description.</li>
+<li><strong>headers</strong> (<em>dict</em>) – a dictionary containing all headers sent by the server as key/value pairs.</li>
+<li><strong>body</strong> – the frame’s payload - usually a detailed error description.</li>
 </ul>
 </td>
 </tr>
@@ -617,8 +690,8 @@ received beyond the specified period.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a dictionary containing all headers sent by the server as key/value pairs.</li>
-<li><strong>body</strong> &#8211; the frame&#8217;s payload - the message body.</li>
+<li><strong>headers</strong> (<em>dict</em>) – a dictionary containing all headers sent by the server as key/value pairs.</li>
+<li><strong>body</strong> – the frame’s payload - the message body.</li>
 </ul>
 </td>
 </tr>
@@ -631,19 +704,25 @@ received beyond the specified period.</p>
 <code class="descname">on_receipt</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.ConnectionListener.on_receipt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called by the STOMP connection when a RECEIPT frame is
 received, sent by the server if requested by the client using
-the &#8216;receipt&#8217; header.</p>
+the ‘receipt’ header.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a dictionary containing all headers sent by the server as key/value pairs.</li>
-<li><strong>body</strong> &#8211; the frame&#8217;s payload. This is usually empty for RECEIPT frames.</li>
+<li><strong>headers</strong> (<em>dict</em>) – a dictionary containing all headers sent by the server as key/value pairs.</li>
+<li><strong>body</strong> – the frame’s payload. This is usually empty for RECEIPT frames.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.ConnectionListener.on_receiver_loop_completed">
+<code class="descname">on_receiver_loop_completed</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.ConnectionListener.on_receiver_loop_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection receiver_loop has finished.</p>
 </dd></dl>
 
 <dl class="method">
@@ -654,7 +733,7 @@ the &#8216;receipt&#8217; header.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; the frame to be sent</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – the frame to be sent</td>
 </tr>
 </tbody>
 </table>
@@ -665,12 +744,12 @@ the &#8216;receipt&#8217; header.</p>
 <dl class="class">
 <dt id="stomp.listener.HeartbeatListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">HeartbeatListener</code><span class="sig-paren">(</span><em>heartbeats</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>Listener used to handle STOMP heartbeating.</p>
 <dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_connected">
 <code class="descname">on_connected</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_connected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Once the connection is established, and &#8216;heart-beat&#8217; is found in the headers, we calculate the real
+<dd><p>Once the connection is established, and ‘heart-beat’ is found in the headers, we calculate the real
 heartbeat numbers (based on what the server sent and what was specified by the client) - if the heartbeats
 are not 0, we start up the heartbeat loop accordingly.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -678,8 +757,8 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; headers in the connection message</li>
-<li><strong>body</strong> &#8211; the message body</li>
+<li><strong>headers</strong> (<em>dict</em>) – headers in the connection message</li>
+<li><strong>body</strong> – the message body</li>
 </ul>
 </td>
 </tr>
@@ -690,7 +769,10 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 <dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_disconnected">
 <code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called by the STOMP connection when a TCP/IP connection to the
+STOMP server has been lost.  No messages should be sent via
+the connection until it has been reestablished.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_error">
@@ -713,8 +795,8 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; headers in the message</li>
-<li><strong>body</strong> &#8211; the message content</li>
+<li><strong>headers</strong> (<em>dict</em>) – headers in the message</li>
+<li><strong>body</strong> – the message content</li>
 </ul>
 </td>
 </tr>
@@ -737,7 +819,7 @@ next outbound heartbeat timestamp.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; the Frame object</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – the Frame object</td>
 </tr>
 </tbody>
 </table>
@@ -748,7 +830,7 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.listener.PrintingListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">PrintingListener</code><a class="headerlink" href="#stomp.listener.PrintingListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_before_message">
 <code class="descname">on_before_message</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_before_message" title="Permalink to this definition">¶</a></dt>
@@ -757,8 +839,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>body</strong> &#8211; </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>body</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -774,8 +856,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>body</strong> &#8211; </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>body</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -790,7 +872,7 @@ next outbound heartbeat timestamp.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em></em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – </td>
 </tr>
 </tbody>
 </table>
@@ -799,7 +881,10 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_disconnected">
 <code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called by the STOMP connection when a TCP/IP connection to the
+STOMP server has been lost.  No messages should be sent via
+the connection until it has been reestablished.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_error">
@@ -809,8 +894,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>body</strong> &#8211; </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>body</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -821,12 +906,15 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called on receipt of a heartbeat.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_heartbeat_timeout">
 <code class="descname">on_heartbeat_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_heartbeat_timeout" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called by the STOMP connection when a heartbeat message has not been
+received beyond the specified period.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_message">
@@ -836,8 +924,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>body</strong> &#8211; </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>body</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -853,8 +941,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>body</strong> &#8211; </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>body</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -869,7 +957,7 @@ next outbound heartbeat timestamp.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – </td>
 </tr>
 </tbody>
 </table>
@@ -880,7 +968,7 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.listener.Publisher">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">Publisher</code><a class="headerlink" href="#stomp.listener.Publisher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Simply a registry of listeners.</p>
 <dl class="method">
 <dt id="stomp.listener.Publisher.get_listener">
@@ -890,7 +978,7 @@ next outbound heartbeat timestamp.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; the listener to return</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – the listener to return</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener">ConnectionListener</a></td>
 </tr>
@@ -906,7 +994,7 @@ next outbound heartbeat timestamp.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; the name of the listener to remove</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – the name of the listener to remove</td>
 </tr>
 </tbody>
 </table>
@@ -915,14 +1003,14 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.Publisher.set_listener">
 <code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.Publisher.set_listener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a named listener to use with this connection. See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Set a named listener to use with this connection. See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; the name of the listener</li>
-<li><strong>listener</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) &#8211; the listener object</li>
+<li><strong>name</strong> (<em>str</em>) – the name of the listener</li>
+<li><strong>listener</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) – the listener object</li>
 </ul>
 </td>
 </tr>
@@ -935,17 +1023,17 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.listener.StatsListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">StatsListener</code><a class="headerlink" href="#stomp.listener.StatsListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>A connection listener for recording statistics on messages sent and received.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_connecting">
 <code class="descname">on_connecting</code><span class="sig-paren">(</span><em>host_and_port</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_connecting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the connection count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_connecting" title="stomp.listener.ConnectionListener.on_connecting"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_connecting()</span></code></a></p>
+<dd><p>Increment the connection count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_connecting" title="stomp.listener.ConnectionListener.on_connecting"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_connecting()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em></em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; the host and port as a tuple</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – the host and port as a tuple</td>
 </tr>
 </tbody>
 </table>
@@ -954,20 +1042,20 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_disconnected">
 <code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the disconnect count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_disconnected" title="stomp.listener.ConnectionListener.on_disconnected"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_disconnected()</span></code></a></p>
+<dd><p>Increment the disconnect count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_disconnected" title="stomp.listener.ConnectionListener.on_disconnected"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_disconnected()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_error">
 <code class="descname">on_error</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the error count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_error" title="stomp.listener.ConnectionListener.on_error"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_error()</span></code></a></p>
+<dd><p>Increment the error count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_error" title="stomp.listener.ConnectionListener.on_error"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_error()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; headers in the message</li>
-<li><strong>body</strong> &#8211; the message content</li>
+<li><strong>headers</strong> (<em>dict</em>) – headers in the message</li>
+<li><strong>body</strong> – the message content</li>
 </ul>
 </td>
 </tr>
@@ -978,26 +1066,26 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
+<dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_heartbeat_timeout">
 <code class="descname">on_heartbeat_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_heartbeat_timeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the heartbeat timeout. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat_timeout" title="stomp.listener.ConnectionListener.on_heartbeat_timeout"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_heartbeat_timeout()</span></code></a></p>
+<dd><p>Increment the heartbeat timeout. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat_timeout" title="stomp.listener.ConnectionListener.on_heartbeat_timeout"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat_timeout()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_message">
 <code class="descname">on_message</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the message received count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_message" title="stomp.listener.ConnectionListener.on_message"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_message()</span></code></a></p>
+<dd><p>Increment the message received count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_message" title="stomp.listener.ConnectionListener.on_message"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_message()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; headers in the message</li>
-<li><strong>body</strong> &#8211; the message content</li>
+<li><strong>headers</strong> (<em>dict</em>) – headers in the message</li>
+<li><strong>body</strong> – the message content</li>
 </ul>
 </td>
 </tr>
@@ -1008,12 +1096,12 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_send">
 <code class="descname">on_send</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the send count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_send" title="stomp.listener.ConnectionListener.on_send"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_send()</span></code></a></p>
+<dd><p>Increment the send count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_send" title="stomp.listener.ConnectionListener.on_send"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_send()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – </td>
 </tr>
 </tbody>
 </table>
@@ -1024,7 +1112,7 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.listener.TestListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">TestListener</code><span class="sig-paren">(</span><em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.WaitingListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.WaitingListener</span></code></a></p>
 <p>Implementation of StatsListener and WaitingListener. Useful for testing.</p>
 <dl class="method">
 <dt id="stomp.listener.TestListener.get_latest_message">
@@ -1034,7 +1122,8 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.TestListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.TestListener.on_message">
@@ -1044,8 +1133,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>message</strong> &#8211; </li>
+<li><strong>headers</strong> (<em>dict</em>) – </li>
+<li><strong>message</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -1068,7 +1157,7 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.listener.WaitingListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">WaitingListener</code><span class="sig-paren">(</span><em>receipt</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.WaitingListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>A listener which waits for a specific receipt to arrive.</p>
 <dl class="method">
 <dt id="stomp.listener.WaitingListener.on_receipt">
@@ -1079,8 +1168,8 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>headers</strong> (<em>dict</em>) &#8211; headers in the message</li>
-<li><strong>body</strong> &#8211; the message content</li>
+<li><strong>headers</strong> (<em>dict</em>) – headers in the message</li>
+<li><strong>body</strong> – the message content</li>
 </ul>
 </td>
 </tr>
@@ -1103,16 +1192,16 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.protocol.Protocol10">
 <em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol10</code><span class="sig-paren">(</span><em>transport</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>Represents version 1.0 of the protocol (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.0.html">https://stomp.github.io/stomp-specification-1.0.html</a>).</p>
-<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
+<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transport</strong> &#8211; </li>
-<li><strong>auto_content_length</strong> (<em>bool</em>) &#8211; Whether to calculate and send the content-length header automatically if it has not been set</li>
+<li><strong>transport</strong> – </li>
+<li><strong>auto_content_length</strong> (<em>bool</em>) – Whether to calculate and send the content-length header automatically if it has not been set</li>
 </ul>
 </td>
 </tr>
@@ -1127,9 +1216,9 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transaction</strong> (<em>str</em>) &#8211; the identifier of the transaction</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>transaction</strong> (<em>str</em>) – the identifier of the transaction</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1139,15 +1228,15 @@ next outbound heartbeat timestamp.</p>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol10.ack">
-<code class="descname">ack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10.ack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Acknowledge &#8216;consumption&#8217; of a message by id.</p>
+<code class="descname">ack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10.ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acknowledge ‘consumption’ of a message by id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; identifier of the message</li>
-<li><strong>transaction</strong> (<em>str</em>) &#8211; include the acknowledgement in the specified transaction</li>
+<li><strong>id</strong> (<em>str</em>) – identifier of the message</li>
+<li><strong>transaction</strong> (<em>str</em>) – include the acknowledgement in the specified transaction</li>
 </ul>
 </td>
 </tr>
@@ -1164,10 +1253,10 @@ next outbound heartbeat timestamp.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>transaction</strong> (<em>str</em>) &#8211; the identifier for the transaction (optional - if not specified
+<li><strong>transaction</strong> (<em>str</em>) – the identifier for the transaction (optional - if not specified
 a unique transaction id will be generated)</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1190,9 +1279,9 @@ a unique transaction id will be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transaction</strong> (<em>str</em>) &#8211; the identifier for the transaction</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>transaction</strong> (<em>str</em>) – the identifier for the transaction</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1209,11 +1298,11 @@ a unique transaction id will be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) &#8211; the username to connect with</li>
-<li><strong>passcode</strong> (<em>str</em>) &#8211; the password used to authenticate with</li>
-<li><strong>wait</strong> (<em>bool</em>) &#8211; if True, wait for the connection to be established/acknowledged</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>username</strong> (<em>str</em>) – the username to connect with</li>
+<li><strong>passcode</strong> (<em>str</em>) – the password used to authenticate with</li>
+<li><strong>wait</strong> (<em>bool</em>) – if True, wait for the connection to be established/acknowledged</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1230,11 +1319,11 @@ a unique transaction id will be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) &#8211; the receipt to use (once the server acknowledges that receipt, we&#8217;re
+<li><strong>receipt</strong> (<em>str</em>) – the receipt to use (once the server acknowledges that receipt, we’re
 officially disconnected; optional - if not specified a unique receipt id will
 be generated)</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1251,11 +1340,11 @@ be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) &#8211; the destination of the message (e.g. queue or topic name)</li>
-<li><strong>body</strong> &#8211; the content of the message</li>
-<li><strong>content_type</strong> (<em>str</em>) &#8211; the content type of the message</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>destination</strong> (<em>str</em>) – the destination of the message (e.g. queue or topic name)</li>
+<li><strong>body</strong> – the content of the message</li>
+<li><strong>content_type</strong> (<em>str</em>) – the content type of the message</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1273,9 +1362,9 @@ through the underlying transport.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cmd</strong> (<em>str</em>) &#8211; the protocol command</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of headers to include in the frame</li>
-<li><strong>body</strong> &#8211; the content of the message</li>
+<li><strong>cmd</strong> (<em>str</em>) – the protocol command</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of headers to include in the frame</li>
+<li><strong>body</strong> – the content of the message</li>
 </ul>
 </td>
 </tr>
@@ -1292,13 +1381,13 @@ through the underlying transport.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) &#8211; the topic or queue to subscribe to</li>
-<li><strong>id</strong> (<em>str</em>) &#8211; a unique id to represent the subscription</li>
-<li><strong>ack</strong> (<em>str</em>) &#8211; acknowledgement mode, either auto, client, or client-individual
+<li><strong>destination</strong> (<em>str</em>) – the topic or queue to subscribe to</li>
+<li><strong>id</strong> (<em>str</em>) – a unique id to represent the subscription</li>
+<li><strong>ack</strong> (<em>str</em>) – acknowledgement mode, either auto, client, or client-individual
 (see <a class="reference external" href="http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header">http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header</a>)
 for more information</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1315,10 +1404,10 @@ for more information</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) &#8211; the name of the topic or queue to unsubscribe from</li>
-<li><strong>id</strong> (<em>str</em>) &#8211; the unique identifier of the topic or queue to unsubscribe from</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>destination</strong> (<em>str</em>) – the name of the topic or queue to unsubscribe from</li>
+<li><strong>id</strong> (<em>str</em>) – the unique identifier of the topic or queue to unsubscribe from</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1330,18 +1419,19 @@ for more information</li>
 
 <dl class="class">
 <dt id="stomp.protocol.Protocol11">
-<em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol11</code><span class="sig-paren">(</span><em>transport</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.HeartbeatListener" title="stomp.listener.HeartbeatListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.HeartbeatListener</span></code></a>, <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol11</code><span class="sig-paren">(</span><em>transport</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.HeartbeatListener" title="stomp.listener.HeartbeatListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.HeartbeatListener</span></code></a>, <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>Represents version 1.1 of the protocol (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.1.html">https://stomp.github.io/stomp-specification-1.1.html</a>).</p>
-<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
+<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transport</strong> &#8211; </li>
-<li><strong>heartbeats</strong> (<em></em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; </li>
-<li><strong>auto_content_length</strong> (<em>bool</em>) &#8211; Whether to calculate and send the content-length header automatically if it has not been set</li>
+<li><strong>transport</strong> – </li>
+<li><strong>heartbeats</strong> (<em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – </li>
+<li><strong>auto_content_length</strong> (<em>bool</em>) – Whether to calculate and send the content-length header automatically if it has not been set</li>
+<li><strong>heart_beat_receive_scale</strong> (<em>float</em>) – how long to wait for a heartbeat before timing out, as a scale factor of receive time</li>
 </ul>
 </td>
 </tr>
@@ -1356,9 +1446,9 @@ for more information</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transaction</strong> (<em>str</em>) &#8211; the identifier of the transaction</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>transaction</strong> (<em>str</em>) – the identifier of the transaction</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1368,16 +1458,16 @@ for more information</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol11.ack">
-<code class="descname">ack</code><span class="sig-paren">(</span><em>id</em>, <em>subscription</em>, <em>transaction=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.ack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Acknowledge &#8216;consumption&#8217; of a message by id.</p>
+<code class="descname">ack</code><span class="sig-paren">(</span><em>id</em>, <em>subscription</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acknowledge ‘consumption’ of a message by id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; identifier of the message</li>
-<li><strong>subscription</strong> (<em>str</em>) &#8211; the subscription this message is associated with</li>
-<li><strong>transaction</strong> (<em>str</em>) &#8211; include the acknowledgement in the specified transaction</li>
+<li><strong>id</strong> (<em>str</em>) – identifier of the message</li>
+<li><strong>subscription</strong> (<em>str</em>) – the subscription this message is associated with</li>
+<li><strong>transaction</strong> (<em>str</em>) – include the acknowledgement in the specified transaction</li>
 </ul>
 </td>
 </tr>
@@ -1394,10 +1484,10 @@ for more information</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>transaction</strong> (<em>str</em>) &#8211; the identifier for the transaction (optional - if not specified
+<li><strong>transaction</strong> (<em>str</em>) – the identifier for the transaction (optional - if not specified
 a unique transaction id will be generated)</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1420,9 +1510,9 @@ a unique transaction id will be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transaction</strong> (<em>str</em>) &#8211; the identifier for the transaction</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>transaction</strong> (<em>str</em>) – the identifier for the transaction</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1439,11 +1529,11 @@ a unique transaction id will be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) &#8211; the username to connect with</li>
-<li><strong>passcode</strong> (<em>str</em>) &#8211; the password used to authenticate with</li>
-<li><strong>wait</strong> (<em>bool</em>) &#8211; if True, wait for the connection to be established/acknowledged</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>username</strong> (<em>str</em>) – the username to connect with</li>
+<li><strong>passcode</strong> (<em>str</em>) – the password used to authenticate with</li>
+<li><strong>wait</strong> (<em>bool</em>) – if True, wait for the connection to be established/acknowledged</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1460,11 +1550,11 @@ a unique transaction id will be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) &#8211; the receipt to use (once the server acknowledges that receipt, we&#8217;re
+<li><strong>receipt</strong> (<em>str</em>) – the receipt to use (once the server acknowledges that receipt, we’re
 officially disconnected; optional - if not specified a unique receipt id will
 be generated)</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1474,16 +1564,16 @@ be generated)</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol11.nack">
-<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>subscription</em>, <em>transaction=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.nack" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>subscription</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.nack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Let the server know that a message was not consumed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; the unique id of the message to nack</li>
-<li><strong>subscription</strong> (<em>str</em>) &#8211; the subscription this message is associated with</li>
-<li><strong>transaction</strong> (<em>str</em>) &#8211; include this nack in a named transaction</li>
+<li><strong>id</strong> (<em>str</em>) – the unique id of the message to nack</li>
+<li><strong>subscription</strong> (<em>str</em>) – the subscription this message is associated with</li>
+<li><strong>transaction</strong> (<em>str</em>) – include this nack in a named transaction</li>
 </ul>
 </td>
 </tr>
@@ -1500,11 +1590,11 @@ be generated)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) &#8211; the destination (such as a message queue - for example &#8216;/queue/test&#8217; - or a message topic)</li>
-<li><strong>body</strong> &#8211; the content of the message</li>
-<li><strong>content_type</strong> (<em>str</em>) &#8211; the MIME type of message</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; additional headers to send in the message frame</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers the broker requires</li>
+<li><strong>destination</strong> (<em>str</em>) – the destination (such as a message queue - for example ‘/queue/test’ - or a message topic)</li>
+<li><strong>body</strong> – the content of the message</li>
+<li><strong>content_type</strong> (<em>str</em>) – the MIME type of message</li>
+<li><strong>headers</strong> (<em>dict</em>) – additional headers to send in the message frame</li>
+<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
 </ul>
 </td>
 </tr>
@@ -1522,9 +1612,9 @@ through the underlying transport:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cmd</strong> (<em>str</em>) &#8211; the protocol command</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of headers to include in the frame</li>
-<li><strong>body</strong> &#8211; the content of the message</li>
+<li><strong>cmd</strong> (<em>str</em>) – the protocol command</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of headers to include in the frame</li>
+<li><strong>body</strong> – the content of the message</li>
 </ul>
 </td>
 </tr>
@@ -1541,11 +1631,11 @@ through the underlying transport:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) &#8211; the topic or queue to subscribe to</li>
-<li><strong>id</strong> (<em>str</em>) &#8211; the identifier to uniquely identify the subscription</li>
-<li><strong>ack</strong> (<em>str</em>) &#8211; either auto, client or client-individual (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a> for more info)</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers to send with the subscription</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the subscription</li>
+<li><strong>destination</strong> (<em>str</em>) – the topic or queue to subscribe to</li>
+<li><strong>id</strong> (<em>str</em>) – the identifier to uniquely identify the subscription</li>
+<li><strong>ack</strong> (<em>str</em>) – either auto, client or client-individual (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a> for more info)</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
 </ul>
 </td>
 </tr>
@@ -1562,9 +1652,9 @@ through the underlying transport:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; the unique identifier to unsubscribe from</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; additional headers to send with the unsubscribe</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the subscription</li>
+<li><strong>id</strong> (<em>str</em>) – the unique identifier to unsubscribe from</li>
+<li><strong>headers</strong> (<em>dict</em>) – additional headers to send with the unsubscribe</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
 </ul>
 </td>
 </tr>
@@ -1576,18 +1666,19 @@ through the underlying transport:</p>
 
 <dl class="class">
 <dt id="stomp.protocol.Protocol12">
-<em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol12</code><span class="sig-paren">(</span><em>transport</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol12</code><span class="sig-paren">(</span><em>transport</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
 <p>Represents version 1.2 of the protocol (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html">https://stomp.github.io/stomp-specification-1.2.html</a>).</p>
-<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
+<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>transport</strong> &#8211; </li>
-<li><strong>heartbeats</strong> (<em></em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; </li>
-<li><strong>auto_content_length</strong> (<em>bool</em>) &#8211; Whether to calculate and send the content-length header automatically if it has not been set</li>
+<li><strong>transport</strong> – </li>
+<li><strong>heartbeats</strong> (<em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – </li>
+<li><strong>auto_content_length</strong> (<em>bool</em>) – Whether to calculate and send the content-length header automatically if it has not been set</li>
+<li><strong>heart_beat_receive_scale</strong> (<em>float</em>) – how long to wait for a heartbeat before timing out, as a scale factor of receive time</li>
 </ul>
 </td>
 </tr>
@@ -1595,15 +1686,15 @@ through the underlying transport:</p>
 </table>
 <dl class="method">
 <dt id="stomp.protocol.Protocol12.ack">
-<code class="descname">ack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.ack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Acknowledge &#8216;consumption&#8217; of a message by id.</p>
+<code class="descname">ack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acknowledge ‘consumption’ of a message by id.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; identifier of the message</li>
-<li><strong>transaction</strong> (<em>str</em>) &#8211; include the acknowledgement in the specified transaction</li>
+<li><strong>id</strong> (<em>str</em>) – identifier of the message</li>
+<li><strong>transaction</strong> (<em>str</em>) – include the acknowledgement in the specified transaction</li>
 </ul>
 </td>
 </tr>
@@ -1620,11 +1711,11 @@ through the underlying transport:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) &#8211; optionally specify the login user</li>
-<li><strong>passcode</strong> (<em>str</em>) &#8211; optionally specify the user password</li>
-<li><strong>wait</strong> (<em>bool</em>) &#8211; wait for the connection to complete before returning</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of any additional headers to send with the subscription</li>
-<li><strong>keyword_headers</strong> &#8211; any additional headers to send with the subscription</li>
+<li><strong>username</strong> (<em>str</em>) – optionally specify the login user</li>
+<li><strong>passcode</strong> (<em>str</em>) – optionally specify the user password</li>
+<li><strong>wait</strong> (<em>bool</em>) – wait for the connection to complete before returning</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
 </ul>
 </td>
 </tr>
@@ -1634,15 +1725,15 @@ through the underlying transport:</p>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol12.nack">
-<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.nack" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.nack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Let the server know that a message was not consumed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) &#8211; the unique id of the message to nack</li>
-<li><strong>transaction</strong> (<em>str</em>) &#8211; include this nack in a named transaction</li>
+<li><strong>id</strong> (<em>str</em>) – the unique id of the message to nack</li>
+<li><strong>transaction</strong> (<em>str</em>) – include this nack in a named transaction</li>
 </ul>
 </td>
 </tr>
@@ -1659,7 +1750,7 @@ through the underlying transport:</p>
 <dl class="class">
 <dt id="stomp.transport.BaseTransport">
 <em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">BaseTransport</code><span class="sig-paren">(</span><em>wait_on_receipt=False</em>, <em>auto_decode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.Publisher</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.Publisher</span></code></a></p>
 <p>Base class for transport classes providing support for listeners, threading overrides,
 and anything else outside of actually establishing a network connection, sending and
 receiving of messages (so generally socket-agnostic functions).</p>
@@ -1668,8 +1759,8 @@ receiving of messages (so generally socket-agnostic functions).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>wait_on_receipt</strong> (<em>bool</em>) &#8211; deprecated, ignored</li>
-<li><strong>auto_decode</strong> (<em>bool</em>) &#8211; automatically decode message responses as strings, rather than
+<li><strong>wait_on_receipt</strong> (<em>bool</em>) – deprecated, ignored</li>
+<li><strong>auto_decode</strong> (<em>bool</em>) – automatically decode message responses as strings, rather than
 leaving them as bytes. This preserves the behaviour as of version 4.0.16.
 (To be defaulted to False as of the next release)</li>
 </ul>
@@ -1703,7 +1794,7 @@ leaving them as bytes. This preserves the behaviour as of version 4.0.16.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; the listener to return</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – the listener to return</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener">ConnectionListener</a></td>
 </tr>
@@ -1733,9 +1824,9 @@ leaving them as bytes. This preserves the behaviour as of version 4.0.16.
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>frame_type</strong> (<em>str</em>) &#8211; the type of message</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; the map of headers associated with the message</li>
-<li><strong>body</strong> &#8211; the content of the message</li>
+<li><strong>frame_type</strong> (<em>str</em>) – the type of message</li>
+<li><strong>headers</strong> (<em>dict</em>) – the map of headers associated with the message</li>
+<li><strong>body</strong> – the content of the message</li>
 </ul>
 </td>
 </tr>
@@ -1753,7 +1844,7 @@ The thread which is returned should be started (ready to run)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>create_thread_fc</strong> (<em>function</em>) &#8211; single argument function for creating a thread</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>create_thread_fc</strong> (<em>function</em>) – single argument function for creating a thread</td>
 </tr>
 </tbody>
 </table>
@@ -1767,8 +1858,8 @@ The thread which is returned should be started (ready to run)</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>f</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; Frame object</li>
-<li><strong>frame_str</strong> (<em>bytes</em>) &#8211; raw frame content</li>
+<li><strong>f</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – Frame object</li>
+<li><strong>frame_str</strong> (<em>bytes</em>) – raw frame content</li>
 </ul>
 </td>
 </tr>
@@ -1798,7 +1889,7 @@ The thread which is returned should be started (ready to run)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; the name of the listener to remove</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – the name of the listener to remove</td>
 </tr>
 </tbody>
 </table>
@@ -1812,7 +1903,7 @@ The thread which is returned should be started (ready to run)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) &#8211; a Frame object which has been encoded for transmission</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) – a Frame object which has been encoded for transmission</td>
 </tr>
 </tbody>
 </table>
@@ -1825,7 +1916,7 @@ The thread which is returned should be started (ready to run)</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connected</strong> (<em>bool</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connected</strong> (<em>bool</em>) – </td>
 </tr>
 </tbody>
 </table>
@@ -1835,14 +1926,14 @@ The thread which is returned should be started (ready to run)</p>
 <dt id="stomp.transport.BaseTransport.set_listener">
 <code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport.set_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a named listener to use with this connection.
-See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; the name of the listener</li>
-<li><strong>listener</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) &#8211; the listener object</li>
+<li><strong>name</strong> (<em>str</em>) – the name of the listener</li>
+<li><strong>listener</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) – the listener object</li>
 </ul>
 </td>
 </tr>
@@ -1878,7 +1969,7 @@ receiver thread to exit.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; the Frame object to transmit</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – the Frame object to transmit</td>
 </tr>
 </tbody>
 </table>
@@ -1887,12 +1978,12 @@ receiver thread to exit.</p>
 <dl class="method">
 <dt id="stomp.transport.BaseTransport.wait_for_connection">
 <code class="descname">wait_for_connection</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport.wait_for_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait until we&#8217;ve established a connection with the server.</p>
+<dd><p>Wait until we’ve established a connection with the server.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>float</em>) &#8211; how long to wait, in seconds</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> (<em>float</em>) – how long to wait, in seconds</td>
 </tr>
 </tbody>
 </table>
@@ -1902,53 +1993,54 @@ receiver thread to exit.</p>
 
 <dl class="class">
 <dt id="stomp.transport.Transport">
-<em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">Transport</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=None</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.Transport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.transport.BaseTransport" title="stomp.transport.BaseTransport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.BaseTransport</span></code></a></p>
-<p>Represents a STOMP client &#8216;transport&#8217;. Effectively this is the communications mechanism without the definition of
+<em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">Transport</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=None</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.Transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.transport.BaseTransport" title="stomp.transport.BaseTransport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.BaseTransport</span></code></a></p>
+<p>Represents a STOMP client ‘transport’. Effectively this is the communications mechanism without the definition of
 the protocol.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host_and_ports</strong> (<em>list</em><em>(</em><em></em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em></em><em>)</em><em></em>) &#8211; a list of (host, port) tuples</li>
-<li><strong>prefer_localhost</strong> (<em>bool</em>) &#8211; if True and the local host is mentioned in the (host,
+<li><strong>host_and_ports</strong> (<em>list</em><em>(</em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em>)</em>) – a list of (host, port) tuples</li>
+<li><strong>prefer_localhost</strong> (<em>bool</em>) – if True and the local host is mentioned in the (host,
 port) tuples, try to connect to this first</li>
-<li><strong>try_loopback_connect</strong> (<em>bool</em>) &#8211; if True and the local host is found in the host
+<li><strong>try_loopback_connect</strong> (<em>bool</em>) – if True and the local host is found in the host
 tuples, try connecting to it using loopback interface
 (127.0.0.1)</li>
-<li><strong>reconnect_sleep_initial</strong> (<em>float</em>) &#8211; initial delay in seconds to wait before reattempting
+<li><strong>reconnect_sleep_initial</strong> (<em>float</em>) – initial delay in seconds to wait before reattempting
 to establish a connection if connection to any of the
 hosts fails.</li>
-<li><strong>reconnect_sleep_increase</strong> (<em>float</em>) &#8211; factor by which the sleep delay is increased after
+<li><strong>reconnect_sleep_increase</strong> (<em>float</em>) – factor by which the sleep delay is increased after
 each connection attempt. For example, 0.5 means
 to wait 50% longer than before the previous attempt,
 1.0 means wait twice as long, and 0.0 means keep
 the delay constant.</li>
-<li><strong>reconnect_sleep_max</strong> (<em>float</em>) &#8211; maximum delay between connection attempts, regardless
+<li><strong>reconnect_sleep_max</strong> (<em>float</em>) – maximum delay between connection attempts, regardless
 of the reconnect_sleep_increase.</li>
-<li><strong>reconnect_sleep_jitter</strong> (<em>float</em>) &#8211; random additional time to wait (as a percentage of
+<li><strong>reconnect_sleep_jitter</strong> (<em>float</em>) – random additional time to wait (as a percentage of
 the time determined using the previous parameters)
 between connection attempts in order to avoid
 stampeding. For example, a value of 0.1 means to wait
 an extra 0%-10% (randomly determined) of the delay
 calculated using the previous three parameters.</li>
-<li><strong>reconnect_attempts_max</strong> (<em>int</em>) &#8211; maximum attempts to reconnect</li>
-<li><strong>use_ssl</strong> (<em>bool</em>) &#8211; deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_cert_file</strong> &#8211; deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_key_file</strong> &#8211; deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_ca_certs</strong> &#8211; deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_cert_validator</strong> &#8211; deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_version</strong> &#8211; deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>timeout</strong> &#8211; the timeout value to use when connecting the stomp socket</li>
-<li><strong>wait_on_receipt</strong> (<em>bool</em>) &#8211; deprecated, ignored</li>
-<li><strong>keepalive</strong> &#8211; some operating systems support sending the occasional heart
+<li><strong>reconnect_attempts_max</strong> (<em>int</em>) – maximum attempts to reconnect</li>
+<li><strong>use_ssl</strong> (<em>bool</em>) – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_cert_file</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_key_file</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_ca_certs</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_cert_validator</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_version</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>timeout</strong> – the timeout value to use when connecting the stomp socket</li>
+<li><strong>wait_on_receipt</strong> (<em>bool</em>) – deprecated, ignored</li>
+<li><strong>keepalive</strong> – some operating systems support sending the occasional heart
 beat packets to detect when a connection fails.  This
 parameter can either be set set to a boolean to turn on the
 default keepalive options for your OS, or as a tuple of
 values, which also enables keepalive packets, but specifies
 options specific to your OS implementation</li>
-<li><strong>vhost</strong> (<em>str</em>) &#8211; specify a virtual hostname to provide in the &#8216;host&#8217; header of the connection</li>
+<li><strong>vhost</strong> (<em>str</em>) – specify a virtual hostname to provide in the ‘host’ header of the connection</li>
+<li><strong>recv_bytes</strong> (<em>int</em>) – the number of bytes to use when calling recv</li>
 </ul>
 </td>
 </tr>
@@ -1980,7 +2072,7 @@ options specific to your OS implementation</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em></em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; the host/port pair we want SSL params for, default current_host_and_port</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – the host/port pair we want SSL params for, default current_host_and_port</td>
 </tr>
 </tbody>
 </table>
@@ -2020,7 +2112,7 @@ options specific to your OS implementation</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) – </td>
 </tr>
 </tbody>
 </table>
@@ -2028,26 +2120,26 @@ options specific to your OS implementation</li>
 
 <dl class="method">
 <dt id="stomp.transport.Transport.set_ssl">
-<code class="descname">set_ssl</code><span class="sig-paren">(</span><em>for_hosts=()</em>, <em>key_file=None</em>, <em>cert_file=None</em>, <em>ca_certs=None</em>, <em>cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.Transport.set_ssl" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_ssl</code><span class="sig-paren">(</span><em>for_hosts=[]</em>, <em>key_file=None</em>, <em>cert_file=None</em>, <em>ca_certs=None</em>, <em>cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.Transport.set_ssl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
-exception if the SSL module can&#8217;t be found.</p>
+exception if the SSL module can’t be found.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>for_hosts</strong> &#8211; hosts this SSL configuration should be applied to</li>
-<li><strong>cert_file</strong> &#8211; the path to a X509 certificate</li>
-<li><strong>key_file</strong> &#8211; the path to a X509 key file</li>
-<li><strong>ca_certs</strong> &#8211; the path to the a file containing CA certificates to validate the server against.
+<li><strong>for_hosts</strong> – a list of tuples describing hosts this SSL configuration should be applied to</li>
+<li><strong>cert_file</strong> – the path to a X509 certificate</li>
+<li><strong>key_file</strong> – the path to a X509 key file</li>
+<li><strong>ca_certs</strong> – the path to the a file containing CA certificates to validate the server against.
 If this is not set, server side certificate validation is not done.</li>
-<li><strong>cert_validator</strong> &#8211; function which performs extra validation on the client certificate, for example
+<li><strong>cert_validator</strong> – function which performs extra validation on the client certificate, for example
 checking the returned certificate has a commonName attribute equal to the
 hostname (to avoid man in the middle attacks).
 The signature is: (OK, err_msg) = validation_function(cert, hostname)
 where OK is a boolean, and cert is a certificate structure
 as returned by ssl.SSLSocket.getpeercert()</li>
-<li><strong>ssl_version</strong> &#8211; SSL protocol to use for the connection. This should be one of the PROTOCOL_x
+<li><strong>ssl_version</strong> – SSL protocol to use for the connection. This should be one of the PROTOCOL_x
 constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1</li>
 </ul>
 </td>
@@ -2065,16 +2157,16 @@ constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1</li>
 <dl class="class">
 <dt id="stomp.utils.Frame">
 <em class="property">class </em><code class="descclassname">stomp.utils.</code><code class="descname">Frame</code><span class="sig-paren">(</span><em>cmd=None</em>, <em>headers=None</em>, <em>body=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.Frame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A STOMP frame (or message).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cmd</strong> (<em>str</em>) &#8211; the protocol command</li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; a map of headers for the frame</li>
-<li><strong>body</strong> &#8211; the content of the frame.</li>
+<li><strong>cmd</strong> (<em>str</em>) – the protocol command</li>
+<li><strong>headers</strong> (<em>dict</em>) – a map of headers for the frame</li>
+<li><strong>body</strong> – the content of the frame.</li>
 </ul>
 </td>
 </tr>
@@ -2092,8 +2184,8 @@ calculate what the actual heartbeat settings should be.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>shb</strong> (<em></em><em>(</em><em>str</em><em>,</em><em>str</em><em>)</em><em></em>) &#8211; server heartbeat numbers</li>
-<li><strong>chb</strong> (<em></em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; client heartbeat numbers</li>
+<li><strong>shb</strong> (<em>(</em><em>str</em><em>,</em><em>str</em><em>)</em>) – server heartbeat numbers</li>
+<li><strong>chb</strong> (<em>(</em><em>int</em><em>,</em><em>int</em><em>)</em>) – client heartbeat numbers</li>
 </ul>
 </td>
 </tr>
@@ -2105,6 +2197,11 @@ calculate what the actual heartbeat settings should be.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="stomp.utils.clean_headers">
+<code class="descclassname">stomp.utils.</code><code class="descname">clean_headers</code><span class="sig-paren">(</span><em>headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.clean_headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="stomp.utils.convert_frame_to_lines">
 <code class="descclassname">stomp.utils.</code><code class="descname">convert_frame_to_lines</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.convert_frame_to_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a frame to a list of lines separated by newlines.</p>
@@ -2112,7 +2209,7 @@ calculate what the actual heartbeat settings should be.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) &#8211; the Frame object to convert</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – the Frame object to convert</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list(str)</td>
 </tr>
@@ -2123,13 +2220,13 @@ calculate what the actual heartbeat settings should be.</p>
 <dl class="function">
 <dt id="stomp.utils.default_create_thread">
 <code class="descclassname">stomp.utils.</code><code class="descname">default_create_thread</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.default_create_thread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default thread creation - used to create threads when the client doesn&#8217;t want to provide their
+<dd><p>Default thread creation - used to create threads when the client doesn’t want to provide their
 own thread creation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>callback</strong> (<em>function</em>) &#8211; the callback function provided to threading.Thread</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>callback</strong> (<em>function</em>) – the callback function provided to threading.Thread</td>
 </tr>
 </tbody>
 </table>
@@ -2138,13 +2235,13 @@ own thread creation.</p>
 <dl class="function">
 <dt id="stomp.utils.is_localhost">
 <code class="descclassname">stomp.utils.</code><code class="descname">is_localhost</code><span class="sig-paren">(</span><em>host_and_port</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.is_localhost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return 1 if the specified host+port is a member of the &#8216;localhost&#8217; list of hosts, 2 if not (predominately used
+<dd><p>Return 1 if the specified host+port is a member of the ‘localhost’ list of hosts, 2 if not (predominately used
 as a sort key.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em></em><em>(</em><em>str</em><em>,</em><em>int</em><em>)</em><em></em>) &#8211; tuple containing host and port</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – tuple containing host and port</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
@@ -2160,7 +2257,7 @@ as a sort key.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> (<em>str</em>) &#8211; the string to return length of (None allowed)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> (<em>str</em>) – the string to return length of (None allowed)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
@@ -2176,7 +2273,7 @@ as a sort key.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>header_map_list</strong> (<em>list</em><em>(</em><em>dict</em><em>)</em><em></em>) &#8211; list of maps</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>header_map_list</strong> (<em>list</em><em>(</em><em>dict</em><em>)</em>) – list of maps</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -2192,7 +2289,7 @@ as a sort key.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<em>bytes</em>) &#8211; the frame received from the server (as a byte string)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<em>bytes</em>) – the frame received from the server (as a byte string)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame">Frame</a></td>
 </tr>
@@ -2209,8 +2306,8 @@ as a sort key.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lines</strong> (<em>list</em><em>(</em><em>str</em><em>)</em><em></em>) &#8211; the lines received in the message response</li>
-<li><strong>offset</strong> (<em>int</em>) &#8211; the starting line number</li>
+<li><strong>lines</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – the lines received in the message response</li>
+<li><strong>offset</strong> (<em>int</em>) – the starting line number</li>
 </ul>
 </td>
 </tr>
@@ -2248,7 +2345,7 @@ Project Page: <a class="reference external" href="https://github.com/jasonrbrigg
 <li><a class="reference internal" href="#module-stomp.backward2">stomp.backward2 module</a></li>
 <li><a class="reference internal" href="#module-stomp.backward3">stomp.backward3 module</a></li>
 <li><a class="reference internal" href="#module-stomp.backwardsock">stomp.backwardsock module</a></li>
-<li><a class="reference internal" href="#stomp-backwardsock25-module">stomp.backwardsock25 module</a></li>
+<li><a class="reference internal" href="#module-stomp.backwardsock25">stomp.backwardsock25 module</a></li>
 <li><a class="reference internal" href="#module-stomp.backwardsock26">stomp.backwardsock26 module</a></li>
 <li><a class="reference internal" href="#module-stomp.colors">stomp.colors module</a></li>
 <li><a class="reference internal" href="#module-stomp.connect">stomp.connect module</a></li>
@@ -2278,12 +2375,14 @@ Project Page: <a class="reference external" href="https://github.com/jasonrbrigg
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -2294,8 +2393,8 @@ Project Page: <a class="reference external" href="https://github.com/jasonrbrigg
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/stomp.rst.txt"
