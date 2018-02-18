@@ -1,4 +1,9 @@
-Version 4.1.20 -
+Version 4.1.21 -
+
+ *
+
+
+Version 4.1.20 - Feb 2018
 
  * Tidy up API (remove need for start/stop methods on the connection)
  * Make updating listeners thread-safe (https://github.com/jasonrbriggs/stomp.py/pull/174)
@@ -7,7 +12,7 @@ Version 4.1.20 -
  * Add missing on_receiver_loop_completed handler to ConnectionListener
 
 
-Version 4.1.19 -
+Version 4.1.19
 
  * Replace custom script with setuptools' entry_point for creating the executable
  * Stop waiting for protocol answers when the connection has been closed
