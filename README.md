@@ -19,16 +19,28 @@ conn.connect('admin', 'password', wait=True)
 conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
 conn.disconnect()
 ```
+Various documentation and resources include:
+- [basic example of using stomp.py with a message listener](https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example)
+- [command-line interface description](https://github.com/jasonrbriggs/stomp.py/wiki/Command-Line-Access)
+- [installation instructions and downloads on PyPi](https://pypi.org/project/stomp.py/)
+- [API documentation](http://jasonrbriggs.github.io/stomp.py/index.html)
+- [current test coverage report](http://jasonrbriggs.github.io/stomp.py/htmlcov/)
+- [travis continuous integration](https://travis-ci.org/jasonrbriggs/stomp.py)
 
-A basic example of using stomp.py, with a message listener, can be found [here](https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example). Testing via the command-line interface is described [here](https://github.com/jasonrbriggs/stomp.py/wiki/Command-Line-Access).
+[Current version](https://pypi.org/project/stomp.py/) supports:
+- Python 2.x and 3.x
+- STOMP version 1.0, 1.1 and 1.2
 
-Downloads can be found on [PyPi](https://pypi.python.org/pypi/stomp.py).
-API documentation can be found [here](http://jasonrbriggs.github.io/stomp.py/index.html). Current test coverage can be found [here](http://jasonrbriggs.github.io/stomp.py/htmlcov/), continuous integration on [Travis](https://travis-ci.org/jasonrbriggs/stomp.py).
+There is also legacy 3.1.7 version is using the old 3-series code ([PyPi](https://pypi.org/project/stomp.py/3.1.7/), [sources in github branch](https://github.com/jasonrbriggs/stomp.py/tree/stomppy-3series)).
 
-[Version 4.0+](https://pypi.python.org/pypi/stomp.py) is for both Python2.x and Python3.x - with support for versions 1.0, 1.1 and 1.2 of the protocol.
-Legacy clients using the old 3-series code, can find the download for 3.1.7 [here](https://pypi.python.org/pypi/stomp.py/3.1.7) (github branch [here](https://github.com/jasonrbriggs/stomp.py/tree/stomppy-3series))
+stomp.py has been perfunctorily tested on:
+- [ActiveMQ](http://activemq.apache.org/)
+- [Apollo](http://activemq.apache.org/apollo/)
+- [RabbitMQ](http://www.rabbitmq.com)
+- [stompserver](http://stompserver.rubyforge.org)
 
-stomp.py has been perfunctorily tested on: [ActiveMQ](http://activemq.apache.org/), [Apollo](http://activemq.apache.org/apollo/), [RabbitMQ](http://www.rabbitmq.com), [stompserver](http://stompserver.rubyforge.org), and has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging) in the distant past.
+stomp.py has been reported to work with [JBossMessaging](http://www.jboss.org/jbossmessaging) in the distant past.
+
 For more info on setting up a test server (using virtualbox), contact the developer.
 
 
