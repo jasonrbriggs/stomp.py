@@ -3,6 +3,7 @@
 from distutils.core import Command
 from setuptools import setup
 import platform
+import io
 import logging.config
 import os
 import shutil
@@ -16,6 +17,10 @@ except:
 
 # Import this after configuring logging
 import stomp
+
+
+with io.open('README.rst', 'rt', encoding='utf8') as f:
+    long_description = f.read()
 
 
 class TestCommand(Command):
@@ -104,6 +109,7 @@ setup(
     name='stomp.py',
     version=version(),
     description='Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol',
+    long_description=long_description,
     license='Apache',
     url='https://github.com/jasonrbriggs/stomp.py',
     author='Jason R Briggs',
