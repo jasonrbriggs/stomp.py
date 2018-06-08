@@ -222,30 +222,32 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(False)
 
         with self.__listeners_change_condition:
-            for listener in self.listeners.values():
-                if not listener:
-                    continue
+            listeners = list(self.listeners.values())
 
-                notify_func = getattr(listener, 'on_%s' % frame_type, None)
-                if not notify_func:
-                    log.debug("listener %s has no method on_%s", listener, frame_type)
-                    continue
-                if frame_type in ('heartbeat', 'disconnected'):
-                    notify_func()
-                    continue
-                if frame_type == 'connecting':
-                    notify_func(self.current_host_and_port)
-                    continue
+        for listener in listeners:
+            if not listener:
+                continue
 
-                if frame_type == 'error' and not self.connected:
-                    with self.__connect_wait_condition:
-                        self.connection_error = True
-                        self.__connect_wait_condition.notify()
+            notify_func = getattr(listener, 'on_%s' % frame_type, None)
+            if not notify_func:
+                log.debug("listener %s has no method on_%s", listener, frame_type)
+                continue
+            if frame_type in ('heartbeat', 'disconnected'):
+                notify_func()
+                continue
+            if frame_type == 'connecting':
+                notify_func(self.current_host_and_port)
+                continue
 
-                rtn = notify_func(headers, body)
-                if rtn:
-                    (headers, body) = rtn
-            return (headers, body)
+            if frame_type == 'error' and not self.connected:
+                with self.__connect_wait_condition:
+                    self.connection_error = True
+                    self.__connect_wait_condition.notify()
+
+            rtn = notify_func(headers, body)
+            if rtn:
+                (headers, body) = rtn
+        return (headers, body)
 
     def transmit(self, frame):
         """
@@ -254,13 +256,15 @@ class BaseTransport(stomp.listener.Publisher):
         :param Frame frame: the Frame object to transmit
         """
         with self.__listeners_change_condition:
-            for listener in self.listeners.values():
-                if not listener:
-                    continue
-                try:
-                    listener.on_send(frame)
-                except AttributeError:
-                    continue
+            listeners = list(self.listeners.values())
+
+        for listener in listeners:
+            if not listener:
+                continue
+            try:
+                listener.on_send(frame)
+            except AttributeError:
+                continue
 
         lines = utils.convert_frame_to_lines(frame)
 
