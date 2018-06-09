@@ -112,7 +112,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         :param dict headers:
         :param keyword_headers:
         """
-        pass
+        self.transport.start()
 
     def subscribe(self, destination, id, ack='auto', headers=None, **keyword_headers):
         """
