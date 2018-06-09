@@ -25,10 +25,10 @@ class TestNonAsciiSend(unittest.TestCase):
             self.conn.disconnect(receipt=None)
 
     def test_send_nonascii(self):
-        queuename = '/queue/p3nonasciitest-%s' % self.timestamp
+        queuename = '/queue/nonasciitest-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
-        txt = 'марко'
+        txt = test_text_for_utf8
         self.conn.send(body=txt, destination=queuename, receipt='123')
 
         self.listener.wait_for_message()
@@ -46,7 +46,7 @@ class TestNonAsciiSend(unittest.TestCase):
         with open(srcname, 'rb') as f:
             img = f.read()
 
-        queuename = '/queue/p3nonascii-image-%s' % self.timestamp
+        queuename = '/queue/nonascii-image-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
         self.conn.send(body=img, destination=queuename, receipt='123')
@@ -71,7 +71,7 @@ class TestNonAsciiSend(unittest.TestCase):
         with open(srcname, 'rb') as f:
             img = f.read()
 
-        queuename = '/queue/p3nonascii-image-%s' % self.timestamp
+        queuename = '/queue/nonascii-image-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
         self.conn.send(body=img, destination=queuename, receipt='123')
@@ -106,10 +106,10 @@ class TestNonAsciiSendAutoDecode(unittest.TestCase):
             self.conn.disconnect(receipt=None)
 
     def test_send_nonascii_auto_decoding(self):
-        queuename = '/queue/p3nonasciitest2-%s' % self.timestamp
+        queuename = '/queue/nonasciitest2-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
-        txt = 'марко'
+        txt = test_text_for_utf8
         self.conn.send(body=txt, destination=queuename, receipt='123')
 
         self.listener.wait_for_message()
@@ -137,10 +137,10 @@ class TestNonAsciiSendSpecificEncoding(unittest.TestCase):
             self.conn.disconnect(receipt=None)
 
     def test_send_nonascii_auto_encoding(self):
-        queuename = '/queue/p3nonasciitest2-%s' % self.timestamp
+        queuename = '/queue/nonasciitest2-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
-        txt = 'ǰ捁楴敶免'
+        txt = test_text_for_utf16
         self.conn.send(body=txt, destination=queuename, receipt='123')
 
         self.listener.wait_for_message()

@@ -102,7 +102,7 @@ class TestNonAsciiViaMulticast(unittest.TestCase):
         queuename = '/queue/multicast-nonascii-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, ack='auto', id='1')
 
-        txt = 'ǰ捁楴敶免'
+        txt = test_text_for_utf16
         self.conn.send(body=txt, destination=queuename, receipt='123')
 
         self.listener.wait_for_message()
