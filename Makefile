@@ -20,7 +20,7 @@ all:
 .PHONY: docs
 
 docs:
-	cd docs && make html 
+	cd docs && make html
 
 source:
 	$(PYTHON) setup.py sdist $(COMPILE)
@@ -32,7 +32,7 @@ test: travistests
 	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,local_test
 
 travistests:
-	$(PYTHON) setup.py test --test=basic_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test
+	$(PYTHON) setup.py test --test=basic_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
 	$(PYTHON) setup.py piptest
 
 travistests-py2:
