@@ -6,7 +6,8 @@ import re
 import socket
 import threading
 
-from stomp.backward import decode, NULL
+from stomp.backward import encode, decode, NULL
+from stomp.constants import *
 
 
 # List of all host names (unqualified, fully-qualified, and IP
@@ -45,6 +46,8 @@ PREAMBLE_END_RE = re.compile(b'\n\n|\r\n\r\n')
 #
 LINE_END_RE = re.compile('\n|\r\n')
 
+ENC_NEWLINE = encode("\n")
+ENC_NULL = encode(NULL)
 
 def default_create_thread(callback):
     """
@@ -201,7 +204,7 @@ def calculate_heartbeats(shb, chb):
     return x, y
 
 
-def convert_frame_to_lines(frame):
+def convert_frame(frame, body_encoding=None):
     """
     Convert a frame to a list of lines separated by newlines.
 
@@ -210,22 +213,33 @@ def convert_frame_to_lines(frame):
     :rtype: list(str)
     """
     lines = []
+
+    body = None
+    if frame.body:
+        if body_encoding:
+            body = encode(frame.body, body_encoding)
+        else:
+            body = encode(frame.body)
+
+        if HDR_CONTENT_LENGTH in frame.headers:
+            frame.headers[HDR_CONTENT_LENGTH] = len(body)
+
     if frame.cmd:
-        lines.append(frame.cmd)
-        lines.append("\n")
+        lines.append(encode(frame.cmd))
+        lines.append(ENC_NEWLINE)
     for key, vals in sorted(frame.headers.items()):
         if vals is None:
             continue
         if type(vals) != tuple:
             vals = (vals,)
         for val in vals:
-            lines.append("%s:%s\n" % (key, val))
-    lines.append("\n")
-    if frame.body:
-        lines.append(frame.body)
+            lines.append(encode("%s:%s\n" % (key, val)))
+    lines.append(ENC_NEWLINE)
+    if body:
+        lines.append(body)
 
     if frame.cmd:
-        lines.append(NULL)
+        lines.append(ENC_NULL)
     return lines
 
 

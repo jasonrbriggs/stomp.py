@@ -16,7 +16,7 @@ def input_prompt(prompt):
     return input(prompt)
 
 
-def decode(byte_data):
+def decode(byte_data, encoding='utf-8'):
     """
     Decode the byte data to a string if not None.
 
@@ -26,10 +26,10 @@ def decode(byte_data):
     """
     if byte_data is None:
         return None
-    return byte_data.decode()
+    return byte_data.decode(encoding, errors='replace')
 
 
-def encode(char_data):
+def encode(char_data, encoding='utf-8'):
     """
     Encode the parameter as a byte string.
 
@@ -38,11 +38,11 @@ def encode(char_data):
     :rtype: bytes
     """
     if type(char_data) is str:
-        return char_data.encode()
+        return char_data.encode(encoding, errors='replace')
     elif type(char_data) is bytes:
         return char_data
     else:
-        raise TypeError('message should be a string or bytes')
+        raise TypeError('message should be a string or bytes, found %s' % type(char_data))
 
 
 def pack(pieces=()):
@@ -53,8 +53,7 @@ def pack(pieces=()):
 
     :rtype: bytes
     """
-    encoded_pieces = (encode(piece) for piece in pieces)
-    return b''.join(encoded_pieces)
+    return b''.join(pieces)
 
 
 def join(chars=()):

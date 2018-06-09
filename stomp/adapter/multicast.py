@@ -20,9 +20,9 @@ class MulticastTransport(Transport):
     """
     Transport over multicast connections rather than using a broker.
     """
-    def __init__(self):
+    def __init__(self, encoding):
         Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False,
-                           DEFAULT_SSL_VERSION, None, None, None)
+                           DEFAULT_SSL_VERSION, None, None, None, encoding)
         self.subscriptions = {}
         self.current_host_and_port = (MCAST_GRP, MCAST_PORT)
 
@@ -81,7 +81,7 @@ class MulticastTransport(Transport):
             self.notify(frame_type, f.headers, f.body)
         if 'receipt' in f.headers:
             receipt_frame = Frame('RECEIPT', {'receipt-id': f.headers['receipt']})
-            lines = convert_frame_to_lines(receipt_frame)
+            lines = convert_frame(receipt_frame)
             self.send(encode(pack(lines)))
         log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
 
@@ -95,11 +95,11 @@ class MulticastTransport(Transport):
 
 
 class MulticastConnection(BaseConnection, Protocol12):
-    def __init__(self, wait_on_receipt=False):
+    def __init__(self, wait_on_receipt=False, encoding='utf-8'):
         """
         :param bool wait_on_receipt: deprecated, ignored
         """
-        self.transport = MulticastTransport()
+        self.transport = MulticastTransport(encoding)
         self.transport.set_listener('mcast-listener', self)
         self.transactions = {}
         Protocol12.__init__(self, self.transport, (0, 0))

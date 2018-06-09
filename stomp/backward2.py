@@ -14,7 +14,7 @@ def input_prompt(prompt):
     return raw_input(prompt)
 
 
-def decode(byte_data):
+def decode(byte_data, encoding=''):
     """
     Decode the byte data to a string - in the case of this Py2 version, we can't really do anything (Py3 differs).
 
@@ -25,7 +25,7 @@ def decode(byte_data):
     return byte_data  # no way to know if it's unicode or not, so just pass through unmolested
 
 
-def encode(char_data):
+def encode(char_data, encoding='utf-8'):
     """
     Encode the parameter as a byte string.
 
@@ -34,7 +34,7 @@ def encode(char_data):
     :rtype: bytes
     """
     if type(char_data) is unicode:
-        return char_data.encode('utf-8')
+        return char_data.encode(encoding, errors='replace')
     else:
         return char_data
 
@@ -47,7 +47,7 @@ def pack(pieces=()):
 
     :rtype: bytes
     """
-    return ''.join(encode(p) for p in pieces)
+    return ''.join(pieces)
 
 
 def join(chars=()):

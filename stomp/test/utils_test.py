@@ -10,14 +10,14 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(1, is_localhost(('127.0.0.1', 8000)))
         self.assertEqual(2, is_localhost(('192.168.1.92', 8000)))
 
-    def test_convert_frame_to_lines(self):
+    def test_convert_frame(self):
         f = Frame('SEND', {
             'header1': 'value1',
             'headerNone': None,
             ' no ': ' trimming ',
         }, 'this is the body')
 
-        lines = convert_frame_to_lines(f)
+        lines = convert_frame(f)
 
         s = pack(lines)
 
