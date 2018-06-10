@@ -112,4 +112,8 @@ class TestNonAsciiViaMulticast(unittest.TestCase):
         self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
         (_, msg) = self.listener.get_latest_message()
-        self.assertEqual(txt, msg)
+
+        if sys.hexversion >= 0x03000000:
+            self.assertEqual(txt, msg)
+        else:
+            self.assertEqual(txt.encode('utf-8'), msg)
