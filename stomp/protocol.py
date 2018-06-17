@@ -3,7 +3,6 @@
 
 import uuid
 
-from stomp.backward import encode
 from stomp.constants import *
 from stomp.exception import ConnectFailedException
 from stomp.listener import *
@@ -162,7 +161,6 @@ class Protocol10(ConnectionListener):
         headers[HDR_DESTINATION] = destination
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
-        body = encode(body)
         if self.auto_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
@@ -395,7 +393,6 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_DESTINATION] = destination
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
-        body = encode(body)
         if self.auto_content_length and body and HDR_CONTENT_LENGTH not in headers:
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)

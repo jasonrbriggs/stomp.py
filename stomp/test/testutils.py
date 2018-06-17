@@ -19,6 +19,12 @@ config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 header_re = re.compile(r'[^:]+:.*')
 
 
+if sys.hexversion >= 0x03000000:  # Python 3+
+    from stomp.test.p3testutils import *
+else:  # Python 2
+    from stomp.test.p2testutils import *
+
+
 def get_environ(name):
     try:
         return os.environ[name]

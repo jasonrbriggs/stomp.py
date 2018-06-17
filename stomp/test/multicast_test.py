@@ -82,3 +82,38 @@ class TestMulticast(unittest.TestCase):
         time.sleep(3)
 
         self.assertTrue(self.listener.messages == 1, 'should have only received 1 message')
+
+
+class TestNonAsciiViaMulticast(unittest.TestCase):
+    def setUp(self):
+        conn = MulticastConnection(encoding='utf-16')
+        listener = TestListener('123')
+        conn.set_listener('', listener)
+        conn.connect(wait=True)
+        self.conn = conn
+        self.listener = listener
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
+
+    def tearDown(self):
+        if self.conn:
+            self.conn.disconnect(receipt=None)
+
+    def test_send_nonascii_auto_encoding(self):
+        queuename = '/queue/multicast-nonascii-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, ack='auto', id='1')
+
+        txt = test_text_for_utf16
+        self.conn.send(body=txt, destination=queuename, receipt='123')
+
+        self.listener.wait_for_message()
+
+        self.assertTrue(self.listener.connections >= 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.messages >= 1, 'should have received 1 message')
+        self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
+
+        (_, msg) = self.listener.get_latest_message()
+
+        if sys.hexversion >= 0x03000000:
+            self.assertEqual(txt, msg)
+        else:
+            self.assertEqual(txt.encode('utf-8'), msg)

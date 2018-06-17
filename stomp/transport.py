@@ -55,6 +55,7 @@ class BaseTransport(stomp.listener.Publisher):
     :param bool auto_decode: automatically decode message responses as strings, rather than
         leaving them as bytes. This preserves the behaviour as of version 4.0.16.
         (To be defaulted to False as of the next release)
+    :param encoding: the character encoding to use for the message body
     """
 
     #
@@ -62,7 +63,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
-    def __init__(self, wait_on_receipt=False, auto_decode=True):
+    def __init__(self, wait_on_receipt=False, auto_decode=True, encoding='utf-8'):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -84,6 +85,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.__send_wait_condition = threading.Condition()
         self.__connect_wait_condition = threading.Condition()
         self.__auto_decode = auto_decode
+        self.__encoding = encoding
 
     def override_threading(self, create_thread_fc):
         """
@@ -266,16 +268,14 @@ class BaseTransport(stomp.listener.Publisher):
             except AttributeError:
                 continue
 
-        lines = utils.convert_frame_to_lines(frame)
-
+        lines = utils.convert_frame(frame)
         packed_frame = pack(lines)
 
         if log.isEnabledFor(logging.DEBUG):
             log.debug("Sending frame: %s", lines)
         else:
             log.info("Sending frame: %r, headers=%r", frame.cmd or "heartbeat", utils.clean_headers(frame.headers))
-
-        self.send(encode(packed_frame))
+        self.send(packed_frame)
 
     def send(self, encoded_frame):
         """
@@ -508,9 +508,10 @@ class Transport(BaseTransport):
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
+                 encoding='utf-8',
                  recv_bytes=1024
                  ):
-        BaseTransport.__init__(self, wait_on_receipt, auto_decode)
+        BaseTransport.__init__(self, wait_on_receipt, auto_decode, encoding)
 
         if host_and_ports is None:
             host_and_ports = [('localhost', 61613)]
