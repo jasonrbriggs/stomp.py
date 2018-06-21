@@ -416,10 +416,11 @@ class StatsListener(ConnectionListener):
         errors, etc)
         """
         return '''Connections: %s
+Disconnects: %s
 Messages sent: %s
 Messages received: %s
 Heartbeats received: %s
-Errors: %s''' % (self.connections, self.messages_sent, self.messages, self.heartbeat_count, self.errors)
+Errors: %s''' % (self.connections, self.disconnects, self.messages_sent, self.messages, self.heartbeat_count, self.errors)
 
 
 class PrintingListener(ConnectionListener):
