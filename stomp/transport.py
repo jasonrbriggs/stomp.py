@@ -351,10 +351,9 @@ class BaseTransport(stomp.listener.Publisher):
                         #
                         self.__recvbuf = b''
                         self.running = False
+                        self.cleanup()
                         self.notify('disconnected')
                     break
-                finally:
-                    self.cleanup()
         finally:
             with self.__receiver_thread_exit_condition:
                 self.__receiver_thread_exited = True
