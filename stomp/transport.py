@@ -331,7 +331,6 @@ class BaseTransport(stomp.listener.Publisher):
         Main loop listening for incoming data.
         """
         log.info("Starting receiver loop")
-        notify_disconnected = False
         try:
             while self.running:
                 try:
@@ -352,7 +351,7 @@ class BaseTransport(stomp.listener.Publisher):
                         #
                         self.__recvbuf = b''
                         self.running = False
-                        notify_disconnected = True
+                        self.notify('disconnected')
                     break
                 finally:
                     self.cleanup()
@@ -362,8 +361,6 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exit_condition.notifyAll()
             log.info("Receiver loop ended")
             self.notify('receiver_loop_completed')
-            if notify_disconnected:
-                self.notify('disconnected')
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
 

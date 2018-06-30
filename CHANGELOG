@@ -1,8 +1,6 @@
 Version 4.1.21 -
 
  * Fix for deadlock issue (https://github.com/jasonrbriggs/stomp.py/issues/197)
- * Fix for encoding issues (https://github.com/jasonrbriggs/stomp.py/issues/195)
- * Fix for issue with reconnection (https://github.com/jasonrbriggs/stomp.py/issues/202)
 
 
 Version 4.1.20 - Feb 2018
