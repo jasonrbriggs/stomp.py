@@ -4,6 +4,7 @@ Version 4.1.21 -
  * Fix for encoding issue (https://github.com/jasonrbriggs/stomp.py/issues/195)
  * Fix for reconnect issue (https://github.com/jasonrbriggs/stomp.py/issues/202)
 
+
 Version 4.1.20 - Feb 2018
 
  * Tidy up API (remove need for start/stop methods on the connection)
