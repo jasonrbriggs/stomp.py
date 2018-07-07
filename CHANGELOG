@@ -1,3 +1,8 @@
+Version 4.1.22 -
+
+ *
+
+
 Version 4.1.21 -
 
  * Fix for deadlock issue (https://github.com/jasonrbriggs/stomp.py/issues/197)
