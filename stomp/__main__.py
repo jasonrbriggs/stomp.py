@@ -20,9 +20,16 @@ Options:
                             Listen for messages on a queue/destination
   -V, --verbose             Verbose logging "on" or "off" (if on, full headers
                             from stomp server responses are printed)
-  --ssl                     Enable SSL connection
   --heartbeats=<heartbeats> Heartbeats to request when connecting with protocol >=
                             1.1 (two comma separated integers required) [default: 0,0]
+  --ssl                     Enable SSL connection
+  --ssl-key-file=<key-file>
+                            ssl key file
+  --ssl-cert-file=<cert-file>
+                            ssh cert file
+  --ssl-ca-file=<ca-file>
+                            ssh ca certs file
+
 """
 
 import base64
@@ -69,7 +76,7 @@ class StompCLI(Cmd, ConnectionListener):
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True,
-                 use_ssl=False, heartbeats=(0, 0), stdin=sys.stdin, stdout=sys.stdout):
+                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None, stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, 'Tab', stdin, stdout)
         ConnectionListener.__init__(self)
         self.__start = True
@@ -89,7 +96,7 @@ class StompCLI(Cmd, ConnectionListener):
         else:
             raise RuntimeError('Unknown version')
         if use_ssl:
-            self.conn.set_ssl([(host, port)])
+            self.conn.set_ssl([(host, port)], key_file=ssl_key_file, cert_file=ssl_cert_file, ca_certs=ssl_ca_file)
         self.conn.set_listener('', self)
         self.conn.start()
         self.conn.connect(self.user, self.passcode, wait=True)
@@ -530,7 +537,11 @@ def main():
     heartbeats = tuple(map(int, arguments['--heartbeats'].split(",")))
 
     st = StompCLI(arguments['--host'], arguments['--port'], arguments['--user'], arguments['--password'], arguments['--protocol'],
-        prompt, arguments['--verbose'], arguments['--ssl'], heartbeats)
+        prompt, arguments['--verbose'], heartbeats=heartbeats,
+        use_ssl=arguments['--ssl'],
+        ssl_key_file=arguments['--ssl-key-file'],
+        ssl_cert_file=arguments['--ssl-cert-file'],
+        ssl_ca_file=arguments['--ssl-ca-file'])
 
     if arguments['--listen'] is not None:
         st.do_subscribe(arguments['--listen'])
