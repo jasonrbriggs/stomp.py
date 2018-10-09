@@ -61,7 +61,7 @@ To receive messages back from the messaging system, you need to setup some sort 
     on_send SUBSCRIBE {'id': 123, 'ack': 'auto', 'destination': '/queue/test'}
     >>> c.send('/queue/test', 'a test message')
     on_send SEND {'content-length': 5, 'destination': '/queue/test'} b'a test message'
-    >>> on_before_message {'destination': '/queue/test', 'message-id': 'mybroker-13e01', 'subscription': '123', 'ack': '2', 'content-length': '5'} a test message
+    on_before_message {'destination': '/queue/test', 'message-id': 'mybroker-13e01', 'subscription': '123', 'ack': '2', 'content-length': '5'} a test message
     on_message {'destination': '/queue/test', 'message-id': 'mybroker-13e01', 'subscription': '123', 'ack': '2', 'content-length': '5'} a test message
     
 You can see the responses from the message system in the ``on_connected``, and ``on_message`` output. The stomp frames sent to the server can be seen in each ``on_send`` output (an initial STOMP connect frame, SUBSCRIBE and then SEND).
