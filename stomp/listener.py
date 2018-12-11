@@ -368,7 +368,10 @@ class StatsListener(ConnectionListener):
         :param dict headers: headers in the message
         :param body: the message content
         """
-        log.info("received an error %s [%s]", body, headers)
+        if log.isEnabledFor(logging.DEBUG):
+            log.debug("received an error %s [%s]", body, headers)
+        else:
+            log.info("received an error %s", body)
         self.errors += 1
 
     def on_connecting(self, host_and_port):

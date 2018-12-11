@@ -189,7 +189,7 @@ class BaseTransport(stomp.listener.Publisher):
             if log.isEnabledFor(logging.DEBUG):
                 log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
-                log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, utils.length(f.body))
+                log.info("Received frame: %r, len(body)=%r", f.cmd, utils.length(f.body))
             self.notify(frame_type, f.headers, f.body)
         else:
             log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
@@ -274,7 +274,7 @@ class BaseTransport(stomp.listener.Publisher):
         if log.isEnabledFor(logging.DEBUG):
             log.debug("Sending frame: %s", lines)
         else:
-            log.info("Sending frame: %r, headers=%r", frame.cmd or "heartbeat", utils.clean_headers(frame.headers))
+            log.info("Sending frame: %r", frame.cmd or "heartbeat")
         self.send(packed_frame)
 
     def send(self, encoded_frame):
