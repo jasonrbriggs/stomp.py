@@ -210,12 +210,12 @@ class BaseTransport(stomp.listener.Publisher):
                 self.set_receipt(receipt, None)
                 self.__send_wait_condition.notify()
 
-            # received a stomp 1.1+ disconnect receipt
-            if receipt == self.__disconnect_receipt:
-                self.disconnect_socket()
-
             if receipt_value == CMD_DISCONNECT:
                 self.set_connected(False)
+                self.__disconnect_receipt = None
+                # received a stomp 1.1+ disconnect receipt
+                if receipt == self.__disconnect_receipt:
+                    self.disconnect_socket()
 
         elif frame_type == 'connected':
             self.set_connected(True)
@@ -267,6 +267,9 @@ class BaseTransport(stomp.listener.Publisher):
                 listener.on_send(frame)
             except AttributeError:
                 continue
+
+        if frame.cmd == CMD_DISCONNECT and HDR_RECEIPT in frame.headers:
+            self.__disconnect_receipt = frame.headers[HDR_RECEIPT]
 
         lines = utils.convert_frame(frame)
         packed_frame = pack(lines)

@@ -1,6 +1,6 @@
 Version 4.1.22 -
 
- *
+ * Fix for disconnect receipt usage in transport (https://github.com/jasonrbriggs/stomp.py/issues/212)
 
 
 Version 4.1.21 -
