@@ -1,8 +1,6 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-import uuid
-
 from stomp.constants import *
 from stomp.exception import ConnectFailedException
 from stomp.listener import *
@@ -81,7 +79,7 @@ class Protocol10(ConnectionListener):
         """
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
-            transaction = str(uuid.uuid4())
+            transaction = utils.get_uuid()
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_BEGIN, headers)
         return transaction
@@ -140,7 +138,7 @@ class Protocol10(ConnectionListener):
             log.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])
-        rec = receipt or str(uuid.uuid4())
+        rec = receipt or utils.get_uuid()
         headers[HDR_RECEIPT] = rec
         self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
@@ -293,7 +291,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         """
         headers = utils.merge_headers([headers, keyword_headers])
         if not transaction:
-            transaction = str(uuid.uuid4())
+            transaction = utils.get_uuid()
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_BEGIN, headers)
         return transaction
@@ -355,7 +353,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             log.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])
-        rec = receipt or str(uuid.uuid4())
+        rec = receipt or utils.get_uuid()
         headers[HDR_RECEIPT] = rec
         self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
