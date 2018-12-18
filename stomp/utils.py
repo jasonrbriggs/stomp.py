@@ -9,6 +9,10 @@ import threading
 from stomp.backward import encode, decode, NULL
 from stomp.constants import *
 
+try:
+    import uuid
+except ImportError:
+    from backward import uuid
 
 # List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
@@ -271,3 +275,7 @@ class Frame(object):
 
     def __str__(self):
         return '{cmd=%s,headers=[%s],body=%s}' % (self.cmd, self.headers, self.body)
+
+
+def get_uuid():
+    return str(uuid.uuid4())
