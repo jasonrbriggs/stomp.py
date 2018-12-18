@@ -212,10 +212,10 @@ class BaseTransport(stomp.listener.Publisher):
 
             if receipt_value == CMD_DISCONNECT:
                 self.set_connected(False)
-                self.__disconnect_receipt = None
                 # received a stomp 1.1+ disconnect receipt
                 if receipt == self.__disconnect_receipt:
                     self.disconnect_socket()
+                self.__disconnect_receipt = None
 
         elif frame_type == 'connected':
             self.set_connected(True)
@@ -224,9 +224,9 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(False)
 
         with self.__listeners_change_condition:
-            listeners = list(self.listeners.values())
+            listeners = sorted(self.listeners.items())
 
-        for listener in listeners:
+        for (_, listener) in listeners:
             if not listener:
                 continue
 
@@ -258,9 +258,9 @@ class BaseTransport(stomp.listener.Publisher):
         :param Frame frame: the Frame object to transmit
         """
         with self.__listeners_change_condition:
-            listeners = list(self.listeners.values())
+            listeners = sorted(self.listeners.items())
 
-        for listener in listeners:
+        for (_, listener) in listeners:
             if not listener:
                 continue
             try:
