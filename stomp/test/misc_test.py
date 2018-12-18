@@ -51,10 +51,10 @@ class TransformationListener(TestListener):
 class TestMessageTransform(unittest.TestCase):
 
     def setUp(self):
-        conn = stomp.Connection(get_default_host())
+        conn = stomp.Connection(get_rabbitmq_host())
         listener = TransformationListener('123')
         conn.set_listener('', listener)
-        conn.connect(get_default_user(), get_default_password(), wait=True)
+        conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
         self.conn = conn
         self.listener = listener
         self.timestamp = time.strftime('%Y%m%d%H%M%S')
@@ -78,11 +78,12 @@ class TestMessageTransform(unittest.TestCase):
     </entry>
 </map>''', destination=queuename, headers={'transformation': 'jms-map-xml'}, receipt='123')
 
+        self.listener.wait_on_receipt()
         self.listener.wait_for_message()
 
         self.assertTrue(self.listener.message is not None, 'Did not receive a message')
         self.assertTrue(self.listener.message.__class__ == dict,
-                        'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
+            'Message type should be dict after transformation, was %s' % self.listener.message.__class__)
         self.assertTrue(self.listener.message['name'] == 'Dejan', 'Missing an expected dict element')
         self.assertTrue(self.listener.message['city'] == 'Belgrade', 'Missing an expected dict element')
 
