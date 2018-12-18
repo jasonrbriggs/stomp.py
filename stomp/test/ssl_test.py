@@ -20,12 +20,14 @@ class TestSSL(unittest.TestCase):
             conn = stomp.Connection(get_default_ssl_host())
             conn.set_ssl(get_default_ssl_host())
             conn.set_listener('', self.listener)
-            conn.connect('admin', 'password', wait=True)
+            conn.connect(get_default_user(), get_default_password(), wait=True)
             conn.subscribe(destination=queuename, id=1, ack='auto')
 
             conn.send(body='this is a test', destination=queuename, receipt='123')
 
             self.listener.wait_on_receipt()
+            self.listener.wait_for_message()
+
             conn.disconnect(receipt=None)
 
             self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
