@@ -27,6 +27,7 @@ class TestIPV6Send(unittest.TestCase):
         self.conn.send(body='this is a test', destination=queuename, receipt='123')
 
         self.listener.wait_on_receipt()
+        self.listener.wait_for_message()
 
         self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assertTrue(self.listener.messages == 1, 'should have received 1 message')

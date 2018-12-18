@@ -11,6 +11,7 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 
 import stomp.connect as connect
 import stomp.listener as listener
+import stomp.adapter as adapter
 
 __version__ = (4, 1, 22)
 

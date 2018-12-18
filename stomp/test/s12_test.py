@@ -111,7 +111,8 @@ message: connection failed\x00''')
         self.assertTrue('special-3' in headers)
         self.assertEqual('test with newlines \n \n', headers['special-3'])
         self.assertTrue('special-4' in headers)
-        self.assertEqual('test with carriage return \r', headers['special-4'])
+        cr_header = headers['special-4'].replace('\\r', '\r')
+        self.assertEqual('test with carriage return \r', cr_header)
 
     def test_suppress_content_length(self):
         queuename = '/queue/testspecialchars12-%s' % self.timestamp

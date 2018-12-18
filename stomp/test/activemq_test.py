@@ -5,24 +5,22 @@ from stomp.listener import TestListener
 from stomp.test.testutils import *
 
 
-class TestStompServerSend(unittest.TestCase):
+class TestRabbitMQSend(unittest.TestCase):
 
     def setUp(self):
         pass
 
     def testbasic(self):
-        conn = stomp.Connection10(get_stompserver_host())
+        conn = stomp.Connection11(get_default_host())
         listener = TestListener('123')
         conn.set_listener('', listener)
-        conn.connect(wait=True)
-        conn.subscribe(destination='/queue/test', ack='auto')
+        conn.connect(get_default_user(), get_default_password(), wait=True)
+        conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
         listener.wait_on_receipt()
         listener.wait_for_message()
-
-        conn.unsubscribe('/queue/test')
 
         conn.disconnect(receipt=None)
 
