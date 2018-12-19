@@ -4,28 +4,27 @@ Stomp.py command-line client
 Usage: stomp [options]
 
 Options:
-  --version                   Show the version number and exit
-  -h, --help                  Show this help message and exit
-  -H <host>, --host=<port>    Hostname or IP address to connect to. [default: localhost]
-  -P <port>, --port=<port>    Port providing stomp protocol connections. [default: 61613]
-  -U <user>, --user=<user>    Username for the connection
+  --version                    Show the version number and exit
+  -h, --help                   Show this help message and exit
+  -H <host>, --host=<port>     Hostname or IP address to connect to. [default: localhost]
+  -P <port>, --port=<port>     Port providing stomp protocol connections. [default: 61613]
+  -U <user>, --user=<user>     Username for the connection
   -W <password>, --password=<password>
-                              Password for the connection
+                               Password for the connection
   -F <filename>, --file=<filename>
-                              File containing commands to be executed, instead of
-                              prompting from the command prompt.
+                               File containing commands to be executed, instead of
+                               prompting from the command prompt.
   -S <protocol version>, --protocol=<protocol version>
-                              Set the STOMP protocol version (1.0, 1.1, 1.2) [default: 1.1]
-  -L <queue>, --listen=<queue>
-                              Listen for messages on a queue/destination
-  -V, --verbose               Verbose logging "on" or "off" (if on, full headers
-                              from stomp server responses are printed)
-  --heartbeats=<heartbeats>   Heartbeats to request when connecting with protocol >=
-                              1.1 (two comma separated integers required) [default: 0,0]
-  --ssl                       Enable SSL connection
-  --ssl-key-file=<key-file>   ssl key file
-  --ssl-cert-file=<cert-file> ssh cert file
-  --ssl-ca-file=<ca-file>     ssh ca certs file
+                               Set the STOMP protocol version (1.0, 1.1, 1.2) [default: 1.1]
+  -L <queue>, --listen=<queue> Listen for messages on a queue/destination
+  -V, --verbose                Verbose logging "on" or "off" (if on, full headers
+                               from stomp server responses are printed)
+  --heartbeats=<heartbeats>    Heartbeats to request when connecting with protocol >=
+                               1.1 (two comma separated integers required) [default: 0,0]
+  --ssl                        Enable SSL connection
+  --ssl-key-file=<key-file>    ssl key file
+  --ssl-cert-file=<cert-file>  ssh cert file
+  --ssl-ca-file=<ca-file>      ssh ca certs file
 
 """
 
