@@ -308,9 +308,11 @@ class WaitingListener(ConnectionListener):
         """
         :param str receipt:
         """
-        self.condition = threading.Condition()
+        self.receipt_condition = threading.Condition()
+        self.disconnect_condition = threading.Condition()
         self.receipt = receipt
         self.received = False
+        self.disconnected = False
 
     def on_receipt(self, headers, body):
         """
@@ -320,19 +322,31 @@ class WaitingListener(ConnectionListener):
         :param body: the message content
         """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
-            with self.condition:
+            with self.receipt_condition:
                 self.received = True
-                self.condition.notify()
+                self.receipt_condition.notify()
+
+    def on_disconnected(self):
+        with self.disconnect_condition:
+            self.disconnected = True
+            self.disconnect_condition.notify()
 
     def wait_on_receipt(self):
         """
         Wait until we receive a message receipt.
         """
-        with self.condition:
+        with self.receipt_condition:
             while not self.received:
-                self.condition.wait()
+                self.receipt_condition.wait()
         self.received = False
 
+    def wait_on_disconnected(self):
+        """
+        Wait until disconnected.
+        """
+        with self.disconnect_condition:
+            while not self.disconnected:
+                self.disconnect_condition.wait()
 
 class StatsListener(ConnectionListener):
     """
