@@ -2,6 +2,7 @@ Version 4.1.22 -
 
  * Reduce verbosity in logging to not include headers unless debug level is turned on (potential security issue as per: https://github.com/jasonrbriggs/stomp.py/issues/226)
  * Fix for disconnect receipt usage in transport (https://github.com/jasonrbriggs/stomp.py/issues/212)
+ * Add __enter__/__exit__ to Connection so it can be used as a context (https://github.com/jasonrbriggs/stomp.py/issues/215)
 
 
 Version 4.1.21 -

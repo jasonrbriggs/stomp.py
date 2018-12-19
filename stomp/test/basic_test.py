@@ -190,3 +190,21 @@ class TestConnectionErrors(unittest.TestCase):
             self.assertFalse(conn.is_connected(), 'Should not be connected')
         except:
             self.fail("Shouldn't happen")
+
+class TestContext(unittest.TestCase):
+    def setUp(self):
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
+
+    def test_with_context(self):
+        with stomp.Connection(get_default_host()) as conn:
+            self.listener = TestListener('123')
+            conn.set_listener('', self.listener)
+            conn.connect(get_default_user(), get_default_password(), wait=True)
+
+            queuename = '/queue/test1-%s' % self.timestamp
+            conn.subscribe(destination=queuename, id=1, ack='auto')
+            conn.send(body='this is a test', destination=queuename, receipt='123')
+            self.listener.wait_for_message()
+
+        self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
+        self.assertTrue(self.listener.disconnects >= 1, 'should have received 1 disconnect')
