@@ -1,10 +1,10 @@
 import time
 import unittest
-import uuid
 
 from stomp.adapter.multicast import MulticastConnection
 from stomp.listener import TestListener
 from stomp.test.testutils import *
+from stomp.utils import get_uuid
 
 
 class TestMulticast(unittest.TestCase):
@@ -58,7 +58,7 @@ class TestMulticast(unittest.TestCase):
         queuename = '/queue/test1-%s' % self.timestamp
         self.conn.subscribe(destination=queuename, id=1, ack='auto')
 
-        trans_id = str(uuid.uuid4())
+        trans_id = get_uuid()
         self.conn.begin(trans_id)
 
         self.conn.send(body='this is a test', transaction=trans_id, destination=queuename, receipt='123')

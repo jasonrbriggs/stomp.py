@@ -41,6 +41,7 @@ from stomp.adapter.multicast import MulticastConnection
 import stomp.colors
 from stomp.connect import StompConnection10, StompConnection11, StompConnection12
 from stomp.listener import ConnectionListener, StatsListener
+from stomp.utils import get_uuid
 
 sys.path.append('.')
 import stomp
@@ -48,11 +49,6 @@ import stomp
 version_string = '%s.%s.%s' % stomp.__version__
 
 heartbeat_pattern = re.compile(r'[0-9]+,[0-9]+')
-
-try:
-    import uuid
-except ImportError:
-    from backward import uuid
 
 
 class SubscriptionInfo(object):
@@ -312,7 +308,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_sendrec(self, args):
         args = args.split()
-        receipt_id = str(uuid.uuid4())
+        receipt_id = get_uuid()
         if len(args) < 2:
             self.__error('Expecting: sendrec <destination> <message>')
         elif not self.transaction_id:
