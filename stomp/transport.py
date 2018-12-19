@@ -189,7 +189,7 @@ class BaseTransport(stomp.listener.Publisher):
             if log.isEnabledFor(logging.DEBUG):
                 log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
-                log.info("Received frame: %r, headers=%r, len(body)=%r", f.cmd, f.headers, utils.length(f.body))
+                log.info("Received frame: %r, len(body)=%r", f.cmd, utils.length(f.body))
             self.notify(frame_type, f.headers, f.body)
         else:
             log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
@@ -210,12 +210,12 @@ class BaseTransport(stomp.listener.Publisher):
                 self.set_receipt(receipt, None)
                 self.__send_wait_condition.notify()
 
-            # received a stomp 1.1+ disconnect receipt
-            if receipt == self.__disconnect_receipt:
-                self.disconnect_socket()
-
             if receipt_value == CMD_DISCONNECT:
                 self.set_connected(False)
+                # received a stomp 1.1+ disconnect receipt
+                if receipt == self.__disconnect_receipt:
+                    self.disconnect_socket()
+                self.__disconnect_receipt = None
 
         elif frame_type == 'connected':
             self.set_connected(True)
@@ -224,9 +224,9 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(False)
 
         with self.__listeners_change_condition:
-            listeners = list(self.listeners.values())
+            listeners = sorted(self.listeners.items())
 
-        for listener in listeners:
+        for (_, listener) in listeners:
             if not listener:
                 continue
 
@@ -258,9 +258,9 @@ class BaseTransport(stomp.listener.Publisher):
         :param Frame frame: the Frame object to transmit
         """
         with self.__listeners_change_condition:
-            listeners = list(self.listeners.values())
+            listeners = sorted(self.listeners.items())
 
-        for listener in listeners:
+        for (_, listener) in listeners:
             if not listener:
                 continue
             try:
@@ -268,13 +268,16 @@ class BaseTransport(stomp.listener.Publisher):
             except AttributeError:
                 continue
 
+        if frame.cmd == CMD_DISCONNECT and HDR_RECEIPT in frame.headers:
+            self.__disconnect_receipt = frame.headers[HDR_RECEIPT]
+
         lines = utils.convert_frame(frame)
         packed_frame = pack(lines)
 
         if log.isEnabledFor(logging.DEBUG):
             log.debug("Sending frame: %s", lines)
         else:
-            log.info("Sending frame: %r, headers=%r", frame.cmd or "heartbeat", utils.clean_headers(frame.headers))
+            log.info("Sending frame: %r", frame.cmd or "heartbeat")
         self.send(packed_frame)
 
     def send(self, encoded_frame):

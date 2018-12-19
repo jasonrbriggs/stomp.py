@@ -4,16 +4,16 @@ Stomp.py command-line client
 Usage: stomp [options]
 
 Options:
-  --version                 Show the version number and exit
-  -h, --help                Show this help message and exit
-  -H <host>, --host=<port>  Hostname or IP address to connect to. [default: localhost]
-  -P <port>, --port=<port>  Port providing stomp protocol connections. [default: 61613]
-  -U <user>, --user=<user>  Username for the connection
+  --version                    Show the version number and exit
+  -h, --help                   Show this help message and exit
+  -H <host>, --host=<port>     Hostname or IP address to connect to. [default: localhost]
+  -P <port>, --port=<port>     Port providing stomp protocol connections. [default: 61613]
+  -U <user>, --user=<user>     Username for the connection
   -W <password>, --password=<password>
-                            Password for the connection
+                               Password for the connection
   -F <filename>, --file=<filename>
-                            File containing commands to be executed, instead of
-                            prompting from the command prompt.
+                               File containing commands to be executed, instead of
+                               prompting from the command prompt.
   -S <protocol version>, --protocol=<protocol version>
                             Set the STOMP protocol version (1.0, 1.1, 1.2) [default: 1.1]
   -L <queue>, --listen=<queue>
@@ -30,6 +30,7 @@ Options:
   --ssl-ca-file=<ca-file>
                             ssh ca certs file
 
+
 """
 
 import base64
@@ -43,10 +44,12 @@ from functools import partial
 
 from docopt import docopt
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from stomp.adapter.multicast import MulticastConnection
 import stomp.colors
 from stomp.connect import StompConnection10, StompConnection11, StompConnection12
 from stomp.listener import ConnectionListener, StatsListener
+from stomp.utils import get_uuid
 
 sys.path.append('.')
 import stomp
@@ -54,11 +57,6 @@ import stomp
 version_string = '%s.%s.%s' % stomp.__version__
 
 heartbeat_pattern = re.compile(r'[0-9]+,[0-9]+')
-
-try:
-    import uuid
-except ImportError:
-    from backward import uuid
 
 
 class SubscriptionInfo(object):
@@ -318,7 +316,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_sendrec(self, args):
         args = args.split()
-        receipt_id = str(uuid.uuid4())
+        receipt_id = get_uuid()
         if len(args) < 2:
             self.__error('Expecting: sendrec <destination> <message>')
         elif not self.transaction_id:

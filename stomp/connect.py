@@ -8,6 +8,7 @@ Provides connection classes for `1.0 <http://stomp.github.io/stomp-specification
 from stomp.listener import *
 from stomp.protocol import *
 from stomp.transport import *
+from stomp.utils import get_uuid
 
 
 class BaseConnection(Publisher):
@@ -20,6 +21,17 @@ class BaseConnection(Publisher):
         :param Transport transport:
         """
         self.transport = transport
+
+    def __enter__(self):
+        self.disconnect_receipt_id = get_uuid()
+        self.disconnect_listener = WaitingListener(self.disconnect_receipt_id)
+        self.set_listener('ZZZZZ-disconnect-listener', self.disconnect_listener)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.disconnect(self.disconnect_receipt_id)
+        self.disconnect_listener.wait_on_receipt()
+        self.disconnect_listener.wait_on_disconnected()
 
     def set_listener(self, name, lstnr):
         """

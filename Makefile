@@ -69,3 +69,7 @@ endif
 
 release:
 	$(PYTHON) setup.py clean install sdist bdist_wheel upload
+
+docker-image:
+	cd docker; \
+	docker build -t stomppy .
