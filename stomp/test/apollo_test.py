@@ -17,10 +17,9 @@ class TestApolloSend(unittest.TestCase):
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-        conn.send(body='this is a test', destination='/queue/test', receipt='123', persistent="true")
+        conn.send(body='this is a test', destination='/queue/test', receipt='123')
 
         listener.wait_on_receipt()
-        listener.wait_for_message()
 
         conn.disconnect(receipt=None)
 
