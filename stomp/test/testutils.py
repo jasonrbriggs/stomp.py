@@ -95,6 +95,10 @@ def get_stompserver_host():
     port = config.get('stompserver', 'port')
     return [(get_environ('STOMPSERVER_HOST') or host, int(get_environ('STOMPSERVER_PORT') or port))]
 
+def get_apollo_host():
+    host = config.get('apollo', 'host')
+    port = config.get('apollo', 'port')
+    return [(get_environ('APOLLO_HOST') or host, int(get_environ('APOLLO_PORT') or port))]
 
 class TestStompServer(object):
     def __init__(self, host, port):
