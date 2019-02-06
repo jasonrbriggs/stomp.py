@@ -475,7 +475,7 @@ class Transport(BaseTransport):
         stampeding. For example, a value of 0.1 means to wait
         an extra 0%-10% (randomly determined) of the delay
         calculated using the previous three parameters.
-    :param int reconnect_attempts_max: maximum attempts to reconnect
+    :param int reconnect_attempts_max: maximum attempts to reconnect (Can also be used for infinite attempts : `-1`)
     :param bool use_ssl: deprecated, see :py:meth:`set_ssl`
     :param ssl_cert_file: deprecated, see :py:meth:`set_ssl`
     :param ssl_key_file: deprecated, see :py:meth:`set_ssl`
