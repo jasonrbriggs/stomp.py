@@ -728,7 +728,9 @@ class Transport(BaseTransport):
         sleep_exp = 1
         connect_count = 0
 
-        while self.running and self.socket is None and connect_count < self.__reconnect_attempts_max:
+        while self.running and self.socket is None and (
+            connect_count < self.__reconnect_attempts_max or 
+            self.__reconnect_attempts_max == -1 ):
             for host_and_port in self.__host_and_ports:
                 try:
                     log.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
