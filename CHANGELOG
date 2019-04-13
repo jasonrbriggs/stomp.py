@@ -1,3 +1,9 @@
+Version 4.1.23 - Apr 2019
+
+* Infinite retry attempts (https://github.com/jasonrbriggs/stomp.py/pull/235)
+* Terminate heartbeat thread on shutdown (https://github.com/jasonrbriggs/stomp.py/pull/234)
+
+
 Version 4.1.22 -
 
  * Reduce verbosity in logging to not include headers unless debug level is turned on (potential security issue as per: https://github.com/jasonrbriggs/stomp.py/issues/226)
