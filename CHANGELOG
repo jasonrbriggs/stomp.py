@@ -1,19 +1,15 @@
-Version 4.1.23 - Apr 2019
+Version 4.1.22 - Apr 2019
 
-* Infinite retry attempts (https://github.com/jasonrbriggs/stomp.py/pull/235)
-* Terminate heartbeat thread on shutdown (https://github.com/jasonrbriggs/stomp.py/pull/234)
-* Remove unused wait_on_receipt parameter (https://github.com/jasonrbriggs/stomp.py/pull/237)
-
-
-Version 4.1.22 -
-
+ * Infinite retry attempts (https://github.com/jasonrbriggs/stomp.py/pull/235)
+ * Terminate heartbeat thread on shutdown (https://github.com/jasonrbriggs/stomp.py/pull/234)
+ * Remove unused wait_on_receipt parameter (https://github.com/jasonrbriggs/stomp.py/pull/237)
  * Reduce verbosity in logging to not include headers unless debug level is turned on (potential security issue as per: https://github.com/jasonrbriggs/stomp.py/issues/226)
  * Fix for disconnect receipt usage in transport (https://github.com/jasonrbriggs/stomp.py/issues/212)
  * Add __enter__/__exit__ to Connection so it can be used as a context (https://github.com/jasonrbriggs/stomp.py/issues/215)
  * Additional ssl options (https://github.com/jasonrbriggs/stomp.py/pull/221/)
 
 
-Version 4.1.21 -
+Version 4.1.21 - July 2018
 
  * Fix for deadlock issue (https://github.com/jasonrbriggs/stomp.py/issues/197)
  * Fix for encoding issue (https://github.com/jasonrbriggs/stomp.py/issues/195)
