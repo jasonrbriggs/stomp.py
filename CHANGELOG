@@ -2,6 +2,7 @@ Version 4.1.23 - Apr 2019
 
 * Infinite retry attempts (https://github.com/jasonrbriggs/stomp.py/pull/235)
 * Terminate heartbeat thread on shutdown (https://github.com/jasonrbriggs/stomp.py/pull/234)
+* Remove unused wait_on_receipt parameter (https://github.com/jasonrbriggs/stomp.py/pull/237)
 
 
 Version 4.1.22 -
