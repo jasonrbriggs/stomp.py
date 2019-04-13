@@ -101,7 +101,6 @@ class StompConnection10(BaseConnection, Protocol10):
                  ssl_cert_file=None,
                  ssl_ca_certs=None,
                  ssl_cert_validator=None,
-                 wait_on_receipt=False,
                  ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  keepalive=None,
@@ -112,7 +111,7 @@ class StompConnection10(BaseConnection, Protocol10):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
-                              ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
+                              ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
                               keepalive, None, auto_decode, encoding)
         BaseConnection.__init__(self, transport)
         Protocol10.__init__(self, transport, auto_content_length)
@@ -152,7 +151,6 @@ class StompConnection11(BaseConnection, Protocol11):
                  ssl_cert_file=None,
                  ssl_ca_certs=None,
                  ssl_cert_validator=None,
-                 wait_on_receipt=False,
                  ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  heartbeats=(0, 0),
@@ -166,7 +164,7 @@ class StompConnection11(BaseConnection, Protocol11):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
-                              ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
+                              ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
                               keepalive, vhost, auto_decode, encoding)
         BaseConnection.__init__(self, transport)
         Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
@@ -206,7 +204,6 @@ class StompConnection12(BaseConnection, Protocol12):
                  ssl_cert_file=None,
                  ssl_ca_certs=None,
                  ssl_cert_validator=None,
-                 wait_on_receipt=False,
                  ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  heartbeats=(0, 0),
@@ -220,7 +217,7 @@ class StompConnection12(BaseConnection, Protocol12):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
-                              ssl_ca_certs, ssl_cert_validator, wait_on_receipt, ssl_version, timeout,
+                              ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
                               keepalive, vhost, auto_decode, encoding)
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)

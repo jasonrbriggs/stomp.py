@@ -51,7 +51,6 @@ class BaseTransport(stomp.listener.Publisher):
     and anything else outside of actually establishing a network connection, sending and
     receiving of messages (so generally socket-agnostic functions).
 
-    :param bool wait_on_receipt: deprecated, ignored
     :param bool auto_decode: automatically decode message responses as strings, rather than
         leaving them as bytes. This preserves the behaviour as of version 4.0.16.
         (To be defaulted to False as of the next release)
@@ -63,7 +62,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
 
-    def __init__(self, wait_on_receipt=False, auto_decode=True, encoding='utf-8'):
+    def __init__(self, auto_decode=True, encoding='utf-8'):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -483,7 +482,6 @@ class Transport(BaseTransport):
     :param ssl_cert_validator: deprecated, see :py:meth:`set_ssl`
     :param ssl_version: deprecated, see :py:meth:`set_ssl`
     :param timeout: the timeout value to use when connecting the stomp socket
-    :param bool wait_on_receipt: deprecated, ignored
     :param keepalive: some operating systems support sending the occasional heart
         beat packets to detect when a connection fails.  This
         parameter can either be set set to a boolean to turn on the
@@ -508,7 +506,6 @@ class Transport(BaseTransport):
                  ssl_cert_file=None,
                  ssl_ca_certs=None,
                  ssl_cert_validator=None,
-                 wait_on_receipt=False,
                  ssl_version=None,
                  timeout=None,
                  keepalive=None,
@@ -517,7 +514,7 @@ class Transport(BaseTransport):
                  encoding='utf-8',
                  recv_bytes=1024
                  ):
-        BaseTransport.__init__(self, wait_on_receipt, auto_decode, encoding)
+        BaseTransport.__init__(self, auto_decode, encoding)
 
         if host_and_ports is None:
             host_and_ports = [('localhost', 61613)]
