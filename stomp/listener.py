@@ -162,6 +162,7 @@ class HeartbeatListener(ConnectionListener):
         self.received_heartbeat = None
         self.heartbeat_thread = None
         self.next_outbound_heartbeat = None
+        self.heartbeat_terminate_event = threading.Event()
 
     def on_connected(self, headers, body):
         """
@@ -195,6 +196,7 @@ class HeartbeatListener(ConnectionListener):
 
     def on_disconnected(self):
         self.running = False
+        self.heartbeat_terminate_event.set()
 
     def on_message(self, headers, body):
         """
@@ -249,6 +251,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
+        log.info('Starting heartbeat loop')
         now = monotonic()
 
         # Setup the initial due time for the outbound heartbeat
@@ -267,7 +270,9 @@ class HeartbeatListener(ConnectionListener):
                     next_events.append(t)
             sleep_time = min(next_events)
             if sleep_time > 0:
-                time.sleep(sleep_time)
+                terminate = self.heartbeat_terminate_event.wait(sleep_time)
+                if terminate:
+                    break
 
             now = monotonic()
 
@@ -298,6 +303,7 @@ class HeartbeatListener(ConnectionListener):
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
         self.heartbeat_thread = None
+        log.info('Heartbeat loop ended')
 
 
 class WaitingListener(ConnectionListener):
