@@ -4,12 +4,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>stomp package &#8212; Stomp 4.1.20 documentation</title>
+    <title>stomp package &#8212; Stomp 4.1.23 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.1.23',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -18,10 +26,10 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body>
   
 
     <div class="document">
@@ -69,7 +77,7 @@
 <p>Python2-specific versions of various functions used by stomp.py</p>
 <dl class="function">
 <dt id="stomp.backward2.decode">
-<code class="descclassname">stomp.backward2.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.decode" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">stomp.backward2.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em>, <em>encoding=''</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.decode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode the byte data to a string - in the case of this Py2 version, we can’t really do anything (Py3 differs).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -85,7 +93,7 @@
 
 <dl class="function">
 <dt id="stomp.backward2.encode">
-<code class="descclassname">stomp.backward2.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.encode" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">stomp.backward2.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.encode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encode the parameter as a byte string.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -151,7 +159,7 @@
 <p>Python3-specific versions of various functions used by stomp.py</p>
 <dl class="function">
 <dt id="stomp.backward3.decode">
-<code class="descclassname">stomp.backward3.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.decode" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">stomp.backward3.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.decode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode the byte data to a string if not None.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -167,7 +175,7 @@
 
 <dl class="function">
 <dt id="stomp.backward3.encode">
-<code class="descclassname">stomp.backward3.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.encode" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">stomp.backward3.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.encode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encode the parameter as a byte string.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -294,7 +302,7 @@
 <dl class="class">
 <dt id="stomp.connect.BaseConnection">
 <em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">BaseConnection</code><span class="sig-paren">(</span><em>transport</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.Publisher</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.Publisher</span></code></a></p>
 <p>Base class for all connection classes.</p>
 <dl class="method">
 <dt id="stomp.connect.BaseConnection.get_listener">
@@ -385,30 +393,14 @@
 
 <dl class="class">
 <dt id="stomp.connect.StompConnection10">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection10</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol10" title="stomp.protocol.Protocol10"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol10</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection10</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol10" title="stomp.protocol.Protocol10"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol10</span></code></a></p>
 <p>Represents a 1.0 connection (comprising transport plus 1.0 protocol class).
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 <dl class="method">
 <dt id="stomp.connect.StompConnection10.connect">
 <code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection10.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start a connection.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) – the username to connect with</li>
-<li><strong>passcode</strong> (<em>str</em>) – the password used to authenticate with</li>
-<li><strong>wait</strong> (<em>bool</em>) – if True, wait for the connection to be established/acknowledged</li>
-<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.connect.StompConnection10.disconnect">
@@ -433,30 +425,14 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 
 <dl class="class">
 <dt id="stomp.connect.StompConnection11">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection11</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_byte=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection11</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_byte=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
 <p>Represents a 1.1 connection (comprising transport plus 1.1 protocol class)
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 <dl class="method">
 <dt id="stomp.connect.StompConnection11.connect">
 <code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection11.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start a connection.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) – the username to connect with</li>
-<li><strong>passcode</strong> (<em>str</em>) – the password used to authenticate with</li>
-<li><strong>wait</strong> (<em>bool</em>) – if True, wait for the connection to be established/acknowledged</li>
-<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers the broker requires</li>
-<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.connect.StompConnection11.disconnect">
@@ -481,30 +457,14 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 
 <dl class="class">
 <dt id="stomp.connect.StompConnection12">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
 <p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
-See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
+See <a class="reference internal" href="#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 <dl class="method">
 <dt id="stomp.connect.StompConnection12.connect">
 <code class="descname">connect</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) – optionally specify the login user</li>
-<li><strong>passcode</strong> (<em>str</em>) – optionally specify the user password</li>
-<li><strong>wait</strong> (<em>bool</em>) – wait for the connection to complete before returning</li>
-<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
-<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.connect.StompConnection12.disconnect">
@@ -538,7 +498,7 @@ See <a class="reference internal" href="#stomp.transport.Transport" title="stomp
 <dl class="exception">
 <dt id="stomp.exception.ConnectFailedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">ConnectFailedException</code><a class="headerlink" href="#stomp.exception.ConnectFailedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised by Connection.attempt_connection when reconnection attempts
 have exceeded Connection.__reconnect_attempts_max.</p>
 </dd></dl>
@@ -546,7 +506,7 @@ have exceeded Connection.__reconnect_attempts_max.</p>
 <dl class="exception">
 <dt id="stomp.exception.ConnectionClosedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">ConnectionClosedException</code><a class="headerlink" href="#stomp.exception.ConnectionClosedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised in the receiver thread when the connection has been closed
 by the server.</p>
 </dd></dl>
@@ -554,21 +514,21 @@ by the server.</p>
 <dl class="exception">
 <dt id="stomp.exception.InterruptedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">InterruptedException</code><a class="headerlink" href="#stomp.exception.InterruptedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised by receive when data read is interrupted.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="stomp.exception.NotConnectedException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">NotConnectedException</code><a class="headerlink" href="#stomp.exception.NotConnectedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.exception.StompException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.exception.StompException" title="stomp.exception.StompException"><code class="xref py py-class docutils literal"><span class="pre">stomp.exception.StompException</span></code></a></p>
 <p>Raised when there is currently no server connection.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="stomp.exception.StompException">
 <em class="property">exception </em><code class="descclassname">stomp.exception.</code><code class="descname">StompException</code><a class="headerlink" href="#stomp.exception.StompException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
 <p>Common exception class. All specific stomp.py exceptions are subclasses
 of StompException, allowing the library user to catch all current and
 future library exceptions.</p>
@@ -581,7 +541,7 @@ future library exceptions.</p>
 <dl class="class">
 <dt id="stomp.listener.ConnectionListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">ConnectionListener</code><a class="headerlink" href="#stomp.listener.ConnectionListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class should be used as a base class for objects registered
 using Connection.set_listener().</p>
 <dl class="method">
@@ -744,7 +704,7 @@ the ‘receipt’ header.</p>
 <dl class="class">
 <dt id="stomp.listener.HeartbeatListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">HeartbeatListener</code><span class="sig-paren">(</span><em>heartbeats</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>Listener used to handle STOMP heartbeating.</p>
 <dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_connected">
@@ -769,10 +729,7 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 <dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_disconnected">
 <code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called by the STOMP connection when a TCP/IP connection to the
-STOMP server has been lost.  No messages should be sent via
-the connection until it has been reestablished.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.HeartbeatListener.on_error">
@@ -830,7 +787,7 @@ next outbound heartbeat timestamp.</p>
 <dl class="class">
 <dt id="stomp.listener.PrintingListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">PrintingListener</code><a class="headerlink" href="#stomp.listener.PrintingListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_before_message">
 <code class="descname">on_before_message</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_before_message" title="Permalink to this definition">¶</a></dt>
@@ -881,10 +838,7 @@ next outbound heartbeat timestamp.</p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_disconnected">
 <code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called by the STOMP connection when a TCP/IP connection to the
-STOMP server has been lost.  No messages should be sent via
-the connection until it has been reestablished.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_error">
@@ -906,15 +860,12 @@ the connection until it has been reestablished.</p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called on receipt of a heartbeat.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_heartbeat_timeout">
 <code class="descname">on_heartbeat_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener.on_heartbeat_timeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called by the STOMP connection when a heartbeat message has not been
-received beyond the specified period.</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_message">
@@ -968,7 +919,7 @@ received beyond the specified period.</p>
 <dl class="class">
 <dt id="stomp.listener.Publisher">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">Publisher</code><a class="headerlink" href="#stomp.listener.Publisher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Simply a registry of listeners.</p>
 <dl class="method">
 <dt id="stomp.listener.Publisher.get_listener">
@@ -1003,7 +954,7 @@ received beyond the specified period.</p>
 <dl class="method">
 <dt id="stomp.listener.Publisher.set_listener">
 <code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.Publisher.set_listener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a named listener to use with this connection. See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Set a named listener to use with this connection. See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1023,12 +974,12 @@ received beyond the specified period.</p>
 <dl class="class">
 <dt id="stomp.listener.StatsListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">StatsListener</code><a class="headerlink" href="#stomp.listener.StatsListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>A connection listener for recording statistics on messages sent and received.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_connecting">
 <code class="descname">on_connecting</code><span class="sig-paren">(</span><em>host_and_port</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_connecting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the connection count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_connecting" title="stomp.listener.ConnectionListener.on_connecting"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_connecting()</span></code></a></p>
+<dd><p>Increment the connection count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_connecting" title="stomp.listener.ConnectionListener.on_connecting"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_connecting()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1042,13 +993,13 @@ received beyond the specified period.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_disconnected">
 <code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the disconnect count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_disconnected" title="stomp.listener.ConnectionListener.on_disconnected"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_disconnected()</span></code></a></p>
+<dd><p>Increment the disconnect count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_disconnected" title="stomp.listener.ConnectionListener.on_disconnected"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_disconnected()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_error">
 <code class="descname">on_error</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the error count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_error" title="stomp.listener.ConnectionListener.on_error"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_error()</span></code></a></p>
+<dd><p>Increment the error count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_error" title="stomp.listener.ConnectionListener.on_error"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_error()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1066,19 +1017,19 @@ received beyond the specified period.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
+<dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_heartbeat_timeout">
 <code class="descname">on_heartbeat_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_heartbeat_timeout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the heartbeat timeout. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat_timeout" title="stomp.listener.ConnectionListener.on_heartbeat_timeout"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat_timeout()</span></code></a></p>
+<dd><p>Increment the heartbeat timeout. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat_timeout" title="stomp.listener.ConnectionListener.on_heartbeat_timeout"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_heartbeat_timeout()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_message">
 <code class="descname">on_message</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the message received count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_message" title="stomp.listener.ConnectionListener.on_message"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_message()</span></code></a></p>
+<dd><p>Increment the message received count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_message" title="stomp.listener.ConnectionListener.on_message"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_message()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1096,7 +1047,7 @@ received beyond the specified period.</p>
 <dl class="method">
 <dt id="stomp.listener.StatsListener.on_send">
 <code class="descname">on_send</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.StatsListener.on_send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the send count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_send" title="stomp.listener.ConnectionListener.on_send"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_send()</span></code></a></p>
+<dd><p>Increment the send count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_send" title="stomp.listener.ConnectionListener.on_send"><code class="xref py py-meth docutils literal"><span class="pre">ConnectionListener.on_send()</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1112,7 +1063,7 @@ received beyond the specified period.</p>
 <dl class="class">
 <dt id="stomp.listener.TestListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">TestListener</code><span class="sig-paren">(</span><em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.WaitingListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.WaitingListener</span></code></a></p>
 <p>Implementation of StatsListener and WaitingListener. Useful for testing.</p>
 <dl class="method">
 <dt id="stomp.listener.TestListener.get_latest_message">
@@ -1122,8 +1073,7 @@ received beyond the specified period.</p>
 <dl class="method">
 <dt id="stomp.listener.TestListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="stomp.listener.TestListener.on_message">
@@ -1157,8 +1107,13 @@ received beyond the specified period.</p>
 <dl class="class">
 <dt id="stomp.listener.WaitingListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">WaitingListener</code><span class="sig-paren">(</span><em>receipt</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.WaitingListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>A listener which waits for a specific receipt to arrive.</p>
+<dl class="method">
+<dt id="stomp.listener.WaitingListener.on_disconnected">
+<code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.WaitingListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="stomp.listener.WaitingListener.on_receipt">
 <code class="descname">on_receipt</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.WaitingListener.on_receipt" title="Permalink to this definition">¶</a></dt>
@@ -1178,6 +1133,12 @@ received beyond the specified period.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="stomp.listener.WaitingListener.wait_on_disconnected">
+<code class="descname">wait_on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.WaitingListener.wait_on_disconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until disconnected.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="stomp.listener.WaitingListener.wait_on_receipt">
 <code class="descname">wait_on_receipt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.WaitingListener.wait_on_receipt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait until we receive a message receipt.</p>
@@ -1192,9 +1153,9 @@ received beyond the specified period.</p>
 <dl class="class">
 <dt id="stomp.protocol.Protocol10">
 <em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol10</code><span class="sig-paren">(</span><em>transport</em>, <em>auto_content_length=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol10" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>Represents version 1.0 of the protocol (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.0.html">https://stomp.github.io/stomp-specification-1.0.html</a>).</p>
-<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
+<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1420,9 +1381,9 @@ for more information</li>
 <dl class="class">
 <dt id="stomp.protocol.Protocol11">
 <em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol11</code><span class="sig-paren">(</span><em>transport</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.HeartbeatListener" title="stomp.listener.HeartbeatListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.HeartbeatListener</span></code></a>, <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.HeartbeatListener" title="stomp.listener.HeartbeatListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.HeartbeatListener</span></code></a>, <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <p>Represents version 1.1 of the protocol (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.1.html">https://stomp.github.io/stomp-specification-1.1.html</a>).</p>
-<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
+<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1667,9 +1628,9 @@ through the underlying transport:</p>
 <dl class="class">
 <dt id="stomp.protocol.Protocol12">
 <em class="property">class </em><code class="descclassname">stomp.protocol.</code><code class="descname">Protocol12</code><span class="sig-paren">(</span><em>transport</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.protocol.Protocol11" title="stomp.protocol.Protocol11"><code class="xref py py-class docutils literal"><span class="pre">stomp.protocol.Protocol11</span></code></a></p>
 <p>Represents version 1.2 of the protocol (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html">https://stomp.github.io/stomp-specification-1.2.html</a>).</p>
-<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
+<p>Most users should not instantiate the protocol directly. See <a class="reference internal" href="#module-stomp.connect" title="stomp.connect"><code class="xref py py-mod docutils literal"><span class="pre">stomp.connect</span></code></a> for connection classes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1749,8 +1710,8 @@ through the underlying transport:</p>
 <p>Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual STOMP protocol</p>
 <dl class="class">
 <dt id="stomp.transport.BaseTransport">
-<em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">BaseTransport</code><span class="sig-paren">(</span><em>wait_on_receipt=False</em>, <em>auto_decode=True</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.Publisher</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">BaseTransport</code><span class="sig-paren">(</span><em>auto_decode=True</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.Publisher" title="stomp.listener.Publisher"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.Publisher</span></code></a></p>
 <p>Base class for transport classes providing support for listeners, threading overrides,
 and anything else outside of actually establishing a network connection, sending and
 receiving of messages (so generally socket-agnostic functions).</p>
@@ -1759,10 +1720,10 @@ receiving of messages (so generally socket-agnostic functions).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>wait_on_receipt</strong> (<em>bool</em>) – deprecated, ignored</li>
 <li><strong>auto_decode</strong> (<em>bool</em>) – automatically decode message responses as strings, rather than
 leaving them as bytes. This preserves the behaviour as of version 4.0.16.
 (To be defaulted to False as of the next release)</li>
+<li><strong>encoding</strong> – the character encoding to use for the message body</li>
 </ul>
 </td>
 </tr>
@@ -1926,7 +1887,7 @@ The thread which is returned should be started (ready to run)</p>
 <dt id="stomp.transport.BaseTransport.set_listener">
 <code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport.set_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a named listener to use with this connection.
-See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
+See <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1993,8 +1954,8 @@ receiver thread to exit.</p>
 
 <dl class="class">
 <dt id="stomp.transport.Transport">
-<em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">Transport</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>wait_on_receipt=False</em>, <em>ssl_version=None</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.Transport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.transport.BaseTransport" title="stomp.transport.BaseTransport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.BaseTransport</span></code></a></p>
+<em class="property">class </em><code class="descclassname">stomp.transport.</code><code class="descname">Transport</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=None</em>, <em>timeout=None</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.Transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#stomp.transport.BaseTransport" title="stomp.transport.BaseTransport"><code class="xref py py-class docutils literal"><span class="pre">stomp.transport.BaseTransport</span></code></a></p>
 <p>Represents a STOMP client ‘transport’. Effectively this is the communications mechanism without the definition of
 the protocol.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2024,15 +1985,14 @@ between connection attempts in order to avoid
 stampeding. For example, a value of 0.1 means to wait
 an extra 0%-10% (randomly determined) of the delay
 calculated using the previous three parameters.</li>
-<li><strong>reconnect_attempts_max</strong> (<em>int</em>) – maximum attempts to reconnect</li>
-<li><strong>use_ssl</strong> (<em>bool</em>) – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_cert_file</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_key_file</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_ca_certs</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_cert_validator</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
-<li><strong>ssl_version</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>reconnect_attempts_max</strong> (<em>int</em>) – maximum attempts to reconnect (Can also be used for infinite attempts : <cite>-1</cite>)</li>
+<li><strong>use_ssl</strong> (<em>bool</em>) – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_cert_file</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_key_file</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_ca_certs</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_cert_validator</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
+<li><strong>ssl_version</strong> – deprecated, see <a class="reference internal" href="#stomp.transport.Transport.set_ssl" title="stomp.transport.Transport.set_ssl"><code class="xref py py-meth docutils literal"><span class="pre">set_ssl()</span></code></a></li>
 <li><strong>timeout</strong> – the timeout value to use when connecting the stomp socket</li>
-<li><strong>wait_on_receipt</strong> (<em>bool</em>) – deprecated, ignored</li>
 <li><strong>keepalive</strong> – some operating systems support sending the occasional heart
 beat packets to detect when a connection fails.  This
 parameter can either be set set to a boolean to turn on the
@@ -2157,7 +2117,7 @@ constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1</li>
 <dl class="class">
 <dt id="stomp.utils.Frame">
 <em class="property">class </em><code class="descclassname">stomp.utils.</code><code class="descname">Frame</code><span class="sig-paren">(</span><em>cmd=None</em>, <em>headers=None</em>, <em>body=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.Frame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A STOMP frame (or message).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2202,8 +2162,8 @@ calculate what the actual heartbeat settings should be.</p>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="stomp.utils.convert_frame_to_lines">
-<code class="descclassname">stomp.utils.</code><code class="descname">convert_frame_to_lines</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.convert_frame_to_lines" title="Permalink to this definition">¶</a></dt>
+<dt id="stomp.utils.convert_frame">
+<code class="descclassname">stomp.utils.</code><code class="descname">convert_frame</code><span class="sig-paren">(</span><em>frame</em>, <em>body_encoding=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.convert_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a frame to a list of lines separated by newlines.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2231,6 +2191,11 @@ own thread creation.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="stomp.utils.get_uuid">
+<code class="descclassname">stomp.utils.</code><code class="descname">get_uuid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.get_uuid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="stomp.utils.is_localhost">
@@ -2375,14 +2340,12 @@ Project Page: <a class="reference external" href="https://github.com/jasonrbrigg
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -2393,8 +2356,8 @@ Project Page: <a class="reference external" href="https://github.com/jasonrbrigg
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/stomp.rst.txt"

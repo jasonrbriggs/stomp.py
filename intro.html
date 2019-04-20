@@ -4,12 +4,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Introduction to Stomp.py &#8212; Stomp 4.1.20 documentation</title>
+    <title>Introduction to Stomp.py &#8212; Stomp 4.1.23 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.1.23',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -20,10 +28,10 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head><body>
+  </head>
+  <body>
   
 
     <div class="document">
@@ -35,7 +43,7 @@
 <h1>Introduction to Stomp.py<a class="headerlink" href="#introduction-to-stomp-py" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="about-stomp-py">
 <h2>About Stomp.py<a class="headerlink" href="#about-stomp-py" title="Permalink to this headline">¶</a></h2>
-<p>Stomp.py started as an <a class="reference external" href="https://en.wikipedia.org/wiki/The_Cathedral_and_the_Bazaar#Lessons_for_creating_good_open_source_software">“itch-scratching” project</a>, after discovering that the message broker we were using for inter-application communications in a telecommunications platform, had a text-based protocol called <a class="reference external" href="https://stomp.github.io/">STOMP</a> you could use for access. We wanted something which could randomly send a variation of messages, easily scriptable - and there was only one other Python-based client library available at the time (which didn’t work, and it looked as if the project had stalled). So after a number of evenings spent coding (ah! those were the days - when one could get away with endless coding in the evenings), the first version of stomp.py was created (supporting the basics of the 1.0 protocol, a smidgen of a CLI, and little else). In the 8 or 9 years since its inception, support for the subsequent versions of STOMP have been added, and the command line client has been significantly enhanced.</p>
+<p>Stomp.py started as an <a class="reference external" href="https://en.wikipedia.org/wiki/The_Cathedral_and_the_Bazaar#Lessons_for_creating_good_open_source_software">“itch-scratching” project</a>, after discovering that the message broker we were using for inter-application communications in a telecommunications platform, had a text-based protocol called <a class="reference external" href="https://stomp.github.io/">STOMP</a> you could use for access. We wanted something which could randomly send a variation of messages, easily scriptable - and there was only one other Python-based client library available at the time (which didn’t work, and looked as if the project had stalled). So after a number of evenings spent coding (ah! those were the days - when one could get away with endless coding in the evenings), the first version of stomp.py was created (supporting the basics of the 1.0 protocol, a smidgen of a CLI, and little else). In the 8 or 9 years since its inception, support for the subsequent versions of STOMP have been added, and the command line client has been significantly enhanced.</p>
 <ul class="simple">
 <li>Stomp.py currently supports all versions of the stomp protocol (1.0, 1.1 and 1.2)</li>
 <li>Both Python 2 and Python 3 are supported</li>
@@ -97,14 +105,12 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -115,8 +121,8 @@
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
       <a href="_sources/intro.rst.txt"
