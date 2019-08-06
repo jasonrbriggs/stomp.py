@@ -2,6 +2,7 @@
 """
 
 import copy
+import os
 import re
 import socket
 import threading
@@ -20,20 +21,21 @@ except ImportError:
 # preferred targets.
 LOCALHOST_NAMES = ["localhost", "127.0.0.1"]
 
-try:
-    LOCALHOST_NAMES.append(socket.gethostbyname(socket.gethostname()))
-except:
-    pass
+if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
+    try:
+        LOCALHOST_NAMES.append(socket.gethostbyname(socket.gethostname()))
+    except Exception:
+        pass
 
-try:
-    LOCALHOST_NAMES.append(socket.gethostname())
-except:
-    pass
+    try:
+        LOCALHOST_NAMES.append(socket.gethostname())
+    except Exception:
+        pass
 
-try:
-    LOCALHOST_NAMES.append(socket.getfqdn(socket.gethostname()))
-except:
-    pass
+    try:
+        LOCALHOST_NAMES.append(socket.getfqdn(socket.gethostname()))
+    except Exception:
+        pass
 
 ##
 # Used to parse STOMP header lines in the format "key:value",
@@ -57,6 +59,7 @@ PASSCODE_RE = re.compile(r'\'passcode:[^\']*\'')
 
 ENC_NEWLINE = encode("\n")
 ENC_NULL = encode(NULL)
+
 
 def default_create_thread(callback):
     """

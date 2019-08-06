@@ -1,7 +1,7 @@
 Version 4.1.23 -
 
  * Fix for credentials exposure (https://github.com/jasonrbriggs/stomp.py/pull/244)
- *  
+ * Check for ``STOMP_SKIP_HOSTNAME_SCAN`` environment variable before extending ``LOCALHOST_NAMES``
 
 
 Version 4.1.22 - Apr 2019
