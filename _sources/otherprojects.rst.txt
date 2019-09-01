@@ -8,4 +8,4 @@ This is a short, incomplete (eventually/possibly out-of-date) list of articles/p
 
 * `Using the STOMP Protocol with Apache Artemis Broker <https://developers.redhat.com/blog/2018/06/14/stomp-with-activemq-artemis-python/>`_ (July 2018)
 
-* Stomp.py in use at CERN (heard via email that stomp.py was in use at CERN, but not for what project - no idea if that's still the case) - `CERN IT Department recommended libraries <https://mig.web.cern.ch/mig/user/libraries.html#53>`_ (July 2016)
+* Stomp.py at CERN (heard via email that stomp.py was in use at CERN, but not for what project - no idea if that's still the case) - `CERN IT Department recommended libraries <https://mig.web.cern.ch/mig/user/libraries.html#53>`_ (July 2016)
