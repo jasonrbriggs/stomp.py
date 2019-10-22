@@ -4,23 +4,16 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Using the Command-line client application &#8212; Stomp 4.1.23 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '4.1.23',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Using the API" href="api.html" />
@@ -29,8 +22,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
@@ -41,11 +33,11 @@
   <div class="section" id="using-the-command-line-client-application">
 <h1>Using the Command-line client application<a class="headerlink" href="#using-the-command-line-client-application" title="Permalink to this headline">¶</a></h1>
 <p>Once stomp.py is installed, access the command-line client as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span> <span class="o">-</span><span class="n">U</span> <span class="n">admin</span> <span class="o">-</span><span class="n">W</span> <span class="n">password</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span> <span class="o">-</span><span class="n">U</span> <span class="n">admin</span> <span class="o">-</span><span class="n">W</span> <span class="n">password</span>
 </pre></div>
 </div>
 <p>Find more info using –help:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ stomp --help
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp --help
 Usage: stomp [options]
 
 Options:
@@ -72,7 +64,7 @@ Options:
 </pre></div>
 </div>
 <p>And you can also get more help within the application using the help command:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">help</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">help</span>
 
 <span class="n">Documented</span> <span class="n">commands</span> <span class="p">(</span><span class="nb">type</span> <span class="n">help</span> <span class="o">&lt;</span><span class="n">topic</span><span class="o">&gt;</span><span class="p">):</span>
 <span class="o">========================================</span>
@@ -81,8 +73,8 @@ Options:
 <span class="n">ack</span>    <span class="n">exit</span>    <span class="n">quit</span>  <span class="n">send</span>      <span class="n">sendreply</span>  <span class="n">unsubscribe</span>
 </pre></div>
 </div>
-<p>Some of the differences to the programmatic API are the ability to run a script, and to send files (<code class="docutils literal"><span class="pre">run</span></code>, <code class="docutils literal"><span class="pre">sendfile</span></code>, <code class="docutils literal"><span class="pre">stats</span></code>):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">help</span> <span class="n">run</span>
+<p>Some of the differences to the programmatic API are the ability to run a script, and to send files (<code class="docutils literal notranslate"><span class="pre">run</span></code>, <code class="docutils literal notranslate"><span class="pre">sendfile</span></code>, <code class="docutils literal notranslate"><span class="pre">stats</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">help</span> <span class="n">run</span>
 <span class="n">Usage</span><span class="p">:</span>
     <span class="n">run</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
 
@@ -117,7 +109,25 @@ Options:
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Stomp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction to Stomp.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Using the API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using the Command-line client application</a></li>
+</ul>
+
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
@@ -125,21 +135,16 @@ Options:
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/commandline.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -150,7 +155,7 @@ Options:
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |
