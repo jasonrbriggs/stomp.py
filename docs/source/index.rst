@@ -19,6 +19,7 @@ Contents:
     intro
     api
     commandline
+    otherprojects
 
 
 Indices and tables
