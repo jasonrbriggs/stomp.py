@@ -9,6 +9,7 @@ RUN apt install -y rabbitmq-server
 RUN apt install -y stompserver
 RUN apt install -y activemq
 RUN apt install -y vim
+RUN apt install -y haproxy
 
 RUN rabbitmq-plugins enable rabbitmq_stomp
 
@@ -24,4 +25,12 @@ RUN sed -i 's/host: .*/host: 172.17.0.2/g' /etc/stompserver/stompserver.conf
 RUN echo "stomp.listeners.tcp.1 = 172.17.0.2:61613" > /etc/rabbitmq/rabbitmq.conf
 RUN echo "loopback_users = none" >> /etc/rabbitmq/rabbitmq.conf
 
-ENTRYPOINT /etc/init.d/activemq start && /etc/init.d/stompserver start && /etc/init.d/rabbitmq-server start && /bin/bash
+RUN openssl req -x509 -newkey rsa:2048 -keyout tmp/key1.pem -out tmp/cert1.pem -days 365 -nodes -subj "/CN=my.example.org"
+RUN openssl req -x509 -newkey rsa:2048 -keyout tmp/key2.pem -out tmp/cert2.pem -days 365 -nodes -subj "/CN=my.example.com"
+RUN cat tmp/cert1.pem tmp/key1.pem > tmp/myorg.pem
+RUN cat tmp/cert2.pem tmp/key2.pem > tmp/mycom.pem
+
+COPY haproxy.cfg /etc/haproxy/haproxy.cfg
+COPY haproxy.sh /
+
+ENTRYPOINT /etc/init.d/activemq start && /etc/init.d/stompserver start && /etc/init.d/rabbitmq-server start && /haproxy.sh && /bin/bash

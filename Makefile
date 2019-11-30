@@ -29,7 +29,7 @@ install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
 test: travistests
-	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test
+	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,ssl_sni_test
 	#$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,local_test
 
 travistests:
@@ -53,13 +53,6 @@ builddeb:
 	# build the package
 	dpkg-buildpackage -i -I -rfakeroot
 
-haproxy:
-	openssl req -x509 -newkey rsa:2048 -keyout tmp/key1.pem -out tmp/cert1.pem -days 365 -nodes -subj "/CN=my.example.org"
-	openssl req -x509 -newkey rsa:2048 -keyout tmp/key2.pem -out tmp/cert2.pem -days 365 -nodes -subj "/CN=my.example.com"
-	cat tmp/cert1.pem tmp/key1.pem > tmp/myorg.pem
-	cat tmp/cert2.pem tmp/key2.pem > tmp/mycom.pem
-	/usr/sbin/haproxy -f stomp/test/haproxy.cfg
-
 clean:
 ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
@@ -74,3 +67,7 @@ release:
 docker-image:
 	cd docker; \
 	docker build -t stomppy .
+
+run-docker:
+	cd docker; \
+	docker run -it stomppy

@@ -1,0 +1,1 @@
+nohup /usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg > /var/log/haproxy.out &
