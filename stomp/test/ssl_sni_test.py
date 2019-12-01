@@ -9,14 +9,12 @@ class TestSNIMQSend(unittest.TestCase):
     """
     To test SNI:
 
-    - Run a STOMP server in 127.0.0.1:62613
+    - Start the docker container
 
     - Add a couple fully qualified hostnames to your /etc/hosts
         # SNI test hosts
-        127.0.0.1 my.example.com
-        127.0.0.1 my.example.org
-
-    - Run `make haproxy` which will generate keys and run the haproxy load balancer
+        172.17.0.2 my.example.com
+        172.17.0.2 my.example.org
 
     Connections with SNI to "my.example.com" will be routed to the STOMP server on port 62613.
     Connections without SNI won't be routed.
