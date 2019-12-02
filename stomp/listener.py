@@ -505,7 +505,7 @@ class PrintingListener(ConnectionListener):
         print('on_heartbeat')
 
 
-class TestListener(StatsListener, WaitingListener):
+class TestListener(StatsListener, WaitingListener, PrintingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
@@ -514,6 +514,7 @@ class TestListener(StatsListener, WaitingListener):
         :param str receipt:
         """
         StatsListener.__init__(self)
+        PrintingListener.__init__(self)
         WaitingListener.__init__(self, receipt)
         self.message_list = []
         self.message_condition = threading.Condition()
