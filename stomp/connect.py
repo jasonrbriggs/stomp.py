@@ -79,7 +79,7 @@ class BaseConnection(Publisher):
         self.transport.set_ssl(*args, **kwargs)
 
     def get_ssl(self, *args, **kwargs):
-        self.transport.get_ssl(*args, **kwargs)
+        return self.transport.get_ssl(*args, **kwargs)
 
 
 class StompConnection10(BaseConnection, Protocol10):
