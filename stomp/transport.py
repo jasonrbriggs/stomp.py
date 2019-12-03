@@ -104,12 +104,13 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Start the connection. This should be called after all
         listeners have been registered. If this method is not called,
-        no frames will be received by the connection.
+        no frames will be received by the connection and no SSL/TLS
+        handshake will occur.
         """
         self.running = True
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        receiver_thread.name = "StompReceiver%s" % getattr(receiver_thread, "name", "Thread")
+        # receiver_thread.name = "StompReceiver%s" % getattr(receiver_thread, "name", "Thread")
         self.notify('connecting')
 
     def stop(self):
