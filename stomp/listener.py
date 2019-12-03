@@ -303,6 +303,7 @@ class HeartbeatListener(ConnectionListener):
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
         self.heartbeat_thread = None
+        self.heartbeat_terminate_event.clear()
         log.info('Heartbeat loop ended')
 
 
