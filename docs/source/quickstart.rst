@@ -23,7 +23,6 @@ Stomp.py API
 
     >>> conn = stomp.Connection()
     >>> conn.set_listener('', MyListener())
-    >>> conn.start()
     >>> conn.connect('admin', 'password', wait=True)
     >>> 
     >>> conn.subscribe(destination='/queue/test', id=1, ack='auto')

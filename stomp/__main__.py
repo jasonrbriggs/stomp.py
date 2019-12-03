@@ -91,7 +91,6 @@ class StompCLI(Cmd, ConnectionListener):
         if use_ssl:
             self.conn.set_ssl([(host, port)], key_file=ssl_key_file, cert_file=ssl_cert_file, ca_certs=ssl_ca_file)
         self.conn.set_listener('', self)
-        self.conn.start()
         self.conn.connect(self.user, self.passcode, wait=True)
         self.transaction_id = None
         self.version = ver

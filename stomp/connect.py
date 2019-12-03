@@ -54,18 +54,6 @@ class BaseConnection(Publisher):
         """
         return self.transport.get_listener(name)
 
-    def start(self):
-        """
-        Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)
-        """
-        pass
-
-    def stop(self):
-        """
-        Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)
-        """
-        pass
-
     def is_connected(self):
         """
         :rtype: bool

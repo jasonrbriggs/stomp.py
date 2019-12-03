@@ -9,7 +9,6 @@ The simplest way to establish a connection, assuming the message broker is runni
 
     >>> import stomp
     >>> c = stomp.Connection([('127.0.0.1', 62613)])
-    >>> c.start()
     >>> c.connect('admin', 'password', wait=True)
     
 By default this represents a STOMP 1.1 connection. You can request a specific version of the connection using one of the following::
@@ -34,7 +33,7 @@ There are a number of other parameters for initialising the connection (looking 
 
     .. autoclass:: stomp.connect.StompConnection12
 
-The ``start`` method is next - which performs the actual socket connection to the remote server and starts a separate receiver thread. The final step is to call the ``connect`` method (corresponding to the `CONNECT frame <https://stomp.github.io/stomp-specification-1.2.html#CONNECT_or_STOMP_Frame>`_):
+The final step is to call the ``connect`` method (corresponding to the `CONNECT frame <https://stomp.github.io/stomp-specification-1.2.html#CONNECT_or_STOMP_Frame>`_):
 
     .. automethod:: stomp.protocol.Protocol12.connect
 
@@ -52,7 +51,6 @@ To receive messages back from the messaging system, you need to setup some sort 
     >>> from stomp import *
     >>> c = Connection([('127.0.0.1', 62613)])
     >>> c.set_listener('', PrintingListener())
-    >>> c.start()
     >>> c.connect('admin', 'password', wait=True)
     on_connecting 127.0.0.1 62613
     on_send STOMP {'passcode': 'password', 'login': 'admin', 'accept-version': '1.2', 'host': '127.0.0.1'}
@@ -148,7 +146,6 @@ You can use a listener to deal with connection failures, and gracefully reconnec
     import stomp
 
     def connect_and_subscribe(conn):
-        conn.start()
         conn.connect('guest', 'guest', wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
@@ -183,7 +180,6 @@ The listener in this code has an, arguably broken, message handler (on_message) 
 
     import stomp
     conn = stomp.Connection([('localhost', 62613)])
-    conn.start()
     conn.connect('guest', 'guest', wait=True)
     conn.send('/queue/test', 'test message')
     
