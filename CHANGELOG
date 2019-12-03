@@ -4,7 +4,10 @@ Version 4.2.0 -
  * Check for ``STOMP_SKIP_HOSTNAME_SCAN`` environment variable before extending ``LOCALHOST_NAMES``
  * Remove python2 backwards compatibility
  * Update dockerfile for better local testing
- * Drop deprecated start/stop methods from connection
+ * Drop deprecated start/stop methods from connection (issue https://github.com/jasonrbriggs/stomp.py/issues/257)
+ * Fix for missing return in get_ssl (https://github.com/jasonrbriggs/stomp.py/pull/258)
+ * Clear heartbeat event after heartbeat loop ends (https://github.com/jasonrbriggs/stomp.py/pull/260)
+ * Update listener to move receive/message_received/heartbeat_received vars inside the 'with' blocks (https://github.com/jasonrbriggs/stomp.py/pull/252)
 
 
 Version 4.1.22 - Apr 2019
