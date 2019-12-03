@@ -38,9 +38,7 @@ class TestSNIMQSend(unittest.TestCase):
         print('.....sending message with receipt %s' % self.receipt_id)
         conn.send(body='this is a test', destination='/queue/test', receipt=self.receipt_id)
 
-        print('>>>>wait on receipt')
         listener.wait_for_message()
-        print('>>>>>receipt received')
         conn.disconnect(receipt=None)
 
         self.assertTrue(listener.connections == 1, 'should have received 1 connection acknowledgement')

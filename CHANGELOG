@@ -1,7 +1,9 @@
-Version 4.1.23 -
+Version 4.2.0 -
 
  * Fix for credentials exposure (https://github.com/jasonrbriggs/stomp.py/pull/244)
  * Check for ``STOMP_SKIP_HOSTNAME_SCAN`` environment variable before extending ``LOCALHOST_NAMES``
+ * Remove python2 backwards compatibility
+ * Update dockerfile for better local testing
 
 
 Version 4.1.22 - Apr 2019

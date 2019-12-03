@@ -298,7 +298,6 @@ class HeartbeatListener(ConnectionListener):
                     log.warning("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
                                 diff_receive, now, self.received_heartbeat)
                     self.transport.set_connected(False)
-                    print('>>>> listener disconnect socket after received')
                     self.transport.disconnect_socket()
                     self.transport.stop()
                     for listener in self.transport.listeners.values():
@@ -329,7 +328,6 @@ class WaitingListener(ConnectionListener):
         :param body: the message content
         """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
-            print('>>>>>> received receipt %s' % headers['receipt-id'])
             print(headers, body)
             with self.receipt_condition:
                 self.received = True

@@ -213,7 +213,6 @@ class BaseTransport(stomp.listener.Publisher):
                 self.set_connected(False)
                 # received a stomp 1.1+ disconnect receipt
                 if receipt == self.__disconnect_receipt:
-                    print('>>>>>>>>>>>>>>> disconnect receipt')
                     self.disconnect_socket()
                 self.__disconnect_receipt = None
 

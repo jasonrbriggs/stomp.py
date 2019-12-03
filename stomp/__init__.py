@@ -13,7 +13,7 @@ import stomp.connect as connect
 import stomp.listener as listener
 import stomp.adapter as adapter
 
-__version__ = (4, 1, 23)
+__version__ = (4, 2, 0)
 
 ##
 # Alias for STOMP 1.0 connections.
