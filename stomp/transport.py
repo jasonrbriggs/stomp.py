@@ -109,7 +109,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.running = True
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        receiver_thread.name = "StompReceiver%s" % getattr(receiver_thread, "name", "Thread")
+        # receiver_thread.name = "StompReceiver%s" % getattr(receiver_thread, "name", "Thread")
         self.notify('connecting')
 
     def stop(self):
