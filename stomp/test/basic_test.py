@@ -1,11 +1,11 @@
 import os
 import signal
 import time
+from time import monotonic
 import unittest
 
 import stomp
 from stomp import exception
-from stomp.backward import monotonic
 from stomp.listener import TestListener
 from stomp.test.testutils import *
 

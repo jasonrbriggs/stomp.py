@@ -11,6 +11,7 @@ import socket
 import sys
 import threading
 import time
+from time import monotonic
 import traceback
 import warnings
 
@@ -35,11 +36,10 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
-from stomp.backward import decode, encode, get_errno, monotonic, pack
 from stomp.constants import *
 import stomp.exception as exception
 import stomp.listener
-import stomp.utils as utils
+from stomp.utils import *
 
 
 log = logging.getLogger('stomp.py')
@@ -76,7 +76,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.__disconnect_receipt = None
 
         # function for creating threads used by the connection
-        self.create_thread_fc = utils.default_create_thread
+        self.create_thread_fc = default_create_thread
 
         self.__listeners_change_condition = threading.Condition()
         self.__receiver_thread_exit_condition = threading.Condition()
@@ -188,10 +188,10 @@ class BaseTransport(stomp.listener.Publisher):
             if log.isEnabledFor(logging.DEBUG):
                 log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
-                log.info("Received frame: %r, len(body)=%r", f.cmd, utils.length(f.body))
+                log.info("Received frame: %r, len(body)=%r", f.cmd, length(f.body))
             self.notify(frame_type, f.headers, f.body)
         else:
-            log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
+            log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
 
     def notify(self, frame_type, headers=None, body=None):
         """
@@ -271,11 +271,11 @@ class BaseTransport(stomp.listener.Publisher):
         if frame.cmd == CMD_DISCONNECT and HDR_RECEIPT in frame.headers:
             self.__disconnect_receipt = frame.headers[HDR_RECEIPT]
 
-        lines = utils.convert_frame(frame)
+        lines = convert_frame(frame)
         packed_frame = pack(lines)
 
         if log.isEnabledFor(logging.DEBUG):
-            log.debug("Sending frame: %s", utils.clean_lines(lines))
+            log.debug("Sending frame: %s", clean_lines(lines))
         else:
             log.info("Sending frame: %r", frame.cmd or "heartbeat")
         self.send(packed_frame)
@@ -342,7 +342,7 @@ class BaseTransport(stomp.listener.Publisher):
                         frames = self.__read()
 
                         for frame in frames:
-                            f = utils.parse_frame(frame)
+                            f = parse_frame(frame)
                             if f is None:
                                 continue
                             if self.__auto_decode:
@@ -415,7 +415,7 @@ class BaseTransport(stomp.listener.Publisher):
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
-                    preamble_end_match = utils.PREAMBLE_END_RE.search(frame)
+                    preamble_end_match = PREAMBLE_END_RE.search(frame)
                     if preamble_end_match:
                         preamble_end = preamble_end_match.start()
                         content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
@@ -528,7 +528,7 @@ class Transport(BaseTransport):
         # the list
         #
         if prefer_localhost:
-            sorted_host_and_ports.sort(key=utils.is_localhost)
+            sorted_host_and_ports.sort(key=is_localhost)
 
         #
         # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port)
@@ -538,7 +538,7 @@ class Transport(BaseTransport):
         loopback_host_and_ports = []
         if try_loopback_connect:
             for host_and_port in sorted_host_and_ports:
-                if utils.is_localhost(host_and_port) == 1:
+                if is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
                     if not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))

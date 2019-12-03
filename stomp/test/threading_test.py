@@ -5,10 +5,10 @@ except ImportError:
 import sys
 import threading
 import time
+from time import monotonic
 import unittest
 
 import stomp
-from stomp.backward import monotonic
 from stomp.test.testutils import *
 
 

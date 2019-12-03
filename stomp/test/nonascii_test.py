@@ -5,6 +5,7 @@ import time
 import unittest
 
 import stomp
+from stomp.utils import *
 from stomp.listener import TestListener
 from stomp.test.testutils import *
 
@@ -38,7 +39,7 @@ class TestNonAsciiSend(unittest.TestCase):
         self.assertTrue(self.listener.errors == 0, 'should not have received any errors')
 
         (_, msg) = self.listener.get_latest_message()
-        self.assertEqual(stomp.backward.encode(txt), msg)
+        self.assertEqual(encode(txt), msg)
 
     def test_image_send(self):
         d = os.path.dirname(os.path.realpath(__file__))

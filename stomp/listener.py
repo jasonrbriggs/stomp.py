@@ -6,7 +6,7 @@ import sys
 import threading
 import time
 
-from stomp.backward import monotonic
+from time import monotonic
 from stomp.constants import *
 import stomp.exception as exception
 import stomp.utils as utils

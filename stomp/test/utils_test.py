@@ -1,6 +1,5 @@
 import unittest
 
-from stomp.backward import *
 from stomp.utils import *
 
 
@@ -21,10 +20,7 @@ class TestUtils(unittest.TestCase):
 
         s = pack(lines)
 
-        if sys.hexversion >= 0x03000000:
-            self.assertEqual(bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
-        else:
-            self.assertEqual('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', s)
+        self.assertEqual(bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
 
     def test_parse_headers(self):
         lines = [
