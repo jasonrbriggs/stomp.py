@@ -7,7 +7,6 @@ import re
 import socket
 import threading
 
-from stomp.backward import encode, decode, NULL
 from stomp.constants import *
 
 try:
@@ -20,6 +19,8 @@ except ImportError:
 # and external interfaces).  This is used for determining
 # preferred targets.
 LOCALHOST_NAMES = ["localhost", "127.0.0.1"]
+
+NULL = b'\x00'
 
 if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
     try:
@@ -36,6 +37,58 @@ if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
         LOCALHOST_NAMES.append(socket.getfqdn(socket.gethostname()))
     except Exception:
         pass
+
+
+def decode(byte_data, encoding='utf-8'):
+    """
+    Decode the byte data to a string if not None.
+
+    :param bytes byte_data: the data to decode
+
+    :rtype: str
+    """
+    if byte_data is None:
+        return None
+    return byte_data.decode(encoding, errors='replace')
+
+
+def encode(char_data, encoding='utf-8'):
+    """
+    Encode the parameter as a byte string.
+
+    :param char_data: the data to encode
+
+    :rtype: bytes
+    """
+    if type(char_data) is str:
+        return char_data.encode(encoding, errors='replace')
+    elif type(char_data) is bytes:
+        return char_data
+    else:
+        raise TypeError('message should be a string or bytes, found %s' % type(char_data))
+
+
+def pack(pieces=()):
+    """
+    Join a sequence of strings together.
+
+    :param list pieces: list of strings
+
+    :rtype: bytes
+    """
+    return b''.join(pieces)
+
+
+def join(chars=()):
+    """
+    Join a sequence of characters into a string.
+
+    :param bytes chars: list of chars
+
+    :rtype: str
+    """
+    return b''.join(chars).decode()
+
 
 ##
 # Used to parse STOMP header lines in the format "key:value",

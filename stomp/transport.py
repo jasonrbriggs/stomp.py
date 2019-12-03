@@ -11,6 +11,7 @@ import socket
 import sys
 import threading
 import time
+import traceback
 import warnings
 
 try:
@@ -35,7 +36,6 @@ except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
 from stomp.backward import decode, encode, get_errno, monotonic, pack
-from stomp.backwardsock import get_socket
 from stomp.constants import *
 import stomp.exception as exception
 import stomp.listener
@@ -213,6 +213,7 @@ class BaseTransport(stomp.listener.Publisher):
                 self.set_connected(False)
                 # received a stomp 1.1+ disconnect receipt
                 if receipt == self.__disconnect_receipt:
+                    print('>>>>>>>>>>>>>>> disconnect receipt')
                     self.disconnect_socket()
                 self.__disconnect_receipt = None
 
@@ -605,6 +606,7 @@ class Transport(BaseTransport):
                     #
                     _, e, _ = sys.exc_info()
                     log.warning(e)
+                    print(traceback.format_exc())
             elif hasattr(socket, 'SHUT_RDWR'):
                 try:
                     self.socket.shutdown(socket.SHUT_RDWR)
@@ -726,12 +728,12 @@ class Transport(BaseTransport):
         connect_count = 0
 
         while self.running and self.socket is None and (
-            connect_count < self.__reconnect_attempts_max or 
+            connect_count < self.__reconnect_attempts_max or
             self.__reconnect_attempts_max == -1 ):
             for host_and_port in self.__host_and_ports:
                 try:
                     log.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
-                    self.socket = get_socket(host_and_port[0], host_and_port[1], self.__timeout)
+                    self.socket = socket.create_connection(host_and_port, self.__timeout)
                     self.__enable_keepalive()
                     need_ssl = self.__need_ssl(host_and_port)
 

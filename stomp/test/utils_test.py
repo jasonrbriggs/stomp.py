@@ -82,3 +82,15 @@ class TestUtils(unittest.TestCase):
     def test_clean_default_headers(self):
         Frame().headers['foo'] = 'bar'
         self.assertEqual(Frame().headers, {})
+
+    def test_decode(self):
+        self.assertTrue(decode(None) is None)
+        self.assertEqual('test', decode(b'test'))
+
+    def test_encode(self):
+        self.assertEqual(b'test', encode('test'))
+        self.assertEqual(b'test', encode(b'test'))
+        self.assertRaises(TypeError, encode, None)
+
+    def test_pack(self):
+        self.assertEquals(b'testtest', pack([b'test', b'test']))

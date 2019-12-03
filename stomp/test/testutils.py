@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+
 try:
     from configparser import RawConfigParser
 except ImportError:
@@ -6,10 +8,10 @@ import logging
 import os
 import re
 import socket
+import sys
 import threading
 
-from stomp.backward import *
-
+from stomp.utils import *
 
 log = logging.getLogger('testutils.py')
 
@@ -17,12 +19,8 @@ config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 
 header_re = re.compile(r'[^:]+:.*')
-
-
-if sys.hexversion >= 0x03000000:  # Python 3+
-    from stomp.test.p3testutils import *
-else:  # Python 2
-    from stomp.test.p2testutils import *
+test_text_for_utf8 = 'марко'
+test_text_for_utf16 = 'ǰ捁楴敶免'
 
 
 def get_environ(name):

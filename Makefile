@@ -4,11 +4,6 @@ PROJECT=stomp.py
 PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0])")
 PLATFORM := $(shell uname)
 
-ifeq ($(PYTHON_VERSION_MAJOR), 3)
-travistests: travistests-py3
-else
-travistests: travistests-py2
-endif
 
 all:
 	@echo "make source - Create source package"
@@ -35,12 +30,6 @@ test: travistests
 travistests:
 	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
 	$(PYTHON) setup.py piptest
-
-travistests-py2:
-	$(PYTHON) setup.py test --test=p2_backward_test
-
-travistests-py3:
-	$(PYTHON) setup.py test --test=p3_backward_test
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
