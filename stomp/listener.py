@@ -345,7 +345,7 @@ class WaitingListener(ConnectionListener):
         with self.receipt_condition:
             while not self.received:
                 self.receipt_condition.wait()
-        self.received = False
+            self.received = False
 
     def wait_on_disconnected(self):
         """
@@ -537,7 +537,7 @@ class TestListener(StatsListener, WaitingListener):
         with self.message_condition:
             while not self.message_received:
                 self.message_condition.wait()
-        self.message_received = False
+            self.message_received = False
 
     def get_latest_message(self):
         return self.message_list[-1]
@@ -552,4 +552,4 @@ class TestListener(StatsListener, WaitingListener):
         with self.heartbeat_condition:
             while not self.heartbeat_received:
                 self.heartbeat_condition.wait()
-        self.heartbeat_received = False
+            self.heartbeat_received = False
