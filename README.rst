@@ -80,5 +80,17 @@ stomp.py has been perfunctorily tested on:
 
 .. _JBossMessaging: http://www.jboss.org/jbossmessaging
 
-For more info on setting up a local test server (using docker), contact the developer.
+For local testing:
 
+1. Create a docker image:
+```
+make docker-image
+```
+2. Run the container:
+```
+make run-docker
+```
+3. Run stomp.py unit tests:
+```
+make test
+```
