@@ -8,6 +8,9 @@ Version 4.2.0 -
  * Fix for missing return in get_ssl (https://github.com/jasonrbriggs/stomp.py/pull/258)
  * Clear heartbeat event after heartbeat loop ends (https://github.com/jasonrbriggs/stomp.py/pull/260)
  * Update listener to move receive/message_received/heartbeat_received vars inside the 'with' blocks (https://github.com/jasonrbriggs/stomp.py/pull/252)
+ * Simplify logging calls
+ * Tidy up listeners (correct the behaviour of TestListener)
+ * Fix problem with double-disconnect notification (ihttps://github.com/jasonrbriggs/stomp.py/issues/245)
 
 
 Version 4.1.22 - Apr 2019
