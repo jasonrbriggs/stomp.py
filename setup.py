@@ -4,7 +4,7 @@ from distutils.core import Command
 from setuptools import setup
 import platform
 import io
-import logging.config
+import logging
 import os
 import shutil
 import sys
@@ -43,7 +43,7 @@ class TestCommand(Command):
         suite = unittest.TestSuite()
         import stomp.test
         if self.test == '*':
-            print('Running all tests')
+            logging.info('Running all tests')
             tests = stomp.test.__all__
         else:
             tests = self.test.split(',')

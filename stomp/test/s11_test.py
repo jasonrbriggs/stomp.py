@@ -1,3 +1,4 @@
+import logging
 import time
 import unittest
 
@@ -75,7 +76,7 @@ heart-beat:1000,1000
             server.running = False
         except Exception:
             _, e, _ = sys.exc_info()
-            log.error("Error: %s", e)
+            logging.error("Error: %s", e)
         finally:
             server.stop()
 
@@ -110,7 +111,7 @@ heart-beat:1000,1000
                 server.running = False
             except Exception:
                 _, e, _ = sys.exc_info()
-                log.error("Error: %s", e)
+                logging.error("Error: %s", e)
 
             self.assertLessEqual(end_time - start_time, 2, 'should stop immediately and not after heartbeat timeout')
             self.assertIsNone(conn.heartbeat_thread, 'heartbeat thread should have finished')

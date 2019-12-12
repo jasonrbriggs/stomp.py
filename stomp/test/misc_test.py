@@ -1,3 +1,4 @@
+import logging
 import time
 import traceback
 import unittest
@@ -7,9 +8,6 @@ import stomp
 from stomp.exception import *
 from stomp.listener import *
 from stomp.test.testutils import *
-
-
-log = logging.getLogger('stomp.py')
 
 
 class TransformationListener(TestListener):
@@ -96,7 +94,7 @@ class TestNoResponseConnectionKill(unittest.TestCase):
 
     def timeout_server(self):
         time.sleep(3)
-        log.info('Stopping server')
+        logging.info('Stopping server')
         self.server.running = False
         self.server.stop()
 
@@ -109,7 +107,7 @@ class TestNoResponseConnectionKill(unittest.TestCase):
             conn.connect(wait=True)
             self.fail("Shouldn't happen")
         except ConnectFailedException:
-            log.info('Received connect failed - test success')
+            logging.info('Received connect failed - test success')
         except Exception:
             self.fail("Shouldn't happen")
 

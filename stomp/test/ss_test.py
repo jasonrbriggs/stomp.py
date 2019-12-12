@@ -11,8 +11,6 @@ import stomp
 from stomp.listener import TestListener
 from stomp.test.testutils import *
 
-log = logging.getLogger('ss_test.py')
-
 
 class TestWithStompServer(unittest.TestCase):
 
@@ -57,7 +55,7 @@ heart-beat:1000,1000
             _, e, _ = sys.exc_info()
             if e.__class__ == AssertionError:
                 self.fail(str(e))
-            log.debug('stopping conn after expected exception %s', e)
+            logging.debug('stopping conn after expected exception %s', e)
             # lost connection, now restart the server
             try:
                 conn.disconnect(receipt=None)

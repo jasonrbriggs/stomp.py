@@ -12,9 +12,6 @@ import stomp.exception as exception
 import stomp.utils as utils
 
 
-log = logging.getLogger('stomp.py')
-
-
 class Publisher(object):
     """
     Simply a registry of listeners.
@@ -182,7 +179,7 @@ class HeartbeatListener(ConnectionListener):
                 # by default, receive gets an additional grace of 50%
                 # set a different heart-beat-receive-scale when creating the connection to override that
                 self.receive_sleep = (self.heartbeats[1] / 1000) * self.heart_beat_receive_scale
-                log.debug("Setting receive_sleep to %s", self.receive_sleep)
+                logging.debug("Setting receive_sleep to %s", self.receive_sleep)
 
                 # Give grace of receiving the first heartbeat
                 self.received_heartbeat = monotonic() + self.receive_sleep
@@ -251,7 +248,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        log.info('Starting heartbeat loop')
+        logging.info('Starting heartbeat loop')
         now = monotonic()
 
         # Setup the initial due time for the outbound heartbeat
@@ -281,21 +278,21 @@ class HeartbeatListener(ConnectionListener):
                 continue
 
             if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
-                log.debug("Sending a heartbeat message at %s", now)
+                logging.debug("Sending a heartbeat message at %s", now)
                 try:
                     self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
-                    log.debug("Lost connection, unable to send heartbeat")
+                    logging.debug("Lost connection, unable to send heartbeat")
                 except Exception:
                     _, e, _ = sys.exc_info()
-                    log.debug("Unable to send heartbeat, due to: %s", e)
+                    logging.debug("Unable to send heartbeat, due to: %s", e)
 
             if self.receive_sleep != 0:
                 diff_receive = now - self.received_heartbeat
 
                 if diff_receive > self.receive_sleep:
                     # heartbeat timeout
-                    log.warning("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
+                    logging.warning("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
                                 diff_receive, now, self.received_heartbeat)
                     self.transport.set_connected(False)
                     self.transport.disconnect_socket()
@@ -304,7 +301,7 @@ class HeartbeatListener(ConnectionListener):
                         listener.on_heartbeat_timeout()
         self.heartbeat_thread = None
         self.heartbeat_terminate_event.clear()
-        log.info('Heartbeat loop ended')
+        logging.info('Heartbeat loop ended')
 
 
 class WaitingListener(ConnectionListener):
@@ -329,7 +326,6 @@ class WaitingListener(ConnectionListener):
         :param body: the message content
         """
         if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
-            print(headers, body)
             with self.receipt_condition:
                 self.received = True
                 self.receipt_condition.notify()
@@ -381,7 +377,7 @@ class StatsListener(ConnectionListener):
         Increment the disconnect count. See :py:meth:`ConnectionListener.on_disconnected`
         """
         self.disconnects += 1
-        log.info("disconnected (x %s)", self.disconnects)
+        logging.info("disconnected (x %s)", self.disconnects)
 
     def on_error(self, headers, body):
         """
@@ -390,10 +386,10 @@ class StatsListener(ConnectionListener):
         :param dict headers: headers in the message
         :param body: the message content
         """
-        if log.isEnabledFor(logging.DEBUG):
-            log.debug("received an error %s [%s]", body, headers)
+        if logging.isEnabledFor(logging.DEBUG):
+            logging.debug("received an error %s [%s]", body, headers)
         else:
-            log.info("received an error %s", body)
+            logging.info("received an error %s", body)
         self.errors += 1
 
     def on_connecting(self, host_and_port):
@@ -402,7 +398,7 @@ class StatsListener(ConnectionListener):
 
         :param (str,int) host_and_port: the host and port as a tuple
         """
-        log.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
+        logging.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
 
     def on_message(self, headers, body):
@@ -426,7 +422,7 @@ class StatsListener(ConnectionListener):
         """
         Increment the heartbeat timeout. See :py:meth:`ConnectionListener.on_heartbeat_timeout`
         """
-        log.debug("received heartbeat timeout")
+        logging.debug("received heartbeat timeout")
         self.heartbeat_timeouts += 1
 
     def on_heartbeat(self):
@@ -524,6 +520,47 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         self.heartbeat_condition = threading.Condition()
         self.heartbeat_received = False
 
+    def wait_for_message(self):
+        with self.message_condition:
+            while not self.message_received:
+                self.message_condition.wait()
+            self.message_received = False
+
+    def get_latest_message(self):
+        return self.message_list[-1]
+
+    def wait_for_heartbeat(self):
+        with self.heartbeat_condition:
+            while not self.heartbeat_received:
+                self.heartbeat_condition.wait()
+            self.heartbeat_received = False
+
+
+    def on_connecting(self, host_and_port):
+        StatsListener.on_connecting(self, host_and_port)
+        PrintingListener.on_connecting(self, host_and_port)
+        WaitingListener.on_connecting(self, host_and_port)
+
+    def on_connected(self, headers, body):
+        StatsListener.on_connected(self, headers, body)
+        PrintingListener.on_connected(self, headers, body)
+        WaitingListener.on_connected(self, headers, body)
+
+    def on_disconnected(self):
+        StatsListener.on_disconnected(self)
+        PrintingListener.on_disconnected(self)
+        WaitingListener.on_disconnected(self)
+
+    def on_heartbeat_timeout(self):
+        StatsListener.on_heartbeat_timeout(self)
+        PrintingListener.on_heartbeat_timeout(self)
+        WaitingListener.on_heartbeat_timeout(self)
+
+    def on_before_message(self, headers, body):
+        StatsListener.on_before_message(self, headers, body)
+        PrintingListener.on_before_message(self, headers, body)
+        WaitingListener.on_before_message(self, headers, body)
+
     def on_message(self, headers, message):
         """
         :param dict headers:
@@ -536,14 +573,20 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
             self.message_received = True
             self.message_condition.notify()
 
-    def wait_for_message(self):
-        with self.message_condition:
-            while not self.message_received:
-                self.message_condition.wait()
-            self.message_received = False
+    def on_receipt(self, headers, body):
+        StatsListener.on_receipt(self, headers, body)
+        PrintingListener.on_receipt(self, headers, body)
+        WaitingListener.on_receipt(self, headers, body)
 
-    def get_latest_message(self):
-        return self.message_list[-1]
+    def on_error(self, headers, body):
+        StatsListener.on_error(self, headers, body)
+        PrintingListener.on_error(self, headers, body)
+        WaitingListener.on_error(self, headers, body)
+
+    def on_send(self, frame):
+        StatsListener.on_send(self, frame)
+        PrintingListener.on_send(self, frame)
+        WaitingListener.on_send(self, frame)
 
     def on_heartbeat(self):
         StatsListener.on_heartbeat(self)
@@ -552,8 +595,7 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
             self.heartbeat_received = True
             self.heartbeat_condition.notify()
 
-    def wait_for_heartbeat(self):
-        with self.heartbeat_condition:
-            while not self.heartbeat_received:
-                self.heartbeat_condition.wait()
-            self.heartbeat_received = False
+    def on_receiver_loop_completed(self, headers, body):
+        StatsListener.on_receiver_loop_completed(self, headers, body)
+        PrintingListener.on_receiver_loop_completed(self, headers, body)
+        WaitingListener.on_receiver_loop_completed(self, headers, body)

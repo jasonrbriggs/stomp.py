@@ -13,8 +13,6 @@ import threading
 
 from stomp.utils import *
 
-log = logging.getLogger('testutils.py')
-
 config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 
@@ -105,7 +103,7 @@ class TestStompServer(object):
         self.frames = []
 
     def start(self):
-        log.debug('Starting stomp server')
+        logging.debug('Starting stomp server')
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((self.host, self.port))
@@ -115,10 +113,10 @@ class TestStompServer(object):
         thread.daemon = True
         thread.start()
         self.stopped = False
-        log.debug('Stomp server started')
+        logging.debug('Stomp server started')
 
     def stop(self):
-        log.debug('Stopping test server')
+        logging.debug('Stopping test server')
         if self.conn:
             try:
                 self.conn.shutdown(socket.SHUT_WR)
@@ -131,7 +129,7 @@ class TestStompServer(object):
         self.conn = None
         self.s = None
         self.stopped = True
-        log.debug('Connection stopped')
+        logging.debug('Connection stopped')
 
     def get_next_frame(self):
         if len(self.frames) > 0:
@@ -156,14 +154,14 @@ class TestStompServer(object):
                     self.conn.send(encode(frame))
             except Exception:
                 _, e, _ = sys.exc_info()
-                log.debug(e)
+                logging.debug(e)
                 break
         try:
             self.conn.close()
         except:
             pass
         self.stopped = True
-        log.debug('Run loop completed')
+        logging.debug('Run loop completed')
 
 
 class TestStdin(object):

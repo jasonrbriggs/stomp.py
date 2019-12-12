@@ -9,6 +9,8 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 
 """
 
+import logging
+
 import stomp.connect as connect
 import stomp.listener as listener
 import stomp.adapter as adapter
@@ -55,3 +57,6 @@ WaitingListener = listener.WaitingListener
 ##
 # Access to the printing listener
 PrintingListener = listener.PrintingListener
+
+__log = logging.getLogger('stomp.py')
+logging.isEnabledFor = __log.isEnabledFor

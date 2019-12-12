@@ -7,9 +7,6 @@ from stomp.listener import *
 import stomp.utils as utils
 
 
-log = logging.getLogger('stomp.py')
-
-
 class Protocol10(ConnectionListener):
     """
     Represents version 1.0 of the protocol (see https://stomp.github.io/stomp-specification-1.0.html).
@@ -135,7 +132,7 @@ class Protocol10(ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
-            log.debug('Not sending disconnect, already disconnected')
+            logging.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])
         rec = receipt or utils.get_uuid()
@@ -350,7 +347,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
-            log.debug('Not sending disconnect, already disconnected')
+            logging.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])
         rec = receipt or utils.get_uuid()

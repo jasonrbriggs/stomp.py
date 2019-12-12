@@ -4,6 +4,7 @@ Obviously not a typical message broker, but convenient if you don't have a broke
 methods.
 """
 
+import logging
 import socket
 import struct
 
@@ -83,7 +84,7 @@ class MulticastTransport(Transport):
             receipt_frame = Frame('RECEIPT', {'receipt-id': f.headers['receipt']})
             lines = convert_frame(receipt_frame)
             self.send(encode(pack(lines)))
-        log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
+        logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
 
     def stop(self):
         self.running = False
