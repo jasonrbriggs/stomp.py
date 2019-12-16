@@ -2,10 +2,12 @@ import os
 import signal
 import time
 import unittest
+from unittest import mock
 
 import stomp
 from stomp import exception
 from stomp.backward import monotonic
+from stomp.constants import HDR_MESSAGE_ID, HDR_SUBSCRIPTION, CMD_NACK
 from stomp.listener import TestListener
 from stomp.test.testutils import *
 
@@ -147,6 +149,24 @@ class TestBasicSend(unittest.TestCase):
         subscription = headers['subscription']
 
         self.conn.nack(message_id, subscription)
+
+    def test_should_send_extra_header_clientnack(self):
+        queuename = '/queue/testclientnack-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client')
+
+        self.conn.send(body='this is a test', destination=queuename, receipt='123')
+
+        self.listener.wait_for_message()
+
+        (headers, _) = self.listener.get_latest_message()
+
+        message_id = headers['message-id']
+        subscription = headers['subscription']
+
+        with mock.patch.object(self.conn, "send_frame", wraps=self.conn.send_frame) as wrapped_send_frame:
+            self.conn.nack(message_id, subscription, requeue="false")
+            expected_headers = {HDR_MESSAGE_ID: message_id, HDR_SUBSCRIPTION: subscription, "requeue": "false"}
+            wrapped_send_frame.assert_called_with(CMD_NACK, expected_headers)
 
     def test_specialchars(self):
         queuename = '/queue/testspecialchars-%s' % self.timestamp
