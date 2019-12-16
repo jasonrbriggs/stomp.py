@@ -1,4 +1,3 @@
-import os
 import signal
 import time
 import unittest
@@ -6,7 +5,6 @@ from unittest import mock
 
 import stomp
 from stomp import exception
-from stomp.backward import monotonic
 from stomp.constants import HDR_MESSAGE_ID, HDR_SUBSCRIPTION, CMD_NACK
 from stomp.listener import TestListener
 from stomp.test.testutils import *
