@@ -24,8 +24,7 @@ install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
 test: travistests
-	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,ssl_sni_test
-	#$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,local_test
+	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,ssl_sni_test,local_test
 
 travistests:
 	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
@@ -59,4 +58,4 @@ docker-image:
 
 run-docker:
 	cd docker; \
-	docker run -it stomppy
+	docker run --name stomppy -it stomppy 

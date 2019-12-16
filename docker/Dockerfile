@@ -14,7 +14,7 @@ RUN apt install -y haproxy
 RUN rabbitmq-plugins enable rabbitmq_stomp
 
 RUN ln -s /etc/activemq/instances-available/main/ /etc/activemq/instances-enabled/
-RUN sed -i 's/<\/transportConnectors>/<transportConnector name="stomp" uri="stomp:\/\/172.17.0.2:62613"\/><transportConnector name="stomp+ssl" uri="stomp+ssl:\/\/172.17.0.2:62614"\/><\/transportConnectors>/g' /etc/activemq/instances-enabled/main/activemq.xml
+RUN sed -i 's/<\/transportConnectors>/<transportConnector name="stomp" uri="stomp:\/\/0.0.0.0:62613"\/><transportConnector name="stomp+ssl" uri="stomp+ssl:\/\/0.0.0.0:62614"\/><\/transportConnectors>/g' /etc/activemq/instances-enabled/main/activemq.xml
 RUN keytool -genkey -alias broker -keyalg RSA -keystore broker.ks -storepass changeit -dname "CN=test, OU=test, O=test, L=test, S=test, C=GB"
 RUN keytool -export -alias broker -keystore broker.ks -file broker_cert -storepass changeit
 ENV ACTIVEMQ_SSL_OPTS="-Djavax.net.ssl.keyStore=/broker.ks -Djavax.net.ssl.keyStorePassword=changeit"

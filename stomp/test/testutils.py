@@ -4,10 +4,12 @@ try:
     from configparser import RawConfigParser
 except ImportError:
     from ConfigParser import RawConfigParser
+import json
 import logging
 import os
 import re
 import socket
+from subprocess import run, PIPE
 import sys
 import threading
 
@@ -53,9 +55,19 @@ def get_default_password():
 
 
 def get_ipv6_host():
-    host = config.get('ipv6', 'host')
+    if config.has_option('ipv6', 'host'):
+        host = config.get('ipv6', 'host')
+    else:
+        result = run(['docker', 'ps', '-f', 'name=stomppy', '--format', '{{.ID}}'], stdout=PIPE)
+        container_id = result.stdout.decode('utf-8').rstrip()
+        result = run(['docker', 'inspect',  container_id], stdout=PIPE)
+        j = json.loads(result.stdout.decode('utf-8'))
+        j = j[0]
+        network = j["NetworkSettings"]
+        host = network["GlobalIPv6Address"]
     port = config.get('ipv6', 'port')
     return [(get_environ('IPV6_HOST') or host, int(get_environ('IPV6_PORT') or port))]
+
 
 
 def get_default_ssl_host():
