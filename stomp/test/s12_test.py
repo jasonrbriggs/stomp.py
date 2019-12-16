@@ -84,7 +84,7 @@ class Test12Connect(unittest.TestCase):
 
         with mock.patch.object(self.conn, "send_frame", wraps=self.conn.send_frame) as wrapped_send_frame:
             self.conn.nack(ack_id, requeue="false")
-            expected_headers = {HDR_ID: ack_id, "requeue": "false"}
+            expected_headers = {HDR_ID: ack_id.replace(':', '\\c'), "requeue": "false"}
             wrapped_send_frame.assert_called_with(CMD_NACK, expected_headers)
 
     def test_timeout(self):
