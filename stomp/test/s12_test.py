@@ -1,5 +1,9 @@
 import time
 import unittest
+from unittest import mock
+
+from stomp.constants import CMD_NACK, HDR_ID
+
 try:
     from unittest.mock import Mock
 except ImportError:
@@ -65,6 +69,23 @@ class Test12Connect(unittest.TestCase):
         ack_id = headers['ack']
 
         self.conn.nack(ack_id)
+
+    def test_should_send_extra_header_clientnack(self):
+        queuename = '/queue/testclientnack12-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client-individual')
+
+        self.conn.send(body='this is a test', destination=queuename, receipt='123')
+
+        self.listener.wait_for_message()
+
+        (headers, _) = self.listener.get_latest_message()
+
+        ack_id = headers['ack']
+
+        with mock.patch.object(self.conn, "send_frame", wraps=self.conn.send_frame) as wrapped_send_frame:
+            self.conn.nack(ack_id, requeue="false")
+            expected_headers = {HDR_ID: ack_id.replace(':', '\\c'), "requeue": "false"}
+            wrapped_send_frame.assert_called_with(CMD_NACK, expected_headers)
 
     def test_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)

@@ -355,17 +355,19 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
 
-    def nack(self, id, subscription, transaction=None, receipt=None):
+    def nack(self, id, subscription, transaction=None, receipt=None, **keyword_headers):
         """
         Let the server know that a message was not consumed.
 
         :param str id: the unique id of the message to nack
         :param str subscription: the subscription this message is associated with
         :param str transaction: include this nack in a named transaction
+        :param keyword_headers: any additional headers to send with the nack command
         """
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
         headers = {HDR_MESSAGE_ID: id, HDR_SUBSCRIPTION: subscription}
+        headers = utils.merge_headers([headers, keyword_headers])
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         if receipt:
@@ -465,15 +467,17 @@ class Protocol12(Protocol11):
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_ACK, headers)
 
-    def nack(self, id, transaction=None, receipt=None):
+    def nack(self, id, transaction=None, receipt=None, **keyword_headers):
         """
         Let the server know that a message was not consumed.
 
         :param str id: the unique id of the message to nack
         :param str transaction: include this nack in a named transaction
+        :param keyword_headers: any additional headers to send with the nack command
         """
         assert id is not None, "'id' is required"
         headers = {HDR_ID: id}
+        headers = utils.merge_headers([headers, keyword_headers])
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         if receipt:
