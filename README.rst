@@ -31,7 +31,6 @@ You can connect to a message broker running on the local machine, and send a mes
 
   conn = stomp.Connection()
   conn.set_listener('', MyListener())
-  conn.start()
   conn.connect('admin', 'password', wait=True)
   conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
   conn.disconnect()
