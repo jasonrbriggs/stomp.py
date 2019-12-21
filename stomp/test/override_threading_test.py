@@ -1,15 +1,10 @@
-import os
-import signal
 import time
-from time import monotonic
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 
 import stomp
-from stomp import exception
 from stomp.listener import TestListener
 from stomp.test.testutils import *
-
-from concurrent.futures import ThreadPoolExecutor
 
 executor = ThreadPoolExecutor()
 

@@ -1,5 +1,4 @@
 import unittest
-import uuid
 
 import stomp
 from stomp.listener import TestListener

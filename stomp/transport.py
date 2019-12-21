@@ -2,17 +2,14 @@
 """
 
 import errno
-from io import BytesIO
 import logging
 import math
 import random
-import re
-import socket
 import sys
-import threading
 import time
-from time import monotonic
 import warnings
+from io import BytesIO
+from time import monotonic
 
 try:
     import ssl
@@ -35,7 +32,6 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
-from stomp.constants import *
 import stomp.exception as exception
 import stomp.listener
 from stomp.utils import *

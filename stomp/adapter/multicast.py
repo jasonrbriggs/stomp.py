@@ -4,8 +4,6 @@ Obviously not a typical message broker, but convenient if you don't have a broke
 methods.
 """
 
-import logging
-import socket
 import struct
 
 from stomp.connect import BaseConnection

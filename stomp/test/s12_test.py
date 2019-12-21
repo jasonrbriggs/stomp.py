@@ -2,8 +2,6 @@ import time
 import unittest
 from unittest import mock
 
-from stomp.constants import CMD_NACK, HDR_ID
-
 try:
     from unittest.mock import Mock
 except ImportError:

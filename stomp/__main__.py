@@ -29,12 +29,12 @@ Options:
 """
 
 import base64
-from cmd import Cmd
 import json
 import os
 import re
 import sys
 import time
+from cmd import Cmd
 from functools import partial
 
 from docopt import docopt

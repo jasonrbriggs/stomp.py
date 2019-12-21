@@ -2,11 +2,9 @@ try:
     from queue import Empty, Full, Queue
 except ImportError:
     from Queue import Empty, Full, Queue
-import sys
-import threading
 import time
-from time import monotonic
 import unittest
+from time import monotonic
 
 import stomp
 from stomp.test.testutils import *

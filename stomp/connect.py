@@ -5,7 +5,6 @@ Provides connection classes for `1.0 <http://stomp.github.io/stomp-specification
 `1.2 <http://stomp.github.io/stomp-specification-1.2.html>`_ versions of the STOMP protocol.
 """
 
-from stomp.listener import *
 from stomp.protocol import *
 from stomp.transport import *
 from stomp.utils import get_uuid

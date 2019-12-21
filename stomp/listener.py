@@ -5,11 +5,11 @@ import logging
 import sys
 import threading
 import time
-
 from time import monotonic
-from stomp.constants import *
+
 import stomp.exception as exception
 import stomp.utils as utils
+from stomp.constants import *
 
 
 class Publisher(object):

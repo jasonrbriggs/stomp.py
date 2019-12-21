@@ -1,10 +1,9 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-from stomp.constants import *
+import stomp.utils as utils
 from stomp.exception import ConnectFailedException
 from stomp.listener import *
-import stomp.utils as utils
 
 
 class Protocol10(ConnectionListener):

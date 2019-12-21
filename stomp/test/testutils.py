@@ -6,12 +6,8 @@ except ImportError:
     from ConfigParser import RawConfigParser
 import json
 import logging
-import os
-import re
-import socket
-from subprocess import run, PIPE
 import sys
-import threading
+from subprocess import run, PIPE
 
 from stomp.utils import *
 

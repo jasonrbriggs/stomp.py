@@ -1,5 +1,3 @@
-import logging
-import time
 import traceback
 import unittest
 import xml.dom.minidom

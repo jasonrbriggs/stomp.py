@@ -2,8 +2,6 @@ try:
     from exceptions import AssertionError
 except ImportError:
     pass
-import logging
-import sys
 import time
 import unittest
 
