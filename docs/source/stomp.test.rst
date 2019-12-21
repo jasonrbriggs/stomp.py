@@ -36,26 +36,10 @@ stomp.test.multicast_test module
     :undoc-members:
     :show-inheritance:
 
-stomp.test.p2_backward_test module
-----------------------------------
-
-.. automodule:: stomp.test.p2_backward_test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 stomp.test.nonascii_test module
 ----------------------------------
 
 .. automodule:: stomp.test.nonascii_test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.test.p3_backward_test module
-----------------------------------
-
-.. automodule:: stomp.test.p3_backward_test
     :members:
     :undoc-members:
     :show-inheritance:
