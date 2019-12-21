@@ -6,13 +6,9 @@ import os
 import re
 import socket
 import threading
+import uuid
 
 from stomp.constants import *
-
-try:
-    import uuid
-except ImportError:
-    from backward import uuid
 
 # List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
