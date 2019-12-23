@@ -113,8 +113,7 @@ class TestNoResponseConnectionKill(unittest.TestCase):
             self.fail("Shouldn't happen")
 
 
-# here just for code coverage
-class TestColours(unittest.TestCase):
+class TestMiscellaneousLogic(unittest.TestCase):
     def setUp(self):
         platform.system = MagicMock(return_value="Windows")
 
