@@ -16,9 +16,6 @@ try:
 except:
     pass
 
-# Import this after configuring logging
-import stomp
-
 
 with io.open('README.rst', 'rt', encoding='utf8') as f:
     long_description = f.read()
@@ -39,8 +36,7 @@ class TestCommand(Command):
         try:
             import coverage
             omitted_files = [
-                '*site-packages*',
-                '*stomp/test/*'
+                '*site-packages*'
             ]
             cov = coverage.Coverage(data_file='.coverage.%s' % (len(cov_files)+1), omit=omitted_files)
             cov.start()
@@ -59,8 +55,6 @@ class TestCommand(Command):
 
         runner = unittest.TextTestRunner(verbosity=2)
         res = runner.run(suite)
-        if len(res.errors) > 0 or len(res.failures) > 0:
-            sys.exit(1)
 
         if cov:
             cov.stop()
@@ -105,6 +99,7 @@ class DoxygenCommand(Command):
 
 
 def version():
+    import stomp
     s = []
     for num in stomp.__version__:
         s.append(str(num))
