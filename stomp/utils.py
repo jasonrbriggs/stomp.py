@@ -104,7 +104,7 @@ LINE_END_RE = re.compile('\n|\r\n')
 ##
 # Used to replace the "passcode" to be dumped in the transport log (at debug level)
 #
-PASSCODE_RE = re.compile(r'\'passcode:[^\']*\'')
+PASSCODE_RE = re.compile(r'passcode:\s+[^\' ]+')
 
 ENC_NEWLINE = encode("\n")
 ENC_NULL = encode(NULL)
@@ -246,7 +246,7 @@ def clean_headers(headers):
 
 # lines: lines returned from a call to convert_frames
 def clean_lines(lines):
-    return re.sub(PASSCODE_RE, '\'passcode:********\\\\n\'', str(lines))
+    return re.sub(PASSCODE_RE, 'passcode:********', str(lines))
 
 
 def calculate_heartbeats(shb, chb):
