@@ -270,7 +270,7 @@ def calculate_heartbeats(shb, chb):
     return x, y
 
 
-def convert_frame(frame, body_encoding=None):
+def convert_frame(frame):
     """
     Convert a frame to a list of lines separated by newlines.
 
@@ -282,10 +282,7 @@ def convert_frame(frame, body_encoding=None):
 
     body = None
     if frame.body:
-        if body_encoding:
-            body = encode(frame.body, body_encoding)
-        else:
-            body = encode(frame.body)
+        body = encode(frame.body)
 
         if HDR_CONTENT_LENGTH in frame.headers:
             frame.headers[HDR_CONTENT_LENGTH] = len(body)

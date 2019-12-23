@@ -2,6 +2,7 @@
 
 from distutils.core import Command
 from setuptools import setup
+import glob
 import platform
 import io
 import logging
@@ -33,9 +34,15 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        cov_files = glob.glob('.coverage*')
+
         try:
             import coverage
-            cov = coverage.coverage()
+            omitted_files = [
+                '*site-packages*',
+                '*stomp/test/*'
+            ]
+            cov = coverage.Coverage(data_file='.coverage.%s' % (len(cov_files)+1), omit=omitted_files)
             cov.start()
         except ImportError:
             cov = None
@@ -58,7 +65,6 @@ class TestCommand(Command):
         if cov:
             cov.stop()
             cov.save()
-            cov.html_report(directory='../stomppy-docs/htmlcov')
 
 
 class TestPipInstallCommand(Command):

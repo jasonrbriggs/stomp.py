@@ -1,5 +1,8 @@
+import importlib
+import platform
 import traceback
 import unittest
+from unittest.mock import MagicMock
 import xml.dom.minidom
 
 import stomp
@@ -109,3 +112,17 @@ class TestNoResponseConnectionKill(unittest.TestCase):
         except Exception:
             self.fail("Shouldn't happen")
 
+
+# here just for code coverage
+class TestColours(unittest.TestCase):
+    def setUp(self):
+        platform.system = MagicMock(return_value="Windows")
+
+    def test_windows_colours(self):
+        import stomp.colours
+        importlib.reload(stomp.colours)
+
+        self.assertEquals("", stomp.colours.GREEN)
+        self.assertEquals("", stomp.colours.RED)
+        self.assertEquals("", stomp.colours.BOLD)
+        self.assertEquals("", stomp.colours.NO_COLOUR)

@@ -41,7 +41,7 @@ from docopt import docopt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from stomp.adapter.multicast import MulticastConnection
-import stomp.colors
+import stomp.colours
 import stomp.utils
 from stomp.connect import StompConnection10, StompConnection11, StompConnection12
 from stomp.listener import ConnectionListener, StatsListener
@@ -132,7 +132,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.stdout.write(str(msg) + end)
 
     def __error(self, msg, end="\n"):
-        self.stdout.write(stomp.colors.BOLD + stomp.colors.RED + str(msg) + stomp.colors.NO_COLOR + end)
+        self.stdout.write(stomp.colours.BOLD + stomp.colours.RED + str(msg) + stomp.colours.NO_COLOUR + end)
 
     def on_connecting(self, host_and_port):
         """
@@ -203,8 +203,8 @@ class StompCLI(Cmd, ConnectionListener):
         oparams = "\n\t" + "\n\t".join(optional)
 
         m = {
-            'hl': stomp.colors.BOLD + stomp.colors.GREEN,
-            'nc': stomp.colors.NO_COLOR,
+            'hl': stomp.colours.BOLD + stomp.colours.GREEN,
+            'nc': stomp.colours.NO_COLOUR,
             'usage': usage,
             'description': description,
             'required': rparams.rstrip(),
@@ -370,7 +370,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_version(self, args):
         self.__sysout('%s%s [Protocol version %s]%s' %
-                      (stomp.colors.BOLD, version_string, self.conn.version, stomp.colors.NO_COLOR))
+                      (stomp.colours.BOLD, version_string, self.conn.version, stomp.colours.NO_COLOUR))
     do_ver = do_version
 
     def help_version(self):

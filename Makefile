@@ -23,8 +23,13 @@ source:
 install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
-test: travistests
+cleantests:
+	coverage erase
+
+test: cleantests travistests
 	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,ssl_sni_test,local_test
+	coverage combine
+	coverage html -d ../stomppy-docs/htmlcov
 
 travistests:
 	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
