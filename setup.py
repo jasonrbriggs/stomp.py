@@ -71,10 +71,8 @@ class TestPipInstallCommand(Command):
         pass
 
     def run(self):
-        if sys.hexversion <= 33950192 or \
-            (platform.python_implementation() == 'PyPy' and sys.version_info.major == 3 and sys.version_info.minor < 3):
-            # spurious failure on py2.6, so drop out here
-            # also failing on pypy3 <3.2
+        if platform.python_implementation() == 'PyPy' and sys.version_info.major == 3 and sys.version_info.minor < 3:
+            # spurious failure pypy3 <3.2
             return
         if os.path.exists('tmp'):
             shutil.rmtree('tmp')
