@@ -1,27 +1,20 @@
 sudo: required
+
 language: python
+
 python:
   - "3.5"
   - "3.6"
   - "3.7"
   - "3.8"
   - "pypy3"
+
 services:
-  - rabbitmq
-addons:
-  apt:
-    packages:
-      - stompserver
-      - rabbitmq-server
-      - activemq
-env:
-  - RABBITMQ_HOST=localhost RABBITMQ_PORT=61613 RABBITMQ_USER=guest RABBITMQ_PASSWORD=guest STOMPSERVER_HOST=localhost STOMPSERVER_PORT=63613 STD_HOST=localhost STD_PORT=61613 STD_USER=guest STD_PASSWORD=guest STD_VHOST=/
-install:
-  - sudo service stompserver stop
-  - sudo rabbitmq-plugins enable rabbitmq_stomp
-  - sudo sed -i -e s/61613/$STOMPSERVER_PORT/ /etc/stompserver/stompserver.conf
-  - sudo service stompserver start
-  - pip install virtualenv-api
-  - pip install docopt
+  - docker
+
+before_install:
+  - docker build -t carlad/sinatra docker/
+  - docker run -d -p 127.0.0.1:61613:62613:62614:63613:64613 carlad/sinatra
+
 script:
   - make travistests
