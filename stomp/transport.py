@@ -358,7 +358,7 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notifyAll()
             logging.info("Receiver loop ended")
-            self.notify('receiver_loop_completed')
+            self.notify("receiver_loop_completed")
             if notify_disconnected and not self.__notified_on_disconnect:
                 self.notify('disconnected')
             with self.__connect_wait_condition:
@@ -383,6 +383,7 @@ class BaseTransport(stomp.listener.Publisher):
                 logging.debug("socket read error", exc_info=True)
                 c = b''
             if c is None or len(c) == 0:
+                logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
             if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
                 #
