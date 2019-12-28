@@ -63,4 +63,4 @@ docker-image:
 
 run-docker:
 	cd docker; \
-	docker run --name stomppy -it stomppy 
+	docker run -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy 

@@ -33,4 +33,10 @@ RUN cat tmp/cert2.pem tmp/key2.pem > tmp/mycom.pem
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY haproxy.sh /
 
+EXPOSE 61613/tcp
+EXPOSE 62613/tcp
+EXPOSE 62614/tcp
+EXPOSE 63613/tcp
+EXPOSE 64613/tcp
+
 ENTRYPOINT /etc/init.d/activemq start && /etc/init.d/stompserver start && /etc/init.d/rabbitmq-server start && /haproxy.sh && /bin/bash
