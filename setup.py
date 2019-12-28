@@ -6,15 +6,14 @@ import glob
 import platform
 import io
 import logging
+from logging import config
 import os
 import shutil
 import sys
 import unittest
 
-try:
-    logging.config.fileConfig('stomp.log.conf')
-except:
-    pass
+
+config.fileConfig('stomp.log.conf')
 
 
 with io.open('README.rst', 'rt', encoding='utf8') as f:
