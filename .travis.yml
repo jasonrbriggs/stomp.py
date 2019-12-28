@@ -12,9 +12,12 @@ python:
 services:
   - docker
 
+env:
+  - RABBITMQ_HOST=127.0.0.1 STOMPSERVER_HOST=127.0.0.1 STD_HOST=127.0.0.1 STD_VHOST=/
+
 before_install:
   - docker build -t carlad/sinatra docker/
-  - docker run -d -p 127.0.0.1:61613:62613:62614:63613:64613 carlad/sinatra
+  - docker run -d -p 127.0.0.1:61613:62613 -p 127.0.0.1::62614:62614 -p 127.0.0.1:63613:63613 -p 127.0.0.1:64613:64613 carlad/sinatra
 
 script:
   - make travistests
