@@ -11,6 +11,7 @@ Version 4.2.0 -
  * Simplify logging calls
  * Tidy up listeners (correct the behaviour of TestListener)
  * Fix problem with double-disconnect notification (ihttps://github.com/jasonrbriggs/stomp.py/issues/245)
+ * Fix docker and travis setup, so there are consistent builds both locally and via CI 
 
 
 Version 4.1.22 - Apr 2019

@@ -17,7 +17,7 @@ env:
 
 before_install:
   - docker build -t carlad/sinatra docker/
-  - docker run -d -p 127.0.0.1:61613:62613 -p 127.0.0.1:62614:62614 -p 127.0.0.1:63613:63613 -p 127.0.0.1:64613:64613 carlad/sinatra
+  - docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 carlad/sinatra
 
 script:
   - make travistests
