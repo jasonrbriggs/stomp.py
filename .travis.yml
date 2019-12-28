@@ -13,7 +13,7 @@ services:
   - docker
 
 env:
-  - RABBITMQ_HOST=127.0.0.1 STOMPSERVER_HOST=127.0.0.1 STD_HOST=127.0.0.1 STD_VHOST=/
+  - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/
 
 before_install:
   - docker build -t carlad/sinatra docker/
