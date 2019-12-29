@@ -1,4 +1,4 @@
-"""Color 'constants' used by the command line client.
+"""Colour 'constants' used by the command line client.
 """
 
 import platform
