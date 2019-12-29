@@ -32,9 +32,8 @@ test: cleantests travistests
 	coverage html -d ../stomppy-docs/htmlcov
 
 travistests:
-	$(PYTHON) setup.py test --test=basic_test
-	#$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
-	#$(PYTHON) setup.py piptest
+	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
+	$(PYTHON) setup.py piptest
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
@@ -59,9 +58,7 @@ release:
 	$(PYTHON) setup.py clean install sdist bdist_wheel upload
 
 docker-image:
-	cd docker; \
-	docker build -t stomppy .
+	docker build -t stomppy docker/
 
 run-docker:
-	cd docker; \
-	docker run -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy 
+	docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy 
