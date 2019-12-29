@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Quick start &#8212; Stomp 4.1.23 documentation</title>
+    <title>Quick start &#8212; Stomp 4.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Introduction to Stomp.py" href="intro.html" />
-    <link rel="prev" title="Stomp.py 4.1.23 documentation" href="index.html" />
+    <link rel="prev" title="Stomp.py 4.2.0 documentation" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -49,7 +49,6 @@
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">stomp</span><span class="o">.</span><span class="n">Connection</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">set_listener</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">MyListener</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ack</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
@@ -114,13 +113,14 @@ stomp --help
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction to Stomp.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Using the API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="commandline.html">Using the Command-line client application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="otherprojects.html">Other Projects/References</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Stomp.py 4.1.23 documentation</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Stomp.py 4.2.0 documentation</a></li>
       <li>Next: <a href="intro.html" title="next chapter">Introduction to Stomp.py</a></li>
   </ul></li>
 </ul>

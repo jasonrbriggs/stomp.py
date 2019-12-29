@@ -1,180 +1,266 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage report</title>
-    <link rel='stylesheet' href='style.css' type='text/css'>
-    
-    <script type='text/javascript' src='jquery.min.js'></script>
-    <script type='text/javascript' src='jquery.tablesorter.min.js'></script>
-    <script type='text/javascript' src='jquery.hotkeys.js'></script>
-    <script type='text/javascript' src='coverage_html.js'></script>
-    <script type='text/javascript' charset='utf-8'>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.ba-throttle-debounce.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
         jQuery(document).ready(coverage.index_ready);
     </script>
 </head>
-<body id='indexfile'>
-
-<div id='header'>
-    <div class='content'>
+<body class="indexfile">
+<div id="header">
+    <div class="content">
         <h1>Coverage report:
-            <span class='pc_cov'>49%</span>
+            <span class="pc_cov">82%</span>
         </h1>
-        <img id='keyboard_icon' src='keybd_closed.png'>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <form id="filter_container">
+            <input id="filter" type="text" value="" placeholder="filter..." />
+        </form>
     </div>
 </div>
-
-<div class='help_panel'>
-    <img id='panel_icon' src='keybd_open.png'>
-    <p class='legend'>Hot-keys on this page</p>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
     <div>
-    <p class='keyhelp'>
-        <span class='key'>n</span>
-        <span class='key'>s</span>
-        <span class='key'>m</span>
-        <span class='key'>x</span>
-        
-        <span class='key'>c</span> &nbsp; change column sorting
+    <p class="keyhelp">
+        <span class="key">n</span>
+        <span class="key">s</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">c</span> &nbsp; change column sorting
     </p>
     </div>
 </div>
-
-<div id='index'>
-    <table class='index'>
+<div id="index">
+    <table class="index">
         <thead>
-            
-            <tr class='tablehead' title='Click to sort'>
-                <th class='name left headerSortDown shortkey_n'>Module</th>
-                <th class='shortkey_s'>statements</th>
-                <th class='shortkey_m'>missing</th>
-                <th class='shortkey_x'>excluded</th>
-                
-                <th class='right shortkey_c'>coverage</th>
+            <tr class="tablehead" title="Click to sort">
+                <th class="name left headerSortDown shortkey_n">Module</th>
+                <th class="shortkey_s">statements</th>
+                <th class="shortkey_m">missing</th>
+                <th class="shortkey_x">excluded</th>
+                <th class="right shortkey_c">coverage</th>
             </tr>
         </thead>
-        
         <tfoot>
-            <tr class='total'>
-                <td class='name left'>Total</td>
-                <td>1277</td>
-                <td>648</td>
+            <tr class="total">
+                <td class="name left">Total</td>
+                <td>3019</td>
+                <td>544</td>
                 <td>0</td>
-                
-                <td class='right'>49%</td>
+                <td class="right" data-ratio="2475 3019">82%</td>
             </tr>
         </tfoot>
         <tbody>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_backward.html'>stomp/backward</a></td>
-                <td>13</td>
-                <td>11</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp___main___py.html">stomp/__main__.py</a></td>
+                <td>353</td>
+                <td>113</td>
                 <td>0</td>
-                
-                <td class='right'>15%</td>
+                <td class="right" data-ratio="240 353">68%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_backward3.html'>stomp/backward3</a></td>
-                <td>18</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_adapter_multicast_py.html">stomp/adapter/multicast.py</a></td>
+                <td>93</td>
+                <td>8</td>
+                <td>0</td>
+                <td class="right" data-ratio="85 93">91%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_colours_py.html">stomp/colours.py</a></td>
                 <td>10</td>
                 <td>0</td>
-                
-                <td class='right'>44%</td>
+                <td>0</td>
+                <td class="right" data-ratio="10 10">100%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_backwardsock26.html'>stomp/backwardsock26</a></td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_connect_py.html">stomp/connect.py</a></td>
+                <td>65</td>
+                <td>27</td>
+                <td>0</td>
+                <td class="right" data-ratio="38 65">58%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_listener_py.html">stomp/listener.py</a></td>
+                <td>279</td>
+                <td>96</td>
+                <td>0</td>
+                <td class="right" data-ratio="183 279">66%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_protocol_py.html">stomp/protocol.py</a></td>
+                <td>234</td>
+                <td>59</td>
+                <td>0</td>
+                <td class="right" data-ratio="175 234">75%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test___init___py.html">stomp/test/__init__.py</a></td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="1 1">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_basic_test_py.html">stomp/test/basic_test.py</a></td>
+                <td>166</td>
                 <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="163 166">98%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_cli_ssl_test_py.html">stomp/test/cli_ssl_test.py</a></td>
+                <td>26</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="26 26">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_cli_test_py.html">stomp/test/cli_test.py</a></td>
+                <td>190</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="190 190">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_local_test_py.html">stomp/test/local_test.py</a></td>
+                <td>26</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="26 26">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_misc_test_py.html">stomp/test/misc_test.py</a></td>
+                <td>92</td>
+                <td>7</td>
+                <td>0</td>
+                <td class="right" data-ratio="85 92">92%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_multicast_test_py.html">stomp/test/multicast_test.py</a></td>
+                <td>77</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="77 77">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_nonascii_test_py.html">stomp/test/nonascii_test.py</a></td>
+                <td>115</td>
+                <td>19</td>
+                <td>0</td>
+                <td class="right" data-ratio="96 115">83%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_rabbitmq_test_py.html">stomp/test/rabbitmq_test.py</a></td>
+                <td>23</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="23 23">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_s10_test_py.html">stomp/test/s10_test.py</a></td>
+                <td>34</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="34 34">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_s11_test_py.html">stomp/test/s11_test.py</a></td>
+                <td>74</td>
+                <td>24</td>
+                <td>0</td>
+                <td class="right" data-ratio="50 74">68%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_s12_test_py.html">stomp/test/s12_test.py</a></td>
+                <td>98</td>
+                <td>3</td>
+                <td>0</td>
+                <td class="right" data-ratio="95 98">97%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_ss_test_py.html">stomp/test/ss_test.py</a></td>
+                <td>107</td>
+                <td>6</td>
+                <td>0</td>
+                <td class="right" data-ratio="101 107">94%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_ssl_sni_test_py.html">stomp/test/ssl_sni_test.py</a></td>
+                <td>21</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="21 21">100%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_ssl_test_py.html">stomp/test/ssl_test.py</a></td>
+                <td>54</td>
                 <td>2</td>
                 <td>0</td>
-                
-                <td class='right'>33%</td>
+                <td class="right" data-ratio="52 54">96%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_connect.html'>stomp/connect</a></td>
-                <td>47</td>
-                <td>38</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_stompserver_test_py.html">stomp/test/stompserver_test.py</a></td>
+                <td>21</td>
                 <td>0</td>
-                
-                <td class='right'>19%</td>
-            </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_listener.html'>stomp/listener</a></td>
-                <td>184</td>
-                <td>141</td>
                 <td>0</td>
-                
-                <td class='right'>23%</td>
+                <td class="right" data-ratio="21 21">100%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_protocol.html'>stomp/protocol</a></td>
-                <td>213</td>
-                <td>143</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_testutils_py.html">stomp/test/testutils.py</a></td>
+                <td>158</td>
+                <td>15</td>
                 <td>0</td>
-                
-                <td class='right'>33%</td>
+                <td class="right" data-ratio="143 158">91%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_test___init__.html'>stomp/test/__init__</a></td>
-                <td>9</td>
-                <td>2</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_transport_test_py.html">stomp/test/transport_test.py</a></td>
+                <td>20</td>
                 <td>0</td>
-                
-                <td class='right'>78%</td>
-            </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_test_basic_test.html'>stomp/test/basic_test</a></td>
-                <td>155</td>
-                <td>5</td>
                 <td>0</td>
-                
-                <td class='right'>97%</td>
+                <td class="right" data-ratio="20 20">100%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_test_testutils.html'>stomp/test/testutils</a></td>
-                <td>120</td>
-                <td>69</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_test_utils_test_py.html">stomp/test/utils_test.py</a></td>
+                <td>74</td>
                 <td>0</td>
-                
-                <td class='right'>42%</td>
-            </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_transport.html'>stomp/transport</a></td>
-                <td>409</td>
-                <td>185</td>
                 <td>0</td>
-                
-                <td class='right'>55%</td>
+                <td class="right" data-ratio="74 74">100%</td>
             </tr>
-            
-            <tr class='file'>
-                <td class='name left'><a href='stomp_utils.html'>stomp/utils</a></td>
-                <td>106</td>
-                <td>42</td>
+            <tr class="file">
+                <td class="name left"><a href="stomp_transport_py.html">stomp/transport.py</a></td>
+                <td>448</td>
+                <td>154</td>
                 <td>0</td>
-                
-                <td class='right'>60%</td>
+                <td class="right" data-ratio="294 448">66%</td>
             </tr>
-            
+            <tr class="file">
+                <td class="name left"><a href="stomp_utils_py.html">stomp/utils.py</a></td>
+                <td>160</td>
+                <td>8</td>
+                <td>0</td>
+                <td class="right" data-ratio="152 160">95%</td>
+            </tr>
         </tbody>
     </table>
+    <p id="no_rows">
+        No items found using the specified filter.
+    </p>
 </div>
-
-<div id='footer'>
-    <div class='content'>
+<div id="footer">
+    <div class="content">
         <p>
-            <a class='nav' href='http://nedbatchelder.com/code/coverage'>coverage.py v3.7.1</a>
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.1</a>,
+            created at 2019-12-29 12:52
         </p>
     </div>
 </div>
-
 </body>
 </html>

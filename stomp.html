@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>stomp package &#8212; Stomp 4.1.23 documentation</title>
+    <title>stomp package &#8212; Stomp 4.2.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -46,240 +46,6 @@
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-stomp.backward">
-<span id="stomp-backward-module"></span><h2>stomp.backward module<a class="headerlink" href="#module-stomp.backward" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="stomp.backward.get_errno">
-<code class="descclassname">stomp.backward.</code><code class="descname">get_errno</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward.get_errno" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the errno of an exception, or the first argument if errno is not available.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>e</strong> (<em>Exception</em>) – the exception object</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-stomp.backward2">
-<span id="stomp-backward2-module"></span><h2>stomp.backward2 module<a class="headerlink" href="#module-stomp.backward2" title="Permalink to this headline">¶</a></h2>
-<p>Python2-specific versions of various functions used by stomp.py</p>
-<dl class="function">
-<dt id="stomp.backward2.decode">
-<code class="descclassname">stomp.backward2.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em>, <em>encoding=''</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode the byte data to a string - in the case of this Py2 version, we can’t really do anything (Py3 differs).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward2.encode">
-<code class="descclassname">stomp.backward2.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode the parameter as a byte string.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward2.input_prompt">
-<code class="descclassname">stomp.backward2.</code><code class="descname">input_prompt</code><span class="sig-paren">(</span><em>prompt</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.input_prompt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get user input</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward2.join">
-<code class="descclassname">stomp.backward2.</code><code class="descname">join</code><span class="sig-paren">(</span><em>chars=()</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.join" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join a sequence of characters into a string.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Rtype str:</th><td class="field-body"></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward2.pack">
-<code class="descclassname">stomp.backward2.</code><code class="descname">pack</code><span class="sig-paren">(</span><em>pieces=()</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward2.pack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join a sequence of strings together (note: py3 version differs)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-stomp.backward3">
-<span id="stomp-backward3-module"></span><h2>stomp.backward3 module<a class="headerlink" href="#module-stomp.backward3" title="Permalink to this headline">¶</a></h2>
-<p>Python3-specific versions of various functions used by stomp.py</p>
-<dl class="function">
-<dt id="stomp.backward3.decode">
-<code class="descclassname">stomp.backward3.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.decode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode the byte data to a string if not None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) – the data to decode</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward3.encode">
-<code class="descclassname">stomp.backward3.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode the parameter as a byte string.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> – the data to encode</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward3.input_prompt">
-<code class="descclassname">stomp.backward3.</code><code class="descname">input_prompt</code><span class="sig-paren">(</span><em>prompt</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.input_prompt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get user input</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prompt</strong> (<em>str</em>) – the prompt to display to the user</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward3.join">
-<code class="descclassname">stomp.backward3.</code><code class="descname">join</code><span class="sig-paren">(</span><em>chars=()</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.join" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join a sequence of characters into a string.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) – list of chars</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="stomp.backward3.pack">
-<code class="descclassname">stomp.backward3.</code><code class="descname">pack</code><span class="sig-paren">(</span><em>pieces=()</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backward3.pack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join a sequence of strings together.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) – list of strings</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-stomp.backwardsock">
-<span id="stomp-backwardsock-module"></span><h2>stomp.backwardsock module<a class="headerlink" href="#module-stomp.backwardsock" title="Permalink to this headline">¶</a></h2>
-<p>Networking functions to support backwards compatibility.</p>
-<p>Distinct from the backward(2/3) functions to handle ipv6 changes between Python versions 2.5 and 2.6.</p>
-</div>
-<div class="section" id="module-stomp.backwardsock25">
-<span id="stomp-backwardsock25-module"></span><h2>stomp.backwardsock25 module<a class="headerlink" href="#module-stomp.backwardsock25" title="Permalink to this headline">¶</a></h2>
-<p>Python2.5 (and lower) specific versions of various networking (ipv6) functions used by stomp.py</p>
-<dl class="function">
-<dt id="stomp.backwardsock25.get_socket">
-<code class="descclassname">stomp.backwardsock25.</code><code class="descname">get_socket</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backwardsock25.get_socket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a socket.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> (<em>str</em>) – the hostname to connect to</li>
-<li><strong>port</strong> (<em>int</em>) – the port number to connect to</li>
-<li><strong>timeout</strong> – if specified, set the socket timeout</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-stomp.backwardsock26">
-<span id="stomp-backwardsock26-module"></span><h2>stomp.backwardsock26 module<a class="headerlink" href="#module-stomp.backwardsock26" title="Permalink to this headline">¶</a></h2>
-<p>Python2.6 (and greater) specific versions of various networking (ipv6) functions used by stomp.py</p>
-<dl class="function">
-<dt id="stomp.backwardsock26.get_socket">
-<code class="descclassname">stomp.backwardsock26.</code><code class="descname">get_socket</code><span class="sig-paren">(</span><em>host</em>, <em>port</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.backwardsock26.get_socket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a socket connection.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>host</strong> (<em>str</em>) – the hostname to connect to</li>
-<li><strong>port</strong> (<em>int</em>) – the port number to connect to</li>
-<li><strong>timeout</strong> – if specified, set the socket timeout</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 <div class="section" id="module-stomp.colors">
 <span id="stomp-colors-module"></span><h2>stomp.colors module<a class="headerlink" href="#module-stomp.colors" title="Permalink to this headline">¶</a></h2>
@@ -368,18 +134,6 @@
 <dt id="stomp.connect.BaseConnection.set_ssl">
 <code class="descname">set_ssl</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.set_ssl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="stomp.connect.BaseConnection.start">
-<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="stomp.connect.BaseConnection.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -1112,7 +866,7 @@ received beyond the specified period.</p>
 <dl class="class">
 <dt id="stomp.listener.TestListener">
 <em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">TestListener</code><span class="sig-paren">(</span><em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.WaitingListener</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.WaitingListener</span></code></a>, <a class="reference internal" href="#stomp.listener.PrintingListener" title="stomp.listener.PrintingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.PrintingListener</span></code></a></p>
 <p>Implementation of StatsListener and WaitingListener. Useful for testing.</p>
 <dl class="method">
 <dt id="stomp.listener.TestListener.get_latest_message">
@@ -1120,9 +874,92 @@ received beyond the specified period.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="stomp.listener.TestListener.on_before_message">
+<code class="descname">on_before_message</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_before_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the STOMP connection before a message is returned to the client app. Returns a tuple
+containing the headers and body (so that implementing listeners can pre-process the content).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>headers</strong> (<em>dict</em>) – the message headers</li>
+<li><strong>body</strong> – the message body</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_connected">
+<code class="descname">on_connected</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_connected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the STOMP connection when a CONNECTED frame is
+received (after a connection has been established or
+re-established).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>headers</strong> (<em>dict</em>) – a dictionary containing all headers sent by the server as key/value pairs.</li>
+<li><strong>body</strong> – the frame’s payload. This is usually empty for CONNECTED frames.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_connecting">
+<code class="descname">on_connecting</code><span class="sig-paren">(</span><em>host_and_port</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_connecting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the connection count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_connecting" title="stomp.listener.ConnectionListener.on_connecting"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_connecting()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – the host and port as a tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_disconnected">
+<code class="descname">on_disconnected</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_disconnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the disconnect count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_disconnected" title="stomp.listener.ConnectionListener.on_disconnected"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_disconnected()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_error">
+<code class="descname">on_error</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the error count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_error" title="stomp.listener.ConnectionListener.on_error"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_error()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>headers</strong> (<em>dict</em>) – headers in the message</li>
+<li><strong>body</strong> – the message content</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="stomp.listener.TestListener.on_heartbeat">
 <code class="descname">on_heartbeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_heartbeat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increment the heartbeat count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat" title="stomp.listener.ConnectionListener.on_heartbeat"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_heartbeat_timeout">
+<code class="descname">on_heartbeat_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_heartbeat_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the heartbeat timeout. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_heartbeat_timeout" title="stomp.listener.ConnectionListener.on_heartbeat_timeout"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_heartbeat_timeout()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1137,6 +974,46 @@ received beyond the specified period.</p>
 <li><strong>message</strong> – </li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_receipt">
+<code class="descname">on_receipt</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_receipt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the STOMP connection when a RECEIPT frame is
+received, sent by the server if requested by the client using
+the ‘receipt’ header.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>headers</strong> (<em>dict</em>) – a dictionary containing all headers sent by the server as key/value pairs.</li>
+<li><strong>body</strong> – the frame’s payload. This is usually empty for RECEIPT frames.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_receiver_loop_completed">
+<code class="descname">on_receiver_loop_completed</code><span class="sig-paren">(</span><em>headers</em>, <em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_receiver_loop_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection receiver_loop has finished.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.TestListener.on_send">
+<code class="descname">on_send</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener.on_send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the send count. See <a class="reference internal" href="#stomp.listener.ConnectionListener.on_send" title="stomp.listener.ConnectionListener.on_send"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConnectionListener.on_send()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frame</strong> (<a class="reference internal" href="#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – </td>
 </tr>
 </tbody>
 </table>
@@ -1578,7 +1455,7 @@ be generated)</li>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol11.nack">
-<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>subscription</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.nack" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>subscription</em>, <em>transaction=None</em>, <em>receipt=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol11.nack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Let the server know that a message was not consumed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1588,6 +1465,7 @@ be generated)</li>
 <li><strong>id</strong> (<em>str</em>) – the unique id of the message to nack</li>
 <li><strong>subscription</strong> (<em>str</em>) – the subscription this message is associated with</li>
 <li><strong>transaction</strong> (<em>str</em>) – include this nack in a named transaction</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the nack command</li>
 </ul>
 </td>
 </tr>
@@ -1739,7 +1617,7 @@ through the underlying transport:</p>
 
 <dl class="method">
 <dt id="stomp.protocol.Protocol12.nack">
-<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em>, <em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.nack" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nack</code><span class="sig-paren">(</span><em>id</em>, <em>transaction=None</em>, <em>receipt=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.nack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Let the server know that a message was not consumed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1748,6 +1626,7 @@ through the underlying transport:</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>id</strong> (<em>str</em>) – the unique id of the message to nack</li>
 <li><strong>transaction</strong> (<em>str</em>) – include this nack in a named transaction</li>
+<li><strong>keyword_headers</strong> – any additional headers to send with the nack command</li>
 </ul>
 </td>
 </tr>
@@ -1965,7 +1844,8 @@ See <a class="reference internal" href="#stomp.listener.ConnectionListener" titl
 <code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.transport.BaseTransport.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the connection. This should be called after all
 listeners have been registered. If this method is not called,
-no frames will be received by the connection.</p>
+no frames will be received by the connection and no SSL/TLS
+handshake will occur.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2236,6 +2116,22 @@ calculate what the actual heartbeat settings should be.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="stomp.utils.decode">
+<code class="descclassname">stomp.utils.</code><code class="descname">decode</code><span class="sig-paren">(</span><em>byte_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode the byte data to a string if not None.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>byte_data</strong> (<em>bytes</em>) – the data to decode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="stomp.utils.default_create_thread">
 <code class="descclassname">stomp.utils.</code><code class="descname">default_create_thread</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.default_create_thread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default thread creation - used to create threads when the client doesn’t want to provide their
@@ -2245,6 +2141,36 @@ own thread creation.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>callback</strong> (<em>function</em>) – the callback function provided to threading.Thread</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="stomp.utils.encode">
+<code class="descclassname">stomp.utils.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>char_data</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode the parameter as a byte string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>char_data</strong> – the data to encode</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="stomp.utils.get_errno">
+<code class="descclassname">stomp.utils.</code><code class="descname">get_errno</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.get_errno" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the errno of an exception, or the first argument if errno is not available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>e</strong> (<em>Exception</em>) – the exception object</td>
 </tr>
 </tbody>
 </table>
@@ -2267,6 +2193,22 @@ as a sort key.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>host_and_port</strong> (<em>(</em><em>str</em><em>,</em><em>int</em><em>)</em>) – tuple containing host and port</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="stomp.utils.join">
+<code class="descclassname">stomp.utils.</code><code class="descname">join</code><span class="sig-paren">(</span><em>chars=()</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join a sequence of characters into a string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>chars</strong> (<em>bytes</em>) – list of chars</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>
@@ -2299,6 +2241,22 @@ as a sort key.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>header_map_list</strong> (<em>list</em><em>(</em><em>dict</em><em>)</em>) – list of maps</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="stomp.utils.pack">
+<code class="descclassname">stomp.utils.</code><code class="descname">pack</code><span class="sig-paren">(</span><em>pieces=()</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.pack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join a sequence of strings together.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pieces</strong> (<em>list</em>) – list of strings</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
 </tr>
 </tbody>
 </table>
