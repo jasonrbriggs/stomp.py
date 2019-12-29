@@ -17,7 +17,7 @@ env:
 
 before_install:
   - docker build -t stomppy docker/
-  - docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 stomppy
+  - docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy
   - docker ps
   - docker inspect stomppy
 
