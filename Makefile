@@ -66,3 +66,7 @@ run-docker:
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/rabbitmq-server start"
 	docker exec -it stomppy /bin/sh -c "start-stop-daemon --start --background --exec /usr/sbin/haproxy -- -f /etc/haproxy/haproxy.cfg"
+
+remove-docker:
+	docker stop stomppy
+	docker rm stomppy
