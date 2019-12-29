@@ -39,4 +39,5 @@ EXPOSE 62614/tcp
 EXPOSE 63613/tcp
 EXPOSE 64613/tcp
 
-ENTRYPOINT /etc/init.d/activemq start && /etc/init.d/stompserver start && /etc/init.d/rabbitmq-server start && /haproxy.sh && /bin/bash
+#ENTRYPOINT /etc/init.d/activemq start && /etc/init.d/stompserver start && /etc/init.d/rabbitmq-server start && /haproxy.sh && /bin/bash
+ENTRYPOINT /bin/bash
