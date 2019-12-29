@@ -2,18 +2,9 @@ Source: stomp.py
 Section: python
 Priority: optional
 Maintainer: Jason R Briggs <jasonrbriggs@gmail.com>
-X-Python-Version: >= 2.5
 X-Python3-Version: >= 3.2
 Build-Depends: debhelper ( >=9 ), dh-python, python-all, python-setuptools, python3-all, python3-setuptools
 Standards-Version: 3.9.7
-
-Package: python-stomp.py
-Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}
-Homepage: https://github.com/jasonrbriggs/stomp.py
-Description: Stomp client support for Python 2
- STOMP is the Simple (or Streaming) Text Orientated Messaging Protocol.
- This library provides Python 2 client support.
 
 Package: python3-stomp.py
 Architecture: all
