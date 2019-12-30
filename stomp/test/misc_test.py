@@ -126,6 +126,9 @@ class TestMiscellaneousLogic(unittest.TestCase):
         self.assertEquals("", stomp.colours.BOLD)
         self.assertEquals("", stomp.colours.NO_COLOUR)
 
+    # just here for coverage
     def test_publisher(self):
         p = Publisher()
         p.set_listener('test', None)
+        p.remove_listener('test')
+        self.assertIsNone(p.get_listener('test'))
