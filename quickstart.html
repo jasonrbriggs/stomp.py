@@ -36,38 +36,37 @@
 <p>Stomp.py is a Python library providing access to a message broker using the <a class="reference external" href="https://stomp.github.io">STOMP protocol</a> - either programmatically or using a command line client.</p>
 <div class="section" id="stomp-py-api">
 <h2>Stomp.py API<a class="headerlink" href="#stomp-py-api" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">time</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">stomp</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyListener</span><span class="p">(</span><span class="n">stomp</span><span class="o">.</span><span class="n">ConnectionListener</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;received an error &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;received a message &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span>
+<p>A simple example of creating a listener, sending and receiving a message using localhost with the default port (61613), can be seen here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">stomp</span><span class="o">.</span><span class="n">Connection</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">set_listener</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">MyListener</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ack</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">stomp</span>
+
+<span class="k">class</span> <span class="nc">MyListener</span><span class="p">(</span><span class="n">stomp</span><span class="o">.</span><span class="n">ConnectionListener</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;received an error &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;received a message &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">stomp</span><span class="o">.</span><span class="n">Connection</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">set_listener</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">MyListener</span><span class="p">())</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ack</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Assuming this was saved to stomptest.py, the code can be executed as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python stomptest.py This is a test
+received a message &quot;This is a test&quot;
 </pre></div>
 </div>
 </div>
 <div class="section" id="command-line-client">
 <h2>Command-line Client<a class="headerlink" href="#command-line-client" title="Permalink to this headline">¶</a></h2>
 <p>Assuming stomp.py is installed (using pip) in the site-packages directory (e.g. lib/python3.3/site-packages), hereby referred to as ${SITEPACKAGES}, then you can run the command line client as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python ${SITEPACKAGES}/stomp -H localhost -P 61613
-</pre></div>
-</div>
-<p>As of version 4.0.3, a stomp.py is also installed into the bin dir (at least on unix), so you can also run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="n">localhost</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613
 </pre></div>
 </div>
 <p>After a successful connection, you can type commands such as:</p>
@@ -76,13 +75,11 @@
 </pre></div>
 </div>
 <p>If you need to pass a username and password to the client:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python ${SITEPACKAGES}/stomp -H localhost -P 61613 -U admin -W password
-stomp -H localhost -P 61613 -U admin -W password
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613 -U admin -W password
 </pre></div>
 </div>
 <p>Type help for more information once you’re running the command-line interface, or run the following to see the list of startup arguments:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python ${SITEPACKAGES}/stomp --help
-stomp --help
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp --help
 </pre></div>
 </div>
 </div>
