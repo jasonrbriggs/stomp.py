@@ -9,7 +9,7 @@ from stomp.test.testutils import *
 
 class TestSSL(unittest.TestCase):
     def setUp(self):
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         self.listener = listener
         self.timestamp = time.strftime('%Y%m%d%H%M%S')
 

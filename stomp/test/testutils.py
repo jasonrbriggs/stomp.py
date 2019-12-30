@@ -1,28 +1,22 @@
+# -*- coding: utf8 -*-
+
 try:
     from configparser import RawConfigParser
 except ImportError:
     from ConfigParser import RawConfigParser
+import json
 import logging
-import os
-import re
-import socket
-import threading
+import sys
+from subprocess import run, PIPE
 
-from stomp.backward import *
-
-
-log = logging.getLogger('testutils.py')
+from stomp.utils import *
 
 config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
 
 header_re = re.compile(r'[^:]+:.*')
-
-
-if sys.hexversion >= 0x03000000:  # Python 3+
-    from stomp.test.p3testutils import *
-else:  # Python 2
-    from stomp.test.p2testutils import *
+test_text_for_utf8 = 'марко'
+test_text_for_utf16 = 'ǰ捁楴敶免'
 
 
 def get_environ(name):
@@ -57,9 +51,19 @@ def get_default_password():
 
 
 def get_ipv6_host():
-    host = config.get('ipv6', 'host')
+    if config.has_option('ipv6', 'host'):
+        host = config.get('ipv6', 'host')
+    else:
+        result = run(['docker', 'ps', '-f', 'name=stomppy', '--format', '{{.ID}}'], stdout=PIPE)
+        container_id = result.stdout.decode('utf-8').rstrip()
+        result = run(['docker', 'inspect',  container_id], stdout=PIPE)
+        j = json.loads(result.stdout.decode('utf-8'))
+        j = j[0]
+        network = j["NetworkSettings"]
+        host = network["GlobalIPv6Address"]
     port = config.get('ipv6', 'port')
     return [(get_environ('IPV6_HOST') or host, int(get_environ('IPV6_PORT') or port))]
+
 
 
 def get_default_ssl_host():
@@ -107,7 +111,7 @@ class TestStompServer(object):
         self.frames = []
 
     def start(self):
-        log.debug('Starting stomp server')
+        logging.debug('Starting stomp server')
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((self.host, self.port))
@@ -117,10 +121,10 @@ class TestStompServer(object):
         thread.daemon = True
         thread.start()
         self.stopped = False
-        log.debug('Stomp server started')
+        logging.debug('Stomp server started')
 
     def stop(self):
-        log.debug('Stopping test server')
+        logging.debug('Stopping test server')
         if self.conn:
             try:
                 self.conn.shutdown(socket.SHUT_WR)
@@ -133,7 +137,7 @@ class TestStompServer(object):
         self.conn = None
         self.s = None
         self.stopped = True
-        log.debug('Connection stopped')
+        logging.debug('Connection stopped')
 
     def get_next_frame(self):
         if len(self.frames) > 0:
@@ -158,14 +162,14 @@ class TestStompServer(object):
                     self.conn.send(encode(frame))
             except Exception:
                 _, e, _ = sys.exc_info()
-                log.debug(e)
+                logging.debug(e)
                 break
         try:
             self.conn.close()
         except:
             pass
         self.stopped = True
-        log.debug('Run loop completed')
+        logging.debug('Run loop completed')
 
 
 class TestStdin(object):

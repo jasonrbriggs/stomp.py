@@ -1,6 +1,7 @@
+import importlib
 import unittest
 
-from stomp.backward import *
+import stomp
 from stomp.utils import *
 
 
@@ -21,10 +22,7 @@ class TestUtils(unittest.TestCase):
 
         s = pack(lines)
 
-        if sys.hexversion >= 0x03000000:
-            self.assertEqual(bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
-        else:
-            self.assertEqual('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', s)
+        self.assertEqual(bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
 
     def test_parse_headers(self):
         lines = [
@@ -82,3 +80,52 @@ class TestUtils(unittest.TestCase):
     def test_clean_default_headers(self):
         Frame().headers['foo'] = 'bar'
         self.assertEqual(Frame().headers, {})
+
+    def test_join(self):
+        str = stomp.utils.join((b'a', b'b', b'c'))
+        self.assertEquals("abc", str)
+
+    def test_decode(self):
+        self.assertTrue(decode(None) is None)
+        self.assertEqual('test', decode(b'test'))
+
+    def test_encode(self):
+        self.assertEqual(b'test', encode('test'))
+        self.assertEqual(b'test', encode(b'test'))
+        self.assertRaises(TypeError, encode, None)
+
+    def test_pack(self):
+        self.assertEquals(b'testtest', pack([b'test', b'test']))
+
+    def test_should_skip_hostname_scan(self):
+        os.environ['STOMP_SKIP_HOSTNAME_SCAN'] = 'true'
+        importlib.reload(stomp.utils)
+
+        self.assertEquals(2, len(stomp.utils.LOCALHOST_NAMES))
+        self.assertTrue('localhost' in stomp.utils.LOCALHOST_NAMES)
+        self.assertTrue('127.0.0.1' in stomp.utils.LOCALHOST_NAMES)
+
+        del os.environ['STOMP_SKIP_HOSTNAME_SCAN']
+        importlib.reload(stomp.utils)
+
+        self.assertTrue(len(stomp.utils.LOCALHOST_NAMES) > 2)
+
+    def test_mask_passcodes(self):
+        lines = [
+            "test line 1",
+            "test line with passcode: somepassword",
+            "test line 3"
+        ]
+
+        lines = stomp.utils.clean_lines(lines)
+
+        self.assertEquals("""['test line 1', 'test line with passcode:********', 'test line 3']""", lines)
+
+    # just for coverage
+    def test_get_errno(self):
+        class ErrObj(object): pass
+
+        o = ErrObj()
+        o.args = ["a"]
+
+        self.assertEquals("a", stomp.utils.get_errno(o))

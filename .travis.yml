@@ -1,26 +1,25 @@
 sudo: required
+
 language: python
+
 python:
-  - "2.6"
-  - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
-  - "pypy-5.4"
+  - "3.7"
+  - "3.8"
+  - "pypy3"
+
 services:
-  - rabbitmq
-addons:
-  apt:
-    packages:
-      - stompserver
+  - docker
+
 env:
-  - RABBITMQ_HOST=localhost RABBITMQ_PORT=61613 RABBITMQ_USER=guest RABBITMQ_PASSWORD=guest STOMPSERVER_HOST=localhost STOMPSERVER_PORT=63613 STD_HOST=localhost STD_PORT=61613 STD_USER=guest STD_PASSWORD=guest STD_VHOST=/
-install:
-  - sudo service stompserver stop
-  - sudo rabbitmq-plugins enable rabbitmq_stomp
-  - sudo sed -i -e s/61613/$STOMPSERVER_PORT/ /etc/stompserver/stompserver.conf
-  - sudo service stompserver start
-  - pip install virtualenv-api
-  - pip install docopt
+  - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/ STOMP_PRINT_TO_LOG=true
+
+before_install:
+  - make docker-image
+  - make run-docker
+  - docker inspect stomppy
+  - docker logs stomppy
+
 script:
   - make travistests

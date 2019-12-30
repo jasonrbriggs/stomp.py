@@ -1,13 +1,9 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-from stomp.constants import *
+import stomp.utils as utils
 from stomp.exception import ConnectFailedException
 from stomp.listener import *
-import stomp.utils as utils
-
-
-log = logging.getLogger('stomp.py')
 
 
 class Protocol10(ConnectionListener):
@@ -135,7 +131,7 @@ class Protocol10(ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
-            log.debug('Not sending disconnect, already disconnected')
+            logging.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])
         rec = receipt or utils.get_uuid()
@@ -350,7 +346,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
-            log.debug('Not sending disconnect, already disconnected')
+            logging.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])
         rec = receipt or utils.get_uuid()
@@ -358,17 +354,19 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.set_receipt(rec, CMD_DISCONNECT)
         self.send_frame(CMD_DISCONNECT, headers)
 
-    def nack(self, id, subscription, transaction=None, receipt=None):
+    def nack(self, id, subscription, transaction=None, receipt=None, **keyword_headers):
         """
         Let the server know that a message was not consumed.
 
         :param str id: the unique id of the message to nack
         :param str subscription: the subscription this message is associated with
         :param str transaction: include this nack in a named transaction
+        :param keyword_headers: any additional headers to send with the nack command
         """
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
         headers = {HDR_MESSAGE_ID: id, HDR_SUBSCRIPTION: subscription}
+        headers = utils.merge_headers([headers, keyword_headers])
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         if receipt:
@@ -468,15 +466,17 @@ class Protocol12(Protocol11):
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_ACK, headers)
 
-    def nack(self, id, transaction=None, receipt=None):
+    def nack(self, id, transaction=None, receipt=None, **keyword_headers):
         """
         Let the server know that a message was not consumed.
 
         :param str id: the unique id of the message to nack
         :param str transaction: include this nack in a named transaction
+        :param keyword_headers: any additional headers to send with the nack command
         """
         assert id is not None, "'id' is required"
         headers = {HDR_ID: id}
+        headers = utils.merge_headers([headers, keyword_headers])
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         if receipt:

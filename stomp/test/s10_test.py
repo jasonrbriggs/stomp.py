@@ -10,7 +10,7 @@ class Test10Connect(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection10(get_default_host())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn

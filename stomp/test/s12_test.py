@@ -1,5 +1,7 @@
 import time
 import unittest
+from unittest import mock
+
 try:
     from unittest.mock import Mock
 except ImportError:
@@ -15,7 +17,7 @@ class Test12Connect(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection12(get_default_host(), vhost=get_default_vhost())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
@@ -66,6 +68,23 @@ class Test12Connect(unittest.TestCase):
 
         self.conn.nack(ack_id)
 
+    def test_should_send_extra_header_clientnack(self):
+        queuename = '/queue/testclientnack12-%s' % self.timestamp
+        self.conn.subscribe(destination=queuename, id=1, ack='client-individual')
+
+        self.conn.send(body='this is a test', destination=queuename, receipt='123')
+
+        self.listener.wait_for_message()
+
+        (headers, _) = self.listener.get_latest_message()
+
+        ack_id = headers['ack']
+
+        with mock.patch.object(self.conn, "send_frame", wraps=self.conn.send_frame) as wrapped_send_frame:
+            self.conn.nack(ack_id, requeue="false")
+            expected_headers = {HDR_ID: ack_id.replace(':', '\\c'), "requeue": "false"}
+            wrapped_send_frame.assert_called_with(CMD_NACK, expected_headers)
+
     def test_timeout(self):
         server = TestStompServer('127.0.0.1', 60000)
         try:
@@ -75,7 +94,7 @@ class Test12Connect(unittest.TestCase):
 message: connection failed\x00''')
 
             conn = stomp.Connection12([('127.0.0.1', 60000)])
-            listener = TestListener()
+            listener = TestListener(print_to_log=True)
             conn.set_listener('', listener)
             try:
                 conn.connect(wait=True)

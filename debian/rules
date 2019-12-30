@@ -3,4 +3,4 @@
 export PYBUILD_NAME=stomp.py
 
 %:
-	dh $@ --with=python2,python3 --buildsystem=pybuild
+	dh $@ --with=python3 --buildsystem=pybuild

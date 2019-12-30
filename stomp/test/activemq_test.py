@@ -12,7 +12,7 @@ class TestRabbitMQSend(unittest.TestCase):
 
     def testbasic(self):
         conn = stomp.Connection11(get_default_host())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')

@@ -47,3 +47,11 @@ tmp/
 docs/build
 
 .DS_Store
+.coverage*
+
+debian/python3-stomp.py/
+debian/.debhelper
+debian/python3-stomp.py.*
+debian/files
+.pybuild
+
