@@ -37,14 +37,14 @@ You can connect to a message broker running on the local machine, and send a mes
 
 Documentation and resources include:
 
-- `basic example of using stomp.py`_ with a message listener
+- a basic example of using stomp.py with a message listener (see the `quick start`_)
 - `command-line interface description`_
 - installation instructions and downloads on `PyPi stomp.py page`_
 - `API documentation`_
 - current `test coverage report`_
 - `travis`_ for continuous integration builds
 
-.. _`basic example of using stomp.py`: https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example
+.. _`quick start`: http://jasonrbriggs.github.io/stomp.py/quickstart.html
 .. _`command-line interface description`: http://jasonrbriggs.github.io/stomp.py/commandline.html
 .. _`PyPi stomp.py page`: https://pypi.org/project/stomp.py/
 .. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/index.html
