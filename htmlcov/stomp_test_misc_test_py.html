@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for stomp/test/misc_test.py: 92%</title>
+    <title>Coverage for stomp/test/misc_test.py: 93%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,12 +17,12 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>stomp/test/misc_test.py</b> :
-            <span class="pc_cov">92%</span>
+            <span class="pc_cov">93%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            92 statements &nbsp;
-            <span class="run shortkey_r button_toggle_run">85 run</span>
+            97 statements &nbsp;
+            <span class="run shortkey_r button_toggle_run">90 run</span>
             <span class="mis show_mis shortkey_m button_toggle_mis">7 missing</span>
             <span class="exc show_exc shortkey_x button_toggle_exc">0 excluded</span>
         </h2>
@@ -155,7 +155,7 @@
     <p id="t102" class="run"><span class="n"><a href="#t102">102</a></span><span class="t">    <span class="key">def</span> <span class="nam">test_noresponse</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t103" class="run"><span class="n"><a href="#t103">103</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t104" class="run"><span class="n"><a href="#t104">104</a></span><span class="t">            <span class="nam">conn</span> <span class="op">=</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">Connection</span><span class="op">(</span><span class="op">[</span><span class="op">(</span><span class="str">'127.0.0.1'</span><span class="op">,</span> <span class="num">60000</span><span class="op">)</span><span class="op">]</span><span class="op">,</span> <span class="nam">heartbeats</span><span class="op">=</span><span class="op">(</span><span class="num">1000</span><span class="op">,</span> <span class="num">1000</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t105" class="run"><span class="n"><a href="#t105">105</a></span><span class="t">            <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t105" class="run"><span class="n"><a href="#t105">105</a></span><span class="t">            <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="nam">print_to_log</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t106" class="run"><span class="n"><a href="#t106">106</a></span><span class="t">            <span class="nam">conn</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">''</span><span class="op">,</span> <span class="nam">listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t107" class="run"><span class="n"><a href="#t107">107</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">timeout_thread</span><span class="op">.</span><span class="nam">start</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t108" class="run"><span class="n"><a href="#t108">108</a></span><span class="t">            <span class="nam">conn</span><span class="op">.</span><span class="nam">connect</span><span class="op">(</span><span class="nam">wait</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -178,12 +178,19 @@
     <p id="t125" class="run"><span class="n"><a href="#t125">125</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEquals</span><span class="op">(</span><span class="str">""</span><span class="op">,</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">colours</span><span class="op">.</span><span class="nam">RED</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t126" class="run"><span class="n"><a href="#t126">126</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEquals</span><span class="op">(</span><span class="str">""</span><span class="op">,</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">colours</span><span class="op">.</span><span class="nam">BOLD</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t127" class="run"><span class="n"><a href="#t127">127</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEquals</span><span class="op">(</span><span class="str">""</span><span class="op">,</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">colours</span><span class="op">.</span><span class="nam">NO_COLOUR</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t128" class="pln"><span class="n"><a href="#t128">128</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t129" class="pln"><span class="n"><a href="#t129">129</a></span><span class="t">    <span class="com"># just here for coverage</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t130" class="run"><span class="n"><a href="#t130">130</a></span><span class="t">    <span class="key">def</span> <span class="nam">test_publisher</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t131" class="run"><span class="n"><a href="#t131">131</a></span><span class="t">        <span class="nam">p</span> <span class="op">=</span> <span class="nam">Publisher</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t132" class="run"><span class="n"><a href="#t132">132</a></span><span class="t">        <span class="nam">p</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">'test'</span><span class="op">,</span> <span class="key">None</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t133" class="run"><span class="n"><a href="#t133">133</a></span><span class="t">        <span class="nam">p</span><span class="op">.</span><span class="nam">remove_listener</span><span class="op">(</span><span class="str">'test'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t134" class="run"><span class="n"><a href="#t134">134</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertIsNone</span><span class="op">(</span><span class="nam">p</span><span class="op">.</span><span class="nam">get_listener</span><span class="op">(</span><span class="str">'test'</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.1</a>,
-            created at 2019-12-23 11:18
+            created at 2019-12-30 10:53
         </p>
     </div>
 </div>

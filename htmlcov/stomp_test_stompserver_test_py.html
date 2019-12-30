@@ -65,7 +65,7 @@
     <p id="t12" class="pln"><span class="n"><a href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t13" class="run"><span class="n"><a href="#t13">13</a></span><span class="t">    <span class="key">def</span> <span class="nam">testbasic</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t">        <span class="nam">conn</span> <span class="op">=</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">Connection10</span><span class="op">(</span><span class="nam">get_stompserver_host</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t">        <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="str">'123'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t">        <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="str">'123'</span><span class="op">,</span> <span class="nam">print_to_log</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t16" class="run"><span class="n"><a href="#t16">16</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">''</span><span class="op">,</span> <span class="nam">listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">connect</span><span class="op">(</span><span class="nam">wait</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">subscribe</span><span class="op">(</span><span class="nam">destination</span><span class="op">=</span><span class="str">'/queue/test'</span><span class="op">,</span> <span class="nam">ack</span><span class="op">=</span><span class="str">'auto'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -87,7 +87,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.1</a>,
-            created at 2019-12-23 10:27
+            created at 2019-12-30 10:43
         </p>
     </div>
 </div>

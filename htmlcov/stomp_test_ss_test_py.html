@@ -82,7 +82,7 @@
     <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t"><span class="str">\x00'''</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t31" class="run"><span class="n"><a href="#t31">31</a></span><span class="t">        <span class="nam">conn</span> <span class="op">=</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">Connection</span><span class="op">(</span><span class="op">[</span><span class="op">(</span><span class="str">'127.0.0.1'</span><span class="op">,</span> <span class="num">60000</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">        <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">        <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="nam">print_to_log</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t33" class="run"><span class="n"><a href="#t33">33</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">''</span><span class="op">,</span> <span class="nam">listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t34" class="run"><span class="n"><a href="#t34">34</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">connect</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -151,7 +151,7 @@
     <p id="t98" class="run"><span class="n"><a href="#t98">98</a></span><span class="t">        <span class="nam">expected_heartbeat_count</span> <span class="op">=</span> <span class="num">0</span>&nbsp;</span><span class="r"></span></p>
     <p id="t99" class="pln"><span class="n"><a href="#t99">99</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t100" class="run"><span class="n"><a href="#t100">100</a></span><span class="t">        <span class="nam">conn</span> <span class="op">=</span> <span class="nam">stomp</span><span class="op">.</span><span class="nam">Connection</span><span class="op">(</span><span class="op">[</span><span class="op">(</span><span class="str">'127.0.0.1'</span><span class="op">,</span> <span class="num">60000</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t101" class="run"><span class="n"><a href="#t101">101</a></span><span class="t">        <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t101" class="run"><span class="n"><a href="#t101">101</a></span><span class="t">        <span class="nam">listener</span> <span class="op">=</span> <span class="nam">TestListener</span><span class="op">(</span><span class="nam">print_to_log</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t102" class="run"><span class="n"><a href="#t102">102</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">''</span><span class="op">,</span> <span class="nam">listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t103" class="run"><span class="n"><a href="#t103">103</a></span><span class="t">        <span class="nam">conn</span><span class="op">.</span><span class="nam">connect</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t104" class="pln"><span class="n"><a href="#t104">104</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -246,7 +246,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.1</a>,
-            created at 2019-12-23 10:27
+            created at 2019-12-30 10:43
         </p>
     </div>
 </div>
