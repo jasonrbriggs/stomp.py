@@ -80,15 +80,12 @@ stomp.py has been perfunctorily tested on:
 
 For testing locally, you'll need docker:
 
-#. Create the docker image::
+#. Create the docker image:
         make docker-image
-#. Run the container
-    ::
+#. Run the container:
         make run-docker
-#. Run stomp.py unit tests
-    ::
+#. Run stomp.py unit tests:
         make test
-#. Cleanup the container afterwards if you don't need it any more
-    ::
+#. Cleanup the container afterwards if you don't need it any more:
         make remove-docker
 
