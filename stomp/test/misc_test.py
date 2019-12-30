@@ -1,15 +1,14 @@
-import time
+import importlib
+import platform
 import traceback
 import unittest
+from unittest.mock import MagicMock
 import xml.dom.minidom
 
 import stomp
 from stomp.exception import *
 from stomp.listener import *
 from stomp.test.testutils import *
-
-
-log = logging.getLogger('stomp.py')
 
 
 class TransformationListener(TestListener):
@@ -96,20 +95,40 @@ class TestNoResponseConnectionKill(unittest.TestCase):
 
     def timeout_server(self):
         time.sleep(3)
-        log.info('Stopping server')
+        logging.info('Stopping server')
         self.server.running = False
         self.server.stop()
 
     def test_noresponse(self):
         try:
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
-            listener = TestListener()
+            listener = TestListener(print_to_log=True)
             conn.set_listener('', listener)
             self.timeout_thread.start()
             conn.connect(wait=True)
             self.fail("Shouldn't happen")
         except ConnectFailedException:
-            log.info('Received connect failed - test success')
+            logging.info('Received connect failed - test success')
         except Exception:
             self.fail("Shouldn't happen")
 
+
+class TestMiscellaneousLogic(unittest.TestCase):
+    def setUp(self):
+        platform.system = MagicMock(return_value="Windows")
+
+    def test_windows_colours(self):
+        import stomp.colours
+        importlib.reload(stomp.colours)
+
+        self.assertEquals("", stomp.colours.GREEN)
+        self.assertEquals("", stomp.colours.RED)
+        self.assertEquals("", stomp.colours.BOLD)
+        self.assertEquals("", stomp.colours.NO_COLOUR)
+
+    # just here for coverage
+    def test_publisher(self):
+        p = Publisher()
+        p.set_listener('test', None)
+        p.remove_listener('test')
+        self.assertIsNone(p.get_listener('test'))

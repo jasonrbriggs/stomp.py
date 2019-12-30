@@ -1,7 +1,18 @@
-Version 4.1.23 -
+Version 4.2.0 - Jan 2020
 
  * Fix for credentials exposure (https://github.com/jasonrbriggs/stomp.py/pull/244)
  * Check for ``STOMP_SKIP_HOSTNAME_SCAN`` environment variable before extending ``LOCALHOST_NAMES``
+ * Remove python2 backwards compatibility
+ * Update dockerfile for better local testing
+ * Fix docker and travis setup, so there are consistent builds both locally and via CI 
+ * Drop deprecated start/stop methods from connection (issue https://github.com/jasonrbriggs/stomp.py/issues/257)
+ * Fix for missing return in get_ssl (https://github.com/jasonrbriggs/stomp.py/pull/258)
+ * Clear heartbeat event after heartbeat loop ends (https://github.com/jasonrbriggs/stomp.py/pull/260)
+ * Update listener to move receive/message_received/heartbeat_received vars inside the 'with' blocks (https://github.com/jasonrbriggs/stomp.py/pull/252)
+ * Simplify logging calls
+ * Tidy up listeners (correct the behaviour of TestListener)
+ * Fix problem with double-disconnect notification (ihttps://github.com/jasonrbriggs/stomp.py/issues/245)
+ * Add facility for PrintingListener to write to log rather than print statements
 
 
 Version 4.1.22 - Apr 2019
@@ -180,7 +191,7 @@ Version 4.1.2 - Jul 2015
 
 Version 4.1.1 - Jul 2015
 
- * Merge patches from Ville S covering invalid module references for colors in the CLI, fixing an attribute error and correctly
+ * Merge patches from Ville S covering invalid module references for colours in the CLI, fixing an attribute error and correctly
    invoking the python exe using sys.executable (https://github.com/jasonrbriggs/stomp.py/pull/41,
    https://github.com/jasonrbriggs/stomp.py/pull/42, https://github.com/jasonrbriggs/stomp.py/pull/43)
 

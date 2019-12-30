@@ -2,21 +2,18 @@
 
 from distutils.core import Command
 from setuptools import setup
+import glob
 import platform
 import io
-import logging.config
+import logging
+from logging import config
 import os
 import shutil
 import sys
 import unittest
 
-try:
-    logging.config.fileConfig('stomp.log.conf')
-except:
-    pass
 
-# Import this after configuring logging
-import stomp
+config.fileConfig('stomp.log.conf')
 
 
 with io.open('README.rst', 'rt', encoding='utf8') as f:
@@ -33,9 +30,14 @@ class TestCommand(Command):
         pass
 
     def run(self):
+        cov_files = glob.glob('.coverage*')
+
         try:
             import coverage
-            cov = coverage.coverage()
+            omitted_files = [
+                '*site-packages*'
+            ]
+            cov = coverage.Coverage(data_file='.coverage.%s' % (len(cov_files)+1), omit=omitted_files)
             cov.start()
         except ImportError:
             cov = None
@@ -43,7 +45,7 @@ class TestCommand(Command):
         suite = unittest.TestSuite()
         import stomp.test
         if self.test == '*':
-            print('Running all tests')
+            logging.info('Running all tests')
             tests = stomp.test.__all__
         else:
             tests = self.test.split(',')
@@ -52,13 +54,10 @@ class TestCommand(Command):
 
         runner = unittest.TextTestRunner(verbosity=2)
         res = runner.run(suite)
-        if len(res.errors) > 0 or len(res.failures) > 0:
-            sys.exit(1)
 
         if cov:
             cov.stop()
             cov.save()
-            cov.html_report(directory='../stomppy-docs/htmlcov')
 
 
 class TestPipInstallCommand(Command):
@@ -71,10 +70,8 @@ class TestPipInstallCommand(Command):
         pass
 
     def run(self):
-        if sys.hexversion <= 33950192 or \
-            (platform.python_implementation() == 'PyPy' and sys.version_info.major == 3 and sys.version_info.minor < 3):
-            # spurious failure on py2.6, so drop out here
-            # also failing on pypy3 <3.2
+        if platform.python_implementation() == 'PyPy' and sys.version_info.major == 3 and sys.version_info.minor < 3:
+            # spurious failure pypy3 <3.2
             return
         if os.path.exists('tmp'):
             shutil.rmtree('tmp')
@@ -99,6 +96,7 @@ class DoxygenCommand(Command):
 
 
 def version():
+    import stomp
     s = []
     for num in stomp.__version__:
         s.append(str(num))

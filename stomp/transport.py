@@ -2,16 +2,14 @@
 """
 
 import errno
-from io import BytesIO
 import logging
 import math
 import random
-import re
-import socket
 import sys
-import threading
 import time
 import warnings
+from io import BytesIO
+from time import monotonic
 
 try:
     import ssl
@@ -34,15 +32,9 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
-from stomp.backward import decode, encode, get_errno, monotonic, pack
-from stomp.backwardsock import get_socket
-from stomp.constants import *
 import stomp.exception as exception
 import stomp.listener
-import stomp.utils as utils
-
-
-log = logging.getLogger('stomp.py')
+from stomp.utils import *
 
 
 class BaseTransport(stomp.listener.Publisher):
@@ -74,9 +66,10 @@ class BaseTransport(stomp.listener.Publisher):
 
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
+        self.__notified_on_disconnect = False
 
         # function for creating threads used by the connection
-        self.create_thread_fc = utils.default_create_thread
+        self.create_thread_fc = default_create_thread
 
         self.__listeners_change_condition = threading.Condition()
         self.__receiver_thread_exit_condition = threading.Condition()
@@ -186,13 +179,13 @@ class BaseTransport(stomp.listener.Publisher):
         if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
             if frame_type == 'message':
                 (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
-            if log.isEnabledFor(logging.DEBUG):
-                log.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
+            if logging.isEnabledFor(logging.DEBUG):
+                logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
-                log.info("Received frame: %r, len(body)=%r", f.cmd, utils.length(f.body))
+                logging.info("Received frame: %r, len(body)=%r", f.cmd, length(f.body))
             self.notify(frame_type, f.headers, f.body)
         else:
-            log.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, utils.length(frame_str))
+            logging.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
 
     def notify(self, frame_type, headers=None, body=None):
         """
@@ -221,6 +214,7 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(True)
 
         elif frame_type == 'disconnected':
+            self.__notified_on_disconnect = True
             self.set_connected(False)
 
         with self.__listeners_change_condition:
@@ -232,7 +226,7 @@ class BaseTransport(stomp.listener.Publisher):
 
             notify_func = getattr(listener, 'on_%s' % frame_type, None)
             if not notify_func:
-                log.debug("listener %s has no method on_%s", listener, frame_type)
+                logging.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
             if frame_type in ('heartbeat', 'disconnected'):
                 notify_func()
@@ -271,13 +265,13 @@ class BaseTransport(stomp.listener.Publisher):
         if frame.cmd == CMD_DISCONNECT and HDR_RECEIPT in frame.headers:
             self.__disconnect_receipt = frame.headers[HDR_RECEIPT]
 
-        lines = utils.convert_frame(frame)
+        lines = convert_frame(frame)
         packed_frame = pack(lines)
 
-        if log.isEnabledFor(logging.DEBUG):
-            log.debug("Sending frame: %s", utils.clean_lines(lines))
+        if logging.isEnabledFor(logging.DEBUG):
+            logging.debug("Sending frame: %s", clean_lines(lines))
         else:
-            log.info("Sending frame: %r", frame.cmd or "heartbeat")
+            logging.info("Sending frame: %r", frame.cmd or "heartbeat")
         self.send(packed_frame)
 
     def send(self, encoded_frame):
@@ -333,7 +327,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Main loop listening for incoming data.
         """
-        log.info("Starting receiver loop")
+        logging.info("Starting receiver loop")
         notify_disconnected = True
         try:
             while self.running:
@@ -342,7 +336,7 @@ class BaseTransport(stomp.listener.Publisher):
                         frames = self.__read()
 
                         for frame in frames:
-                            f = utils.parse_frame(frame)
+                            f = parse_frame(frame)
                             if f is None:
                                 continue
                             if self.__auto_decode:
@@ -363,9 +357,9 @@ class BaseTransport(stomp.listener.Publisher):
             with self.__receiver_thread_exit_condition:
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notifyAll()
-            log.info("Receiver loop ended")
-            self.notify('receiver_loop_completed')
-            if notify_disconnected:
+            logging.info("Receiver loop ended")
+            self.notify("receiver_loop_completed")
+            if notify_disconnected and not self.__notified_on_disconnect:
                 self.notify('disconnected')
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
@@ -383,12 +377,13 @@ class BaseTransport(stomp.listener.Publisher):
                 try:
                     c = self.receive()
                 except exception.InterruptedException:
-                    log.debug("socket read interrupted, restarting")
+                    logging.debug("socket read interrupted, restarting")
                     continue
             except Exception:
-                log.debug("socket read error", exc_info=True)
+                logging.debug("socket read error", exc_info=True)
                 c = b''
             if c is None or len(c) == 0:
+                logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
             if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
                 #
@@ -415,7 +410,7 @@ class BaseTransport(stomp.listener.Publisher):
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
-                    preamble_end_match = utils.PREAMBLE_END_RE.search(frame)
+                    preamble_end_match = PREAMBLE_END_RE.search(frame)
                     if preamble_end_match:
                         preamble_end = preamble_end_match.start()
                         content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
@@ -528,7 +523,7 @@ class Transport(BaseTransport):
         # the list
         #
         if prefer_localhost:
-            sorted_host_and_ports.sort(key=utils.is_localhost)
+            sorted_host_and_ports.sort(key=is_localhost)
 
         #
         # If the user wishes to attempt connecting to local ports using the loopback interface, for each (host, port)
@@ -538,7 +533,7 @@ class Transport(BaseTransport):
         loopback_host_and_ports = []
         if try_loopback_connect:
             for host_and_port in sorted_host_and_ports:
-                if utils.is_localhost(host_and_port) == 1:
+                if is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
                     if not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
@@ -605,7 +600,7 @@ class Transport(BaseTransport):
                     # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
                     #
                     _, e, _ = sys.exc_info()
-                    log.warning(e)
+                    logging.warning(e)
             elif hasattr(socket, 'SHUT_RDWR'):
                 try:
                     self.socket.shutdown(socket.SHUT_RDWR)
@@ -613,7 +608,7 @@ class Transport(BaseTransport):
                     _, e, _ = sys.exc_info()
                     # ignore when socket already closed
                     if get_errno(e) != errno.ENOTCONN:
-                        log.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+                        logging.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
@@ -623,7 +618,7 @@ class Transport(BaseTransport):
                 self.socket.close()
             except socket.error:
                 _, e, _ = sys.exc_info()
-                log.warning("Unable to close socket because of error '%s'", e)
+                logging.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
         self.notify('disconnected')
@@ -638,7 +633,7 @@ class Transport(BaseTransport):
                     self.socket.sendall(encoded_frame)
             except Exception:
                 _, e, _ = sys.exc_info()
-                log.error("Error sending frame", exc_info=1)
+                logging.error("Error sending frame", exc_info=1)
                 raise e
         else:
             raise exception.NotConnectedException()
@@ -652,7 +647,7 @@ class Transport(BaseTransport):
         except socket.error:
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
-                log.debug("socket read interrupted, restarting")
+                logging.debug("socket read interrupted, restarting")
                 raise exception.InterruptedException()
             if self.is_connected():
                 raise
@@ -674,9 +669,9 @@ class Transport(BaseTransport):
                 return True  # no value to set always works
             try:
                 sock.setsockopt(fam, opt, val)
-                log.info("keepalive: set %r option to %r on socket", name, val)
+                logging.info("keepalive: set %r option to %r on socket", name, val)
             except:
-                log.error("keepalive: unable to set %r option to %r on socket", name, val)
+                logging.error("keepalive: unable to set %r option to %r on socket", name, val)
                 return False
             return True
 
@@ -693,22 +688,22 @@ class Transport(BaseTransport):
                 ka_sig = ka[0]
                 ka_args = ka[1:]
             except Exception:
-                log.error("keepalive: bad specification %r", ka)
+                logging.error("keepalive: bad specification %r", ka)
                 return
 
         if ka_sig == 'auto':
             if LINUX_KEEPALIVE_AVAIL:
                 ka_sig = 'linux'
                 ka_args = None
-                log.info("keepalive: autodetected linux-style support")
+                logging.info("keepalive: autodetected linux-style support")
             else:
-                log.error("keepalive: unable to detect any implementation, DISABLED!")
+                logging.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
 
         if ka_sig == 'linux':
-            log.info("keepalive: activating linux-style support")
+            logging.info("keepalive: activating linux-style support")
             if ka_args is None:
-                log.info("keepalive: using system defaults")
+                logging.info("keepalive: using system defaults")
                 ka_args = (None, None, None)
             lka_idle, lka_intvl, lka_cnt = ka_args
             if try_setsockopt(self.socket, 'enable', SOL_SOCKET, SO_KEEPALIVE, 1):
@@ -716,7 +711,7 @@ class Transport(BaseTransport):
                 try_setsockopt(self.socket, 'interval', SOL_TCP, TCP_KEEPINTVL, lka_intvl)
                 try_setsockopt(self.socket, 'count', SOL_TCP, TCP_KEEPCNT, lka_cnt)
         else:
-            log.error("keepalive: implementation %r not recognized or not supported", ka_sig)
+            logging.error("keepalive: implementation %r not recognized or not supported", ka_sig)
 
     def attempt_connection(self):
         """
@@ -731,8 +726,8 @@ class Transport(BaseTransport):
             self.__reconnect_attempts_max == -1 ):
             for host_and_port in self.__host_and_ports:
                 try:
-                    log.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
-                    self.socket = get_socket(host_and_port[0], host_and_port[1], self.__timeout)
+                    logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    self.socket = socket.create_connection(host_and_port, self.__timeout)
                     self.__enable_keepalive()
                     need_ssl = self.__need_ssl(host_and_port)
 
@@ -784,12 +779,12 @@ class Transport(BaseTransport):
                             raise SSLError("Server certificate validation failed: %s", errmsg)
 
                     self.current_host_and_port = host_and_port
-                    log.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except socket.error:
                     self.socket = None
                     connect_count += 1
-                    log.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
+                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
@@ -797,7 +792,7 @@ class Transport(BaseTransport):
                                        * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
                                   * (1.0 + random.random() * self.__reconnect_sleep_jitter))
                 sleep_end = monotonic() + sleep_duration
-                log.debug("Sleeping for %.1f seconds before attempting reconnect", sleep_duration)
+                logging.debug("Sleeping for %.1f seconds before attempting reconnect", sleep_duration)
                 while self.running and monotonic() < sleep_end:
                     time.sleep(0.2)
 

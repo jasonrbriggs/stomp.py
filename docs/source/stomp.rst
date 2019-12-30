@@ -12,58 +12,10 @@ Subpackages
 Submodules
 ----------
 
-stomp.backward module
----------------------
-
-.. automodule:: stomp.backward
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.backward2 module
-----------------------
-
-.. automodule:: stomp.backward2
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.backward3 module
-----------------------
-
-.. automodule:: stomp.backward3
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.backwardsock module
--------------------------
-
-.. automodule:: stomp.backwardsock
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.backwardsock25 module
----------------------------
-
-.. automodule:: stomp.backwardsock25
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.backwardsock26 module
----------------------------
-
-.. automodule:: stomp.backwardsock26
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-stomp.colors module
+stomp.colours module
 -------------------
 
-.. automodule:: stomp.colors
+.. automodule:: stomp.colours
     :members:
     :undoc-members:
     :show-inheritance:

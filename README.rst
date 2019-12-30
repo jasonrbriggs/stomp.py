@@ -12,7 +12,7 @@ stomp.py
 
 "stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ_, Apollo_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.
 
-**NOTE:** Stomp.py is officially ending support for Python2.x by Jan 2020. See `python3statement.org`_ for more information. 
+**NOTE:** Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
 
 .. _STOMP: http://stomp.github.io
 .. _`STOMP v1.0`: http://stomp.github.io/stomp-specification-1.0.html
@@ -31,7 +31,6 @@ You can connect to a message broker running on the local machine, and send a mes
 
   conn = stomp.Connection()
   conn.set_listener('', MyListener())
-  conn.start()
   conn.connect('admin', 'password', wait=True)
   conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
   conn.disconnect()
@@ -80,5 +79,17 @@ stomp.py has been perfunctorily tested on:
 
 .. _JBossMessaging: http://www.jboss.org/jbossmessaging
 
-For more info on setting up a local test server (using docker), contact the developer.
+For local testing:
 
+1. Create a docker image:
+```
+make docker-image
+```
+2. Run the container:
+```
+make run-docker
+```
+3. Run stomp.py unit tests:
+```
+make test
+```

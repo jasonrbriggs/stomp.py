@@ -4,11 +4,6 @@ PROJECT=stomp.py
 PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0])")
 PLATFORM := $(shell uname)
 
-ifeq ($(PYTHON_VERSION_MAJOR), 3)
-travistests: travistests-py3
-else
-travistests: travistests-py2
-endif
 
 all:
 	@echo "make source - Create source package"
@@ -28,19 +23,17 @@ source:
 install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
-test: travistests
-	$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,ssl_sni_test
-	#$(PYTHON) setup.py test --test=cli_ssl_test,multicast_test,ssl_test,local_test
+cleantests:
+	coverage erase
+
+test: cleantests travistests
+	$(PYTHON) setup.py test --test=local_test
+	coverage combine
+	coverage html -d ../stomppy-docs/htmlcov
 
 travistests:
-	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test
+	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test,cli_ssl_test,ssl_test,ssl_sni_test
 	$(PYTHON) setup.py piptest
-
-travistests-py2:
-	$(PYTHON) setup.py test --test=p2_backward_test
-
-travistests-py3:
-	$(PYTHON) setup.py test --test=p3_backward_test
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
@@ -48,26 +41,33 @@ buildrpm:
 builddeb:
 	# build the source package in the parent directory
 	# then rename it to project_version.orig.tar.gz
-	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../ --prune
+	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../
 	rename -f 's/$(PROJECT)-(.*)\.tar\.gz/$(PROJECT)_$$1\.orig\.tar\.gz/' ../*
 	# build the package
-	dpkg-buildpackage -i -I -rfakeroot
+	dpkg-buildpackage -kjasonrbriggs@gmail.com -i -I -rfakeroot
 
 clean:
 ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
 endif
 	$(PYTHON) setup.py clean
-	rm -rf build/ MANIFEST dist/
+	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/
 	find . -name '*.pyc' -delete
 
 release:
 	$(PYTHON) setup.py clean install sdist bdist_wheel upload
 
 docker-image:
-	cd docker; \
-	docker build -t stomppy .
+	docker build -t stomppy docker/
 
 run-docker:
-	cd docker; \
-	docker run -it stomppy
+	docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy 
+	docker ps
+	docker exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
+	docker exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
+	docker exec -it stomppy /bin/sh -c "/etc/init.d/rabbitmq-server start"
+	docker exec -it stomppy /bin/sh -c "start-stop-daemon --start --background --exec /usr/sbin/haproxy -- -f /etc/haproxy/haproxy.cfg"
+
+remove-docker:
+	docker stop stomppy
+	docker rm stomppy

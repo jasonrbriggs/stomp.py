@@ -4,6 +4,7 @@ import unittest
 
 from stomp.__main__ import StompCLI
 from stomp.test.testutils import *
+from stomp.adapter import multicast
 
 username = get_default_user()
 password = get_default_password()
@@ -27,6 +28,34 @@ class TestCLI(unittest.TestCase):
 
     def setUp(self):
         pass
+
+    def test_invalid_version(self):
+        with self.assertRaises(RuntimeError) as _:
+            StompCLI(host, port, username, password, 'invalid')
+
+    def test_help(self):
+        teststdin = TestStdin()
+
+        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin)
+
+        cli.help_help()
+        cli.help_quit()
+        cli.help_exit()
+        cli.help_EOF()
+        cli.help_subscribe()
+        cli.help_unsubscribe()
+        cli.help_send()
+        cli.help_sendrec()
+        cli.help_sendreply()
+        cli.help_sendfile()
+        cli.help_version()
+        cli.help_ack()
+        cli.help_nack()
+        cli.help_abort()
+        cli.help_commit()
+        cli.help_stats()
+        cli.help_run()
+        cli.help_begin()
 
     def testsubscribe(self):
         teststdin = TestStdin()
@@ -56,7 +85,7 @@ class TestCLI(unittest.TestCase):
 
         teststdout.expect('CONNECTED')
 
-        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
+        cli = StompCLI(host, port, username, password, '1.1', stdin=teststdin, stdout=teststdout)
 
         time.sleep(3)
 
@@ -75,10 +104,16 @@ class TestCLI(unittest.TestCase):
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
 
-        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
+        cli = StompCLI(host, port, username, password, '1.2', stdin=teststdin, stdout=teststdout)
 
         time.sleep(3)
 
+        teststdout.expect('Subscribing to "/queue/testsendfile" with acknowledge set to "auto", id set to "1"')
+        cli.onecmd('subscribe /queue/testsendfile')
+
+        time.sleep(3)
+
+        teststdout.expect('MESSAGE')
         cli.onecmd('sendfile /queue/testsendfile %s' % f.name)
 
         time.sleep(3)
@@ -93,7 +128,7 @@ class TestCLI(unittest.TestCase):
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
 
-        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
+        cli = StompCLI(host, port, username, password, '1.2', stdin=teststdin, stdout=teststdout)
 
         time.sleep(3)
 
@@ -109,7 +144,7 @@ class TestCLI(unittest.TestCase):
         teststdout = TestStdout(self)
         teststdout.expect('CONNECTED')
 
-        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
+        cli = StompCLI(host, port, username, password, '1.2', stdin=teststdin, stdout=teststdout)
 
         time.sleep(3)
 
@@ -222,6 +257,22 @@ class TestCLI(unittest.TestCase):
         teststdout.expect('Unsubscribing from "/queue/testfile"')
 
         cli.do_run(f.name)
+
+        teststdout.expect('Shutting down, please wait')
+        cli.onecmd('quit')
+
+    def test_multicast(self):
+        teststdin = TestStdin()
+        teststdout = TestStdout(self)
+        teststdout.expect('CONNECTED')
+
+        cli = StompCLI(None, None, None, None, 'multicast', stdin=teststdin, stdout=teststdout)
+
+        teststdout.expect('Subscribing to "/queue/testmulticastclisubscribe" with acknowledge set to "auto", id set to "1"')
+        cli.onecmd('subscribe /queue/testmulticastclisubscribe')
+        teststdout.expect('MESSAGE')
+        teststdout.expect('this is a test')
+        cli.onecmd('send /queue/testsubscribe this is a test')
 
         teststdout.expect('Shutting down, please wait')
         cli.onecmd('quit')

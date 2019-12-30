@@ -5,7 +5,6 @@ Provides connection classes for `1.0 <http://stomp.github.io/stomp-specification
 `1.2 <http://stomp.github.io/stomp-specification-1.2.html>`_ versions of the STOMP protocol.
 """
 
-from stomp.listener import *
 from stomp.protocol import *
 from stomp.transport import *
 from stomp.utils import get_uuid
@@ -53,18 +52,6 @@ class BaseConnection(Publisher):
         :rtype: ConnectionListener
         """
         return self.transport.get_listener(name)
-
-    def start(self):
-        """
-        Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)
-        """
-        pass
-
-    def stop(self):
-        """
-        Deprecated. Still included to provide backwards compatibility with previous versions of stomp.py (no longer required)
-        """
-        pass
 
     def is_connected(self):
         """
@@ -129,7 +116,8 @@ class StompConnection10(BaseConnection, Protocol10):
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol10.disconnect(self, receipt, headers, **keyword_headers)
-        self.transport.stop()
+        if receipt is not None:
+            self.transport.stop()
 
 
 class StompConnection11(BaseConnection, Protocol11):
@@ -182,7 +170,8 @@ class StompConnection11(BaseConnection, Protocol11):
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
-        self.transport.stop()
+        if receipt is not None:
+            self.transport.stop()
 
 
 class StompConnection12(BaseConnection, Protocol12):
@@ -235,4 +224,5 @@ class StompConnection12(BaseConnection, Protocol12):
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
-        self.transport.stop()
+        if receipt is not None:
+            self.transport.stop()

@@ -1,11 +1,11 @@
-import os
 import signal
 import time
 import unittest
+from unittest.mock import MagicMock
+from time import monotonic
 
 import stomp
 from stomp import exception
-from stomp.backward import monotonic
 from stomp.listener import TestListener
 from stomp.test.testutils import *
 
@@ -14,7 +14,7 @@ class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection(get_default_host())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
@@ -191,20 +191,44 @@ class TestConnectionErrors(unittest.TestCase):
         except:
             self.fail("Shouldn't happen")
 
+
 class TestContext(unittest.TestCase):
     def setUp(self):
         self.timestamp = time.strftime('%Y%m%d%H%M%S')
 
-    def test_with_context(self):
-        with stomp.Connection(get_default_host()) as conn:
-            self.listener = TestListener('123')
-            conn.set_listener('', self.listener)
-            conn.connect(get_default_user(), get_default_password(), wait=True)
 
-            queuename = '/queue/test1-%s' % self.timestamp
-            conn.subscribe(destination=queuename, id=1, ack='auto')
-            conn.send(body='this is a test', destination=queuename, receipt='123')
-            self.listener.wait_for_message()
+    def send_test_message(self, conn):
+        self.listener = TestListener('123', print_to_log=True)
+        conn.set_listener('testlistener', self.listener)
+        conn.connect(get_default_user(), get_default_password(), wait=True)
 
+        queuename = '/queue/test1-%s' % self.timestamp
+        conn.subscribe(destination=queuename, id=1, ack='auto')
+        conn.send(body='this is a test', destination=queuename, receipt='123')
+        self.listener.wait_for_message()
+
+    def post_test_message(self, conn):
+        conn.remove_listener('testlistener')
+        pass
+
+    def check_asserts(self):
         self.assertTrue(self.listener.connections == 1, 'should have received 1 connection acknowledgement')
         self.assertTrue(self.listener.disconnects >= 1, 'should have received 1 disconnect')
+
+    def test_with_context_stomp11(self):
+        with stomp.Connection11(get_default_host()) as conn:
+            self.send_test_message(conn)
+        self.check_asserts()
+        self.post_test_message(conn)
+
+    def test_with_context_stomp10(self):
+        with stomp.Connection10(get_default_host()) as conn:
+            self.send_test_message(conn)
+        self.check_asserts()
+        self.post_test_message(conn)
+
+    def test_with_context_stomp12(self):
+        with stomp.Connection12(get_default_host()) as conn:
+            self.send_test_message(conn)
+        self.check_asserts()
+        self.post_test_message(conn)

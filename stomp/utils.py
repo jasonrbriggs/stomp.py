@@ -6,20 +6,17 @@ import os
 import re
 import socket
 import threading
+import uuid
 
-from stomp.backward import encode, decode, NULL
 from stomp.constants import *
-
-try:
-    import uuid
-except ImportError:
-    from backward import uuid
 
 # List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
 # and external interfaces).  This is used for determining
 # preferred targets.
 LOCALHOST_NAMES = ["localhost", "127.0.0.1"]
+
+NULL = b'\x00'
 
 if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
     try:
@@ -36,6 +33,58 @@ if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
         LOCALHOST_NAMES.append(socket.getfqdn(socket.gethostname()))
     except Exception:
         pass
+
+
+def decode(byte_data, encoding='utf-8'):
+    """
+    Decode the byte data to a string if not None.
+
+    :param bytes byte_data: the data to decode
+
+    :rtype: str
+    """
+    if byte_data is None:
+        return None
+    return byte_data.decode(encoding, errors='replace')
+
+
+def encode(char_data, encoding='utf-8'):
+    """
+    Encode the parameter as a byte string.
+
+    :param char_data: the data to encode
+
+    :rtype: bytes
+    """
+    if type(char_data) is str:
+        return char_data.encode(encoding, errors='replace')
+    elif type(char_data) is bytes:
+        return char_data
+    else:
+        raise TypeError('message should be a string or bytes, found %s' % type(char_data))
+
+
+def pack(pieces=()):
+    """
+    Join a sequence of strings together.
+
+    :param list pieces: list of strings
+
+    :rtype: bytes
+    """
+    return b''.join(pieces)
+
+
+def join(chars=()):
+    """
+    Join a sequence of characters into a string.
+
+    :param bytes chars: list of chars
+
+    :rtype: str
+    """
+    return b''.join(chars).decode()
+
 
 ##
 # Used to parse STOMP header lines in the format "key:value",
@@ -55,7 +104,7 @@ LINE_END_RE = re.compile('\n|\r\n')
 ##
 # Used to replace the "passcode" to be dumped in the transport log (at debug level)
 #
-PASSCODE_RE = re.compile(r'\'passcode:[^\']*\'')
+PASSCODE_RE = re.compile(r'passcode:\s+[^\' ]+')
 
 ENC_NEWLINE = encode("\n")
 ENC_NULL = encode(NULL)
@@ -197,7 +246,7 @@ def clean_headers(headers):
 
 # lines: lines returned from a call to convert_frames
 def clean_lines(lines):
-    return re.sub(PASSCODE_RE, '\'passcode:********\\\\n\'', str(lines))
+    return re.sub(PASSCODE_RE, 'passcode:********', str(lines))
 
 
 def calculate_heartbeats(shb, chb):
@@ -221,7 +270,7 @@ def calculate_heartbeats(shb, chb):
     return x, y
 
 
-def convert_frame(frame, body_encoding=None):
+def convert_frame(frame):
     """
     Convert a frame to a list of lines separated by newlines.
 
@@ -233,10 +282,7 @@ def convert_frame(frame, body_encoding=None):
 
     body = None
     if frame.body:
-        if body_encoding:
-            body = encode(frame.body, body_encoding)
-        else:
-            body = encode(frame.body)
+        body = encode(frame.body)
 
         if HDR_CONTENT_LENGTH in frame.headers:
             frame.headers[HDR_CONTENT_LENGTH] = len(body)
@@ -292,3 +338,15 @@ class Frame(object):
 
 def get_uuid():
     return str(uuid.uuid4())
+
+
+def get_errno(e):
+    """
+    Return the errno of an exception, or the first argument if errno is not available.
+
+    :param Exception e: the exception object
+    """
+    try:
+        return e.errno
+    except AttributeError:
+        return e.args[0]
