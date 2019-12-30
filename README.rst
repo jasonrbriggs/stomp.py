@@ -80,8 +80,7 @@ stomp.py has been perfunctorily tested on:
 
 For testing locally, you'll need docker:
 
-#. Create the docker image
-    ::
+#. Create the docker image::
         make docker-image
 #. Run the container
     ::
