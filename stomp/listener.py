@@ -13,13 +13,6 @@ import stomp.utils as utils
 from stomp.constants import *
 
 
-def print_out(msg, *args):
-    if os.environ.get('STOMP_PRINT_TO_LOG'):
-        logging.info(msg, *args)
-    else:
-        print(msg % args)
-
-
 class Publisher(object):
     """
     Simply a registry of listeners.
@@ -453,31 +446,40 @@ Errors: %s''' % (self.connections, self.disconnects, self.messages_sent, self.me
 
 
 class PrintingListener(ConnectionListener):
+    def __init__(self, print_to_log=False):
+        self.print_to_log = print_to_log
+
+    def __print(self, msg, *args):
+        if self.print_to_log:
+            logging.info(msg, *args)
+        else:
+            print(msg % args)
+
     def on_connecting(self, host_and_port):
         """
         :param (str,int) host_and_port:
         """
-        print_out('on_connecting %s %s', *host_and_port)
+        self.__print('on_connecting %s %s', *host_and_port)
 
     def on_connected(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        print_out('on_connected %s %s', headers, body)
+        self.__print('on_connected %s %s', headers, body)
 
     def on_disconnected(self):
-        print_out('on_disconnected')
+        self.__print('on_disconnected')
 
     def on_heartbeat_timeout(self):
-        print_out('on_heartbeat_timeout')
+        self.__print('on_heartbeat_timeout')
 
     def on_before_message(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        print_out('on_before_message %s %s', headers, body)
+        self.__print('on_before_message %s %s', headers, body)
         return headers, body
 
     def on_message(self, headers, body):
@@ -485,30 +487,30 @@ class PrintingListener(ConnectionListener):
         :param dict headers:
         :param body:
         """
-        print_out('on_message %s %s', headers, body)
+        self.__print('on_message %s %s', headers, body)
 
     def on_receipt(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        print_out('on_receipt %s %s', headers, body)
+        self.__print('on_receipt %s %s', headers, body)
 
     def on_error(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        print_out('on_error %s %s', headers, body)
+        self.__print('on_error %s %s', headers, body)
 
     def on_send(self, frame):
         """
         :param Frame frame:
         """
-        print_out('on_send %s %s %s', frame.cmd, utils.clean_headers(frame.headers), frame.body)
+        self.__print('on_send %s %s %s', frame.cmd, utils.clean_headers(frame.headers), frame.body)
 
     def on_heartbeat(self):
-        print_out('on_heartbeat')
+        self.__print('on_heartbeat')
 
 
 class TestListener(StatsListener, WaitingListener, PrintingListener):
