@@ -54,7 +54,7 @@ Documentation and resources include:
 
 Current version supports:
 
-- Python 2.x and 3.x
+- Python 3.x (Python2 support ended as of Jan 2020)
 - STOMP version 1.0, 1.1 and 1.2
 
 There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on PyPi`_ and `3.1.7 on GitHub`_).
@@ -69,19 +69,18 @@ stomp.py has been perfunctorily tested on:
 - RabbitMQ_
 - stompserver_
 
-
 .. _ActiveMQ: http://activemq.apache.org/
 .. _Apollo: http://activemq.apache.org/apollo/
 .. _RabbitMQ: http://www.rabbitmq.com
 .. _stompserver: http://stompserver.rubyforge.org
 
-`stomp.py` has been reported to work with JBossMessaging_ in the distant past.
+`stomp.py` has been reported to work with JBossMessaging_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
 
 .. _JBossMessaging: http://www.jboss.org/jbossmessaging
 
-For local testing:
+For testing locally, you'll need docker:
 
-#. Create a docker image
+#. Create the docker image
    ::
       make docker-image
 #. Run the container
@@ -90,3 +89,7 @@ For local testing:
 #. Run stomp.py unit tests
    ::
       make test
+#. Cleanup the container afterwards if you don't need it any more
+   ::
+      make remove-docker
+
