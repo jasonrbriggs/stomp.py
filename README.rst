@@ -81,11 +81,12 @@ stomp.py has been perfunctorily tested on:
 
 For local testing:
 
-1. Create a docker image:
+#. Create a docker image:
+   ::
       make docker-image
-
-2. Run the container:
+#. Run the container:
+   ::
       make run-docker
-
-3. Run stomp.py unit tests:
+#. Run stomp.py unit tests:
+   ::
       make test
