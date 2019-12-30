@@ -5,9 +5,7 @@ stomp.py
 .. image:: https://badge.fury.io/py/stomp.py.svg
    :target: https://badge.fury.io/py/stomp.py
    :alt: PyPI version
-
 |
-
 .. image:: https://travis-ci.org/jasonrbriggs/stomp.py.svg
    :target: https://travis-ci.org/jasonrbriggs/stomp.py
    :alt: Build Status
