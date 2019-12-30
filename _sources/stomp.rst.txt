@@ -12,10 +12,10 @@ Subpackages
 Submodules
 ----------
 
-stomp.colors module
+stomp.colours module
 -------------------
 
-.. automodule:: stomp.colors
+.. automodule:: stomp.colours
     :members:
     :undoc-members:
     :show-inheritance:

@@ -47,9 +47,9 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-stomp.colors">
-<span id="stomp-colors-module"></span><h2>stomp.colors module<a class="headerlink" href="#module-stomp.colors" title="Permalink to this headline">¶</a></h2>
-<p>Color ‘constants’ used by the command line client.</p>
+<div class="section" id="stomp-colours-module">
+<h2>stomp.colours module<a class="headerlink" href="#stomp-colours-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-stomp.colours"></span><p>Colour ‘constants’ used by the command line client.</p>
 </div>
 <div class="section" id="module-stomp.connect">
 <span id="stomp-connect-module"></span><h2>stomp.connect module<a class="headerlink" href="#module-stomp.connect" title="Permalink to this headline">¶</a></h2>
@@ -583,7 +583,7 @@ next outbound heartbeat timestamp.</p>
 
 <dl class="class">
 <dt id="stomp.listener.PrintingListener">
-<em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">PrintingListener</code><a class="headerlink" href="#stomp.listener.PrintingListener" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">PrintingListener</code><span class="sig-paren">(</span><em>print_to_log=False</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.PrintingListener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.ConnectionListener</span></code></a></p>
 <dl class="method">
 <dt id="stomp.listener.PrintingListener.on_before_message">
@@ -865,7 +865,7 @@ received beyond the specified period.</p>
 
 <dl class="class">
 <dt id="stomp.listener.TestListener">
-<em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">TestListener</code><span class="sig-paren">(</span><em>receipt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">stomp.listener.</code><code class="descname">TestListener</code><span class="sig-paren">(</span><em>receipt=None</em>, <em>print_to_log=False</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.TestListener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#stomp.listener.StatsListener" title="stomp.listener.StatsListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.StatsListener</span></code></a>, <a class="reference internal" href="#stomp.listener.WaitingListener" title="stomp.listener.WaitingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.WaitingListener</span></code></a>, <a class="reference internal" href="#stomp.listener.PrintingListener" title="stomp.listener.PrintingListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.listener.PrintingListener</span></code></a></p>
 <p>Implementation of StatsListener and WaitingListener. Useful for testing.</p>
 <dl class="method">
@@ -2101,7 +2101,7 @@ calculate what the actual heartbeat settings should be.</p>
 
 <dl class="function">
 <dt id="stomp.utils.convert_frame">
-<code class="descclassname">stomp.utils.</code><code class="descname">convert_frame</code><span class="sig-paren">(</span><em>frame</em>, <em>body_encoding=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.convert_frame" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">stomp.utils.</code><code class="descname">convert_frame</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.utils.convert_frame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a frame to a list of lines separated by newlines.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -4,9 +4,22 @@ Using the Command-line client application
 
 Once stomp.py is installed, access the command-line client as follows::
 
-    stomp -H 127.0.0.1 -P 61613 -U admin -W password
-    
-Find more info using --help::
+    python -m stomp -H localhost -P 61613
+
+As of version 4.0.3, a stomp.py is also installed into the bin dir (at least on unix), so you can also run::
+
+    stomp -H localhost -P 61613
+
+After a successful connection, you can type commands such as::
+
+    subscribe /queue/test
+    send /queue/test hello world
+
+If you need to pass a username and password to the client::
+
+    stomp -H localhost -P 61613 -U admin -W password
+
+Run the following to see the list of startup arguments::
 
     $ stomp --help
     Usage: stomp [options]

@@ -34,10 +34,23 @@
   <div class="section" id="using-the-command-line-client-application">
 <h1>Using the Command-line client application<a class="headerlink" href="#using-the-command-line-client-application" title="Permalink to this headline">¶</a></h1>
 <p>Once stomp.py is installed, access the command-line client as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span> <span class="o">-</span><span class="n">U</span> <span class="n">admin</span> <span class="o">-</span><span class="n">W</span> <span class="n">password</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="n">localhost</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span>
 </pre></div>
 </div>
-<p>Find more info using –help:</p>
+<p>As of version 4.0.3, a stomp.py is also installed into the bin dir (at least on unix), so you can also run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="n">localhost</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span>
+</pre></div>
+</div>
+<p>After a successful connection, you can type commands such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">subscribe</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span>
+<span class="n">send</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span> <span class="n">hello</span> <span class="n">world</span>
+</pre></div>
+</div>
+<p>If you need to pass a username and password to the client:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stomp</span> <span class="o">-</span><span class="n">H</span> <span class="n">localhost</span> <span class="o">-</span><span class="n">P</span> <span class="mi">61613</span> <span class="o">-</span><span class="n">U</span> <span class="n">admin</span> <span class="o">-</span><span class="n">W</span> <span class="n">password</span>
+</pre></div>
+</div>
+<p>Run the following to see the list of startup arguments:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp --help
 Usage: stomp [options]
 
