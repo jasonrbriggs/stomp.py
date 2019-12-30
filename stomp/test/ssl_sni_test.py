@@ -27,7 +27,7 @@ class TestSNIMQSend(unittest.TestCase):
     def testconnect(self):
         conn = stomp.Connection11(get_sni_ssl_host())
         conn.set_ssl(get_sni_ssl_host())
-        listener = TestListener(self.receipt_id)
+        listener = TestListener(self.receipt_id, print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')

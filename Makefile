@@ -51,7 +51,7 @@ ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
 endif
 	$(PYTHON) setup.py clean
-	rm -rf build/ MANIFEST dist/
+	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/
 	find . -name '*.pyc' -delete
 
 release:

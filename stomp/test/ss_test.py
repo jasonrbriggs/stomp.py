@@ -29,7 +29,7 @@ heart-beat:1000,1000
 \x00''')
 
         conn = stomp.Connection([('127.0.0.1', 60000)])
-        listener = TestListener()
+        listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
 
@@ -98,7 +98,7 @@ heart-beat:1000,1000
         expected_heartbeat_count = 0
 
         conn = stomp.Connection([('127.0.0.1', 60000)])
-        listener = TestListener()
+        listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
 

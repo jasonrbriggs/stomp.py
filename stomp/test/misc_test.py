@@ -102,7 +102,7 @@ class TestNoResponseConnectionKill(unittest.TestCase):
     def test_noresponse(self):
         try:
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
-            listener = TestListener()
+            listener = TestListener(print_to_log=True)
             conn.set_listener('', listener)
             self.timeout_thread.start()
             conn.connect(wait=True)
@@ -125,3 +125,7 @@ class TestMiscellaneousLogic(unittest.TestCase):
         self.assertEquals("", stomp.colours.RED)
         self.assertEquals("", stomp.colours.BOLD)
         self.assertEquals("", stomp.colours.NO_COLOUR)
+
+    def test_publisher(self):
+        p = Publisher()
+        p.set_listener('test', None)

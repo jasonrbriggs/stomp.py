@@ -517,12 +517,12 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
-    def __init__(self, receipt=None):
+    def __init__(self, receipt=None, print_to_log=False):
         """
         :param str receipt:
         """
         StatsListener.__init__(self)
-        PrintingListener.__init__(self)
+        PrintingListener.__init__(self, print_to_log)
         WaitingListener.__init__(self, receipt)
         self.message_list = []
         self.message_condition = threading.Condition()

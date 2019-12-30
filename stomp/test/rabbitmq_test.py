@@ -12,7 +12,7 @@ class TestRabbitMQSend(unittest.TestCase):
 
     def testbasic(self):
         conn = stomp.Connection11(get_rabbitmq_host())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         listener2 = WaitingListener('456')
         conn.set_listener('123', listener)
         conn.set_listener('456', listener2)
