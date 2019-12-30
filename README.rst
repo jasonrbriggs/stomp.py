@@ -47,7 +47,7 @@ Documentation and resources include:
 .. _`quick start`: http://jasonrbriggs.github.io/stomp.py/quickstart.html
 .. _`command-line interface description`: http://jasonrbriggs.github.io/stomp.py/commandline.html
 .. _`PyPi stomp.py page`: https://pypi.org/project/stomp.py/
-.. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/index.html
+.. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/api.html
 .. _`test coverage report`: http://jasonrbriggs.github.io/stomp.py/htmlcov/
 .. _`travis`: https://travis-ci.org/jasonrbriggs/stomp.py
 
