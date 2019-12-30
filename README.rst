@@ -35,21 +35,21 @@ You can connect to a message broker running on the local machine, and send a mes
   conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
   conn.disconnect()
 
-Various documentation and resources include:
+Documentation and resources include:
 
 - `basic example of using stomp.py`_ with a message listener
 - `command-line interface description`_
 - installation instructions and downloads on `PyPi stomp.py page`_
 - `API documentation`_
 - current `test coverage report`_
-- `travis continuous integration`_
+- `travis`_ for continuous integration builds
 
 .. _`basic example of using stomp.py`: https://github.com/jasonrbriggs/stomp.py/wiki/Simple-Example
-.. _`command-line interface description`: https://github.com/jasonrbriggs/stomp.py/wiki/Command-Line-Access
+.. _`command-line interface description`: http://jasonrbriggs.github.io/stomp.py/commandline.html
 .. _`PyPi stomp.py page`: https://pypi.org/project/stomp.py/
 .. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/index.html
 .. _`test coverage report`: http://jasonrbriggs.github.io/stomp.py/htmlcov/
-.. _`travis continuous integration`: https://travis-ci.org/jasonrbriggs/stomp.py
+.. _`travis`: https://travis-ci.org/jasonrbriggs/stomp.py
 
 
 Current version supports:
