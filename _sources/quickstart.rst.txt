@@ -54,3 +54,4 @@ If you need to pass a username and password to the client::
 Type help for more information once you're running the command-line interface, or run the following to see the list of startup arguments::
 
     $ stomp --help
+
