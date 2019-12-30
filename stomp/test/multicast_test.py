@@ -11,7 +11,7 @@ class TestMulticast(unittest.TestCase):
 
     def setUp(self):
         conn = MulticastConnection()
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
         self.conn = conn
@@ -87,7 +87,7 @@ class TestMulticast(unittest.TestCase):
 class TestNonAsciiViaMulticast(unittest.TestCase):
     def setUp(self):
         conn = MulticastConnection(encoding='utf-16')
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(wait=True)
         self.conn = conn

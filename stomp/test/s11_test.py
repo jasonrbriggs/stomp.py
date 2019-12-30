@@ -9,7 +9,7 @@ from stomp.test.testutils import *
 class Test11Send(unittest.TestCase):
     def test11(self):
         conn = stomp.Connection(get_default_host())
-        tl = TestListener('123')
+        tl = TestListener('123', print_to_log=True)
         conn.set_listener('', tl)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
@@ -35,7 +35,7 @@ class Test11Send(unittest.TestCase):
 
     def testheartbeat(self):
         conn = stomp.Connection(get_default_host(), heartbeats=(2000, 3000))
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.assertTrue(conn.heartbeats[0] > 0)
@@ -66,7 +66,7 @@ heart-beat:1000,1000
 \x00''')
 
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
-            listener = TestListener()
+            listener = TestListener(print_to_log=True)
             conn.set_listener('', listener)
             conn.connect()
 
@@ -95,7 +95,7 @@ heart-beat:1000,1000
     \x00''')
 
                 conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(10000, 10000))
-                listener = TestListener()
+                listener = TestListener(print_to_log=True)
                 conn.set_listener('', listener)
                 conn.connect()
 

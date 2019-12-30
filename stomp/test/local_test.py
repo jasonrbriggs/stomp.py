@@ -9,7 +9,7 @@ from stomp.test.testutils import *
 class TestIPV6Send(unittest.TestCase):
     def setUp(self):
         conn = stomp.Connection11(get_ipv6_host())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect('admin', 'password', wait=True)
         self.conn = conn

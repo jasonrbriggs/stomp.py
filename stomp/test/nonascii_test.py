@@ -13,7 +13,7 @@ class TestNonAsciiSend(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection(get_default_host(), auto_decode=False)
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
@@ -94,7 +94,7 @@ class TestNonAsciiSend(unittest.TestCase):
 class TestNonAsciiSendAutoDecode(unittest.TestCase):
     def setUp(self):
         conn = stomp.Connection(get_default_host(), auto_decode=True)
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
@@ -129,7 +129,7 @@ class TestNonAsciiSendAutoDecode(unittest.TestCase):
 class TestNonAsciiSendSpecificEncoding(unittest.TestCase):
     def setUp(self):
         conn = stomp.Connection(get_default_host(), auto_decode=True, encoding='utf-16')
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn

@@ -4,6 +4,7 @@ Version 4.2.0 - Jan 2020
  * Check for ``STOMP_SKIP_HOSTNAME_SCAN`` environment variable before extending ``LOCALHOST_NAMES``
  * Remove python2 backwards compatibility
  * Update dockerfile for better local testing
+ * Fix docker and travis setup, so there are consistent builds both locally and via CI 
  * Drop deprecated start/stop methods from connection (issue https://github.com/jasonrbriggs/stomp.py/issues/257)
  * Fix for missing return in get_ssl (https://github.com/jasonrbriggs/stomp.py/pull/258)
  * Clear heartbeat event after heartbeat loop ends (https://github.com/jasonrbriggs/stomp.py/pull/260)
@@ -11,7 +12,7 @@ Version 4.2.0 - Jan 2020
  * Simplify logging calls
  * Tidy up listeners (correct the behaviour of TestListener)
  * Fix problem with double-disconnect notification (ihttps://github.com/jasonrbriggs/stomp.py/issues/245)
- * Fix docker and travis setup, so there are consistent builds both locally and via CI 
+ * Add facility for PrintingListener to write to log rather than print statements
 
 
 Version 4.1.22 - Apr 2019

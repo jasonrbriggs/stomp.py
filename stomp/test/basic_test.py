@@ -14,7 +14,7 @@ class TestBasicSend(unittest.TestCase):
 
     def setUp(self):
         conn = stomp.Connection(get_default_host())
-        listener = TestListener('123')
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         self.conn = conn
@@ -198,7 +198,7 @@ class TestContext(unittest.TestCase):
 
 
     def send_test_message(self, conn):
-        self.listener = TestListener('123')
+        self.listener = TestListener('123', print_to_log=True)
         conn.set_listener('testlistener', self.listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
 
