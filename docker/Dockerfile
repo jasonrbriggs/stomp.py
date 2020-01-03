@@ -9,6 +9,7 @@ RUN apt install -y rabbitmq-server
 RUN apt install -y stompserver
 RUN apt install -y activemq
 RUN apt install -y vim
+RUN apt install -y wget
 RUN apt install -y haproxy
 
 RUN rabbitmq-plugins enable rabbitmq_stomp
