@@ -99,10 +99,19 @@ def get_stompserver_host():
     port = config.get('stompserver', 'port')
     return [(get_environ('STOMPSERVER_HOST') or host, int(get_environ('STOMPSERVER_PORT') or port))]
 
-def get_apollo_host():
-    host = config.get('apollo', 'host')
-    port = config.get('apollo', 'port')
-    return [(get_environ('APOLLO_HOST') or host, int(get_environ('APOLLO_PORT') or port))]
+def get_artemis_host():
+    host = config.get('artemis', 'host')
+    port = config.get('artemis', 'port')
+    return [(get_environ('ARTEMIS_HOST') or host, int(get_environ('ARTEMIS_PORT') or port))]
+
+def get_artemis_user():
+    user = config.get('artemis', 'user')
+    return get_environ('ARTEMIS_USER') or user
+
+def get_artemis_password():
+    password = config.get('artemis', 'password')
+    return get_environ('ARTEMIS_PASSWORD') or password
+
 
 class TestStompServer(object):
     def __init__(self, host, port):

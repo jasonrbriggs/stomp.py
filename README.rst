@@ -10,7 +10,7 @@ stomp.py
    :target: https://travis-ci.org/jasonrbriggs/stomp.py
    :alt: Build Status
 
-"stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ_, Apollo_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.
+"stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ_, Artemis_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.
 
 **NOTE:** Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
 
@@ -65,12 +65,12 @@ There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on Py
 stomp.py has been perfunctorily tested on:
 
 - ActiveMQ_
-- Apollo_
+- Artemis_
 - RabbitMQ_
 - stompserver_
 
 .. _ActiveMQ: http://activemq.apache.org/
-.. _Apollo: http://activemq.apache.org/apollo/
+.. _Artemis: https://activemq.apache.org/components/artemis/
 .. _RabbitMQ: http://www.rabbitmq.com
 .. _stompserver: http://stompserver.rubyforge.org
 
