@@ -10,7 +10,7 @@ Stomp.py started as an `"itch-scratching" project <https://en.wikipedia.org/wiki
 * Stomp.py currently supports all versions of the stomp protocol (1.0, 1.1 and 1.2)
 * Both Python 2 and Python 3 are supported
 * The command-line client is installed via pip and has a number of useful features for testing
-* The code is perfunctorily tested on: ActiveMQ, RabbitMQ, stompserver, and has been reported to work with JBossMessaging in the distant past. Full test suite runs against Apache Apollo (for info on setting up VirtualBox for testing, contact the developer).
+* The code is perfunctorily tested on: ActiveMQ, RabbitMQ, stompserver, and has been reported to work with JBossMessaging in the distant past.
 
 
 Getting Help
