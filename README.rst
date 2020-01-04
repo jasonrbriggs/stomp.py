@@ -3,12 +3,12 @@ stomp.py
 ========
 
 .. image:: https://badge.fury.io/py/stomp.py.svg
-   :target: https://badge.fury.io/py/stomp.py
-   :alt: PyPI version
+        :target: https://badge.fury.io/py/stomp.py
+        :alt: PyPI version
 
 .. image:: https://travis-ci.org/jasonrbriggs/stomp.py.svg
-   :target: https://travis-ci.org/jasonrbriggs/stomp.py
-   :alt: Build Status
+        :target: https://travis-ci.org/jasonrbriggs/stomp.py
+        :alt: Build Status
 
 "stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ_, Artemis_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.
 
@@ -89,3 +89,8 @@ For testing locally, you'll need docker:
 #. Cleanup the container afterwards if you don't need it any more:
         make remove-docker
 
+
+Donate
+======
+
+If you find this project vaguely useful, feel free to [buy me a coffee](https://www.paypal.me/jasonrbriggs).
