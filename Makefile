@@ -32,7 +32,8 @@ test: cleantests travistests
 	coverage html -d ../stomppy-docs/htmlcov
 
 travistests:
-	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,misc_test,transport_test,utils_test,multicast_test,cli_ssl_test,ssl_test,ssl_sni_test
+	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,\
+	misc_test,transport_test,utils_test,multicast_test,cli_ssl_test,ssl_test,ssl_sni_test,activemq_test,artemis_test
 	$(PYTHON) setup.py piptest
 
 buildrpm:
@@ -67,6 +68,7 @@ run-docker:
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/rabbitmq-server start"
 	docker exec -it stomppy /bin/sh -c "start-stop-daemon --start --background --exec /usr/sbin/haproxy -- -f /etc/haproxy/haproxy.cfg"
+	docker exec -it stomppy /bin/sh -c "testbroker/bin/artemis-service start"
 
 remove-docker:
 	docker stop stomppy
