@@ -40,8 +40,8 @@ You can connect to a message broker running on the local machine, and send a mes
   conn.disconnect()
 
 
-Documentation
-=============
+Documentation and Resources
+===========================
 
 Documentation and resources include:
 
@@ -58,7 +58,6 @@ Documentation and resources include:
 .. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/api.html
 .. _`test coverage report`: http://jasonrbriggs.github.io/stomp.py/htmlcov/
 .. _`travis`: https://travis-ci.org/jasonrbriggs/stomp.py
-
 
 Current version supports:
 
@@ -86,7 +85,11 @@ stomp.py has been perfunctorily tested on:
 
 .. _JBossMessaging: http://www.jboss.org/jbossmessaging
 
-For testing locally, you'll need docker:
+
+Local Testing
+=============
+
+For testing locally, you'll need to install docker. Once installed:
 
 #. Create the docker image:
         make docker-image
