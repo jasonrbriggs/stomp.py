@@ -75,15 +75,15 @@ Testing
 
 stomp.py has been perfunctorily tested on:
 
-- Pivotal RabbitMQ_: `rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/rabbitmq_test.py>`_
-- Apache ActiveMQ_: `activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/activemq_test.py>`_
-- Apache ActiveMQ Artemis_: `artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/artemis_test.py>`_
-- stompserver_ `stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/stompserver_test.py>`_
+- Pivotal `RabbitMQ`_: `rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/rabbitmq_test.py>`_
+- Apache `ActiveMQ`_: `activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/activemq_test.py>`_
+- Apache `ActiveMQ Artemis`_: `artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/artemis_test.py>`_
+- `stompserver`_ `stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/stompserver_test.py>`_
 
 `stomp.py` has also been reported to work with JBossMessaging_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
 
-.. _ActiveMQ: http://activemq.apache.org/
-.. _Artemis: https://activemq.apache.org/components/artemis/
+.. _ActiveMQ` - http://activemq.apache.org/
+.. _Artemis - https://activemq.apache.org/components/artemis/
 .. _RabbitMQ: http://www.rabbitmq.com
 .. _stompserver: http://stompserver.rubyforge.org
 .. _JBossMessaging: http://www.jboss.org/jbossmessaging
