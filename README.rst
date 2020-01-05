@@ -17,7 +17,7 @@ stomp.py
 .. contents::
     :depth: 1
 
-.. _STOMP: http://stomp.github.io
+.. _`STOMP`: http://stomp.github.io
 .. _`STOMP v1.0`: http://stomp.github.io/stomp-specification-1.0.html
 .. _`STOMP v1.1`: http://stomp.github.io/stomp-specification-1.1.html
 .. _`STOMP v1.2`: http://stomp.github.io/stomp-specification-1.2.html
