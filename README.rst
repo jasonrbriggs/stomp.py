@@ -93,6 +93,6 @@ For testing locally, you'll need docker:
 Donate
 ======
 
-If you find this project vaguely useful, why not `buy me a coffee`_.
+If you find this project useful, why not `buy me a coffee`_.
 
 .. _`buy me a coffee`: https://www.paypal.me/jasonrbriggs
