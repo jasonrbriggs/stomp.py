@@ -34,6 +34,10 @@
   <div class="section" id="quick-start">
 <h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
 <p>Stomp.py is a Python library providing access to a message broker using the <a class="reference external" href="https://stomp.github.io">STOMP protocol</a> - either programmatically or using a command line client.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Stomp is available on <a class="reference external" href="https://pypi.org/project/stomp.py/">PyPi</a>. Install it in a new environment using virtualenv and pip:</p>
+</div>
 <div class="section" id="stomp-py-api">
 <h2>Stomp.py API<a class="headerlink" href="#stomp-py-api" title="Permalink to this headline">¶</a></h2>
 <p>A simple example of creating a listener, sending and receiving a message using localhost with the default port (61613), can be seen here:</p>
@@ -58,30 +62,17 @@
 </pre></div>
 </div>
 <p>Assuming this was saved to stomptest.py, the code can be executed as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python stomptest.py This is a test
-received a message &quot;This is a test&quot;
-</pre></div>
-</div>
 </div>
 <div class="section" id="command-line-client">
 <h2>Command-line Client<a class="headerlink" href="#command-line-client" title="Permalink to this headline">¶</a></h2>
 <p>Assuming stomp.py is installed (using pip) in the site-packages directory (e.g. lib/python3.3/site-packages), hereby referred to as ${SITEPACKAGES}, then you can run the command line client as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613
-</pre></div>
-</div>
 <p>After a successful connection, you can type commands such as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">subscribe</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span>
 <span class="n">send</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span> <span class="n">hello</span> <span class="n">world</span>
 </pre></div>
 </div>
 <p>If you need to pass a username and password to the client:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613 -U admin -W password
-</pre></div>
-</div>
 <p>Type help for more information once you’re running the command-line interface, or run the following to see the list of startup arguments:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp --help
-</pre></div>
-</div>
 </div>
 </div>
 
@@ -103,6 +94,7 @@ received a message &quot;This is a test&quot;
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#stomp-py-api">Stomp.py API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-client">Command-line Client</a></li>
 </ul>
