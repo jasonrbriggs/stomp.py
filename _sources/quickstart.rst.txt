@@ -12,8 +12,8 @@ Stomp is available on `PyPi <https://pypi.org/project/stomp.py/>`_. Install it i
 
     $ virtualenv -p python3 teststomp
     $ . teststomp/bin/activate
-    $ pip install stomp.py
-    $ stomp --version
+    (teststomp) $ pip install stomp.py
+    (teststomp) $ stomp --version
 
 
 Stomp.py API
