@@ -37,6 +37,12 @@
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Stomp is available on <a class="reference external" href="https://pypi.org/project/stomp.py/">PyPi</a>. Install it in a new environment using virtualenv and pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ virtualenv -p python3 teststomp
+$ . teststomp/bin/activate
+$ pip install stomp.py
+$ stomp --version
+</pre></div>
+</div>
 </div>
 <div class="section" id="stomp-py-api">
 <h2>Stomp.py API<a class="headerlink" href="#stomp-py-api" title="Permalink to this headline">¶</a></h2>
@@ -66,13 +72,22 @@
 <div class="section" id="command-line-client">
 <h2>Command-line Client<a class="headerlink" href="#command-line-client" title="Permalink to this headline">¶</a></h2>
 <p>Assuming stomp.py is installed (using pip) in the site-packages directory (e.g. lib/python3.3/site-packages), hereby referred to as ${SITEPACKAGES}, then you can run the command line client as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613
+</pre></div>
+</div>
 <p>After a successful connection, you can type commands such as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">subscribe</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span>
 <span class="n">send</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span> <span class="n">hello</span> <span class="n">world</span>
 </pre></div>
 </div>
 <p>If you need to pass a username and password to the client:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613 -U admin -W password
+</pre></div>
+</div>
 <p>Type help for more information once you’re running the command-line interface, or run the following to see the list of startup arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp --help
+</pre></div>
+</div>
 </div>
 </div>
 
