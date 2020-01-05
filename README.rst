@@ -75,10 +75,10 @@ Testing
 
 stomp.py has been perfunctorily tested on:
 
-- Pivotal `RabbitMQ`_ - `rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/rabbitmq_test.py>`_
-- Apache `ActiveMQ`_ - `activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/activemq_test.py>`_
-- Apache `ActiveMQ Artemis`_ - `artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/artemis_test.py>`_
-- `stompserver`_ - `stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/stompserver_test.py>`_
+- Pivotal `RabbitMQ`_   (`rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/rabbitmq_test.py>`_)
+- Apache `ActiveMQ`_   (`activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/activemq_test.py>`_)
+- Apache `ActiveMQ Artemis`_  (`artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/artemis_test.py>`_)
+- `stompserver`_  (`stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/stompserver_test.py>`_)
 
 `stomp.py` has also been reported to work with `JBossMessaging`_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
 
