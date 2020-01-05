@@ -10,6 +10,8 @@ Stomp.py was created by `Jason R Briggs <http://jasonrbriggs.com>`_ and contribu
 
 NOTE: the examples in this documentation are largely written using version 1.1 of the stomp protocol: `<http://stomp.github.io/stomp-specification-1.1.html>`_. Please check the `API documentation <http://jasonrbriggs.github.io/stomp.py/stomp.html#module-stomp.protocol>`_ for protocols 1.0 or 1.2, if you need to use a different version.
 
+If you find this project useful, why not `buy me a coffee <https://www.paypal.me/jasonrbriggs>`_.
+
 Contents:
 
 .. toctree::
