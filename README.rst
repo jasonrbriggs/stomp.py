@@ -3,22 +3,26 @@ stomp.py
 ========
 
 .. image:: https://badge.fury.io/py/stomp.py.svg
-        :target: https://badge.fury.io/py/stomp.py
-        :alt: PyPI version
+    :target: https://badge.fury.io/py/stomp.py
+    :alt: PyPI version
 
 .. image:: https://travis-ci.org/jasonrbriggs/stomp.py.svg
-        :target: https://travis-ci.org/jasonrbriggs/stomp.py
-        :alt: Build Status
+    :target: https://travis-ci.org/jasonrbriggs/stomp.py
+    :alt: Build Status
 
 "stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ_, Artemis_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.
 
 **NOTE:** Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
+
+.. contents::
+    :depth: 1
 
 .. _STOMP: http://stomp.github.io
 .. _`STOMP v1.0`: http://stomp.github.io/stomp-specification-1.0.html
 .. _`STOMP v1.1`: http://stomp.github.io/stomp-specification-1.1.html
 .. _`STOMP v1.2`: http://stomp.github.io/stomp-specification-1.2.html
 .. _`python3statement.org`: http://python3statement.org/
+
 
 Quick Start
 ===========
@@ -34,6 +38,10 @@ You can connect to a message broker running on the local machine, and send a mes
   conn.connect('admin', 'password', wait=True)
   conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
   conn.disconnect()
+
+
+Documentation
+=============
 
 Documentation and resources include:
 
