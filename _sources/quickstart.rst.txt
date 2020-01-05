@@ -10,7 +10,7 @@ Installation
 
 Stomp is available on `PyPi <https://pypi.org/project/stomp.py/>`_. Install it in a new environment using virtualenv and pip:
 
-.. code-block:: shell
+.. code:: shell
     $ virtualenv -p python3 teststomp
     $ . teststomp/bin/activate
     $ pip install stomp.py
