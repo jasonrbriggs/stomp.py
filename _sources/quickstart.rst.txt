@@ -40,9 +40,8 @@ A simple example of creating a listener, sending and receiving a message using l
     time.sleep(2)
     conn.disconnect()
 
-Assuming this was saved to stomptest.py, the code can be executed as follows:
+Assuming this was saved to stomptest.py, the code can be executed as follows::
 
-.. code-block:: shell
     $ python stomptest.py This is a test
     received a message "This is a test"
 
