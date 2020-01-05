@@ -82,8 +82,8 @@ stomp.py has been perfunctorily tested on:
 
 `stomp.py` has also been reported to work with `JBossMessaging`_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
 
-.. _`ActiveMQ` - http://activemq.apache.org/
-.. _`Artemis` - https://activemq.apache.org/components/artemis/
+.. _`ActiveMQ`:  http://activemq.apache.org/
+.. _`Artemis`: https://activemq.apache.org/components/artemis/
 .. _`RabbitMQ`: http://www.rabbitmq.com
 .. _`stompserver`: http://stompserver.rubyforge.org
 .. _`JBossMessaging`: http://www.jboss.org/jbossmessaging
