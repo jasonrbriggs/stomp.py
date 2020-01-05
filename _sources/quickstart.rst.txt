@@ -8,7 +8,9 @@ Stomp.py is a Python library providing access to a message broker using the `STO
 Installation
 ============
 
-Stomp is available on `PyPi <https://pypi.org/project/stomp.py/>`_. Install it in a new environment using virtualenv and pip::
+Stomp is available on `PyPi <https://pypi.org/project/stomp.py/>`_. Install it in a new environment using virtualenv and pip:
+
+.. code-block:: shell
 
     $ virtualenv -p python3 teststomp
     $ . teststomp/bin/activate
