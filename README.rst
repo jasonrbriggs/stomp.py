@@ -75,10 +75,10 @@ Testing
 
 stomp.py has been perfunctorily tested on:
 
-- ActiveMQ_: `activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/activemq_test.py>`
-- Artemis_: `artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/artemis_test.py>`
-- RabbitMQ_: `rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/rabbitmq_test.py>`
-- stompserver_ `stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/stompserver_test.py>`
+- ActiveMQ_: `activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/activemq_test.py>`_
+- Artemis_: `artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/artemis_test.py>`_
+- RabbitMQ_: `rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/rabbitmq_test.py>`_
+- stompserver_ `stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/stomp/test/stompserver_test.py>`_
 
 `stomp.py` has also been reported to work with JBossMessaging_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
 
