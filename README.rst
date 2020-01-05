@@ -34,7 +34,6 @@ You can connect to a message broker running on the local machine, and send a mes
   import stomp
 
   conn = stomp.Connection()
-  conn.set_listener('', MyListener())
   conn.connect('admin', 'password', wait=True)
   conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
   conn.disconnect()
@@ -42,8 +41,6 @@ You can connect to a message broker running on the local machine, and send a mes
 
 Documentation and Resources
 ===========================
-
-Documentation and resources include:
 
 - a basic example of using stomp.py with a message listener (see the `quick start`_)
 - `command-line interface description`_
@@ -59,15 +56,19 @@ Documentation and resources include:
 .. _`test coverage report`: http://jasonrbriggs.github.io/stomp.py/htmlcov/
 .. _`travis`: https://travis-ci.org/jasonrbriggs/stomp.py
 
-Current version supports:
+The current version supports:
 
 - Python 3.x (Python2 support ended as of Jan 2020)
 - STOMP version 1.0, 1.1 and 1.2
 
-There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on PyPi`_ and `3.1.7 on GitHub`_).
+There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on PyPi`_ and `3.1.7 on GitHub`_). This is no longer supported, but (at least as of 2018) there were still a couple of reports of this version still being used.
 
 .. _`3.1.7 on PyPi`: https://pypi.org/project/stomp.py/3.1.7/
 .. _`3.1.7 on GitHub`: https://github.com/jasonrbriggs/stomp.py/tree/stomppy-3series
+
+
+Testing
+=======
 
 stomp.py has been perfunctorily tested on:
 
@@ -76,18 +77,13 @@ stomp.py has been perfunctorily tested on:
 - RabbitMQ_
 - stompserver_
 
+`stomp.py` has also been reported to work with JBossMessaging_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
+
 .. _ActiveMQ: http://activemq.apache.org/
 .. _Artemis: https://activemq.apache.org/components/artemis/
 .. _RabbitMQ: http://www.rabbitmq.com
 .. _stompserver: http://stompserver.rubyforge.org
-
-`stomp.py` has been reported to work with JBossMessaging_ in the distant past (note: no idea whether the same is true of the replacement, HornetQ)
-
 .. _JBossMessaging: http://www.jboss.org/jbossmessaging
-
-
-Local Testing
-=============
 
 For testing locally, you'll need to install docker. Once installed:
 
