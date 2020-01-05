@@ -14,7 +14,7 @@ stomp.py
 
 **NOTE:** Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
 
-.. contents:: ""
+.. contents:: -
     :depth: 1
 
 .. _`STOMP`: http://stomp.github.io
