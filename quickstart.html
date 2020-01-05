@@ -68,28 +68,28 @@ $ . teststomp/bin/activate
 </pre></div>
 </div>
 <p>Assuming this was saved to stomptest.py, the code can be executed as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python stomptest.py This is a test
-received a message &quot;This is a test&quot;
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python stomptest.py This is a <span class="nb">test</span>
+received a message <span class="s2">&quot;This is a test&quot;</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="command-line-client">
 <h2>Command-line Client<a class="headerlink" href="#command-line-client" title="Permalink to this headline">¶</a></h2>
 <p>Assuming stomp.py is installed (using pip) in the site-packages directory (e.g. lib/python3.3/site-packages), hereby referred to as ${SITEPACKAGES}, then you can run the command line client as follows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P <span class="m">61613</span>
 </pre></div>
 </div>
 <p>After a successful connection, you can type commands such as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">subscribe</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span>
-<span class="n">send</span> <span class="o">/</span><span class="n">queue</span><span class="o">/</span><span class="n">test</span> <span class="n">hello</span> <span class="n">world</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>subscribe /queue/test
+send /queue/test hello world
 </pre></div>
 </div>
 <p>If you need to pass a username and password to the client:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P 61613 -U admin -W password
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ stomp -H localhost -P <span class="m">61613</span> -U admin -W password
 </pre></div>
 </div>
 <p>Type help for more information once you’re running the command-line interface, or run the following to see the list of startup arguments:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ stomp --help
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ stomp --help
 </pre></div>
 </div>
 </div>
