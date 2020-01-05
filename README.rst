@@ -29,7 +29,7 @@ Quick Start
 
 You can connect to a message broker running on the local machine, and send a message using the following example.
 
-.. code:: python
+.. code-block:: python
 
   import stomp
 
@@ -42,26 +42,26 @@ You can connect to a message broker running on the local machine, and send a mes
 Documentation and Resources
 ===========================
 
-- a basic example of using stomp.py with a message listener (see the `quick start`_)
-- `command-line interface description`_
-- installation instructions and downloads on `PyPi stomp.py page`_
 - `API documentation`_
-- current `test coverage report`_
-- `travis`_ for continuous integration builds
+- A basic example of using stomp.py with a message listener can be found in the `quick start`_ section of the main documentation
+- Description of the `command-line interface`_
+- `Travis`_ for continuous integration builds
+- Current `test coverage report`_
+- `PyPi stomp.py page`_
 
 .. _`quick start`: http://jasonrbriggs.github.io/stomp.py/quickstart.html
 .. _`command-line interface description`: http://jasonrbriggs.github.io/stomp.py/commandline.html
 .. _`PyPi stomp.py page`: https://pypi.org/project/stomp.py/
 .. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/api.html
 .. _`test coverage report`: http://jasonrbriggs.github.io/stomp.py/htmlcov/
-.. _`travis`: https://travis-ci.org/jasonrbriggs/stomp.py
+.. _`Travis`: https://travis-ci.org/jasonrbriggs/stomp.py
 
-The current version supports:
+The current version of stomp.py supports:
 
 - Python 3.x (Python2 support ended as of Jan 2020)
 - STOMP version 1.0, 1.1 and 1.2
 
-There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on PyPi`_ and `3.1.7 on GitHub`_). This is no longer supported, but (at least as of 2018) there were still a couple of reports of this version still being used.
+There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on PyPi`_ and `3.1.7 on GitHub`_). This is no longer supported, but (at least as of 2018) there were still a couple of reports of this version still being used in the wild.
 
 .. _`3.1.7 on PyPi`: https://pypi.org/project/stomp.py/3.1.7/
 .. _`3.1.7 on GitHub`: https://github.com/jasonrbriggs/stomp.py/tree/stomppy-3series
