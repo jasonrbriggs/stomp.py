@@ -1,3 +1,8 @@
+Version 5.0.1 -
+
+ * 
+
+
 Version 5.0.0 - Jan 2020
 
  * Fix for credentials exposure (https://github.com/jasonrbriggs/stomp.py/pull/244)

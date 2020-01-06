@@ -52,6 +52,7 @@ class Protocol10(ConnectionListener):
 
         :param str id: identifier of the message
         :param str transaction: include the acknowledgement in the specified transaction
+        :param str receipt: the receipt id
         """
         assert id is not None, "'id' is required"
         headers = {HDR_MESSAGE_ID: id}
@@ -263,6 +264,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param str id: identifier of the message
         :param str subscription: the subscription this message is associated with
         :param str transaction: include the acknowledgement in the specified transaction
+        :param str receipt: the receipt id
         """
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
@@ -361,6 +363,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param str id: the unique id of the message to nack
         :param str subscription: the subscription this message is associated with
         :param str transaction: include this nack in a named transaction
+        :param str receipt: the receipt id
         :param keyword_headers: any additional headers to send with the nack command
         """
         assert id is not None, "'id' is required"
@@ -457,6 +460,7 @@ class Protocol12(Protocol11):
 
         :param str id: identifier of the message
         :param str transaction: include the acknowledgement in the specified transaction
+        :param str receipt: the receipt id
         """
         assert id is not None, "'id' is required"
         headers = {HDR_ID: id}
@@ -472,6 +476,7 @@ class Protocol12(Protocol11):
 
         :param str id: the unique id of the message to nack
         :param str transaction: include this nack in a named transaction
+        :param str receipt: the receipt id
         :param keyword_headers: any additional headers to send with the nack command
         """
         assert id is not None, "'id' is required"
