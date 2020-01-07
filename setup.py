@@ -5,7 +5,6 @@ from setuptools import setup
 import glob
 import platform
 import io
-import logging
 from logging import config
 import os
 import shutil
@@ -14,6 +13,8 @@ import unittest
 
 
 config.fileConfig('stomp.log.conf')
+
+from stomp import logging
 
 
 with io.open('README.rst', 'rt', encoding='utf8') as f:
