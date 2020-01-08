@@ -22,26 +22,8 @@ View outstanding issues on the GitHub `issues list <https://github.com/jasonrbri
 Contributors
 ------------
 
-Julian Scheid (`Rising Sun Pictures <http://open.rsp.com.au/>`_)
+Contributors since moving to GitHub can be found in GitHub's `Insights page <https://github.com/jasonrbriggs/stomp.py/graphs/contributors>`_.
 
-Andreas Schobel
+Prior to that, contributors to the project included:
 
-Fernando Ciciliati
-
-Eugene Strulyov
-
-Gavin M. Roy
-
-Martin Pieuchot
-
-Joe Gdaniec
-
-Jayson Vantuyl
-
-Tatiana Al-Chueyr Martins
-
-Rafael Durán Casteñada
-
-Chaskiel Grundman
-
-Ville Skyttä
+Julian Scheid (`Rising Sun Pictures <http://open.rsp.com.au/>`_), Andreas Schobel, Fernando Ciciliati, Eugene Strulyov, Gavin M. Roy, Martin Pieuchot, Joe Gdaniec, Jayson Vantuyl, Tatiana Al-Chueyr Martins, Rafael Durán Casteñada, Chaskiel Grundman, and Ville Skyttä

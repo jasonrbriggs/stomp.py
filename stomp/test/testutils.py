@@ -5,11 +5,11 @@ try:
 except ImportError:
     from ConfigParser import RawConfigParser
 import json
-import logging
 import sys
 from subprocess import run, PIPE
 
 from stomp.utils import *
+from stomp import logging
 
 config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'setup.ini'))
