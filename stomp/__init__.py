@@ -14,7 +14,7 @@ import stomp.connect as connect
 import stomp.listener as listener
 import stomp.logging as logging
 
-__version__ = (5, 0, 0)
+__version__ = (5, 0, 1)
 
 ##
 # Alias for STOMP 1.0 connections.
