@@ -9,13 +9,12 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 
 """
 
-import logging
-
 import stomp.adapter as adapter
 import stomp.connect as connect
 import stomp.listener as listener
+import stomp.logging as logging
 
-__version__ = (5, 0, 0)
+__version__ = (5, 0, 1)
 
 ##
 # Alias for STOMP 1.0 connections.
@@ -57,6 +56,3 @@ WaitingListener = listener.WaitingListener
 ##
 # Access to the printing listener
 PrintingListener = listener.PrintingListener
-
-__log = logging.getLogger('stomp.py')
-logging.isEnabledFor = __log.isEnabledFor

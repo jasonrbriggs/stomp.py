@@ -1,7 +1,6 @@
 """Various listeners for using with stomp.py connections.
 """
 
-import logging
 import os
 import sys
 import threading
@@ -11,6 +10,7 @@ from time import monotonic
 import stomp.exception as exception
 import stomp.utils as utils
 from stomp.constants import *
+from stomp import logging
 
 
 class Publisher(object):

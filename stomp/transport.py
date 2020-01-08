@@ -2,7 +2,6 @@
 """
 
 import errno
-import logging
 import math
 import random
 import sys
@@ -35,6 +34,7 @@ except ImportError:
 import stomp.exception as exception
 import stomp.listener
 from stomp.utils import *
+from stomp import logging
 
 
 class BaseTransport(stomp.listener.Publisher):

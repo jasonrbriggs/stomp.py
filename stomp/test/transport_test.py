@@ -1,7 +1,7 @@
-import logging
 import unittest
 
 import stomp
+from stomp import logging
 
 
 class TestTransport(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestTransport(unittest.TestCase):
         self.transport.process_frame(fr, None)
 
     def test_process_frame_empty_body(self):
-        logging.getLogger().setLevel(logging.INFO)
+        logging.setLevel(logging.INFO)
         fr = stomp.utils.Frame('error', {}, None)
         self.transport.process_frame(fr, None)
 
@@ -22,6 +22,6 @@ class TestTransport(unittest.TestCase):
         self.transport.process_frame(fr, None)
 
     def test_process_frame(self):
-        logging.getLogger().setLevel(logging.INFO)
+        logging.setLevel(logging.INFO)
         fr = stomp.utils.Frame('error', {}, 'test message')
         self.transport.process_frame(fr, None)

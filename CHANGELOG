@@ -1,6 +1,6 @@
-Version 5.0.1 -
+Version 5.0.1 - Jan 2020
 
- * 
+ * Fix logging simplification code (should not be logging to root appender - https://github.com/jasonrbriggs/stomp.py/issues/275)
 
 
 Version 5.0.0 - Jan 2020
