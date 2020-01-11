@@ -513,7 +513,7 @@ class PrintingListener(ConnectionListener):
         self.__print('on_heartbeat')
 
 
-class TestListener(StatsListener, WaitingListener, PrintingListener):
+class CombinedListener(StatsListener, WaitingListener, PrintingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
@@ -529,6 +529,7 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         self.message_received = False
         self.heartbeat_condition = threading.Condition()
         self.heartbeat_received = False
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
 
     def wait_for_message(self):
         with self.message_condition:

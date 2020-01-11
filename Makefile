@@ -23,18 +23,8 @@ source:
 install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
-cleantests:
-	coverage erase
-
-test: cleantests travistests
-	$(PYTHON) setup.py test --test=local_test
-	coverage combine
-	coverage html -d ../stomppy-docs/htmlcov
-
-travistests:
-	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,\
-	misc_test,transport_test,utils_test,multicast_test,cli_ssl_test,ssl_test,ssl_sni_test,activemq_test,artemis_test
-	$(PYTHON) setup.py piptest
+test:
+	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --tb=native
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall

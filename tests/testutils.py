@@ -113,14 +113,14 @@ def get_artemis_password():
     return get_environ('ARTEMIS_PASSWORD') or password
 
 
-class TestStompServer(object):
+class StubStompServer(object):
     def __init__(self, host, port):
         self.host = host
         self.port = port
         self.frames = []
 
     def start(self):
-        logging.debug('Starting stomp server')
+        logging.info('Starting stomp server')
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((self.host, self.port))
@@ -130,10 +130,10 @@ class TestStompServer(object):
         thread.daemon = True
         thread.start()
         self.stopped = False
-        logging.debug('Stomp server started')
+        logging.info('Stomp server started')
 
     def stop(self):
-        logging.debug('Stopping test server')
+        logging.info('Stopping test server')
         if self.conn:
             try:
                 self.conn.shutdown(socket.SHUT_WR)
@@ -146,7 +146,7 @@ class TestStompServer(object):
         self.conn = None
         self.s = None
         self.stopped = True
-        logging.debug('Connection stopped')
+        logging.info('Connection stopped')
 
     def get_next_frame(self):
         if len(self.frames) > 0:
@@ -178,14 +178,14 @@ class TestStompServer(object):
         except:
             pass
         self.stopped = True
-        logging.debug('Run loop completed')
+        logging.info('Run loop completed')
 
 
-class TestStdin(object):
+class StubStdin(object):
     pass
 
 
-class TestStdout(object):
+class StubStdout(object):
     def __init__(self, test):
         self.test = test
         self.expects = []
@@ -213,3 +213,13 @@ class TestStdout(object):
 
     def flush(self):
         pass
+
+
+def validate_send(conn, connections=1, messages=1, errors=0):
+    listener = conn.get_listener('testlistener')
+    listener.wait_on_receipt()
+    listener.wait_for_message()
+
+    assert listener.connections == 1, 'should have received 1 connection acknowledgement'
+    assert listener.messages == 1, 'should have received 1 message'
+    assert listener.errors == 0, 'should not have received any errors'

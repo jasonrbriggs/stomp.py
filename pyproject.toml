@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "stomp"
+version = "5.0.2"
+description = "Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol"
+authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+docopt = "^0.6.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pytest-cov = "^2.8.1"
+pytest-mock = "^2.0.0"
+
+[tool.poetry.scripts]
+stomp = "stomp.__main__:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

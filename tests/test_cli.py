@@ -2,8 +2,10 @@ import tempfile
 import time
 import unittest
 
+import pytest
+
 from stomp.__main__ import StompCLI
-from stomp.test.testutils import *
+from .testutils import *
 from stomp.adapter import multicast
 
 username = get_default_user()
@@ -24,17 +26,14 @@ unsubscribe /queue/testfile''')
     return f
 
 
-class TestCLI(unittest.TestCase):
-
-    def setUp(self):
-        pass
+class TestCLI(object):
 
     def test_invalid_version(self):
-        with self.assertRaises(RuntimeError) as _:
+        with pytest.raises(RuntimeError):
             StompCLI(host, port, username, password, 'invalid')
 
     def test_help(self):
-        teststdin = TestStdin()
+        teststdin = StubStdin()
 
         cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin)
 
@@ -58,8 +57,8 @@ class TestCLI(unittest.TestCase):
         cli.help_begin()
 
     def testsubscribe(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
@@ -80,8 +79,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def testsendrec(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
 
         teststdout.expect('CONNECTED')
 
@@ -100,8 +99,8 @@ class TestCLI(unittest.TestCase):
     def testsendfile(self):
         f = create_test_file()
 
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.2', stdin=teststdin, stdout=teststdout)
@@ -124,8 +123,8 @@ class TestCLI(unittest.TestCase):
     def testsendfileheaders(self):
         f = create_test_file()
 
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.2', stdin=teststdin, stdout=teststdout)
@@ -140,8 +139,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def testabort(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.2', stdin=teststdin, stdout=teststdout)
@@ -163,8 +162,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def testcommit(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
@@ -190,8 +189,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def teststats(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
@@ -224,8 +223,8 @@ class TestCLI(unittest.TestCase):
     def testrun(self):
         f = create_test_file()
 
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
@@ -243,8 +242,8 @@ class TestCLI(unittest.TestCase):
     def testrunarg(self):
         f = create_test_file()
 
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
@@ -262,8 +261,8 @@ class TestCLI(unittest.TestCase):
         cli.onecmd('quit')
 
     def test_multicast(self):
-        teststdin = TestStdin()
-        teststdout = TestStdout(self)
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
         teststdout.expect('CONNECTED')
 
         cli = StompCLI(None, None, None, None, 'multicast', stdin=teststdin, stdout=teststdout)
