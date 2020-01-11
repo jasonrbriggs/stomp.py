@@ -2,7 +2,7 @@ import pytest
 
 import stomp
 from stomp import transport
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from .testutils import *
 
 
@@ -22,7 +22,7 @@ def stomp_transport():
 
 class TestSSL(object):
     def test_ssl_connection(self):
-        listener = CombinedListener('123', print_to_log=True)
+        listener = TestListener('123', print_to_log=True)
         try:
             import ssl
             queuename = '/queue/test4-%s' % listener.timestamp

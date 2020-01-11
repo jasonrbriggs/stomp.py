@@ -1,14 +1,14 @@
 import pytest
 
 import stomp
-from stomp.listener import CombinedListener, WaitingListener
+from stomp.listener import TestListener, WaitingListener
 from .testutils import *
 
 
 @pytest.fixture()
 def conn():
     conn = stomp.Connection11(get_rabbitmq_host())
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     listener2 = WaitingListener('456')
     conn.set_listener('123', listener)
     conn.set_listener('456', listener2)

@@ -2,14 +2,14 @@ import pytest
 
 import stomp
 from stomp import exception
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from .testutils import *
 
 
 @pytest.fixture()
 def conn():
     conn = stomp.Connection12(get_default_host())
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn
@@ -85,7 +85,7 @@ class Test12Connect(object):
 message: connection failed\x00''')
 
             conn = stomp.Connection12([('127.0.0.1', 60000)])
-            listener = CombinedListener(print_to_log=True)
+            listener = TestListener(print_to_log=True)
             conn.set_listener('', listener)
             try:
                 conn.connect(wait=True)

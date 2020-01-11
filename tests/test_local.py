@@ -4,7 +4,7 @@ import time
 import pytest
 
 import stomp
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from stomp import logging
 from .testutils import *
 
@@ -19,7 +19,7 @@ def is_inside_travis():
 @pytest.fixture()
 def conn():
     conn = stomp.Connection11(get_ipv6_host())
-    conn.set_listener('testlistener', CombinedListener('123', print_to_log=True))
+    conn.set_listener('testlistener', TestListener('123', print_to_log=True))
     conn.connect('admin', 'password', wait=True)
     yield conn
     conn.disconnect(receipt=None)

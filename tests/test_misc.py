@@ -13,9 +13,9 @@ from stomp.listener import *
 from .testutils import *
 
 
-class TransformationListener(CombinedListener):
+class TransformationListener(TestListener):
     def __init__(self, receipt, print_to_log):
-        CombinedListener.__init__(self, receipt, print_to_log)
+        TestListener.__init__(self, receipt, print_to_log)
         self.message = None
 
     def on_before_message(self, headers, body):
@@ -45,7 +45,7 @@ class TransformationListener(CombinedListener):
                 return (headers, body)
 
     def on_message(self, headers, body):
-        CombinedListener.on_message(self, headers, body)
+        TestListener.on_message(self, headers, body)
         self.message = body
 
 import inspect
@@ -112,7 +112,7 @@ class TestNoResponseConnectionKill(object):
     def test_noresponse(self, server, timeout_thread):
         try:
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
-            listener = CombinedListener(print_to_log=True)
+            listener = TestListener(print_to_log=True)
             conn.set_listener('testlistener', listener)
             timeout_thread.start()
             conn.connect(wait=True)

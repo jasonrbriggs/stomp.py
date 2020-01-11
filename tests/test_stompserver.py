@@ -1,14 +1,14 @@
 import pytest
 
 import stomp
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from .testutils import *
 
 
 @pytest.fixture()
 def conn():
     conn = stomp.Connection10(get_stompserver_host())
-    conn.set_listener('testlistener', CombinedListener('123', print_to_log=True))
+    conn.set_listener('testlistener', TestListener('123', print_to_log=True))
     conn.connect(wait=True)
     yield conn
     conn.disconnect(receipt=None)

@@ -5,7 +5,7 @@ from time import monotonic
 import pytest
 
 import stomp
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from .testutils import *
 
 
@@ -13,7 +13,7 @@ class TestContext(object):
     timestamp = time.strftime('%Y%m%d%H%M%S')
 
     def send_test_message(self, conn):
-        listener = CombinedListener('123', print_to_log=True)
+        listener = TestListener('123', print_to_log=True)
         conn.set_listener('testlistener', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
 

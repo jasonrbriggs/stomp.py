@@ -13,7 +13,7 @@ from .testutils import *
 @pytest.fixture
 def conn():
     conn = stomp.Connection(get_default_host(), auto_decode=False)
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn
@@ -22,7 +22,7 @@ def conn():
 @pytest.fixture
 def conn_encode():
     conn = stomp.Connection(get_default_host(), auto_decode=True)
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn
@@ -32,7 +32,7 @@ def conn_encode():
 @pytest.fixture
 def conn_encode_utf18():
     conn = stomp.Connection(get_default_host(), auto_decode=True, encoding='utf-16')
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn

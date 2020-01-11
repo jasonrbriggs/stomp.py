@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pytest
 
 import stomp
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from .testutils import *
 
 
@@ -18,9 +18,9 @@ def create_thread(fc):
     return f
 
 
-class ReconnectListener(CombinedListener):
+class ReconnectListener(TestListener):
     def __init__(self, conn):
-        CombinedListener.__init__(self, '123', True)
+        TestListener.__init__(self, '123', True)
         self.conn = conn
     def on_receiver_loop_ended(self, *args):
         if self.conn:

@@ -1,7 +1,7 @@
 import pytest
 
 import stomp
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from .testutils import *
 
 
@@ -25,7 +25,7 @@ class TestSNIMQSend(object):
         receipt_id = str(uuid.uuid4())
         conn = stomp.Connection11(get_sni_ssl_host())
         conn.set_ssl(get_sni_ssl_host())
-        listener = CombinedListener(receipt_id, print_to_log=True)
+        listener = TestListener(receipt_id, print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
         conn.subscribe(destination='/queue/test', id=1, ack='auto')

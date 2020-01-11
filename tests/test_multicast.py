@@ -3,7 +3,7 @@ import time
 import pytest
 
 from stomp.adapter.multicast import MulticastConnection
-from stomp.listener import CombinedListener
+from stomp.listener import TestListener
 from stomp.utils import get_uuid
 from .testutils import *
 
@@ -11,7 +11,7 @@ from .testutils import *
 @pytest.fixture
 def conn():
     conn = MulticastConnection()
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect()
     yield conn
@@ -21,7 +21,7 @@ def conn():
 @pytest.fixture
 def connutf16():
     conn = MulticastConnection(encoding='utf-16')
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect()
     yield conn

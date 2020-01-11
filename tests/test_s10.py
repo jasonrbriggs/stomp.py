@@ -10,7 +10,7 @@ from .testutils import *
 @pytest.fixture()
 def conn():
     conn = stomp.Connection10(get_default_host())
-    listener = CombinedListener('123', print_to_log=True)
+    listener = TestListener('123', print_to_log=True)
     conn.set_listener('testlistener', listener)
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn

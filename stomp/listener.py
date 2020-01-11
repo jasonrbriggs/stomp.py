@@ -513,7 +513,7 @@ class PrintingListener(ConnectionListener):
         self.__print('on_heartbeat')
 
 
-class CombinedListener(StatsListener, WaitingListener, PrintingListener):
+class TestListener(StatsListener, WaitingListener, PrintingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
