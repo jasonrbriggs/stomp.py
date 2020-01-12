@@ -18,7 +18,9 @@ docs:
 	cd docs && make html
 
 install:
+	poetry update
 	poetry build
+	poetry export -f requirements.txt --dev -o requirements.txt
 
 test:
 	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html

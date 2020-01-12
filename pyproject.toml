@@ -6,7 +6,7 @@ authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6"
 docopt = "^0.6.2"
 
 [tool.poetry.dev-dependencies]
