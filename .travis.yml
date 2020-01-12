@@ -13,7 +13,7 @@ services:
   - docker
 
 env:
-  - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/ STOMP_PRINT_TO_LOG=true
+  - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/ STOMP_PRINT_TO_LOG=true TRAVIS=true
 
 before_install:
   - make docker-image
@@ -22,4 +22,4 @@ before_install:
   - docker logs stomppy
 
 script:
-  - make travistests
+  - make test
