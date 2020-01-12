@@ -27,7 +27,6 @@ class Test10Connect(object):
 
         validate_send(conn, 1, 1, 0)
 
-    '''
     def testclientack10(self, conn):
         listener = conn.get_listener('testlistener')
         queuename = '/queue/testclientack10-%s' % listener.timestamp
@@ -44,4 +43,3 @@ class Test10Connect(object):
         conn.ack(message_id)
 
         time.sleep(1)
-    '''
