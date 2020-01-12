@@ -24,7 +24,7 @@ install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
 
 test:
-	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --tb=native
+	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/
 
 buildrpm:
 	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
