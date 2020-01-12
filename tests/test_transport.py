@@ -28,3 +28,12 @@ class TestTransport(object):
         logging.setLevel(logging.INFO)
         fr = stomp.utils.Frame('error', {}, 'test message')
         stomp_transport.process_frame(fr, None)
+
+    # just for coverage
+    def test_methods_for_coverage(self, stomp_transport):
+        stomp_transport.send(None)
+        stomp_transport.receive()
+        stomp_transport.cleanup()
+        stomp_transport.attempt_connection()
+        stomp_transport.disconnect_socket()
+

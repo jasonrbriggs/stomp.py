@@ -29,13 +29,21 @@ def invalidconn():
 class TestBasic(object):
 
     def test_basic(self, conn):
-        timestamp = time.strftime('%Y%m%d%H%M%S')
-        queuename = '/queue/test1-%s' % timestamp
+        queuename = '/queue/test1-%s' % conn.get_listener('testlistener').timestamp
         conn.subscribe(destination=queuename, id=1, ack='auto')
 
         conn.send(body='this is a test', destination=queuename, receipt='123')
 
         validate_send(conn)
+
+    def test_default_to_localhost(self):
+        conn = stomp.Connection()
+        listener = TestListener('123', print_to_log=True)
+        queuename = '/queue/test1-%s' % listener.timestamp
+        conn.set_listener('testlistener', listener)
+        conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
+        conn.send(body='this is a test', destination=queuename, receipt='123')
+        conn.disconnect(receipt=None)
 
     def test_commit(self, conn):
         timestamp = time.strftime('%Y%m%d%H%M%S')
