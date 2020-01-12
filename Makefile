@@ -17,36 +17,32 @@ all:
 docs:
 	cd docs && make html
 
-source:
-	$(PYTHON) setup.py sdist $(COMPILE)
-
 install:
-	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
+	poetry build
 
 test:
 	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html
 
-buildrpm:
-	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
-
-builddeb:
-	# build the source package in the parent directory
-	# then rename it to project_version.orig.tar.gz
-	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../
-	rename -f 's/$(PROJECT)-(.*)\.tar\.gz/$(PROJECT)_$$1\.orig\.tar\.gz/' ../*
-	# build the package
-	dpkg-buildpackage -kjasonrbriggs@gmail.com -i -I -rfakeroot
+#buildrpm:
+#	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
+#
+#builddeb:
+#	# build the source package in the parent directory
+#	# then rename it to project_version.orig.tar.gz
+#	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../
+#	rename -f 's/$(PROJECT)-(.*)\.tar\.gz/$(PROJECT)_$$1\.orig\.tar\.gz/' ../*
+#	# build the package
+#	dpkg-buildpackage -kjasonrbriggs@gmail.com -i -I -rfakeroot
 
 clean:
 ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
 endif
-	$(PYTHON) setup.py clean
 	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/
 	find . -name '*.pyc' -delete
 
 release:
-	$(PYTHON) setup.py clean install sdist bdist_wheel upload
+	poetry publish
 
 docker-image:
 	docker build -t stomppy docker/
