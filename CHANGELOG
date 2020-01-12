@@ -1,6 +1,6 @@
 Version 5.0.2 -
 
- *  
+ * Update to not allow a null (None) listener when calling set_listener (minor code "smell" tidy up)
 
 
 Version 5.0.1 - Jan 2020

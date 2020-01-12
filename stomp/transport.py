@@ -148,6 +148,7 @@ class BaseTransport(stomp.listener.Publisher):
         :param str name: the name of the listener
         :param ConnectionListener listener: the listener object
         """
+        assert listener is not None
         with self.__listeners_change_condition:
             self.listeners[name] = listener
 
@@ -221,9 +222,6 @@ class BaseTransport(stomp.listener.Publisher):
             listeners = sorted(self.listeners.items())
 
         for (_, listener) in listeners:
-            if not listener:
-                continue
-
             notify_func = getattr(listener, 'on_%s' % frame_type, None)
             if not notify_func:
                 logging.debug("listener %s has no method on_%s", listener, frame_type)
@@ -255,8 +253,6 @@ class BaseTransport(stomp.listener.Publisher):
             listeners = sorted(self.listeners.items())
 
         for (_, listener) in listeners:
-            if not listener:
-                continue
             try:
                 listener.on_send(frame)
             except AttributeError:
