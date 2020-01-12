@@ -15,7 +15,7 @@ try:
     from ssl import SSLError
 
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLSv1
-except (ImportError, AttributeError):  # python version < 2.6 without the backported ssl module
+except (ImportError, AttributeError):
     ssl = None
 
     class SSLError(object):
@@ -306,6 +306,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Disconnect the socket.
         """
+        pass
 
     def wait_for_connection(self, timeout=None):
         """
