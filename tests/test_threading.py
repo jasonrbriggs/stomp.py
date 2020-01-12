@@ -47,7 +47,6 @@ def get_mq():
 
 class TestThreading(object):
     def init(self):
-        logging.info(">>>>>>>>>>>>>>SETUP")
         self.mq = get_mq()
         self.q = Queue(10)
         self.cmd = Queue()
