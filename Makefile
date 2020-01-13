@@ -23,7 +23,7 @@ install:
 	poetry export -f requirements.txt --dev -o requirements.txt
 
 test:
-	poetry run pytest tests/ --cov=stomp --log-level=DEBUG --log-cli-level=DEBUG -s -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html
+	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html
 
 #buildrpm:
 #	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
@@ -50,7 +50,7 @@ docker-image:
 	docker build -t stomppy docker/
 
 run-docker:
-	docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy 
+	docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy -e TRAVIS=${TRAVIS}
 	docker ps
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
