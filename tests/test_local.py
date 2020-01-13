@@ -5,12 +5,12 @@ import pytest
 
 import stomp
 from stomp.listener import TestListener
-from stomp import logging
 from .testutils import *
 
+import logging
 
 def is_inside_travis():
-    logging.info(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
+    logging.warn(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
     if os.environ.get('TRAVIS', 'false') == 'true':
         logging.info("Not running ipv6 test inside travis")
         return True
