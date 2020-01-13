@@ -28,6 +28,8 @@ def conn():
 
 class TestIP6(object):
     def test_ipv6_send(self, conn):
+        logging.warn(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
+        logging.warn(">>>>>>>>>>>>>>>> %s" % is_inside_travis())
         if not is_inside_travis():
             logging.info("Running ipv6 test")
             timestamp = time.strftime('%Y%m%d%H%M%S')
