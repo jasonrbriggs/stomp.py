@@ -14,6 +14,12 @@ services:
 env:
   - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/ STOMP_PRINT_TO_LOG=true TRAVIS=true
 
+addons:
+  hosts:
+    - my.example.com
+    - my.example.org
+    - my.example.net
+
 before_install:
   - make docker-image
   - make run-docker
