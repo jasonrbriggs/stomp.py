@@ -10,7 +10,7 @@ from .testutils import *
 import logging
 
 def is_inside_travis():
-    logging.warn(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
+    print(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
     if os.environ.get('TRAVIS', 'false') == 'true':
         logging.info("Not running ipv6 test inside travis")
         return True
@@ -28,8 +28,8 @@ def conn():
 
 class TestIP6(object):
     def test_ipv6_send(self, conn):
-        logging.warn(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
-        logging.warn(">>>>>>>>>>>>>>>> %s" % is_inside_travis())
+        print(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
+        print(">>>>>>>>>>>>>>>> %s" % is_inside_travis())
         if not is_inside_travis():
             logging.info("Running ipv6 test")
             timestamp = time.strftime('%Y%m%d%H%M%S')
