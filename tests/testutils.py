@@ -223,3 +223,10 @@ def validate_send(conn, connections=1, messages=1, errors=0):
     assert listener.connections == 1, 'should have received 1 connection acknowledgement'
     assert listener.messages == 1, 'should have received 1 message'
     assert listener.errors == 0, 'should not have received any errors'
+
+
+def is_inside_travis():
+    if os.environ.get('TRAVIS', 'false') == 'true':
+        logging.info("Not running test inside travis")
+        return True
+    return False
