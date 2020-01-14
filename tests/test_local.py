@@ -10,7 +10,6 @@ from .testutils import *
 import logging
 
 def is_inside_travis():
-    print(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
     if os.environ.get('TRAVIS', 'false') == 'true':
         logging.info("Not running ipv6 test inside travis")
         return True
@@ -19,17 +18,18 @@ def is_inside_travis():
 
 @pytest.fixture()
 def conn():
-    conn = stomp.Connection11(get_ipv6_host())
-    conn.set_listener('testlistener', TestListener('123', print_to_log=True))
-    conn.connect('admin', 'password', wait=True)
-    yield conn
-    conn.disconnect(receipt=None)
+    if not is_inside_travis():
+        conn = stomp.Connection11(get_ipv6_host())
+        conn.set_listener('testlistener', TestListener('123', print_to_log=True))
+        conn.connect('admin', 'password', wait=True)
+        yield conn
+        conn.disconnect(receipt=None)
+    else:
+        yield None
 
 
 class TestIP6(object):
     def test_ipv6_send(self, conn):
-        print(">>>>>>>>>>>>>>>> %s" % os.environ.get('TRAVIS', 'false'))
-        print(">>>>>>>>>>>>>>>> %s" % is_inside_travis())
         if not is_inside_travis():
             logging.info("Running ipv6 test")
             timestamp = time.strftime('%Y%m%d%H%M%S')
