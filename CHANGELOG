@@ -1,6 +1,7 @@
 Version 5.0.2 -
 
  * Update to not allow a null (None) listener when calling set_listener (minor code "smell" tidy up)
+ * Change build to use [Python Poetry](https://python-poetry.org/)
 
 
 Version 5.0.1 - Jan 2020

@@ -1,4 +1,5 @@
 import importlib
+import inspect
 import logging
 import platform
 import traceback
@@ -48,7 +49,6 @@ class TransformationListener(TestListener):
         TestListener.on_message(self, headers, body)
         self.message = body
 
-import inspect
 
 @pytest.fixture()
 def conn():

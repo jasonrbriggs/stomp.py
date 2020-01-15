@@ -23,6 +23,7 @@ pytest = "^5.2"
 pytest-cov = "^2.8.1"
 pytest-mock = "^2.0.0"
 pytest-html = "^2.0.1"
+pytest-ordering = "^0.6"
 
 [tool.poetry.scripts]
 stomp = "stomp.__main__:main"
