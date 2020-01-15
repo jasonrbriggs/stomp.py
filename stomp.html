@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>stomp package &#8212; Stomp 5.0.0 documentation</title>
+    <title>stomp package &#8212; Stomp 5.0.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -1128,6 +1128,7 @@ the connection until it has been reestablished.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>id</strong> (<em>str</em>) – identifier of the message</li>
 <li><strong>transaction</strong> (<em>str</em>) – include the acknowledgement in the specified transaction</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt id</li>
 </ul>
 </td>
 </tr>
@@ -1359,6 +1360,7 @@ for more information</li>
 <li><strong>id</strong> (<em>str</em>) – identifier of the message</li>
 <li><strong>subscription</strong> (<em>str</em>) – the subscription this message is associated with</li>
 <li><strong>transaction</strong> (<em>str</em>) – include the acknowledgement in the specified transaction</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt id</li>
 </ul>
 </td>
 </tr>
@@ -1465,6 +1467,7 @@ be generated)</li>
 <li><strong>id</strong> (<em>str</em>) – the unique id of the message to nack</li>
 <li><strong>subscription</strong> (<em>str</em>) – the subscription this message is associated with</li>
 <li><strong>transaction</strong> (<em>str</em>) – include this nack in a named transaction</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt id</li>
 <li><strong>keyword_headers</strong> – any additional headers to send with the nack command</li>
 </ul>
 </td>
@@ -1587,6 +1590,7 @@ through the underlying transport:</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>id</strong> (<em>str</em>) – identifier of the message</li>
 <li><strong>transaction</strong> (<em>str</em>) – include the acknowledgement in the specified transaction</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt id</li>
 </ul>
 </td>
 </tr>
@@ -1626,6 +1630,7 @@ through the underlying transport:</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>id</strong> (<em>str</em>) – the unique id of the message to nack</li>
 <li><strong>transaction</strong> (<em>str</em>) – include this nack in a named transaction</li>
+<li><strong>receipt</strong> (<em>str</em>) – the receipt id</li>
 <li><strong>keyword_headers</strong> – any additional headers to send with the nack command</li>
 </ul>
 </td>
