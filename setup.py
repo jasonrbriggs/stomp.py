@@ -122,6 +122,7 @@ setup(
             'stomp = stomp.__main__:main',
         ],
     },
+    python_requires='>=3.4',
     classifiers=[
          'Development Status :: 5 - Production/Stable',
          'Intended Audience :: Developers',
