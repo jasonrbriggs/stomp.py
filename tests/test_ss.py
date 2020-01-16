@@ -1,8 +1,3 @@
-try:
-    from exceptions import AssertionError
-except ImportError:
-    pass
-
 import pytest
 
 import stomp
