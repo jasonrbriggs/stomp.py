@@ -503,17 +503,6 @@ def do_nothing_loop():
         time.sleep(1)
 
 
-def optional_arg(arg_default):
-    def func(option, opt_str, value, parser):
-        if parser.rargs and not parser.rargs[0].startswith('-'):
-            val = parser.rargs[0]
-            parser.rargs.pop(0)
-        else:
-            val = arg_default
-        setattr(parser.values, option.dest, val)
-    return func
-
-
 def main():
     arguments = docopt(__doc__, version=version_string)
 
