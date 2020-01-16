@@ -27,7 +27,6 @@ unsubscribe /queue/testfile''')
 
 
 class TestCLI(object):
-
     def test_invalid_version(self):
         with pytest.raises(RuntimeError):
             StompCLI(host, port, username, password, 'invalid')
@@ -275,3 +274,15 @@ class TestCLI(object):
 
         teststdout.expect('Shutting down, please wait')
         cli.onecmd('quit')
+
+    # just here for coverage
+    def test_on_disconnected_edgecase(self):
+        teststdin = StubStdin()
+        teststdout = StubStdout(self)
+        teststdout.expect('CONNECTED')
+
+        cli = StompCLI(host, port, username, password, '1.0', stdin=teststdin, stdout=teststdout)
+
+        teststdout.expect('.*lost connection.*')
+
+        cli.on_disconnected()
