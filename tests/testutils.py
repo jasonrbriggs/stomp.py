@@ -1,12 +1,11 @@
 # -*- coding: utf8 -*-
 
-try:
-    from configparser import RawConfigParser
-except ImportError:
-    from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 import json
 import sys
 from subprocess import run, PIPE
+
+import pytest
 
 from stomp.utils import *
 from stomp import logging
@@ -187,7 +186,6 @@ class StubStdin(object):
 
 class StubStdout(object):
     def __init__(self, test):
-        self.test = test
         self.expects = []
 
     def expect(self, txt):
@@ -200,7 +198,7 @@ class StubStdout(object):
         if txt == '>' or txt == '' or header_re.match(txt):
             return
         if len(self.expects) == 0:
-            self.test.fail('No expectations - actual "%s"' % txt)
+            pytest.fail('No expectations - actual "%s"' % txt)
             return
 
         for x in range(0, len(self.expects)):
@@ -209,7 +207,7 @@ class StubStdout(object):
                 del self.expects[x]
                 return
 
-        self.test.fail('"%s" was not expected' % txt)
+        pytest.fail('"%s" was not expected (expectations were: [%s])' % (txt, self.expects))
 
     def flush(self):
         pass
