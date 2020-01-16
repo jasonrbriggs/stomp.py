@@ -10,10 +10,7 @@ must be wedged in their send() calls.
 """
 
 import os
-try:
-    from queue import Empty, Full, Queue
-except ImportError:
-    from Queue import Empty, Full, Queue
+from queue import Empty, Full, Queue
 import time
 from time import monotonic
 
