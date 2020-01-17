@@ -17,52 +17,40 @@ all:
 docs:
 	cd docs && make html
 
-source:
-	$(PYTHON) setup.py sdist $(COMPILE)
-
 install:
-	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)
+	poetry update
+	poetry build
+	poetry export -f requirements.txt --dev -o requirements.txt
 
-cleantests:
-	coverage erase
+test:
+	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html
 
-test: cleantests travistests
-	$(PYTHON) setup.py test --test=local_test
-	coverage combine
-	coverage html -d ../stomppy-docs/htmlcov
-
-travistests:
-	$(PYTHON) setup.py test --test=basic_test,nonascii_test,ss_test,cli_test,s10_test,s11_test,s12_test,rabbitmq_test,stompserver_test,\
-	misc_test,transport_test,utils_test,multicast_test,cli_ssl_test,ssl_test,ssl_sni_test,activemq_test,artemis_test
-	$(PYTHON) setup.py piptest
-
-buildrpm:
-	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
-
-builddeb:
-	# build the source package in the parent directory
-	# then rename it to project_version.orig.tar.gz
-	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../
-	rename -f 's/$(PROJECT)-(.*)\.tar\.gz/$(PROJECT)_$$1\.orig\.tar\.gz/' ../*
-	# build the package
-	dpkg-buildpackage -kjasonrbriggs@gmail.com -i -I -rfakeroot
+#buildrpm:
+#	$(PYTHON) setup.py bdist_rpm --post-install=rpm/postinstall --pre-uninstall=rpm/preuninstall
+#
+#builddeb:
+#	# build the source package in the parent directory
+#	# then rename it to project_version.orig.tar.gz
+#	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../
+#	rename -f 's/$(PROJECT)-(.*)\.tar\.gz/$(PROJECT)_$$1\.orig\.tar\.gz/' ../*
+#	# build the package
+#	dpkg-buildpackage -kjasonrbriggs@gmail.com -i -I -rfakeroot
 
 clean:
 ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
 endif
-	$(PYTHON) setup.py clean
 	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/
 	find . -name '*.pyc' -delete
 
 release:
-	$(PYTHON) setup.py clean install sdist bdist_wheel upload
+	poetry publish
 
 docker-image:
 	docker build -t stomppy docker/
 
 run-docker:
-	docker run -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy 
+	docker run --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy
 	docker ps
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"

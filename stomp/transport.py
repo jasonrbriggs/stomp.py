@@ -15,7 +15,7 @@ try:
     from ssl import SSLError
 
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLSv1
-except (ImportError, AttributeError):  # python version < 2.6 without the backported ssl module
+except (ImportError, AttributeError):
     ssl = None
 
     class SSLError(object):
@@ -103,7 +103,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.running = True
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        # receiver_thread.name = "StompReceiver%s" % getattr(receiver_thread, "name", "Thread")
+        logging.info("Created thread %s using func %s" % (receiver_thread, self.create_thread_fc))
         self.notify('connecting')
 
     def stop(self):
@@ -148,6 +148,7 @@ class BaseTransport(stomp.listener.Publisher):
         :param str name: the name of the listener
         :param ConnectionListener listener: the listener object
         """
+        assert listener is not None
         with self.__listeners_change_condition:
             self.listeners[name] = listener
 
@@ -221,9 +222,6 @@ class BaseTransport(stomp.listener.Publisher):
             listeners = sorted(self.listeners.items())
 
         for (_, listener) in listeners:
-            if not listener:
-                continue
-
             notify_func = getattr(listener, 'on_%s' % frame_type, None)
             if not notify_func:
                 logging.debug("listener %s has no method on_%s", listener, frame_type)
@@ -255,8 +253,6 @@ class BaseTransport(stomp.listener.Publisher):
             listeners = sorted(self.listeners.items())
 
         for (_, listener) in listeners:
-            if not listener:
-                continue
             try:
                 listener.on_send(frame)
             except AttributeError:
@@ -306,6 +302,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Disconnect the socket.
         """
+        pass
 
     def wait_for_connection(self, timeout=None):
         """
@@ -327,7 +324,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Main loop listening for incoming data.
         """
-        logging.info("Starting receiver loop")
+        logging.info("Starting receiver loop (%s)" % threading.current_thread())
         notify_disconnected = True
         try:
             while self.running:
@@ -661,7 +658,6 @@ class Transport(BaseTransport):
         except:
             pass  # ignore errors when attempting to close socket
         self.socket = None
-        self.current_host_and_port = None
 
     def __enable_keepalive(self):
         def try_setsockopt(sock, name, fam, opt, val):
@@ -721,6 +717,7 @@ class Transport(BaseTransport):
         sleep_exp = 1
         connect_count = 0
 
+        logging.info("attempt reconnection (%s, %s, %s)" % (self.running, self.socket, connect_count))
         while self.running and self.socket is None and (
             connect_count < self.__reconnect_attempts_max or
             self.__reconnect_attempts_max == -1 ):

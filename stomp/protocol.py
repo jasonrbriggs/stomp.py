@@ -210,7 +210,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
     :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
-        HeartbeatListener.__init__(self, heartbeats)
+        HeartbeatListener.__init__(self, transport, heartbeats, heart_beat_receive_scale)
         self.transport = transport
         self.auto_content_length = auto_content_length
         transport.set_listener('protocol-listener', self)
@@ -348,6 +348,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
+            import traceback
+            traceback.print_stack()
             logging.debug('Not sending disconnect, already disconnected')
             return
         headers = utils.merge_headers([headers, keyword_headers])

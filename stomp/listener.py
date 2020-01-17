@@ -154,12 +154,14 @@ class HeartbeatListener(ConnectionListener):
     """
     Listener used to handle STOMP heartbeating.
     """
-    def __init__(self, heartbeats):
+    def __init__(self, transport, heartbeats, heart_beat_receive_scale=1.5):
         self.running = False
+        self.transport = transport
         self.heartbeats = heartbeats
         self.received_heartbeat = None
         self.heartbeat_thread = None
         self.next_outbound_heartbeat = None
+        self.heart_beat_receive_scale = heart_beat_receive_scale
         self.heartbeat_terminate_event = threading.Event()
 
     def on_connected(self, headers, body):
@@ -274,7 +276,7 @@ class HeartbeatListener(ConnectionListener):
 
             now = monotonic()
 
-            if not self.transport.is_connected():
+            if not self.running:
                 time.sleep(self.send_sleep)
                 continue
 
@@ -529,6 +531,7 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         self.message_received = False
         self.heartbeat_condition = threading.Condition()
         self.heartbeat_received = False
+        self.timestamp = time.strftime('%Y%m%d%H%M%S')
 
     def wait_for_message(self):
         with self.message_condition:

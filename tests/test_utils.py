@@ -1,15 +1,16 @@
 import importlib
-import unittest
+
+import pytest
 
 import stomp
 from stomp.utils import *
 
 
-class TestUtils(unittest.TestCase):
+class TestUtils(object):
     def test_returns_true_when_localhost(self):
-        self.assertEqual(1, is_localhost(('localhost', 8000)))
-        self.assertEqual(1, is_localhost(('127.0.0.1', 8000)))
-        self.assertEqual(2, is_localhost(('192.168.1.92', 8000)))
+        assert 1 == is_localhost(('localhost', 8000))
+        assert 1 == is_localhost(('127.0.0.1', 8000))
+        assert 2 == is_localhost(('192.168.1.92', 8000))
 
     def test_convert_frame(self):
         f = Frame('SEND', {
@@ -22,7 +23,7 @@ class TestUtils(unittest.TestCase):
 
         s = pack(lines)
 
-        self.assertEqual(bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii'), s)
+        assert bytearray('SEND\n no : trimming \nheader1:value1\n\nthis is the body\x00', 'ascii') == s
 
     def test_parse_headers(self):
         lines = [
@@ -33,40 +34,40 @@ class TestUtils(unittest.TestCase):
             r'against-spec:\t',  # should actually raise or something, we're against spec here ATM
             r' foo : bar',
         ]
-        self.assertEqual({
+        assert {
             'h1': r'foo:\bar  ',
             'h:2': 'baz\r\nquux',
             'h3': r'\n\c',
             'against-spec': r'\t',
             ' foo ': ' bar',
-        }, parse_headers(lines))
+        } == parse_headers(lines)
 
     def test_calculate_heartbeats(self):
         chb = (3000, 5000)
         shb = map(str, reversed(chb))
-        self.assertEqual((3000, 5000), calculate_heartbeats(shb, chb))
+        assert (3000, 5000) == calculate_heartbeats(shb, chb)
         shb = ('6000', '2000')
-        self.assertEqual((3000, 6000), calculate_heartbeats(shb, chb))
+        assert (3000, 6000) == calculate_heartbeats(shb, chb)
         shb = ('0', '0')
-        self.assertEqual((0, 0), calculate_heartbeats(shb, chb))
+        assert (0, 0) == calculate_heartbeats(shb, chb)
         shb = ('10000', '0')
-        self.assertEqual((0, 10000), calculate_heartbeats(shb, chb))
+        assert (0, 10000) == calculate_heartbeats(shb, chb)
         chb = (0, 0)
-        self.assertEqual((0, 0), calculate_heartbeats(shb, chb))
+        assert (0, 0) == calculate_heartbeats(shb, chb)
 
     def test_parse_frame(self):
         # heartbeat
         f = parse_frame(b'\x0a')
-        self.assertEqual(str(f), str(Frame('heartbeat')))
+        assert str(f) == str(Frame('heartbeat'))
         # oddball/broken
         f = parse_frame(b'FOO')
-        self.assertEqual(str(f), str(Frame('FOO', body=b'')))
+        assert str(f) == str(Frame('FOO', body=b''))
         # empty body
         f = parse_frame(b'RECEIPT\nreceipt-id:message-12345\n\n')
-        self.assertEqual(str(f), str(Frame('RECEIPT', {'receipt-id': 'message-12345'}, b'')))
+        assert str(f) == str(Frame('RECEIPT', {'receipt-id': 'message-12345'}, b''))
         # no headers
         f = parse_frame(b'ERROR\n\n')
-        self.assertEqual(str(f), str(Frame('ERROR', body=b'')))
+        assert str(f) == str(Frame('ERROR', body=b''))
         # regular, different linefeeds
         for lf in b'\n', b'\r\n':
             f = parse_frame(
@@ -75,40 +76,41 @@ class TestUtils(unittest.TestCase):
                 lf +
                 b'hello world!'
             )
-            self.assertEqual(str(f), str(Frame('MESSAGE', {'content-type': 'text/plain'}, b'hello world!')))
+            assert str(f) == str(Frame('MESSAGE', {'content-type': 'text/plain'}, b'hello world!'))
 
     def test_clean_default_headers(self):
         Frame().headers['foo'] = 'bar'
-        self.assertEqual(Frame().headers, {})
+        assert Frame().headers == {}
 
     def test_join(self):
         str = stomp.utils.join((b'a', b'b', b'c'))
-        self.assertEquals("abc", str)
+        assert "abc" == str
 
     def test_decode(self):
-        self.assertTrue(decode(None) is None)
-        self.assertEqual('test', decode(b'test'))
+        assert decode(None) is None
+        assert 'test' == decode(b'test')
 
     def test_encode(self):
-        self.assertEqual(b'test', encode('test'))
-        self.assertEqual(b'test', encode(b'test'))
-        self.assertRaises(TypeError, encode, None)
+        assert b'test' == encode('test')
+        assert b'test' == encode(b'test')
+        with pytest.raises(TypeError):
+            encode(None)
 
     def test_pack(self):
-        self.assertEquals(b'testtest', pack([b'test', b'test']))
+        assert b'testtest' == pack([b'test', b'test'])
 
     def test_should_skip_hostname_scan(self):
         os.environ['STOMP_SKIP_HOSTNAME_SCAN'] = 'true'
         importlib.reload(stomp.utils)
 
-        self.assertEquals(2, len(stomp.utils.LOCALHOST_NAMES))
-        self.assertTrue('localhost' in stomp.utils.LOCALHOST_NAMES)
-        self.assertTrue('127.0.0.1' in stomp.utils.LOCALHOST_NAMES)
+        assert 2 == len(stomp.utils.LOCALHOST_NAMES)
+        assert 'localhost' in stomp.utils.LOCALHOST_NAMES
+        assert '127.0.0.1' in stomp.utils.LOCALHOST_NAMES
 
         del os.environ['STOMP_SKIP_HOSTNAME_SCAN']
         importlib.reload(stomp.utils)
 
-        self.assertTrue(len(stomp.utils.LOCALHOST_NAMES) > 2)
+        assert len(stomp.utils.LOCALHOST_NAMES) > 2
 
     def test_mask_passcodes(self):
         lines = [
@@ -119,7 +121,7 @@ class TestUtils(unittest.TestCase):
 
         lines = stomp.utils.clean_lines(lines)
 
-        self.assertEquals("""['test line 1', 'test line with passcode:********', 'test line 3']""", lines)
+        assert """['test line 1', 'test line with passcode:********', 'test line 3']""" == lines
 
     # just for coverage
     def test_get_errno(self):
@@ -128,4 +130,4 @@ class TestUtils(unittest.TestCase):
         o = ErrObj()
         o.args = ["a"]
 
-        self.assertEquals("a", stomp.utils.get_errno(o))
+        assert "a" == stomp.utils.get_errno(o)

@@ -1,12 +1,13 @@
 import time
-import unittest
+
+import pytest
 
 import stomp
-from stomp.listener import TestListener, WaitingListener
-from stomp.test.testutils import *
+from stomp.listener import *
+from .testutils import *
 
 
-class Test11Send(unittest.TestCase):
+class Test11Send(object):
     def test11(self):
         conn = stomp.Connection(get_default_host())
         tl = TestListener('123', print_to_log=True)
@@ -18,9 +19,9 @@ class Test11Send(unittest.TestCase):
 
         tl.wait_for_message()
 
-        self.assertTrue(tl.connections == 1, 'should have received 1 connection acknowledgement')
-        self.assertTrue(tl.messages >= 1, 'should have received at least 1 message')
-        self.assertTrue(tl.errors == 0, 'should not have received any errors')
+        assert tl.connections == 1, 'should have received 1 connection acknowledgement'
+        assert tl.messages >= 1, 'should have received at least 1 message'
+        assert tl.errors == 0, 'should not have received any errors'
 
         conn.unsubscribe(destination='/queue/test', id=1)
 
@@ -38,7 +39,7 @@ class Test11Send(unittest.TestCase):
         listener = TestListener('123', print_to_log=True)
         conn.set_listener('', listener)
         conn.connect(get_default_user(), get_default_password(), wait=True)
-        self.assertTrue(conn.heartbeats[0] > 0)
+        assert conn.heartbeats[0] > 0
         conn.subscribe(destination='/queue/test', ack='auto', id=1)
 
         conn.send(body='this is a test', destination='/queue/test', receipt='123')
@@ -46,15 +47,13 @@ class Test11Send(unittest.TestCase):
         listener.wait_for_message()
         conn.disconnect(receipt=None)
 
-        self.assertTrue(listener.connections >= 1,
-                        'should have received 1 connection acknowledgement, was %s' % listener.connections)
-        self.assertTrue(listener.messages >= 1, 'should have received 1 message, was %s' % listener.messages)
-        self.assertTrue(listener.errors == 0, 'should not have received any errors, was %s' % listener.errors)
-        self.assertTrue(listener.heartbeat_timeouts == 0,
-                        'should not have received a heartbeat timeout, was %s' % listener.heartbeat_timeouts)
+        assert listener.connections >= 1, 'should have received 1 connection acknowledgement, was %s' % listener.connections
+        assert listener.messages >= 1, 'should have received 1 message, was %s' % listener.messages
+        assert listener.errors == 0, 'should not have received any errors, was %s' % listener.errors
+        assert listener.heartbeat_timeouts == 0, 'should not have received a heartbeat timeout, was %s' % listener.heartbeat_timeouts
 
     def testheartbeat_timeout(self):
-        server = TestStompServer('127.0.0.1', 60000)
+        server = StubStompServer('127.0.0.1', 60000)
         server.start()
         try:
             server.add_frame('''CONNECTED
@@ -79,7 +78,7 @@ heart-beat:1000,1000
         finally:
             server.stop()
 
-        self.assertTrue(listener.heartbeat_timeouts >= 1, 'should have received a heartbeat timeout')
+        assert listener.heartbeat_timeouts >= 1, 'should have received a heartbeat timeout'
 
         def testheartbeat_shutdown(self):
             server = TestStompServer('127.0.0.1', 60000)
@@ -112,5 +111,5 @@ heart-beat:1000,1000
                 _, e, _ = sys.exc_info()
                 logging.error("Error: %s", e)
 
-            self.assertLessEqual(end_time - start_time, 2, 'should stop immediately and not after heartbeat timeout')
-            self.assertIsNone(conn.heartbeat_thread, 'heartbeat thread should have finished')
+            assert end_time - start_time <= 2, 'should stop immediately and not after heartbeat timeout'
+            assert conn.heartbeat_thread is None, 'heartbeat thread should have finished'

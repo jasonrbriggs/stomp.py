@@ -3,7 +3,6 @@ sudo: required
 language: python
 
 python:
-  - "3.5"
   - "3.6"
   - "3.7"
   - "3.8"
@@ -13,13 +12,20 @@ services:
   - docker
 
 env:
-  - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/ STOMP_PRINT_TO_LOG=true
+  - RABBITMQ_HOST=localhost STOMPSERVER_HOST=localhost STD_HOST=localhost STD_VHOST=/ TRAVIS=true
+
+addons:
+  hosts:
+    - my.example.com
+    - my.example.org
+    - my.example.net
 
 before_install:
   - make docker-image
   - make run-docker
   - docker inspect stomppy
   - docker logs stomppy
+  - pip install poetry
 
 script:
-  - make travistests
+  - make test

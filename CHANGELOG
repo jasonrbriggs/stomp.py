@@ -1,6 +1,9 @@
-Version 5.0.2 -
+Version 5.1.0 -
 
- *
+ * Update to not allow a null (None) listener when calling set_listener (minor code "smell" tidy up)
+ * Change get_ssl call in connect to be consistent with transport method
+ * Change build to use [Python Poetry](https://python-poetry.org/)
+ * Test coverage improvement
 
 
 Version 5.0.1 - Jan 2020

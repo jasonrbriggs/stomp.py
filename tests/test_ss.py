@@ -1,26 +1,22 @@
-try:
-    from exceptions import AssertionError
-except ImportError:
-    pass
-import time
-import unittest
+import pytest
 
 import stomp
-from stomp.listener import TestListener
-from stomp.test.testutils import *
+from stomp.listener import *
+from .testutils import *
 
 
-class TestWithStompServer(unittest.TestCase):
+@pytest.fixture
+def server():
+    server = StubStompServer('127.0.0.1', 60000)
+    server.start()
+    yield server
+    server.stop()
 
-    def setUp(self):
-        self.server = TestStompServer('127.0.0.1', 60000)
-        self.server.start()
 
-    def tearDown(self):
-        self.server.stop()
+class TestWithStompServer(object):
 
-    def test_disconnect(self):
-        self.server.add_frame('''CONNECTED
+    def test_disconnect(self, server):
+        server.add_frame('''CONNECTED
 version:1.1
 session:1
 server:test
@@ -35,10 +31,10 @@ heart-beat:1000,1000
 
         time.sleep(2)
 
-        self.server.stop()
+        server.stop()
 
         for _ in range(100):
-            if self.server.stopped:
+            if server.stopped:
                 break
             time.sleep(0.1)
         else:
@@ -48,11 +44,11 @@ heart-beat:1000,1000
 
         try:
             conn.send(body='test disconnect', destination='/test/disconnectqueue')
-            self.fail('Should not have successfully sent a message at this point')
+            pytest.fail('Should not have successfully sent a message at this point')
         except Exception:
             _, e, _ = sys.exc_info()
             if e.__class__ == AssertionError:
-                self.fail(str(e))
+                pytest.fail(str(e))
             logging.debug('stopping conn after expected exception %s', e)
             # lost connection, now restart the server
             try:
@@ -62,7 +58,7 @@ heart-beat:1000,1000
 
             time.sleep(2)
 
-            self.server.add_frame('''CONNECTED
+            server.add_frame('''CONNECTED
 version:1.1
 session:1
 server:test
@@ -70,15 +66,15 @@ heart-beat:1000,1000
 
 \x00''')
 
-            self.server.start()
+            server.start()
 
             conn.connect()
 
             time.sleep(5)
 
-        self.assertTrue(listener.connections >= 2, 'should have received 2 connection acknowledgements')
+        assert listener.connections >= 2, 'should have received 2 connection acknowledgements'
 
-    def test_parsing(self):
+    def test_parsing(self, server):
 
         def pump(n):
             # pump; test server gives us one frame per received something
@@ -88,7 +84,7 @@ heart-beat:1000,1000
 
         # Trailing optional EOLs in a frame
 
-        self.server.add_frame('''CONNECTED
+        server.add_frame('''CONNECTED
 version:1.1
 session:1
 server:test
@@ -104,7 +100,7 @@ heart-beat:1000,1000
 
         time.sleep(2)
 
-        self.assertEqual(expected_heartbeat_count, listener.heartbeat_count)
+        assert expected_heartbeat_count == listener.heartbeat_count
 
         # No trailing EOLs, separate heartbeat
 
@@ -114,8 +110,8 @@ content-type:text/plain
 
 %s\x00''' % message_body
 
-        self.server.add_frame(message_frame)
-        self.server.add_frame('\n')
+        server.add_frame(message_frame)
+        server.add_frame('\n')
         expected_heartbeat_count += 1
 
         pump(2)
@@ -123,15 +119,15 @@ content-type:text/plain
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        self.assertEqual(expected_heartbeat_count, listener.heartbeat_count)
-        self.assertEqual({"content-type": "text/plain"}, headers)
-        self.assertEqual(message_body, body)
+        assert expected_heartbeat_count == listener.heartbeat_count
+        assert {"content-type": "text/plain"} == headers
+        assert message_body == body
 
         # Trailing EOL, separate heartbeat, another message
 
-        self.server.add_frame(message_frame + '\n')
-        self.server.add_frame('\n')
-        self.server.add_frame(message_frame + '\n')
+        server.add_frame(message_frame + '\n')
+        server.add_frame('\n')
+        server.add_frame(message_frame + '\n')
         expected_heartbeat_count += 1
 
         pump(3)
@@ -140,16 +136,16 @@ content-type:text/plain
         listener.wait_for_message()
         headers, body = listener.get_latest_message()
 
-        self.assertEqual(expected_heartbeat_count, listener.heartbeat_count)
-        self.assertEqual({"content-type": "text/plain"}, headers)
-        self.assertEqual(message_body, body)
+        assert expected_heartbeat_count == listener.heartbeat_count
+        assert {"content-type": "text/plain"} == headers
+        assert message_body == body
 
         # Torture tests: return content one byte at a time
 
-        self.server.add_frame('\n')
+        server.add_frame('\n')
         for c in message_frame:
-            self.server.add_frame(c)
-        self.server.add_frame('\n')
+            server.add_frame(c)
+        server.add_frame('\n')
         expected_heartbeat_count += 2
 
         pump(len(message_frame) + 2)
@@ -157,9 +153,9 @@ content-type:text/plain
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        self.assertEqual(expected_heartbeat_count, listener.heartbeat_count)
-        self.assertEqual({"content-type": "text/plain"}, headers)
-        self.assertEqual(message_body, body)
+        assert expected_heartbeat_count == listener.heartbeat_count
+        assert {"content-type": "text/plain"} == headers
+        assert message_body == body
 
         # ...and a similar one with content-length and null bytes in body
 
@@ -170,11 +166,11 @@ content-length:%s
 
 %s\x00''' % (len(message_body), message_body)
 
-        self.server.add_frame('\n')
-        self.server.add_frame('\n')
+        server.add_frame('\n')
+        server.add_frame('\n')
         for c in message_frame:
-            self.server.add_frame(c)
-        self.server.add_frame('\n')
+            server.add_frame(c)
+        server.add_frame('\n')
         expected_heartbeat_count += 3
 
         pump(len(message_frame) + 3)
@@ -182,9 +178,9 @@ content-length:%s
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        self.assertEqual(expected_heartbeat_count, listener.heartbeat_count)
-        self.assertEqual({
+        assert expected_heartbeat_count == listener.heartbeat_count
+        assert {
             "content-type": "text/plain",
             "content-length": str(len(message_body)),
-        }, headers)
-        self.assertEqual(message_body, body)
+        } == headers
+        assert message_body == body
