@@ -263,7 +263,7 @@
     <p id="t210" class="pln"><span class="n"><a href="#t210">210</a></span><span class="t"><span class="str">    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time</span>&nbsp;</span><span class="r"></span></p>
     <p id="t211" class="pln"><span class="n"><a href="#t211">211</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
     <p id="t212" class="run"><span class="n"><a href="#t212">212</a></span><span class="t">    <span class="key">def</span> <span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">transport</span><span class="op">,</span> <span class="nam">heartbeats</span><span class="op">=</span><span class="op">(</span><span class="num">0</span><span class="op">,</span> <span class="num">0</span><span class="op">)</span><span class="op">,</span> <span class="nam">auto_content_length</span><span class="op">=</span><span class="key">True</span><span class="op">,</span> <span class="nam">heart_beat_receive_scale</span><span class="op">=</span><span class="num">1.5</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t213" class="run"><span class="n"><a href="#t213">213</a></span><span class="t">        <span class="nam">HeartbeatListener</span><span class="op">.</span><span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">heartbeats</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t213" class="run"><span class="n"><a href="#t213">213</a></span><span class="t">        <span class="nam">HeartbeatListener</span><span class="op">.</span><span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">transport</span><span class="op">,</span> <span class="nam">heartbeats</span><span class="op">,</span> <span class="nam">heart_beat_receive_scale</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t214" class="run"><span class="n"><a href="#t214">214</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span> <span class="op">=</span> <span class="nam">transport</span>&nbsp;</span><span class="r"></span></p>
     <p id="t215" class="run"><span class="n"><a href="#t215">215</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">auto_content_length</span> <span class="op">=</span> <span class="nam">auto_content_length</span>&nbsp;</span><span class="r"></span></p>
     <p id="t216" class="run"><span class="n"><a href="#t216">216</a></span><span class="t">        <span class="nam">transport</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">'protocol-listener'</span><span class="op">,</span> <span class="nam">self</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -578,7 +578,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.3</a>,
-            created at 2020-01-15 23:52
+            created at 2020-01-16 23:42
         </p>
     </div>
 </div>

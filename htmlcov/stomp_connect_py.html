@@ -118,8 +118,8 @@
     <p id="t65" class="run"><span class="n"><a href="#t65">65</a></span><span class="t">    <span class="key">def</span> <span class="nam">set_ssl</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t66" class="run"><span class="n"><a href="#t66">66</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">set_ssl</span><span class="op">(</span><span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="key">def</span> <span class="nam">get_ssl</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t69" class="mis show_mis"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">get_ssl</span><span class="op">(</span><span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="key">def</span> <span class="nam">get_ssl</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">host_and_port</span><span class="op">=</span><span class="key">None</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="mis show_mis"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">get_ssl</span><span class="op">(</span><span class="nam">host_and_port</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t70" class="pln"><span class="n"><a href="#t70">70</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t71" class="pln"><span class="n"><a href="#t71">71</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t72" class="run"><span class="n"><a href="#t72">72</a></span><span class="t"><span class="key">class</span> <span class="nam">StompConnection10</span><span class="op">(</span><span class="nam">BaseConnection</span><span class="op">,</span> <span class="nam">Protocol10</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -284,7 +284,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.3</a>,
-            created at 2020-01-15 23:52
+            created at 2020-01-16 22:57
         </p>
     </div>
 </div>
