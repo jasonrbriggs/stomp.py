@@ -3,7 +3,6 @@ import inspect
 import logging
 import platform
 import traceback
-from unittest.mock import MagicMock
 import xml.dom.minidom
 
 import pytest
@@ -79,6 +78,8 @@ def timeout_thread(server):
     yield timeout_thread
 
 
+
+
 class TestMessageTransform(object):
 
     def test_transform(self, conn):
@@ -125,8 +126,8 @@ class TestNoResponseConnectionKill(object):
 
 
 class TestMiscellaneousLogic(object):
-    def test_windows_colours(self):
-        platform.system = MagicMock(return_value="Windows")
+    def test_windows_colours(self, mocker):
+        platform.system = mocker.MagicMock(return_value="Windows")
         import stomp.colours
         importlib.reload(stomp.colours)
 
@@ -141,3 +142,18 @@ class TestMiscellaneousLogic(object):
         p.set_listener('testlistener', None)
         p.remove_listener('testlistener')
         assert p.get_listener('testlistener') is None
+
+    # coverage improvement since on_heartbeat is handled in subclasses of ConnectionListener
+    def test_on_heartbeat(self):
+        cl = ConnectionListener()
+        cl.on_heartbeat()
+
+    def test_heartbeatlistener(self, mocker):
+        transport = mocker.MagicMock()
+        hl = HeartbeatListener(transport, (10000,20000))
+        hl.on_connected({'heart-beat': '10000,20000'}, '')
+        time.sleep(1)
+        hl.on_message
+
+        # just check if there was a received heartbeat calculated
+        assert hl.received_heartbeat > 0

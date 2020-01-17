@@ -39,6 +39,7 @@ class TestSSL(object):
 
             conn.disconnect(receipt=None)
 
+            assert conn.get_ssl() is not None
             assert listener.connections == 1, 'should have received 1 connection acknowledgement'
             assert listener.messages == 1, 'should have received 1 message'
             assert listener.errors == 0, 'should not have received any errors'
