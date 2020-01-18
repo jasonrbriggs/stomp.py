@@ -161,7 +161,7 @@ class HeartbeatListener(ConnectionListener):
         self.received_heartbeat = None
         self.heartbeat_thread = None
         self.next_outbound_heartbeat = None
-        self.heart_beat_receive_scale = heart_beat_receive_scale
+        self.heart_beat_receive_scale = 1.0
         self.heartbeat_terminate_event = threading.Event()
 
     def on_connected(self, headers, body):

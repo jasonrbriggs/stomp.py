@@ -215,7 +215,6 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.auto_content_length = auto_content_length
         transport.set_listener('protocol-listener', self)
         self.version = '1.1'
-        self.heart_beat_receive_scale = heart_beat_receive_scale
 
     def _escape_headers(self, headers):
         """
