@@ -153,7 +153,7 @@ content-type:text/plain
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        assert expected_heartbeat_count == listener.heartbeat_count
+        assert expected_heartbeat_count == listener.heartbeat_count, "expected heartbeat count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
         assert {"content-type": "text/plain"} == headers
         assert message_body == body
 
