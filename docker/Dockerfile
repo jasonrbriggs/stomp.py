@@ -39,9 +39,9 @@ COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY haproxy.sh /
 
 # activemq artemis
-RUN wget http://www.mirrorservice.org/sites/ftp.apache.org/activemq/activemq-artemis/2.10.1/apache-artemis-2.10.1-bin.tar.gz
-RUN tar -xvzf apache-artemis-2.10.1-bin.tar.gz
-RUN apache-artemis-2.10.1/bin/artemis create testbroker --user testuser --password password --allow-anonymous --no-amqp-acceptor --no-hornetq-acceptor --default-port 61619
+RUN wget http://www.mirrorservice.org/sites/ftp.apache.org/activemq/activemq-artemis/2.11.0/apache-artemis-2.11.0-bin.tar.gz
+RUN tar -xvzf apache-artemis-2.11.0-bin.tar.gz
+RUN apache-artemis-2.11.0/bin/artemis create testbroker --user testuser --password password --allow-anonymous --no-amqp-acceptor --no-hornetq-acceptor --default-port 61619
 RUN sed -i 's/acceptor name="stomp">tcp:\/\/0.0.0.0:61613/acceptor name="stomp">tcp:\/\/0.0.0.0:61615/g' testbroker/etc/broker.xml
 
 # expose ports
