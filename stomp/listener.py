@@ -276,7 +276,7 @@ class HeartbeatListener(ConnectionListener):
 
             now = monotonic()
 
-            if not self.running:
+            if not self.transport.is_connected():
                 time.sleep(self.send_sleep)
                 continue
 
