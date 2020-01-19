@@ -78,13 +78,13 @@ class StompCLI(Cmd, ConnectionListener):
         self.user = user
         self.passcode = passcode
         self.__quit = False
-        if ver == '1.0':
+        if ver == "1.0":
             self.conn = StompConnection10([(host, port)])
-        elif ver == '1.1':
+        elif ver == "1.1":
             self.conn = StompConnection11([(host, port)], heartbeats=heartbeats)
-        elif ver == '1.2':
+        elif ver == "1.2":
             self.conn = StompConnection12([(host, port)], heartbeats=heartbeats)
-        elif ver == 'multicast':
+        elif ver == "multicast":
             self.conn = MulticastConnection()
         else:
             raise RuntimeError("Unknown version")

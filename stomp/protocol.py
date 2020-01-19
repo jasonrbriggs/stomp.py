@@ -19,7 +19,7 @@ class Protocol10(ConnectionListener):
         self.transport = transport
         self.auto_content_length = auto_content_length
         transport.set_listener("protocol-listener", self)
-        self.version = '1.0'
+        self.version = "1.0"
 
     def send_frame(self, cmd, headers=None, body=''):
         """
@@ -214,7 +214,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         self.transport = transport
         self.auto_content_length = auto_content_length
         transport.set_listener("protocol-listener", self)
-        self.version = '1.1'
+        self.version = "1.1"
 
     def _escape_headers(self, headers):
         """
@@ -442,7 +442,7 @@ class Protocol12(Protocol11):
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
         Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
-        self.version = '1.2'
+        self.version = "1.2"
 
     def _escape_headers(self, headers):
         """

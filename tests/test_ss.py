@@ -9,7 +9,7 @@ from .testutils import *
 
 @pytest.fixture
 def server():
-    server = StubStompServer('127.0.0.1', 60000)
+    server = StubStompServer("127.0.0.1", 60000)
     server.start()
     yield server
     server.stop()
@@ -26,7 +26,7 @@ heart-beat:1000,1000
 
 \x00''')
 
-        conn = stomp.Connection([('127.0.0.1', 60000)])
+        conn = stomp.Connection([("127.0.0.1", 60000)])
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
@@ -40,12 +40,12 @@ heart-beat:1000,1000
                 break
             time.sleep(0.1)
         else:
-            assert False, 'server never disconnected'
+            assert False, "server never disconnected"
 
         time.sleep(1)
 
         try:
-            conn.send(body='test disconnect', destination='/test/disconnectqueue')
+            conn.send(body="test disconnect", destination="/test/disconnectqueue")
             pytest.fail("Should not have successfully sent a message at this point")
         except Exception:
             _, e, _ = sys.exc_info()
@@ -74,7 +74,7 @@ heart-beat:1000,1000
 
             time.sleep(5)
 
-        assert listener.connections >= 2, 'should have received 2 connection acknowledgements'
+        assert listener.connections >= 2, "should have received 2 connection acknowledgements"
 
     def test_parsing(self, server):
 
@@ -83,7 +83,7 @@ heart-beat:1000,1000
             for x in range(n):
                 if x == 0:
                     logging.debug("pump sending %s frames" % n)
-                conn.transport.send(b'\n')
+                conn.transport.send(b"\n")
                 time.sleep(0.01)
 
         # Trailing optional EOLs in a frame
@@ -94,10 +94,10 @@ session:1
 server:test
 heart-beat:1000,1000
 
-\x00''' + '\n\n\n')
+\x00''' + "\n\n\n")
         expected_heartbeat_count = 0
 
-        conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000,1000))
+        conn = stomp.Connection([("127.0.0.1", 60000)], heartbeats=(1000,1000))
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
@@ -107,14 +107,14 @@ heart-beat:1000,1000
 
         # No trailing EOLs, separate heartbeat
 
-        message_body = 'Hello\n...world!'
+        message_body = "Hello\n...world!"
         message_frame = '''MESSAGE
 content-type:text/plain
 
 %s\x00''' % message_body
 
         server.add_frame(message_frame)
-        server.add_frame('\n')
+        server.add_frame("\n")
         expected_heartbeat_count += 1
 
         pump(2)
@@ -130,9 +130,9 @@ content-type:text/plain
 
         # Trailing EOL, separate heartbeat, another message
 
-        server.add_frame(message_frame + '\n')
-        server.add_frame('\n')
-        server.add_frame(message_frame + '\n')
+        server.add_frame(message_frame + "\n")
+        server.add_frame("\n")
+        server.add_frame(message_frame + "\n")
         expected_heartbeat_count += 1
 
         pump(3)
@@ -149,9 +149,9 @@ content-type:text/plain
 
         # Torture tests: return content one byte at a time
 
-        server.add_frame('\n')
+        server.add_frame("\n")
         server.add_frame(message_frame)
-        server.add_frame('\n')
+        server.add_frame("\n")
         expected_heartbeat_count += 2
 
         pump(len(message_frame) + 2)
@@ -167,17 +167,17 @@ content-type:text/plain
 
         # ...and a similar one with content-length and null bytes in body
 
-        message_body = '%s\x00\x00%s' % (message_body, message_body)
+        message_body = "%s\x00\x00%s" % (message_body, message_body)
         message_frame = '''MESSAGE
 content-type:text/plain
 content-length:%s
 
 %s\x00''' % (len(message_body), message_body)
 
-        server.add_frame('\n')
-        server.add_frame('\n')
+        server.add_frame("\n")
+        server.add_frame("\n")
         server.add_frame(message_frame)
-        server.add_frame('\n')
+        server.add_frame("\n")
         expected_heartbeat_count += 3
 
         pump(len(message_frame) + 3)

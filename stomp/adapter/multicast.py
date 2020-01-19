@@ -11,7 +11,7 @@ from stomp.protocol import *
 from stomp.transport import *
 from stomp.utils import *
 
-MCAST_GRP = '224.1.1.1'
+MCAST_GRP = "224.1.1.1"
 MCAST_PORT = 5000
 
 
@@ -65,28 +65,28 @@ class MulticastTransport(Transport):
         """
         frame_type = f.cmd.lower()
 
-        if frame_type in ['disconnect']:
+        if frame_type in ["disconnect"]:
             return
 
-        if frame_type == 'send':
-            frame_type = 'message'
-            f.cmd = 'MESSAGE'
+        if frame_type == "send":
+            frame_type = "message"
+            f.cmd = "MESSAGE"
 
-        if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
-            if frame_type == 'message':
-                if f.headers['destination'] not in self.subscriptions.values():
+        if frame_type in ["connected", "message", "receipt", "error", "heartbeat"]:
+            if frame_type == "message":
+                if f.headers["destination"] not in self.subscriptions.values():
                     return
                 (f.headers, f.body) = self.notify("before_message", f.headers, f.body)
             self.notify(frame_type, f.headers, f.body)
-        if 'receipt' in f.headers:
-            receipt_frame = Frame("RECEIPT", {"receipt-id": f.headers['receipt']})
+        if "receipt" in f.headers:
+            receipt_frame = Frame("RECEIPT", {"receipt-id": f.headers["receipt"]})
             lines = convert_frame(receipt_frame)
             self.send(encode(pack(lines)))
         logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
 
     def stop(self):
         self.running = False
-        if hasattr(self.receiver_socket, 'SHUT_RDWR'):
+        if hasattr(self.receiver_socket, "SHUT_RDWR"):
             self.receiver_socket.shutdown(socket.SHUT_RDWR)
         self.receiver_socket.close()
         self.disconnect_socket()
@@ -168,7 +168,7 @@ class MulticastConnection(BaseConnection, Protocol12):
             trans = headers["transaction"]
             del self.transactions[trans]
         else:
-            if 'transaction' in headers:
+            if "transaction" in headers:
                 trans = headers["transaction"]
                 if trans not in self.transactions:
                     self.transport.notify("error", {}, "Transaction %s not started" % trans)
