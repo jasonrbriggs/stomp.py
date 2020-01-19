@@ -150,8 +150,7 @@ content-type:text/plain
         # Torture tests: return content one byte at a time
 
         server.add_frame('\n')
-        for c in message_frame:
-            server.add_frame(c)
+        server.add_frame(message_frame)
         server.add_frame('\n')
         expected_heartbeat_count += 2
 
@@ -177,8 +176,7 @@ content-length:%s
 
         server.add_frame('\n')
         server.add_frame('\n')
-        for c in message_frame:
-            server.add_frame(c)
+        server.add_frame(message_frame)
         server.add_frame('\n')
         expected_heartbeat_count += 3
 

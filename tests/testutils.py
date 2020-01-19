@@ -3,6 +3,7 @@
 from configparser import RawConfigParser
 import json
 import sys
+import time
 from subprocess import run, PIPE
 
 import pytest
@@ -167,11 +168,13 @@ class StubStompServer(object):
                 if self.conn is None:
                     break
                 if frame is not None:
+                    logging.info("Stompserver sending frame %s", frame)
                     self.conn.send(encode(frame))
             except Exception:
                 _, e, _ = sys.exc_info()
                 logging.debug(e)
                 break
+            time.sleep(0.1)
         try:
             self.conn.close()
         except:
