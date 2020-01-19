@@ -1,3 +1,5 @@
+import time
+
 import pytest
 
 import stomp
@@ -177,6 +179,8 @@ content-length:%s
 
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
+
+        time.sleep(1)
 
         assert expected_heartbeat_count == listener.heartbeat_count, "(4) expected heartbeat count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
         assert {
