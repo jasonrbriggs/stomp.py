@@ -163,6 +163,7 @@ class HeartbeatListener(ConnectionListener):
         self.next_outbound_heartbeat = None
         self.heart_beat_receive_scale = heart_beat_receive_scale
         self.heartbeat_terminate_event = threading.Event()
+        self.loop_sleep = 1
 
     def on_connected(self, headers, body):
         """
@@ -176,13 +177,17 @@ class HeartbeatListener(ConnectionListener):
         if 'heart-beat' in headers:
             self.heartbeats = utils.calculate_heartbeats(
                 headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
+            logging.debug("Heartbeats calculated %s", str(self.heartbeats))
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
                 # by default, receive gets an additional grace of 50%
                 # set a different heart-beat-receive-scale when creating the connection to override that
                 self.receive_sleep = (self.heartbeats[1] / 1000) * self.heart_beat_receive_scale
-                logging.debug("Setting receive_sleep to %s", self.receive_sleep)
+
+                self.loop_sleep = max(1, int(min(self.send_sleep, self.receive_sleep) / 2.0))
+
+                logging.debug("Set receive_sleep to %s, send_sleep to %s, loop sleep to %s", self.receive_sleep, self.send_sleep, self.loop_sleep)
 
                 # Give grace of receiving the first heartbeat
                 self.received_heartbeat = monotonic() + self.receive_sleep
@@ -257,6 +262,7 @@ class HeartbeatListener(ConnectionListener):
         # Setup the initial due time for the outbound heartbeat
         if self.send_sleep != 0:
             self.next_outbound_heartbeat = now + self.send_sleep
+            logging.debug("Calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
 
         while self.running:
             now = monotonic()
@@ -302,9 +308,13 @@ class HeartbeatListener(ConnectionListener):
                     self.transport.stop()
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
+
+            time.sleep(self.loop_sleep)
         self.heartbeat_thread = None
         self.heartbeat_terminate_event.clear()
-        logging.info('Heartbeat loop ended')
+        if self.heartbeats != (0, 0):
+            # don't bother logging this if heartbeats weren't setup to start with
+            logging.info('Heartbeat loop ended')
 
 
 class WaitingListener(ConnectionListener):
