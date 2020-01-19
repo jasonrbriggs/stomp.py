@@ -66,18 +66,16 @@ def timeout_server(svr):
 
 
 @pytest.fixture()
-def server():
+def miscserver():
     server = StubStompServer('127.0.0.1', 60000)
     server.start()
     yield server
 
 
 @pytest.fixture()
-def timeout_thread(server):
-    timeout_thread = threading.Thread(name='shutdown test server', target=timeout_server, args=(server,))
+def timeout_thread(miscserver):
+    timeout_thread = threading.Thread(name='shutdown test server', target=timeout_server, args=(miscserver,))
     yield timeout_thread
-
-
 
 
 class TestMessageTransform(object):
@@ -110,7 +108,7 @@ class TestMessageTransform(object):
 
 class TestNoResponseConnectionKill(object):
 
-    def test_noresponse(self, server, timeout_thread):
+    def test_noresponse(self, miscserver, timeout_thread):
         try:
             conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000))
             listener = TestListener(print_to_log=True)
