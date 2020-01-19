@@ -18,7 +18,7 @@ LOCALHOST_NAMES = ["localhost", "127.0.0.1"]
 
 NULL = b'\x00'
 
-if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
+if not os.environ.get("STOMP_SKIP_HOSTNAME_SCAN"):
     try:
         LOCALHOST_NAMES.append(socket.gethostbyname(socket.gethostname()))
     except Exception:
@@ -35,7 +35,7 @@ if not os.environ.get('STOMP_SKIP_HOSTNAME_SCAN'):
         pass
 
 
-def decode(byte_data, encoding='utf-8'):
+def decode(byte_data, encoding="utf-8"):
     """
     Decode the byte data to a string if not None.
 
@@ -45,10 +45,10 @@ def decode(byte_data, encoding='utf-8'):
     """
     if byte_data is None:
         return None
-    return byte_data.decode(encoding, errors='replace')
+    return byte_data.decode(encoding, errors="replace")
 
 
-def encode(char_data, encoding='utf-8'):
+def encode(char_data, encoding="utf-8"):
     """
     Encode the parameter as a byte string.
 
@@ -57,11 +57,11 @@ def encode(char_data, encoding='utf-8'):
     :rtype: bytes
     """
     if type(char_data) is str:
-        return char_data.encode(encoding, errors='replace')
+        return char_data.encode(encoding, errors="replace")
     elif type(char_data) is bytes:
         return char_data
     else:
-        raise TypeError('message should be a string or bytes, found %s' % type(char_data))
+        raise TypeError("message should be a string or bytes, found %s" % type(char_data))
 
 
 def pack(pieces=()):
@@ -89,22 +89,22 @@ def join(chars=()):
 ##
 # Used to parse STOMP header lines in the format "key:value",
 #
-HEADER_LINE_RE = re.compile('(?P<key>[^:]+)[:](?P<value>.*)')
+HEADER_LINE_RE = re.compile("(?P<key>[^:]+)[:](?P<value>.*)")
 
 ##
 # As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed.
 #
-PREAMBLE_END_RE = re.compile(b'\n\n|\r\n\r\n')
+PREAMBLE_END_RE = re.compile(b"\n\n|\r\n\r\n")
 
 ##
 # As of STOMP 1.2, lines can end with either line feed, or carriage return plus line feed.
 #
-LINE_END_RE = re.compile('\n|\r\n')
+LINE_END_RE = re.compile("\n|\r\n")
 
 ##
 # Used to replace the "passcode" to be dumped in the transport log (at debug level)
 #
-PASSCODE_RE = re.compile(r'passcode:\s+[^\' ]+')
+PASSCODE_RE = re.compile(r"passcode:\s+[^\' ]+")
 
 ENC_NEWLINE = encode("\n")
 ENC_NULL = encode(NULL)
@@ -170,10 +170,10 @@ def parse_headers(lines, offset=0):
     for header_line in lines[offset:]:
         header_match = HEADER_LINE_RE.match(header_line)
         if header_match:
-            key = header_match.group('key')
+            key = header_match.group("key")
             key = re.sub(r'\\.', _unescape_header, key)
             if key not in headers:
-                value = header_match.group('value')
+                value = header_match.group("value")
                 value = re.sub(r'\\.', _unescape_header, value)
                 headers[key] = value
     return headers
@@ -189,7 +189,7 @@ def parse_frame(frame):
     """
     f = Frame()
     if frame == b'\x0a':
-        f.cmd = 'heartbeat'
+        f.cmd = "heartbeat"
         return f
 
     mat = PREAMBLE_END_RE.search(frame)
@@ -238,15 +238,15 @@ def merge_headers(header_map_list):
 
 def clean_headers(headers):
     rtn = headers
-    if 'passcode' in headers:
+    if "passcode" in headers:
         rtn = copy.copy(headers)
-        rtn['passcode'] = '********'
+        rtn["passcode"] = "********"
     return rtn
 
 
 # lines: lines returned from a call to convert_frames
 def clean_lines(lines):
-    return re.sub(PASSCODE_RE, 'passcode:********', str(lines))
+    return re.sub(PASSCODE_RE, "passcode:********", str(lines))
 
 
 def calculate_heartbeats(shb, chb):
@@ -333,7 +333,7 @@ class Frame(object):
         self.body = body
 
     def __str__(self):
-        return '{cmd=%s,headers=[%s],body=%s}' % (self.cmd, self.headers, self.body)
+        return "{cmd=%s,headers=[%s],body=%s}" % (self.cmd, self.headers, self.body)
 
 
 def get_uuid():

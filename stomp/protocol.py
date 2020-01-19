@@ -18,7 +18,7 @@ class Protocol10(ConnectionListener):
     def __init__(self, transport, auto_content_length=True):
         self.transport = transport
         self.auto_content_length = auto_content_length
-        transport.set_listener('protocol-listener', self)
+        transport.set_listener("protocol-listener", self)
         self.version = '1.0'
 
     def send_frame(self, cmd, headers=None, body=''):
@@ -132,7 +132,7 @@ class Protocol10(ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
-            logging.debug('Not sending disconnect, already disconnected')
+            logging.debug("Not sending disconnect, already disconnected")
             return
         headers = utils.merge_headers([headers, keyword_headers])
         rec = receipt or utils.get_uuid()
@@ -160,7 +160,7 @@ class Protocol10(ConnectionListener):
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
-    def subscribe(self, destination, id=None, ack='auto', headers=None, **keyword_headers):
+    def subscribe(self, destination, id=None, ack="auto", headers=None, **keyword_headers):
         """
         Subscribe to a destination.
 
@@ -213,7 +213,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         HeartbeatListener.__init__(self, transport, heartbeats, heart_beat_receive_scale)
         self.transport = transport
         self.auto_content_length = auto_content_length
-        transport.set_listener('protocol-listener', self)
+        transport.set_listener("protocol-listener", self)
         self.version = '1.1'
 
     def _escape_headers(self, headers):
@@ -349,7 +349,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         if not self.transport.is_connected():
             import traceback
             traceback.print_stack()
-            logging.debug('Not sending disconnect, already disconnected')
+            logging.debug("Not sending disconnect, already disconnected")
             return
         headers = utils.merge_headers([headers, keyword_headers])
         rec = receipt or utils.get_uuid()
@@ -397,7 +397,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
             headers[HDR_CONTENT_LENGTH] = len(body)
         self.send_frame(CMD_SEND, headers, body)
 
-    def subscribe(self, destination, id, ack='auto', headers=None, **keyword_headers):
+    def subscribe(self, destination, id, ack="auto", headers=None, **keyword_headers):
         """
         Subscribe to a destination
 

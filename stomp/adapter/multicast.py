@@ -76,10 +76,10 @@ class MulticastTransport(Transport):
             if frame_type == 'message':
                 if f.headers['destination'] not in self.subscriptions.values():
                     return
-                (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
+                (f.headers, f.body) = self.notify("before_message", f.headers, f.body)
             self.notify(frame_type, f.headers, f.body)
         if 'receipt' in f.headers:
-            receipt_frame = Frame('RECEIPT', {'receipt-id': f.headers['receipt']})
+            receipt_frame = Frame("RECEIPT", {"receipt-id": f.headers['receipt']})
             lines = convert_frame(receipt_frame)
             self.send(encode(pack(lines)))
         logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
@@ -94,12 +94,12 @@ class MulticastTransport(Transport):
 
 
 class MulticastConnection(BaseConnection, Protocol12):
-    def __init__(self, wait_on_receipt=False, encoding='utf-8'):
+    def __init__(self, wait_on_receipt=False, encoding="utf-8"):
         """
         :param bool wait_on_receipt: deprecated, ignored
         """
         self.transport = MulticastTransport(encoding)
-        self.transport.set_listener('mcast-listener', self)
+        self.transport.set_listener("mcast-listener", self)
         self.transactions = {}
         Protocol12.__init__(self, self.transport, (0, 0))
 
@@ -113,7 +113,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         """
         self.transport.start()
 
-    def subscribe(self, destination, id, ack='auto', headers=None, **keyword_headers):
+    def subscribe(self, destination, id, ack="auto", headers=None, **keyword_headers):
         """
         :param str destination:
         :param str id:
@@ -153,25 +153,25 @@ class MulticastConnection(BaseConnection, Protocol12):
         if cmd == CMD_BEGIN:
             trans = headers[HDR_TRANSACTION]
             if trans in self.transactions:
-                self.notify('error', {}, 'Transaction %s already started' % trans)
+                self.notify("error", {}, "Transaction %s already started" % trans)
             else:
                 self.transactions[trans] = []
         elif cmd == CMD_COMMIT:
             trans = headers[HDR_TRANSACTION]
             if trans not in self.transactions:
-                self.notify('error', {}, 'Transaction %s not started' % trans)
+                self.notify("error", {}, "Transaction %s not started" % trans)
             else:
                 for f in self.transactions[trans]:
                     self.transport.transmit(f)
                 del self.transactions[trans]
         elif cmd == CMD_ABORT:
-            trans = headers['transaction']
+            trans = headers["transaction"]
             del self.transactions[trans]
         else:
             if 'transaction' in headers:
-                trans = headers['transaction']
+                trans = headers["transaction"]
                 if trans not in self.transactions:
-                    self.transport.notify('error', {}, 'Transaction %s not started' % trans)
+                    self.transport.notify("error", {}, "Transaction %s not started" % trans)
                     return
                 else:
                     self.transactions[trans].append(frame)

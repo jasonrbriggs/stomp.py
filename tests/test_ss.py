@@ -46,12 +46,12 @@ heart-beat:1000,1000
 
         try:
             conn.send(body='test disconnect', destination='/test/disconnectqueue')
-            pytest.fail('Should not have successfully sent a message at this point')
+            pytest.fail("Should not have successfully sent a message at this point")
         except Exception:
             _, e, _ = sys.exc_info()
             if e.__class__ == AssertionError:
                 pytest.fail(str(e))
-            logging.debug('stopping conn after expected exception %s', e)
+            logging.debug("stopping conn after expected exception %s", e)
             # lost connection, now restart the server
             try:
                 conn.disconnect(receipt=None)

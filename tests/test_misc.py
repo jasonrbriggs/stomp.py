@@ -60,7 +60,7 @@ def conn():
 
 def timeout_server(svr):
     time.sleep(3)
-    logging.info('Stopping server %s' % svr)
+    logging.info("Stopping server %s" % svr)
     svr.running = False
     svr.stop()
 
@@ -117,7 +117,7 @@ class TestNoResponseConnectionKill(object):
             conn.connect(wait=True)
             pytest.fail("Shouldn't happen")
         except ConnectFailedException:
-            logging.info('Received connect failed - test success')
+            logging.info("Received connect failed - test success")
         except Exception as e:
             logging.error(e)
             pytest.fail("Shouldn't happen, error %s" % e)

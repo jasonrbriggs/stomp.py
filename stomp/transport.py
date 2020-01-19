@@ -52,9 +52,9 @@ class BaseTransport(stomp.listener.Publisher):
     #
     # Used to parse the STOMP "content-length" header lines,
     #
-    __content_length_re = re.compile(b'^content-length[:]\\s*(?P<value>[0-9]+)', re.MULTILINE)
+    __content_length_re = re.compile(b"^content-length[:]\\s*(?P<value>[0-9]+)", re.MULTILINE)
 
-    def __init__(self, auto_decode=True, encoding='utf-8'):
+    def __init__(self, auto_decode=True, encoding="utf-8"):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -104,7 +104,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
         logging.info("Created thread %s using func %s", receiver_thread, self.create_thread_fc)
-        self.notify('connecting')
+        self.notify("connecting")
 
     def stop(self):
         """
@@ -177,9 +177,9 @@ class BaseTransport(stomp.listener.Publisher):
         :param bytes frame_str: raw frame content
         """
         frame_type = f.cmd.lower()
-        if frame_type in ['connected', 'message', 'receipt', 'error', 'heartbeat']:
-            if frame_type == 'message':
-                (f.headers, f.body) = self.notify('before_message', f.headers, f.body)
+        if frame_type in ["connected", "message", "receipt", "error", "heartbeat"]:
+            if frame_type == "message":
+                (f.headers, f.body) = self.notify("before_message", f.headers, f.body)
             if logging.isEnabledFor(logging.DEBUG):
                 logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
@@ -196,9 +196,9 @@ class BaseTransport(stomp.listener.Publisher):
         :param dict headers: the map of headers associated with the message
         :param body: the content of the message
         """
-        if frame_type == 'receipt':
+        if frame_type == "receipt":
             # logic for wait-on-receipt notification
-            receipt = headers['receipt-id']
+            receipt = headers["receipt-id"]
             receipt_value = self.__receipts.get(receipt)
             with self.__send_wait_condition:
                 self.set_receipt(receipt, None)
@@ -211,10 +211,10 @@ class BaseTransport(stomp.listener.Publisher):
                     self.disconnect_socket()
                 self.__disconnect_receipt = None
 
-        elif frame_type == 'connected':
+        elif frame_type == "connected":
             self.set_connected(True)
 
-        elif frame_type == 'disconnected':
+        elif frame_type == "disconnected":
             self.__notified_on_disconnect = True
             self.set_connected(False)
 
@@ -222,18 +222,18 @@ class BaseTransport(stomp.listener.Publisher):
             listeners = sorted(self.listeners.items())
 
         for (_, listener) in listeners:
-            notify_func = getattr(listener, 'on_%s' % frame_type, None)
+            notify_func = getattr(listener, "on_%s" % frame_type, None)
             if not notify_func:
                 logging.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
-            if frame_type in ('heartbeat', 'disconnected'):
+            if frame_type in ("heartbeat", "disconnected"):
                 notify_func()
                 continue
-            if frame_type == 'connecting':
+            if frame_type == "connecting":
                 notify_func(self.current_host_and_port)
                 continue
 
-            if frame_type == 'error' and not self.connected:
+            if frame_type == "error" and not self.connected:
                 with self.__connect_wait_condition:
                     self.connection_error = True
                     self.__connect_wait_condition.notify()
@@ -357,7 +357,7 @@ class BaseTransport(stomp.listener.Publisher):
             logging.info("Receiver loop ended")
             self.notify("receiver_loop_completed")
             if notify_disconnected and not self.__notified_on_disconnect:
-                self.notify('disconnected')
+                self.notify("disconnected")
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
 
@@ -412,7 +412,7 @@ class BaseTransport(stomp.listener.Publisher):
                         preamble_end = preamble_end_match.start()
                         content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
                         if content_length_match:
-                            content_length = int(content_length_match.group('value'))
+                            content_length = int(content_length_match.group("value"))
                             content_offset = preamble_end_match.end()
                             frame_size = content_offset + content_length
                             if frame_size > len(frame):
@@ -504,13 +504,13 @@ class Transport(BaseTransport):
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
-                 encoding='utf-8',
+                 encoding="utf-8",
                  recv_bytes=1024
                  ):
         BaseTransport.__init__(self, auto_decode, encoding)
 
         if host_and_ports is None:
-            host_and_ports = [('localhost', 61613)]
+            host_and_ports = [("localhost", 61613)]
 
         sorted_host_and_ports = []
         sorted_host_and_ports.extend(host_and_ports)
@@ -598,7 +598,7 @@ class Transport(BaseTransport):
                     #
                     _, e, _ = sys.exc_info()
                     logging.warning(e)
-            elif hasattr(socket, 'SHUT_RDWR'):
+            elif hasattr(socket, "SHUT_RDWR"):
                 try:
                     self.socket.shutdown(socket.SHUT_RDWR)
                 except socket.error:
@@ -618,7 +618,7 @@ class Transport(BaseTransport):
                 logging.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
-        self.notify('disconnected')
+        self.notify("disconnected")
 
     def send(self, encoded_frame):
         """
@@ -677,7 +677,7 @@ class Transport(BaseTransport):
             return
 
         if ka is True:
-            ka_sig = 'auto'
+            ka_sig = "auto"
             ka_args = ()
         else:
             try:
@@ -687,25 +687,25 @@ class Transport(BaseTransport):
                 logging.error("keepalive: bad specification %r", ka)
                 return
 
-        if ka_sig == 'auto':
+        if ka_sig == "auto":
             if LINUX_KEEPALIVE_AVAIL:
-                ka_sig = 'linux'
+                ka_sig = "linux"
                 ka_args = None
                 logging.info("keepalive: autodetected linux-style support")
             else:
                 logging.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
 
-        if ka_sig == 'linux':
+        if ka_sig == "linux":
             logging.info("keepalive: activating linux-style support")
             if ka_args is None:
                 logging.info("keepalive: using system defaults")
                 ka_args = (None, None, None)
             lka_idle, lka_intvl, lka_cnt = ka_args
-            if try_setsockopt(self.socket, 'enable', SOL_SOCKET, SO_KEEPALIVE, 1):
-                try_setsockopt(self.socket, 'idle time', SOL_TCP, TCP_KEEPIDLE, lka_idle)
-                try_setsockopt(self.socket, 'interval', SOL_TCP, TCP_KEEPINTVL, lka_intvl)
-                try_setsockopt(self.socket, 'count', SOL_TCP, TCP_KEEPCNT, lka_cnt)
+            if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
+                try_setsockopt(self.socket, "idle time", SOL_TCP, TCP_KEEPIDLE, lka_idle)
+                try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, lka_intvl)
+                try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, lka_cnt)
         else:
             logging.error("keepalive: implementation %r not recognized or not supported", ka_sig)
 
@@ -730,19 +730,19 @@ class Transport(BaseTransport):
 
                     if need_ssl:  # wrap socket
                         ssl_params = self.get_ssl(host_and_port)
-                        if ssl_params['ca_certs']:
+                        if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
                         else:
                             cert_validation = ssl.CERT_NONE
                         try:
-                            tls_context = ssl.create_default_context(cafile=ssl_params['ca_certs'])
+                            tls_context = ssl.create_default_context(cafile=ssl_params["ca_certs"])
                         except AttributeError:
                             tls_context = None
                         if tls_context:
                             # Wrap the socket for TLS
-                            certfile = ssl_params['cert_file']
-                            keyfile = ssl_params['key_file']
-                            password = ssl_params.get('password')
+                            certfile = ssl_params["cert_file"]
+                            keyfile = ssl_params["key_file"]
+                            password = ssl_params.get("password")
                             if certfile and not keyfile:
                                 keyfile = certfile
                             if certfile:
@@ -755,11 +755,11 @@ class Transport(BaseTransport):
                             # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
                             self.socket = ssl.wrap_socket(
                                 self.socket,
-                                keyfile=ssl_params['key_file'],
-                                certfile=ssl_params['cert_file'],
+                                keyfile=ssl_params["key_file"],
+                                certfile=ssl_params["cert_file"],
                                 cert_reqs=cert_validation,
-                                ca_certs=ssl_params['ca_certs'],
-                                ssl_version=ssl_params['ssl_version'])
+                                ca_certs=ssl_params["ca_certs"],
+                                ssl_version=ssl_params["ssl_version"])
 
                     self.socket.settimeout(self.__timeout)
 
@@ -769,9 +769,9 @@ class Transport(BaseTransport):
                     #
                     # Validate server cert
                     #
-                    if need_ssl and ssl_params['cert_validator']:
+                    if need_ssl and ssl_params["cert_validator"]:
                         cert = self.socket.getpeercert()
-                        (ok, errmsg) = ssl_params['cert_validator'](cert, host_and_port[0])
+                        (ok, errmsg) = ssl_params["cert_validator"](cert, host_and_port[0])
                         if not ok:
                             raise SSLError("Server certificate validation failed: %s", errmsg)
 

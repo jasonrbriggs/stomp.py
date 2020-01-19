@@ -3,7 +3,7 @@ import logging
 DEBUG = logging.DEBUG
 INFO = logging.INFO
 
-__logger = logging.getLogger('stomp.py')
+__logger = logging.getLogger("stomp.py")
 debug = __logger.debug
 info = __logger.info
 warning = __logger.warning

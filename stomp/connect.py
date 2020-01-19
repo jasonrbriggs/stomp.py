@@ -24,7 +24,7 @@ class BaseConnection(Publisher):
     def __enter__(self):
         self.disconnect_receipt_id = get_uuid()
         self.disconnect_listener = WaitingListener(self.disconnect_receipt_id)
-        self.set_listener('ZZZZZ-disconnect-listener', self.disconnect_listener)
+        self.set_listener("ZZZZZ-disconnect-listener", self.disconnect_listener)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -92,7 +92,7 @@ class StompConnection10(BaseConnection, Protocol10):
                  timeout=None,
                  keepalive=None,
                  auto_decode=True,
-                 encoding='utf-8',
+                 encoding="utf-8",
                  auto_content_length=True,
                  recv_bytes=1024):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
@@ -145,7 +145,7 @@ class StompConnection11(BaseConnection, Protocol11):
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
-                 encoding='utf-8',
+                 encoding="utf-8",
                  auto_content_length=True,
                  heart_beat_receive_scale=1.5,
                  recv_byte=1024):
@@ -199,7 +199,7 @@ class StompConnection12(BaseConnection, Protocol12):
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
-                 encoding='utf-8',
+                 encoding="utf-8",
                  auto_content_length=True,
                  heart_beat_receive_scale=1.5,
                  recv_bytes=1024):
