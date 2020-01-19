@@ -103,7 +103,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.running = True
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        logging.info("Created thread %s using func %s" % (receiver_thread, self.create_thread_fc))
+        logging.info("Created thread %s using func %s", receiver_thread, self.create_thread_fc)
         self.notify('connecting')
 
     def stop(self):
@@ -324,7 +324,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Main loop listening for incoming data.
         """
-        logging.info("Starting receiver loop (%s)" % threading.current_thread())
+        logging.info("Starting receiver loop (%s)", threading.current_thread())
         notify_disconnected = True
         try:
             while self.running:
@@ -717,7 +717,7 @@ class Transport(BaseTransport):
         sleep_exp = 1
         connect_count = 0
 
-        logging.info("attempt reconnection (%s, %s, %s)" % (self.running, self.socket, connect_count))
+        logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
         while self.running and self.socket is None and (
             connect_count < self.__reconnect_attempts_max or
             self.__reconnect_attempts_max == -1 ):
