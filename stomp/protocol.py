@@ -222,7 +222,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         """
         for key, val in headers.items():
             try:
-                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c')
+                val = val.replace("\\", "\\\\").replace("\n", "\\n").replace(":", "\\c")
             except:
                 pass
             headers[key] = val
@@ -450,7 +450,7 @@ class Protocol12(Protocol11):
         """
         for key, val in headers.items():
             try:
-                val = val.replace('\\', '\\\\').replace('\n', '\\n').replace(':', '\\c').replace('\r', '\\r')
+                val = val.replace("\\", "\\\\").replace("\n", "\\n").replace(":", "\\c").replace("\r", "\\r")
             except:
                 pass
             headers[key] = val
