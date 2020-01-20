@@ -30,14 +30,14 @@ class TestSNIMQSend(object):
             listener = TestListener(receipt_id, print_to_log=True)
             conn.set_listener('', listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)
-            conn.subscribe(destination='/queue/test', id=1, ack='auto')
+            conn.subscribe(destination="/queue/test", id=1, ack="auto")
 
             logging.info("sending message with receipt %s" % receipt_id)
-            conn.send(body='this is a test', destination='/queue/test', receipt=receipt_id)
+            conn.send(body="this is a test", destination="/queue/test", receipt=receipt_id)
 
             listener.wait_for_message()
             conn.disconnect(receipt=None)
 
-            assert listener.connections == 1, 'should have received 1 connection acknowledgement'
-            assert listener.messages >= 1, 'should have received 1 message'
-            assert listener.errors == 0, 'should not have received any errors'
+            assert listener.connections == 1, "should have received 1 connection acknowledgement"
+            assert listener.messages >= 1, "should have received 1 message"
+            assert listener.errors == 0, "should not have received any errors"
