@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stomp"
-version = "5.0.2"
+version = "6.0.0"
 description = "Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol"
 authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
 license = "Apache-2.0"
@@ -15,7 +15,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.4"
+python = "^3.6"
 docopt = "^0.6.2"
 
 [tool.poetry.dev-dependencies]

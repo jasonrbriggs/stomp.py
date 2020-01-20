@@ -1,3 +1,5 @@
+import time
+
 import pytest
 
 import stomp
@@ -78,7 +80,9 @@ heart-beat:1000,1000
 
         def pump(n):
             # pump; test server gives us one frame per received something
-            for _ in range(n):
+            for x in range(n):
+                if x == 0:
+                    logging.debug("pump sending %s frames" % n)
                 conn.transport.send(b'\n')
                 time.sleep(0.01)
 
@@ -93,14 +97,13 @@ heart-beat:1000,1000
 \x00''' + '\n\n\n')
         expected_heartbeat_count = 0
 
-        conn = stomp.Connection([('127.0.0.1', 60000)])
+        conn = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000,1000))
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
 
-        time.sleep(2)
-
-        assert expected_heartbeat_count == listener.heartbeat_count
+        logging.info("test parsing (1) expected hb count is %s", expected_heartbeat_count)
+        assert expected_heartbeat_count == listener.heartbeat_count, "(1) expected hb count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
 
         # No trailing EOLs, separate heartbeat
 
@@ -116,10 +119,12 @@ content-type:text/plain
 
         pump(2)
 
+        logging.info("test parsing (2) expected hb count is %s", expected_heartbeat_count)
+
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        assert expected_heartbeat_count == listener.heartbeat_count
+        assert expected_heartbeat_count == listener.heartbeat_count, "(2) expected hb count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
         assert {"content-type": "text/plain"} == headers
         assert message_body == body
 
@@ -132,28 +137,31 @@ content-type:text/plain
 
         pump(3)
 
+        logging.info("test parsing (3) expected hb count is %s", expected_heartbeat_count)
+
         listener.wait_for_heartbeat()
         listener.wait_for_message()
         headers, body = listener.get_latest_message()
 
-        assert expected_heartbeat_count == listener.heartbeat_count, "(1) expected heartbeat count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
+        assert expected_heartbeat_count == listener.heartbeat_count, "(3) expected hb count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
         assert {"content-type": "text/plain"} == headers
         assert message_body == body
 
         # Torture tests: return content one byte at a time
 
         server.add_frame('\n')
-        for c in message_frame:
-            server.add_frame(c)
+        server.add_frame(message_frame)
         server.add_frame('\n')
         expected_heartbeat_count += 2
 
         pump(len(message_frame) + 2)
 
+        logging.info("test parsing (4) expected hb count is %s", expected_heartbeat_count)
+
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        assert expected_heartbeat_count == listener.heartbeat_count, "(2) expected heartbeat count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
+        assert expected_heartbeat_count == listener.heartbeat_count, "(4) expected hb count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
         assert {"content-type": "text/plain"} == headers
         assert message_body == body
 
@@ -168,17 +176,18 @@ content-length:%s
 
         server.add_frame('\n')
         server.add_frame('\n')
-        for c in message_frame:
-            server.add_frame(c)
+        server.add_frame(message_frame)
         server.add_frame('\n')
         expected_heartbeat_count += 3
 
         pump(len(message_frame) + 3)
 
+        logging.info("test parsing (5) expected hb count is %s", expected_heartbeat_count)
+
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
 
-        assert expected_heartbeat_count == listener.heartbeat_count
+        assert expected_heartbeat_count == listener.heartbeat_count, "(5) expected hb count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
         assert {
             "content-type": "text/plain",
             "content-length": str(len(message_body)),

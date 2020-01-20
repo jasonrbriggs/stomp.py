@@ -14,6 +14,8 @@ stomp.py
 
 **NOTE:** Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
 
+If you find this project useful, why not `buy me a coffee`_.
+
 .. contents:: \ 
     :depth: 1
 
@@ -72,12 +74,6 @@ For testing locally, you'll need to install docker. Once installed:
         make test
 #. Cleanup the container afterwards if you don't need it any more:
         make remove-docker
-
-
-Donate
-======
-
-If you find this project useful, why not `buy me a coffee`_.
 
 
 .. _`STOMP`: http://stomp.github.io

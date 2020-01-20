@@ -17,7 +17,10 @@ all:
 docs:
 	cd docs && make html
 
-install:
+updateversion:
+	poetry version `python -c "import stomp; print('.'.join(map(str, stomp.__version__)))"`
+
+install: updateversion
 	poetry update
 	poetry build
 	poetry export -f requirements.txt --dev -o requirements.txt
@@ -43,7 +46,7 @@ endif
 	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/
 	find . -name '*.pyc' -delete
 
-release:
+release: updateversion
 	poetry publish
 
 docker-image:
