@@ -27,9 +27,9 @@ class MQ(object):
     def __init__(self):
         self.conn = stomp.Connection(get_default_host())
         self.conn.set_listener('', None)
-        self.conn.connect('admin', 'password', wait=True)
+        self.conn.connect("admin", "password", wait=True)
 
-    def send(self, topic, msg, persistent='true', retry=False):
+    def send(self, topic, msg, persistent="true", retry=False):
         self.conn.send(destination="/topic/%s" % topic, body=msg,
                              persistent=persistent)
 
@@ -61,7 +61,7 @@ class TestThreading(object):
         for t in self.threads:
             if not t.isAlive:
                 print("thread", t, "died")
-            self.cmd.put('stop')
+            self.cmd.put("stop")
         for t in self.threads:
             t.join()
         print()
@@ -95,8 +95,8 @@ class TestThreading(object):
                 while 1:
                     # print "%s sending %s" % (i, counter)
                     try:
-                        get_mq().send('testclientwedge',
-                                'Message %s:%s' % (i, counter))
+                        get_mq().send("testclientwedge",
+                                "Message %s:%s" % (i, counter))
                     except:
                         error.put(sys.exc_info())
                         # thread will die
@@ -118,7 +118,7 @@ class TestThreading(object):
         return send
 
     def test_threads_dont_wedge(self):
-        if os.environ.get('TEST_THREADS_DONT_WEDGE', 'false') == 'true':
+        if os.environ.get("TEST_THREADS_DONT_WEDGE", "false") == "true":
             self.init()
 
             for t in self.threads:

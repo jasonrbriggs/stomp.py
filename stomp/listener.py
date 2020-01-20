@@ -174,9 +174,9 @@ class HeartbeatListener(ConnectionListener):
         :param dict headers: headers in the connection message
         :param body: the message body
         """
-        if 'heart-beat' in headers:
+        if "heart-beat" in headers:
             self.heartbeats = utils.calculate_heartbeats(
-                headers['heart-beat'].replace(' ', '').split(','), self.heartbeats)
+                headers["heart-beat"].replace(' ', '').split(','), self.heartbeats)
             logging.debug("Heartbeats calculated %s", str(self.heartbeats))
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
@@ -240,7 +240,7 @@ class HeartbeatListener(ConnectionListener):
         """
         if frame.cmd == CMD_CONNECT or frame.cmd == CMD_STOMP:
             if self.heartbeats != (0, 0):
-                frame.headers[HDR_HEARTBEAT] = '%s,%s' % self.heartbeats
+                frame.headers[HDR_HEARTBEAT] = "%s,%s" % self.heartbeats
         if self.next_outbound_heartbeat is not None:
             self.next_outbound_heartbeat = monotonic() + self.send_sleep
 
@@ -256,7 +256,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        logging.info('Starting heartbeat loop')
+        logging.info("Starting heartbeat loop")
         now = monotonic()
 
         # Setup the initial due time for the outbound heartbeat
@@ -314,7 +314,7 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeat_terminate_event.clear()
         if self.heartbeats != (0, 0):
             # don't bother logging this if heartbeats weren't setup to start with
-            logging.info('Heartbeat loop ended')
+            logging.info("Heartbeat loop ended")
 
 
 class WaitingListener(ConnectionListener):
@@ -338,7 +338,7 @@ class WaitingListener(ConnectionListener):
         :param dict headers: headers in the message
         :param body: the message content
         """
-        if 'receipt-id' in headers and headers['receipt-id'] == self.receipt:
+        if "receipt-id" in headers and headers["receipt-id"] == self.receipt:
             with self.receipt_condition:
                 self.received = True
                 self.receipt_condition.notify()
@@ -471,27 +471,27 @@ class PrintingListener(ConnectionListener):
         """
         :param (str,int) host_and_port:
         """
-        self.__print('on_connecting %s %s', *host_and_port)
+        self.__print("on_connecting %s %s", *host_and_port)
 
     def on_connected(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        self.__print('on_connected %s %s', headers, body)
+        self.__print("on_connected %s %s", headers, body)
 
     def on_disconnected(self):
-        self.__print('on_disconnected')
+        self.__print("on_disconnected")
 
     def on_heartbeat_timeout(self):
-        self.__print('on_heartbeat_timeout')
+        self.__print("on_heartbeat_timeout")
 
     def on_before_message(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        self.__print('on_before_message %s %s', headers, body)
+        self.__print("on_before_message %s %s", headers, body)
         return headers, body
 
     def on_message(self, headers, body):
@@ -499,30 +499,30 @@ class PrintingListener(ConnectionListener):
         :param dict headers:
         :param body:
         """
-        self.__print('on_message %s %s', headers, body)
+        self.__print("on_message %s %s", headers, body)
 
     def on_receipt(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        self.__print('on_receipt %s %s', headers, body)
+        self.__print("on_receipt %s %s", headers, body)
 
     def on_error(self, headers, body):
         """
         :param dict headers:
         :param body:
         """
-        self.__print('on_error %s %s', headers, body)
+        self.__print("on_error %s %s", headers, body)
 
     def on_send(self, frame):
         """
         :param Frame frame:
         """
-        self.__print('on_send %s %s %s', frame.cmd, utils.clean_headers(frame.headers), frame.body)
+        self.__print("on_send %s %s %s", frame.cmd, utils.clean_headers(frame.headers), frame.body)
 
     def on_heartbeat(self):
-        self.__print('on_heartbeat')
+        self.__print("on_heartbeat")
 
 
 class TestListener(StatsListener, WaitingListener, PrintingListener):
@@ -541,7 +541,7 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         self.message_received = False
         self.heartbeat_condition = threading.Condition()
         self.heartbeat_received = False
-        self.timestamp = time.strftime('%Y%m%d%H%M%S')
+        self.timestamp = time.strftime("%Y%m%d%H%M%S")
 
     def wait_for_message(self):
         with self.message_condition:

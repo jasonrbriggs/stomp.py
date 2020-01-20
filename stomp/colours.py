@@ -4,7 +4,7 @@
 import platform
 
 
-if platform.system().lower() != 'windows':
+if platform.system().lower() != "windows":
     GREEN = "\33[32m"
     RED = "\33[31m"
     NO_COLOUR = "\33[0m"
