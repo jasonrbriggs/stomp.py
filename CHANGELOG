@@ -1,3 +1,10 @@
+Version 4.1.23 - Jan 2020
+
+ * Bug fix version of 4.1.22 fixing issue #284 (https://github.com/jasonrbriggs/stomp.py/issues/284)
+
+Note: not 100% tested due to Python2 decommission
+
+
 Version 4.1.22 - Apr 2019
 
  * Infinite retry attempts (https://github.com/jasonrbriggs/stomp.py/pull/235)
