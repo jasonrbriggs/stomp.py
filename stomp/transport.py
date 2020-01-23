@@ -74,6 +74,7 @@ class BaseTransport(stomp.listener.Publisher):
 
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
+        self.__notified_on_disconnect = False
 
         # function for creating threads used by the connection
         self.create_thread_fc = utils.default_create_thread
@@ -220,6 +221,7 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(True)
 
         elif frame_type == 'disconnected':
+            self.__notified_on_disconnect = True
             self.set_connected(False)
 
         with self.__listeners_change_condition:

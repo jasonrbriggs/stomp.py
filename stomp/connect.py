@@ -129,7 +129,8 @@ class StompConnection10(BaseConnection, Protocol10):
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol10.disconnect(self, receipt, headers, **keyword_headers)
-        self.transport.stop()
+        if receipt is not None:
+            self.transport.stop()
 
 
 class StompConnection11(BaseConnection, Protocol11):
@@ -182,7 +183,8 @@ class StompConnection11(BaseConnection, Protocol11):
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
-        self.transport.stop()
+        if receipt is not None:
+            self.transport.stop()
 
 
 class StompConnection12(BaseConnection, Protocol12):
@@ -235,4 +237,5 @@ class StompConnection12(BaseConnection, Protocol12):
         :param keyword_headers: any additional headers to send with the disconnection
         """
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
-        self.transport.stop()
+        if receipt is not None:
+            self.transport.stop()
