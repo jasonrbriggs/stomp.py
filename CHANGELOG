@@ -6,6 +6,7 @@ Version 6.0.0 -
  * Minor change to make quote-use more consistent (replace single with double in most places)
  * Change build to use [Python Poetry](https://python-poetry.org/)
  * Test coverage improvement
+ * Threading fix (is_alive) - https://github.com/jasonrbriggs/stomp.py/issues/286
 
 
 Version 5.0.1 - Jan 2020
