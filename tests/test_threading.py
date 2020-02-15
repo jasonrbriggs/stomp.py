@@ -59,7 +59,7 @@ class TestThreading(object):
 
     def shutdown(self):
         for t in self.threads:
-            if not t.isAlive:
+            if not t.is_alive():
                 print("thread", t, "died")
             self.cmd.put("stop")
         for t in self.threads:
