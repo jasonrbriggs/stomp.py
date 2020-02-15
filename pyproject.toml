@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "stomp"
+name = "stomp.py"
 version = "6.0.0"
 description = "Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol"
 authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
