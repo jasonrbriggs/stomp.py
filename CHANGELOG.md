@@ -13,6 +13,24 @@
  * Test coverage improvement
  * Threading fix (is_alive) - https://github.com/jasonrbriggs/stomp.py/issues/286
 
+(from v5.0.1):
+ * Fix logging simplification code (should not be logging to root appender - https://github.com/jasonrbriggs/stomp.py/issues/275)
+
+(from v5.0.0):
+ * Fix for credentials exposure (https://github.com/jasonrbriggs/stomp.py/pull/244)
+ * Check for ``STOMP_SKIP_HOSTNAME_SCAN`` environment variable before extending ``LOCALHOST_NAMES``
+ * Remove python2 backwards compatibility
+ * Update dockerfile for better local testing
+ * Fix docker and travis setup, so there are consistent builds both locally and via CI 
+ * Drop deprecated start/stop methods from connection (issue https://github.com/jasonrbriggs/stomp.py/issues/257)
+ * Fix for missing return in get_ssl (https://github.com/jasonrbriggs/stomp.py/pull/258)
+ * Clear heartbeat event after heartbeat loop ends (https://github.com/jasonrbriggs/stomp.py/pull/260)
+ * Update listener to move receive/message_received/heartbeat_received vars inside the 'with' blocks (https://github.com/jasonrbriggs/stomp.py/pull/252)
+ * Simplify logging calls
+ * Tidy up listeners (correct the behaviour of TestListener)
+ * Fix problem with double-disconnect notification (ihttps://github.com/jasonrbriggs/stomp.py/issues/245)
+ * Add facility for PrintingListener to write to log rather than print statements
+
 
 ## Version 5.0.1 - Jan 2020 [YANKED]
 
