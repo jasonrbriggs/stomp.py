@@ -1,7 +1,3 @@
-## Unreleased -
-
- * TBC
-
 
 ## Version 6.0.0 - Feb 2020
 
