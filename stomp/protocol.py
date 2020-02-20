@@ -347,8 +347,6 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param keyword_headers: any additional headers the broker requires
         """
         if not self.transport.is_connected():
-            import traceback
-            traceback.print_stack()
             logging.debug("Not sending disconnect, already disconnected")
             return
         headers = utils.merge_headers([headers, keyword_headers])
