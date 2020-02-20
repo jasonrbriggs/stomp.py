@@ -1,3 +1,7 @@
+## Upcoming
+
+ * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
+
 
 ## Version 6.0.0 - Feb 2020
 
