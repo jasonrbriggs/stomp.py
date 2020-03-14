@@ -360,6 +360,7 @@ class BaseTransport(stomp.listener.Publisher):
                 self.notify("disconnected")
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
+            self.__notified_on_disconnect = False
 
     def __read(self):
         """
