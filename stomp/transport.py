@@ -382,7 +382,7 @@ class BaseTransport(stomp.listener.Publisher):
             if c is None or len(c) == 0:
                 logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
-            if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
+            if c in (b'\x0a', b'\x0d\x0a') and not self.__recvbuf and not fastbuf.tell():
                 #
                 # EOL to an empty receive buffer: treat as heartbeat.
                 # Note that this may misdetect an optional EOL at end of frame as heartbeat in case the

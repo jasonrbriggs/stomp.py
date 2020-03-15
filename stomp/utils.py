@@ -188,7 +188,7 @@ def parse_frame(frame):
     :rtype: Frame
     """
     f = Frame()
-    if frame == b'\x0a':
+    if frame in (b'\x0a', b'\x0d\x0a'):
         f.cmd = "heartbeat"
         return f
 
