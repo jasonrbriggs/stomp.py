@@ -56,9 +56,6 @@ class TestUtils(object):
         assert (0, 0) == calculate_heartbeats(shb, chb)
 
     def test_parse_frame(self):
-        # heartbeat
-        f = parse_frame(b'\x0a')
-        assert str(f) == str(Frame("heartbeat"))
         # oddball/broken
         f = parse_frame(b"FOO")
         assert str(f) == str(Frame("FOO", body=b''))

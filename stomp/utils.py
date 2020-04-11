@@ -86,6 +86,9 @@ def join(chars=()):
     return b''.join(chars).decode()
 
 
+def is_eol_default(c):
+    return c == b'\x0a'
+
 ##
 # Used to parse STOMP header lines in the format "key:value",
 #
@@ -188,10 +191,6 @@ def parse_frame(frame):
     :rtype: Frame
     """
     f = Frame()
-    if frame == b'\x0a':
-        f.cmd = "heartbeat"
-        return f
-
     mat = PREAMBLE_END_RE.search(frame)
     if mat:
         preamble_end = mat.start()
@@ -350,3 +349,6 @@ def get_errno(e):
         return e.errno
     except AttributeError:
         return e.args[0]
+
+
+HEARTBEAT_FRAME = Frame("heartbeat")

@@ -54,7 +54,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     __content_length_re = re.compile(b"^content-length[:]\\s*(?P<value>[0-9]+)", re.MULTILINE)
 
-    def __init__(self, auto_decode=True, encoding="utf-8"):
+    def __init__(self, auto_decode=True, encoding="utf-8", is_eol_fc=is_eol_default):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -78,6 +78,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.__connect_wait_condition = threading.Condition()
         self.__auto_decode = auto_decode
         self.__encoding = encoding
+        self.__is_eol = is_eol_fc
 
     def override_threading(self, create_thread_fc):
         """
@@ -333,7 +334,10 @@ class BaseTransport(stomp.listener.Publisher):
                         frames = self.__read()
 
                         for frame in frames:
-                            f = parse_frame(frame)
+                            if self.__is_eol(frame):
+                                f = HEARTBEAT_FRAME
+                            else:
+                                f = parse_frame(frame)
                             if f is None:
                                 continue
                             if self.__auto_decode:
@@ -382,7 +386,7 @@ class BaseTransport(stomp.listener.Publisher):
             if c is None or len(c) == 0:
                 logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
-            if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
+            if self.__is_eol(c) and not self.__recvbuf and not fastbuf.tell():
                 #
                 # EOL to an empty receive buffer: treat as heartbeat.
                 # Note that this may misdetect an optional EOL at end of frame as heartbeat in case the
@@ -432,7 +436,7 @@ class BaseTransport(stomp.listener.Publisher):
                     #
                     # Ignore optional EOLs at end of frame
                     #
-                    while self.__recvbuf[pos:pos + 1] == b'\x0a':
+                    while self.__is_eol(self.__recvbuf[pos:pos + 1]):
                         pos += 1
                     self.__recvbuf = self.__recvbuf[pos:]
                 else:
@@ -505,9 +509,10 @@ class Transport(BaseTransport):
                  vhost=None,
                  auto_decode=True,
                  encoding="utf-8",
-                 recv_bytes=1024
+                 recv_bytes=1024,
+                 is_eol_fc=is_eol_default
                  ):
-        BaseTransport.__init__(self, auto_decode, encoding)
+        BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
             host_and_ports = [("localhost", 61613)]

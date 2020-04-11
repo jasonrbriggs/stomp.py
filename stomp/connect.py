@@ -207,7 +207,7 @@ class StompConnection12(BaseConnection, Protocol12):
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
                               ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
-                              keepalive, vhost, auto_decode, encoding)
+                              keepalive, vhost, auto_decode, encoding, is_eol_fc=self.is_eol)
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
 
@@ -226,3 +226,6 @@ class StompConnection12(BaseConnection, Protocol12):
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         if receipt is not None:
             self.transport.stop()
+
+    def is_eol(self, c):
+        return c == b'\x0a' or c == b'\x0d\x0a'
