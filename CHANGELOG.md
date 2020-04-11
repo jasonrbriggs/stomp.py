@@ -1,6 +1,8 @@
 ## Upcoming
 
  * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
+ * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))
+ * Remove heartbeat loop sleep (issue https://github.com/jasonrbriggs/stomp.py/issues/297, https://github.com/jasonrbriggs/stomp.py/pull/298)
 
 
 ## Version 6.0.0 - Feb 2020
