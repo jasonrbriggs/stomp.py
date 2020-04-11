@@ -436,8 +436,13 @@ class BaseTransport(stomp.listener.Publisher):
                     #
                     # Ignore optional EOLs at end of frame
                     #
-                    while self.__is_eol(self.__recvbuf[pos:pos + 1]):
-                        pos += 1
+                    while 1:
+                        if self.__is_eol(self.__recvbuf[pos:pos + 1]):
+                            pos += 1
+                        elif self.__is_eol(self.__recvbuf[pos:pos + 2]):
+                            pos += 2
+                        else:
+                            break
                     self.__recvbuf = self.__recvbuf[pos:]
                 else:
                     break
