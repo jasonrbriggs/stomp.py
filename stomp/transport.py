@@ -23,13 +23,18 @@ except (ImportError, AttributeError):
 
     DEFAULT_SSL_VERSION = None
 
+from socket import SOL_SOCKET, SO_KEEPALIVE
 try:
-    from socket import SOL_SOCKET, SO_KEEPALIVE
     from socket import SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
-
     LINUX_KEEPALIVE_AVAIL = True
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
+
+try:
+    from socket import IPPROTO_TCP
+    MAC_KEEPALIVE_AVAIL = True
+except ImportError:
+    MAC_KEEPALIVE_AVAIL = False
 
 import stomp.exception as exception
 import stomp.listener
@@ -480,7 +485,9 @@ class Transport(BaseTransport):
         parameter can either be set set to a boolean to turn on the
         default keepalive options for your OS, or as a tuple of
         values, which also enables keepalive packets, but specifies
-        options specific to your OS implementation
+        options specific to your OS implementation.
+        For linux, supply ("linux", ka_idle, ka_intvl, ka_cnt)
+        For macos, supply ("mac", ka_intvl)
     :param str vhost: specify a virtual hostname to provide in the 'host' header of the connection
     :param int recv_bytes: the number of bytes to use when calling recv
     """
@@ -692,6 +699,10 @@ class Transport(BaseTransport):
                 ka_sig = "linux"
                 ka_args = None
                 logging.info("keepalive: autodetected linux-style support")
+            elif MAC_KEEPALIVE_AVAIL:
+                ka_sig = "mac"
+                ka_args = None
+                logging.info("keepalive, autodeteced mac-style support")
             else:
                 logging.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
@@ -701,11 +712,19 @@ class Transport(BaseTransport):
             if ka_args is None:
                 logging.info("keepalive: using system defaults")
                 ka_args = (None, None, None)
-            lka_idle, lka_intvl, lka_cnt = ka_args
+            ka_idle, ka_intvl, ka_cnt = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
-                try_setsockopt(self.socket, "idle time", SOL_TCP, TCP_KEEPIDLE, lka_idle)
-                try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, lka_intvl)
-                try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, lka_cnt)
+                try_setsockopt(self.socket, "idle time", SOL_TCP, TCP_KEEPIDLE, ka_idle)
+                try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
+                try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
+        elif ka_sig == "mac":
+            logging.info("keepalive: activating mac-style support")
+            if ka_args is None:
+                logging.info("keepalive: using system defaults")
+                ka_args = (3,)
+            ka_intvl = ka_args
+            if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
+                try_setsockopt(self.socket, socket.IPPROTO_TCP, 0x10, ka_intvl)
         else:
             logging.error("keepalive: implementation %r not recognized or not supported", ka_sig)
 

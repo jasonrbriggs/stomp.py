@@ -16,7 +16,7 @@ class TestSSLFailure(object):
     @pytest.mark.run(order=-1)
     def test_socket_failure(self, monkeypatch):
         import socket
-        monkeypatch.delattr(socket, "SO_KEEPALIVE", raising=True)
+        monkeypatch.delattr(socket, "SOL_TCP", raising=True)
         import stomp.transport as t
         importlib.reload(t)
         assert t.LINUX_KEEPALIVE_AVAIL == False
