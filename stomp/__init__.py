@@ -14,8 +14,7 @@ import stomp.connect as connect
 import stomp.listener as listener
 import stomp.logging as logging
 
-from importlib.metadata import version
-__version__ = tuple([int(x) for x in version('stomp.py').split('.')])
+__version__ = (6, 0, 0)
 
 ##
 # Alias for STOMP 1.0 connections.
