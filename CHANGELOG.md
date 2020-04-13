@@ -1,7 +1,7 @@
 ## Upcoming
 
  * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
- * Pull version number using importlib, rather than having in two places (__init__.py and pyproject.toml)
+ * Update version number using the makefile and the poetry version command
 
 
 ## Version 6.0.0 - Feb 2020
