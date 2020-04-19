@@ -22,7 +22,7 @@ class TransformationListener(TestListener):
         if "transformation" in frame.headers:
             trans_type = frame.headers["transformation"]
             if trans_type != "jms-map-xml":
-                return frame.body
+                return
 
             try:
                 entries = {}
@@ -36,17 +36,16 @@ class TransformationListener(TestListener):
                         pair.append(node.firstChild.nodeValue)
                     assert len(pair) == 2
                     entries[pair[0]] = pair[1]
-                return (frame.headers, entries)
+                frame.body = entries
             except Exception:
                 #
                 # unable to parse message. return original
                 #
                 traceback.print_exc()
-                return (frame.headers, frame.body)
 
     def on_message(self, frame):
         TestListener.on_message(self, frame)
-        self.message = frame.body
+        self.message = frame
 
 
 @pytest.fixture()
@@ -96,14 +95,14 @@ class TestMessageTransform(object):
     </entry>
 </map>''', destination=queuename, headers={"transformation": "jms-map-xml"}, receipt="123")
 
-
         listener.wait_on_receipt()
         listener.wait_for_message()
 
-        assert listener.message is not None, "Did not receive a message"
-        assert listener.message.__class__ == dict, "Message type should be dict after transformation, was %s" % listener.message.__class__
-        assert listener.message["name"] == "Dejan", "Missing an expected dict element"
-        assert listener.message["city"] == "Belgrade", "Missing an expected dict element"
+        message = listener.message.body
+        assert message is not None, "Did not receive a message"
+        assert type(message) == dict, "Message type should be dict after transformation, was %s" % message.__class__
+        assert message["name"] == "Dejan", "Missing an expected dict element"
+        assert message["city"] == "Belgrade", "Missing an expected dict element"
 
 
 class TestNoResponseConnectionKill(object):

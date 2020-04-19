@@ -180,7 +180,7 @@ class BaseTransport(stomp.listener.Publisher):
         frame_type = f.cmd.lower()
         if frame_type in ["connected", "message", "receipt", "error", "heartbeat"]:
             if frame_type == "message":
-                (f.headers, f.body) = self.notify("before_message", f)
+                self.notify("before_message", f)
             if logging.isEnabledFor(logging.DEBUG):
                 logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
@@ -197,13 +197,9 @@ class BaseTransport(stomp.listener.Publisher):
         :param dict headers: the map of headers associated with the message
         :param body: the content of the message
         """
-        headers, body = (None, None)
-        if frame is not None:
-            headers, body = (frame.headers, frame.body)
-
         if frame_type == "receipt":
             # logic for wait-on-receipt notification
-            receipt = headers["receipt-id"]
+            receipt = frame.headers["receipt-id"]
             receipt_value = self.__receipts.get(receipt)
             with self.__send_wait_condition:
                 self.set_receipt(receipt, None)
@@ -243,10 +239,7 @@ class BaseTransport(stomp.listener.Publisher):
                     self.connection_error = True
                     self.__connect_wait_condition.notify()
 
-            rtn = notify_func(frame)
-            if rtn:
-                (headers, body) = rtn
-        return (headers, body)
+            notify_func(frame)
 
     def transmit(self, frame):
         """

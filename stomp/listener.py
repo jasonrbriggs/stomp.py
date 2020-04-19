@@ -73,7 +73,6 @@ class ConnectionListener(object):
         :param dict headers: a dictionary containing all headers sent by the server as key/value pairs.
         :param body: the frame's payload. This is usually empty for CONNECTED frames.
         """
-        pass
 
     def on_disconnected(self):
         """
@@ -98,7 +97,7 @@ class ConnectionListener(object):
         :param dict headers: the message headers
         :param body: the message body
         """
-        return frame.headers, frame.body
+        pass
 
     def on_message(self, frame):
         """
@@ -487,7 +486,6 @@ class PrintingListener(ConnectionListener):
         :param body:
         """
         self.__print("on_before_message %s %s", frame.headers, frame.body)
-        return frame.headers, frame.body
 
     def on_message(self, frame):
         """
@@ -552,7 +550,6 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
             while not self.heartbeat_received:
                 self.heartbeat_condition.wait()
             self.heartbeat_received = False
-
 
     def on_connecting(self, host_and_port):
         StatsListener.on_connecting(self, host_and_port)

@@ -76,7 +76,7 @@ class MulticastTransport(Transport):
             if frame_type == "message":
                 if f.headers["destination"] not in self.subscriptions.values():
                     return
-                (f.headers, f.body) = self.notify("before_message", f)
+                self.notify("before_message", f)
             self.notify(frame_type, f)
         if "receipt" in f.headers:
             receipt_frame = Frame("RECEIPT", {"receipt-id": f.headers["receipt"]})
@@ -148,7 +148,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         """
         if headers is None:
             headers = {}
-        frame = utils.Frame(cmd, headers, body)
+        frame = Frame(cmd, headers, body)
 
         if cmd == CMD_BEGIN:
             trans = headers[HDR_TRANSACTION]
