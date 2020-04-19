@@ -64,7 +64,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_connected(self, headers, body):
+    def on_connected(self, frame):
         """
         Called by the STOMP connection when a CONNECTED frame is
         received (after a connection has been established or
@@ -90,7 +90,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_before_message(self, headers, body):
+    def on_before_message(self, frame):
         """
         Called by the STOMP connection before a message is returned to the client app. Returns a tuple
         containing the headers and body (so that implementing listeners can pre-process the content).
@@ -98,9 +98,9 @@ class ConnectionListener(object):
         :param dict headers: the message headers
         :param body: the message body
         """
-        return headers, body
+        return frame.headers, frame.body
 
-    def on_message(self, headers, body):
+    def on_message(self, frame):
         """
         Called by the STOMP connection when a MESSAGE frame is received.
 
@@ -109,7 +109,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_receipt(self, headers, body):
+    def on_receipt(self, frame):
         """
         Called by the STOMP connection when a RECEIPT frame is
         received, sent by the server if requested by the client using
@@ -120,7 +120,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_error(self, headers, body):
+    def on_error(self, frame):
         """
         Called by the STOMP connection when an ERROR frame is received.
 
@@ -143,7 +143,7 @@ class ConnectionListener(object):
         """
         pass
 
-    def on_receiver_loop_completed(self, headers, body):
+    def on_receiver_loop_completed(self, frame):
         """
         Called when the connection receiver_loop has finished.
         """
@@ -164,7 +164,7 @@ class HeartbeatListener(ConnectionListener):
         self.heart_beat_receive_scale = heart_beat_receive_scale
         self.heartbeat_terminate_event = threading.Event()
 
-    def on_connected(self, headers, body):
+    def on_connected(self, frame):
         """
         Once the connection is established, and 'heart-beat' is found in the headers, we calculate the real
         heartbeat numbers (based on what the server sent and what was specified by the client) - if the heartbeats
@@ -173,9 +173,9 @@ class HeartbeatListener(ConnectionListener):
         :param dict headers: headers in the connection message
         :param body: the message body
         """
-        if "heart-beat" in headers:
+        if "heart-beat" in frame.headers:
             self.heartbeats = utils.calculate_heartbeats(
-                headers["heart-beat"].replace(' ', '').split(','), self.heartbeats)
+                frame.headers["heart-beat"].replace(' ', '').split(','), self.heartbeats)
             logging.debug("Heartbeats calculated %s", str(self.heartbeats))
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
@@ -200,7 +200,7 @@ class HeartbeatListener(ConnectionListener):
         self.running = False
         self.heartbeat_terminate_event.set()
 
-    def on_message(self, headers, body):
+    def on_message(self, frame):
         """
         Reset the last received time whenever a message is received.
 
@@ -326,14 +326,14 @@ class WaitingListener(ConnectionListener):
         self.received = False
         self.disconnected = False
 
-    def on_receipt(self, headers, body):
+    def on_receipt(self, frame):
         """
         If the receipt id can be found in the headers, then notify the waiting thread.
 
         :param dict headers: headers in the message
         :param body: the message content
         """
-        if "receipt-id" in headers and headers["receipt-id"] == self.receipt:
+        if "receipt-id" in frame.headers and frame.headers["receipt-id"] == self.receipt:
             with self.receipt_condition:
                 self.received = True
                 self.receipt_condition.notify()
@@ -387,7 +387,7 @@ class StatsListener(ConnectionListener):
         self.disconnects += 1
         logging.info("disconnected (x %s)", self.disconnects)
 
-    def on_error(self, headers, body):
+    def on_error(self, frame):
         """
         Increment the error count. See :py:meth:`ConnectionListener.on_error`
 
@@ -395,9 +395,9 @@ class StatsListener(ConnectionListener):
         :param body: the message content
         """
         if logging.isEnabledFor(logging.DEBUG):
-            logging.debug("received an error %s [%s]", body, headers)
+            logging.debug("received an error %s [%s]", frame.body, frame.headers)
         else:
-            logging.info("received an error %s", body)
+            logging.info("received an error %s", frame.body)
         self.errors += 1
 
     def on_connecting(self, host_and_port):
@@ -409,7 +409,7 @@ class StatsListener(ConnectionListener):
         logging.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
 
-    def on_message(self, headers, body):
+    def on_message(self, frame):
         """
         Increment the message received count. See :py:meth:`ConnectionListener.on_message`
 
@@ -468,12 +468,12 @@ class PrintingListener(ConnectionListener):
         """
         self.__print("on_connecting %s %s", *host_and_port)
 
-    def on_connected(self, headers, body):
+    def on_connected(self, frame):
         """
         :param dict headers:
         :param body:
         """
-        self.__print("on_connected %s %s", headers, body)
+        self.__print("on_connected %s %s", frame.headers, frame.body)
 
     def on_disconnected(self):
         self.__print("on_disconnected")
@@ -481,34 +481,34 @@ class PrintingListener(ConnectionListener):
     def on_heartbeat_timeout(self):
         self.__print("on_heartbeat_timeout")
 
-    def on_before_message(self, headers, body):
+    def on_before_message(self, frame):
         """
         :param dict headers:
         :param body:
         """
-        self.__print("on_before_message %s %s", headers, body)
-        return headers, body
+        self.__print("on_before_message %s %s", frame.headers, frame.body)
+        return frame.headers, frame.body
 
-    def on_message(self, headers, body):
+    def on_message(self, frame):
         """
         :param dict headers:
         :param body:
         """
-        self.__print("on_message %s %s", headers, body)
+        self.__print("on_message %s %s", frame.headers, frame.body)
 
-    def on_receipt(self, headers, body):
+    def on_receipt(self, frame):
         """
         :param dict headers:
         :param body:
         """
-        self.__print("on_receipt %s %s", headers, body)
+        self.__print("on_receipt %s %s", frame.headers, frame.body)
 
-    def on_error(self, headers, body):
+    def on_error(self, frame):
         """
         :param dict headers:
         :param body:
         """
-        self.__print("on_error %s %s", headers, body)
+        self.__print("on_error %s %s", frame.headers, frame.body)
 
     def on_send(self, frame):
         """
@@ -559,10 +559,10 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         PrintingListener.on_connecting(self, host_and_port)
         WaitingListener.on_connecting(self, host_and_port)
 
-    def on_connected(self, headers, body):
-        StatsListener.on_connected(self, headers, body)
-        PrintingListener.on_connected(self, headers, body)
-        WaitingListener.on_connected(self, headers, body)
+    def on_connected(self, frame):
+        StatsListener.on_connected(self, frame)
+        PrintingListener.on_connected(self, frame)
+        WaitingListener.on_connected(self, frame)
 
     def on_disconnected(self):
         StatsListener.on_disconnected(self)
@@ -574,32 +574,32 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         PrintingListener.on_heartbeat_timeout(self)
         WaitingListener.on_heartbeat_timeout(self)
 
-    def on_before_message(self, headers, body):
-        StatsListener.on_before_message(self, headers, body)
-        PrintingListener.on_before_message(self, headers, body)
-        WaitingListener.on_before_message(self, headers, body)
+    def on_before_message(self, frame):
+        StatsListener.on_before_message(self, frame)
+        PrintingListener.on_before_message(self, frame)
+        WaitingListener.on_before_message(self, frame)
 
-    def on_message(self, headers, message):
+    def on_message(self, frame):
         """
         :param dict headers:
         :param message:
         """
-        StatsListener.on_message(self, headers, message)
-        PrintingListener.on_message(self, headers, message)
-        self.message_list.append((headers, message))
+        StatsListener.on_message(self, frame)
+        PrintingListener.on_message(self, frame)
+        self.message_list.append((frame.headers, frame.body))
         with self.message_condition:
             self.message_received = True
             self.message_condition.notify()
 
-    def on_receipt(self, headers, body):
-        StatsListener.on_receipt(self, headers, body)
-        PrintingListener.on_receipt(self, headers, body)
-        WaitingListener.on_receipt(self, headers, body)
+    def on_receipt(self, frame):
+        StatsListener.on_receipt(self, frame)
+        PrintingListener.on_receipt(self, frame)
+        WaitingListener.on_receipt(self, frame)
 
-    def on_error(self, headers, body):
-        StatsListener.on_error(self, headers, body)
-        PrintingListener.on_error(self, headers, body)
-        WaitingListener.on_error(self, headers, body)
+    def on_error(self, frame):
+        StatsListener.on_error(self, frame)
+        PrintingListener.on_error(self, frame)
+        WaitingListener.on_error(self, frame)
 
     def on_send(self, frame):
         StatsListener.on_send(self, frame)
@@ -613,7 +613,7 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
             self.heartbeat_received = True
             self.heartbeat_condition.notify()
 
-    def on_receiver_loop_completed(self, headers, body):
-        StatsListener.on_receiver_loop_completed(self, headers, body)
-        PrintingListener.on_receiver_loop_completed(self, headers, body)
-        WaitingListener.on_receiver_loop_completed(self, headers, body)
+    def on_receiver_loop_completed(self, frame):
+        StatsListener.on_receiver_loop_completed(self, frame)
+        PrintingListener.on_receiver_loop_completed(self, frame)
+        WaitingListener.on_receiver_loop_completed(self, frame)

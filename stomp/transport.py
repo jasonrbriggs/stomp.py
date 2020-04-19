@@ -243,7 +243,7 @@ class BaseTransport(stomp.listener.Publisher):
                     self.connection_error = True
                     self.__connect_wait_condition.notify()
 
-            rtn = notify_func(headers, body)
+            rtn = notify_func(frame)
             if rtn:
                 (headers, body) = rtn
         return (headers, body)

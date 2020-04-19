@@ -101,7 +101,7 @@ class StompCLI(Cmd, ConnectionListener):
         self.__subscriptions = {}
         self.__subscription_id = 1
 
-    def __print_async(self, frame_type, headers, body):
+    def __print_async(self, frame_type, frame):
         """
         Utility function to print a message and setup the command prompt
         for the next input
@@ -110,16 +110,16 @@ class StompCLI(Cmd, ConnectionListener):
             return
         if self.verbose:
             self.__sysout(frame_type)
-            for k, v in headers.items():
+            for k, v in frame.headers.items():
                 self.__sysout("%s: %s" % (k, v))
         else:
-            if "message-id" in headers:
-                self.__sysout("message-id: %s" % headers["message-id"])
-            if "subscription" in headers:
-                self.__sysout("subscription: %s" % headers["subscription"])
+            if "message-id" in frame.headers:
+                self.__sysout("message-id: %s" % frame.headers["message-id"])
+            if "subscription" in frame.headers:
+                self.__sysout("subscription: %s" % frame.headers["subscription"])
         if self.prompt != '':
             self.__sysout('')
-        self.__sysout(body)
+        self.__sysout(frame.body)
         if not self.__start:
             self.__sysout(self.prompt, end='')
         else:
@@ -147,7 +147,7 @@ class StompCLI(Cmd, ConnectionListener):
         if not self.__quit:
             self.__error("lost connection")
 
-    def on_message(self, headers, body):
+    def on_message(self, frame):
         """
         See :py:meth:`ConnectionListener.on_message`
 
@@ -155,35 +155,36 @@ class StompCLI(Cmd, ConnectionListener):
         as a file
         """
         self.__sysout('')
-        if "filename" in headers:
-            content = base64.b64decode(body.encode())
-            if os.path.exists(headers["filename"]):
-                fname = "%s.%s" % (headers["filename"], int(time.time()))
+        if "filename" in frame.headers:
+            content = base64.b64decode(frame.body.encode())
+            if os.path.exists(frame.headers["filename"]):
+                fname = "%s.%s" % (frame.headers["filename"], int(time.time()))
             else:
-                fname = headers["filename"]
+                fname = frame.headers["filename"]
             with open(fname, 'wb') as f:
                 f.write(content)
-            self.__print_async("MESSAGE", headers, "Saved file: %s" % fname)
+            frame.body = "Saved file: %s" % fname
+            self.__print_async("MESSAGE", frame)
         else:
-            self.__print_async("MESSAGE", headers, body)
+            self.__print_async("MESSAGE", frame)
 
-    def on_error(self, headers, body):
+    def on_error(self, frame):
         """
         See :py:meth:`ConnectionListener.on_error`
         """
-        self.__print_async("ERROR", headers, body)
+        self.__print_async("ERROR", frame)
 
-    def on_receipt(self, headers, body):
+    def on_receipt(self, frame):
         """
         See :py:meth:`ConnectionListener.on_receipt`
         """
-        self.__print_async("RECEIPT", headers, body)
+        self.__print_async("RECEIPT", frame)
 
-    def on_connected(self, headers, body):
+    def on_connected(self, frame):
         """
         See :py:meth:`ConnectionListener.on_connected`
         """
-        self.__print_async("CONNECTED", headers, body)
+        self.__print_async("CONNECTED", frame)
 
     def on_send(self, frame):
         if self.verbose:

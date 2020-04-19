@@ -18,15 +18,15 @@ class TransformationListener(TestListener):
         TestListener.__init__(self, receipt, print_to_log)
         self.message = None
 
-    def on_before_message(self, headers, body):
-        if "transformation" in headers:
-            trans_type = headers["transformation"]
+    def on_before_message(self, frame):
+        if "transformation" in frame.headers:
+            trans_type = frame.headers["transformation"]
             if trans_type != "jms-map-xml":
-                return body
+                return frame.body
 
             try:
                 entries = {}
-                doc = xml.dom.minidom.parseString(body)
+                doc = xml.dom.minidom.parseString(frame.body)
                 rootElem = doc.documentElement
                 for entryElem in rootElem.getElementsByTagName("entry"):
                     pair = []
@@ -36,17 +36,17 @@ class TransformationListener(TestListener):
                         pair.append(node.firstChild.nodeValue)
                     assert len(pair) == 2
                     entries[pair[0]] = pair[1]
-                return (headers, entries)
+                return (frame.headers, entries)
             except Exception:
                 #
                 # unable to parse message. return original
                 #
                 traceback.print_exc()
-                return (headers, body)
+                return (frame.headers, frame.body)
 
-    def on_message(self, headers, body):
-        TestListener.on_message(self, headers, body)
-        self.message = body
+    def on_message(self, frame):
+        TestListener.on_message(self, frame)
+        self.message = frame.body
 
 
 @pytest.fixture()
@@ -149,7 +149,7 @@ class TestMiscellaneousLogic(object):
     def test_heartbeatlistener(self, mocker):
         transport = mocker.MagicMock()
         hl = HeartbeatListener(transport, (10000,20000))
-        hl.on_connected({"heart-beat": "10000,20000"}, '')
+        hl.on_connected(Frame('heartbeat', {"heart-beat": "10000,20000"}, ''))
         time.sleep(1)
         hl.on_message
 
