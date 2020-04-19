@@ -76,8 +76,8 @@ class MulticastTransport(Transport):
             if frame_type == "message":
                 if f.headers["destination"] not in self.subscriptions.values():
                     return
-                (f.headers, f.body) = self.notify("before_message", f.headers, f.body)
-            self.notify(frame_type, f.headers, f.body)
+                (f.headers, f.body) = self.notify("before_message", f)
+            self.notify(frame_type, f)
         if "receipt" in f.headers:
             receipt_frame = Frame("RECEIPT", {"receipt-id": f.headers["receipt"]})
             lines = convert_frame(receipt_frame)
@@ -153,13 +153,13 @@ class MulticastConnection(BaseConnection, Protocol12):
         if cmd == CMD_BEGIN:
             trans = headers[HDR_TRANSACTION]
             if trans in self.transactions:
-                self.notify("error", {}, "Transaction %s already started" % trans)
+                self.notify("error", Frame(None, {}, "Transaction %s already started" % trans))
             else:
                 self.transactions[trans] = []
         elif cmd == CMD_COMMIT:
             trans = headers[HDR_TRANSACTION]
             if trans not in self.transactions:
-                self.notify("error", {}, "Transaction %s not started" % trans)
+                self.notify("error", Frame(None, {}, "Transaction %s not started" % trans))
             else:
                 for f in self.transactions[trans]:
                     self.transport.transmit(f)
@@ -171,7 +171,7 @@ class MulticastConnection(BaseConnection, Protocol12):
             if "transaction" in headers:
                 trans = headers["transaction"]
                 if trans not in self.transactions:
-                    self.transport.notify("error", {}, "Transaction %s not started" % trans)
+                    self.transport.notify("error", Frame(None, {}, "Transaction %s not started" % trans))
                     return
                 else:
                     self.transactions[trans].append(frame)
