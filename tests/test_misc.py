@@ -48,6 +48,15 @@ class TransformationListener(TestListener):
         self.message = frame
 
 
+class HeaderModListener(TestListener):
+    def on_before_message(self, frame):
+        frame.headers["testheader"] = "modifiedheader"
+
+    def on_message(self, frame):
+        TestListener.on_message(self, frame)
+        self.message = frame
+
+
 @pytest.fixture()
 def conn():
     conn = stomp.Connection11(get_rabbitmq_host())
@@ -55,6 +64,15 @@ def conn():
     conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
     yield conn
     conn.disconnect(receipt=None)
+
+
+@pytest.fixture()
+def conn2():
+    conn2 = stomp.Connection11(get_rabbitmq_host())
+    conn2.set_listener("testlistener", HeaderModListener("123", print_to_log=True))
+    conn2.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
+    yield conn2
+    conn2.disconnect(receipt=None)
 
 
 def timeout_server(svr):
@@ -78,7 +96,6 @@ def timeout_thread(miscserver):
 
 
 class TestMessageTransform(object):
-
     def test_transform(self, conn):
         listener = conn.get_listener("testlistener")
         queuename = "/queue/testtransform-%s" % listener.timestamp
@@ -154,3 +171,16 @@ class TestMiscellaneousLogic(object):
 
         # just check if there was a received heartbeat calculated
         assert hl.received_heartbeat > 0
+
+    def test_original_headers(self, conn2):
+        listener = conn2.get_listener("testlistener")
+        queuename = "/queue/testheadermod-%s" % listener.timestamp
+        conn2.subscribe(destination=queuename, id=1, ack="auto")
+
+        conn2.send(body="test message", destination=queuename, headers={"testheader": "originalheader"}, receipt="123")
+
+        listener.wait_on_receipt()
+        listener.wait_for_message()
+
+        assert "modifiedheader" == listener.message.headers["testheader"]
+        assert "originalheader" == listener.message.original_headers["testheader"]
