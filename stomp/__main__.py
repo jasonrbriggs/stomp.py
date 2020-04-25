@@ -164,9 +164,7 @@ class StompCLI(Cmd, ConnectionListener):
             with open(fname, 'wb') as f:
                 f.write(content)
             frame.body = "Saved file: %s" % fname
-            self.__print_async("MESSAGE", frame)
-        else:
-            self.__print_async("MESSAGE", frame)
+        self.__print_async("MESSAGE", frame)
 
     def on_error(self, frame):
         """
