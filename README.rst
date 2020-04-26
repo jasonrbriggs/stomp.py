@@ -51,7 +51,7 @@ The current version of stomp.py supports:
 
 There is also legacy 3.1.7 version using the old 3-series code (see `3.1.7 on PyPi`_ and `3.1.7 on GitHub`_). This is no longer supported, but (at least as of 2018) there were still a couple of reports of this version still being used in the wild.
 
-Note: stomp.py now follows [semantic versioning](https://semver.org/):
+Note: stomp.py now follows `semantic versioning`_:
 
 - MAJOR version for incompatible API changes,
 - MINOR version for functionality added in a backwards compatible manner, and
@@ -105,3 +105,5 @@ For testing locally, you'll need to install docker. Once installed:
 .. _`stompserver`: http://stompserver.rubyforge.org
 
 .. _`buy me a coffee`: https://www.paypal.me/jasonrbriggs
+
+.. _`semantic versioning`: https://semver.org/
