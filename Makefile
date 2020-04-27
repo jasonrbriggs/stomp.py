@@ -60,3 +60,6 @@ run-docker:
 remove-docker:
 	docker stop stomppy
 	docker rm stomppy
+
+
+docker: remove-docker docker-image run-docker

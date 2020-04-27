@@ -76,8 +76,8 @@ class TestUtils(object):
             assert str(f) == str(Frame("MESSAGE", {"content-type": "text/plain"}, b"hello world!"))
 
     def test_clean_default_headers(self):
-        Frame().headers["foo"] = "bar"
-        assert Frame().headers == {}
+        Frame('test').headers["foo"] = "bar"
+        assert Frame('test').headers == {}
 
     def test_join(self):
         str = stomp.utils.join((b'a', b'b', b'c'))
