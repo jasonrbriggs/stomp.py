@@ -3,14 +3,10 @@ DESTDIR=/
 PROJECT=stomp.py
 PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0])")
 PLATFORM := $(shell uname)
+VERSION :=$(shell poetry version | sed 's/stomp.py\s*//g' | sed 's/\./, /g')
 
 
-all:
-	@echo "make source - Create source package"
-	@echo "make install - Install on local system"
-	@echo "make buildrpm - Generate a rpm package"
-	@echo "make builddeb - Generate a deb package"
-	@echo "make clean - Get rid of scratch and byte files"
+all: test install
 
 .PHONY: docs
 
@@ -18,9 +14,9 @@ docs:
 	cd docs && make html
 
 updateversion:
-	poetry version `python -c "import stomp; print('.'.join(map(str, stomp.__version__)))"`
+	sed -i "s/__version__\s*=.*/__version__ = \($(VERSION)\)/g" stomp/__init__.py
 
-install: updateversion
+install: updateversion test
 	poetry update
 	poetry build
 	poetry export -f requirements.txt --dev -o requirements.txt
@@ -64,3 +60,6 @@ run-docker:
 remove-docker:
 	docker stop stomppy
 	docker rm stomppy
+
+
+docker: remove-docker docker-image run-docker

@@ -59,7 +59,7 @@ class BaseTransport(stomp.listener.Publisher):
     #
     __content_length_re = re.compile(b"^content-length[:]\\s*(?P<value>[0-9]+)", re.MULTILINE)
 
-    def __init__(self, auto_decode=True, encoding="utf-8"):
+    def __init__(self, auto_decode=True, encoding="utf-8", is_eol_fc=is_eol_default):
         self.__recvbuf = b''
         self.listeners = {}
         self.running = False
@@ -83,6 +83,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.__connect_wait_condition = threading.Condition()
         self.__auto_decode = auto_decode
         self.__encoding = encoding
+        self.__is_eol = is_eol_fc
 
     def override_threading(self, create_thread_fc):
         """
@@ -184,16 +185,16 @@ class BaseTransport(stomp.listener.Publisher):
         frame_type = f.cmd.lower()
         if frame_type in ["connected", "message", "receipt", "error", "heartbeat"]:
             if frame_type == "message":
-                (f.headers, f.body) = self.notify("before_message", f.headers, f.body)
+                self.notify("before_message", f)
             if logging.isEnabledFor(logging.DEBUG):
                 logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             else:
                 logging.info("Received frame: %r, len(body)=%r", f.cmd, length(f.body))
-            self.notify(frame_type, f.headers, f.body)
+            self.notify(frame_type, f)
         else:
             logging.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
 
-    def notify(self, frame_type, headers=None, body=None):
+    def notify(self, frame_type, frame=None):
         """
         Utility function for notifying listeners of incoming and outgoing messages
 
@@ -203,7 +204,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         if frame_type == "receipt":
             # logic for wait-on-receipt notification
-            receipt = headers["receipt-id"]
+            receipt = frame.headers["receipt-id"]
             receipt_value = self.__receipts.get(receipt)
             with self.__send_wait_condition:
                 self.set_receipt(receipt, None)
@@ -243,10 +244,7 @@ class BaseTransport(stomp.listener.Publisher):
                     self.connection_error = True
                     self.__connect_wait_condition.notify()
 
-            rtn = notify_func(headers, body)
-            if rtn:
-                (headers, body) = rtn
-        return (headers, body)
+            notify_func(frame)
 
     def transmit(self, frame):
         """
@@ -338,7 +336,10 @@ class BaseTransport(stomp.listener.Publisher):
                         frames = self.__read()
 
                         for frame in frames:
-                            f = parse_frame(frame)
+                            if self.__is_eol(frame):
+                                f = HEARTBEAT_FRAME
+                            else:
+                                f = parse_frame(frame)
                             if f is None:
                                 continue
                             if self.__auto_decode:
@@ -365,6 +366,7 @@ class BaseTransport(stomp.listener.Publisher):
                 self.notify("disconnected")
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
+            self.__notified_on_disconnect = False
 
     def __read(self):
         """
@@ -387,7 +389,7 @@ class BaseTransport(stomp.listener.Publisher):
             if c is None or len(c) == 0:
                 logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
-            if c == b'\x0a' and not self.__recvbuf and not fastbuf.tell():
+            if self.__is_eol(c) and not self.__recvbuf and not fastbuf.tell():
                 #
                 # EOL to an empty receive buffer: treat as heartbeat.
                 # Note that this may misdetect an optional EOL at end of frame as heartbeat in case the
@@ -437,8 +439,13 @@ class BaseTransport(stomp.listener.Publisher):
                     #
                     # Ignore optional EOLs at end of frame
                     #
-                    while self.__recvbuf[pos:pos + 1] == b'\x0a':
-                        pos += 1
+                    while 1:
+                        if self.__is_eol(self.__recvbuf[pos:pos + 1]):
+                            pos += 1
+                        elif self.__is_eol(self.__recvbuf[pos:pos + 2]):
+                            pos += 2
+                        else:
+                            break
                     self.__recvbuf = self.__recvbuf[pos:]
                 else:
                     break
@@ -512,9 +519,10 @@ class Transport(BaseTransport):
                  vhost=None,
                  auto_decode=True,
                  encoding="utf-8",
-                 recv_bytes=1024
+                 recv_bytes=1024,
+                 is_eol_fc=is_eol_default
                  ):
-        BaseTransport.__init__(self, auto_decode, encoding)
+        BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
             host_and_ports = [("localhost", 61613)]

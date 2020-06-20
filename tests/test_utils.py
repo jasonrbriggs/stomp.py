@@ -56,9 +56,6 @@ class TestUtils(object):
         assert (0, 0) == calculate_heartbeats(shb, chb)
 
     def test_parse_frame(self):
-        # heartbeat
-        f = parse_frame(b'\x0a')
-        assert str(f) == str(Frame("heartbeat"))
         # oddball/broken
         f = parse_frame(b"FOO")
         assert str(f) == str(Frame("FOO", body=b''))
@@ -79,8 +76,8 @@ class TestUtils(object):
             assert str(f) == str(Frame("MESSAGE", {"content-type": "text/plain"}, b"hello world!"))
 
     def test_clean_default_headers(self):
-        Frame().headers["foo"] = "bar"
-        assert Frame().headers == {}
+        Frame('test').headers["foo"] = "bar"
+        assert Frame('test').headers == {}
 
     def test_join(self):
         str = stomp.utils.join((b'a', b'b', b'c'))

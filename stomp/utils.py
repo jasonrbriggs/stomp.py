@@ -2,6 +2,7 @@
 """
 
 import copy
+import logging
 import os
 import re
 import socket
@@ -85,6 +86,9 @@ def join(chars=()):
     """
     return b''.join(chars).decode()
 
+
+def is_eol_default(c):
+    return c == b'\x0a'
 
 ##
 # Used to parse STOMP header lines in the format "key:value",
@@ -187,11 +191,6 @@ def parse_frame(frame):
 
     :rtype: Frame
     """
-    f = Frame()
-    if frame == b'\x0a':
-        f.cmd = "heartbeat"
-        return f
-
     mat = PREAMBLE_END_RE.search(frame)
     if mat:
         preamble_end = mat.start()
@@ -202,7 +201,7 @@ def parse_frame(frame):
     preamble = decode(frame[0:preamble_end])
     preamble_lines = LINE_END_RE.split(preamble)
     preamble_len = len(preamble_lines)
-    f.body = frame[body_start:]
+    body = frame[body_start:]
 
     # Skip any leading newlines
     first_line = 0
@@ -213,12 +212,12 @@ def parse_frame(frame):
         return None
 
     # Extract frame type/command
-    f.cmd = preamble_lines[first_line]
+    cmd = preamble_lines[first_line]
 
     # Put headers into a key/value map
-    f.headers = parse_headers(preamble_lines, first_line + 1)
+    headers = parse_headers(preamble_lines, first_line + 1)
 
-    return f
+    return Frame(cmd, headers, body)
 
 
 def merge_headers(header_map_list):
@@ -327,9 +326,10 @@ class Frame(object):
     :param dict headers: a map of headers for the frame
     :param body: the content of the frame.
     """
-    def __init__(self, cmd=None, headers=None, body=None):
+    def __init__(self, cmd, headers=None, body=None):
         self.cmd = cmd
         self.headers = headers if headers is not None else {}
+        self.original_headers = copy.copy(self.headers)
         self.body = body
 
     def __str__(self):
@@ -350,3 +350,6 @@ def get_errno(e):
         return e.errno
     except AttributeError:
         return e.args[0]
+
+
+HEARTBEAT_FRAME = Frame("heartbeat")
