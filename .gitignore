@@ -44,6 +44,7 @@ nosetests.xml
 MANIFEST
 
 tmp/
+docker/tmp
 docs/build
 
 .DS_Store

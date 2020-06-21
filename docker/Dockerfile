@@ -9,8 +9,8 @@ RUN apt install -y rabbitmq-server
 RUN apt install -y stompserver
 RUN apt install -y activemq
 RUN apt install -y vim
-RUN apt install -y wget
 RUN apt install -y haproxy
+RUN apt install -y rsyslog
 
 # rabbitmq setup
 RUN rabbitmq-plugins enable rabbitmq_stomp
@@ -39,9 +39,9 @@ COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY haproxy.sh /
 
 # activemq artemis
-RUN wget http://www.mirrorservice.org/sites/ftp.apache.org/activemq/activemq-artemis/2.11.0/apache-artemis-2.11.0-bin.tar.gz
-RUN tar -xvzf apache-artemis-2.11.0-bin.tar.gz
-RUN apache-artemis-2.11.0/bin/artemis create testbroker --user testuser --password password --allow-anonymous --no-amqp-acceptor --no-hornetq-acceptor --default-port 61619
+COPY tmp/activemq-artemis-bin.tar.gz /
+RUN tar -xvzf activemq-artemis-bin.tar.gz
+RUN apache-artemis-2.13.0/bin/artemis create testbroker --user testuser --password password --allow-anonymous --no-amqp-acceptor --no-hornetq-acceptor --default-port 61619
 RUN sed -i 's/acceptor name="stomp">tcp:\/\/0.0.0.0:61613/acceptor name="stomp">tcp:\/\/0.0.0.0:61615/g' testbroker/etc/broker.xml
 
 # expose ports
