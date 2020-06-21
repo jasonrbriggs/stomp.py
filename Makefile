@@ -49,6 +49,7 @@ release: updateversion
 	poetry publish
 
 docker/tmp/activemq-artemis-bin.tar.gz:
+	mkdir -p docker/tmp
 	wget http://www.apache.org/dist/activemq/activemq-artemis/2.13.0/apache-artemis-2.13.0-bin.tar.gz -O docker/tmp/activemq-artemis-bin.tar.gz
 
 docker-image: docker/tmp/activemq-artemis-bin.tar.gz
