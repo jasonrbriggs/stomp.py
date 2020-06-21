@@ -21,11 +21,11 @@ addons:
     - my.example.net
 
 before_install:
+  - pip install poetry
   - make docker-image
   - make run-docker
   - docker inspect stomppy
   - docker logs stomppy
-  - pip install poetry
 
 script:
   - make test
