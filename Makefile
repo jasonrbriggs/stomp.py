@@ -35,6 +35,9 @@ test:
 #	# build the package
 #	dpkg-buildpackage -kjasonrbriggs@gmail.com -i -I -rfakeroot
 
+testsingle:
+	poetry run pytest tests/${TEST} --log-cli-level=DEBUG -v -ra --full-trace
+
 clean:
 ifeq ($(PLATFORM),Linux)
 	$(MAKE) -f $(CURDIR)/debian/rules clean
@@ -45,7 +48,10 @@ endif
 release: updateversion
 	poetry publish
 
-docker-image:
+docker/tmp/activemq-artemis-bin.tar.gz:
+	wget http://www.apache.org/dist/activemq/activemq-artemis/2.13.0/apache-artemis-2.13.0-bin.tar.gz -O docker/tmp/activemq-artemis-bin.tar.gz
+
+docker-image: docker/tmp/activemq-artemis-bin.tar.gz
 	docker build -t stomppy docker/
 
 run-docker:
