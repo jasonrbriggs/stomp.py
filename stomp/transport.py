@@ -61,12 +61,13 @@ class BaseTransport(stomp.listener.Publisher):
         self.blocking = None
         self.connected = False
         self.connection_error = False
+        self.disconnecting = False
         self.__receipts = {}
         self.current_host_and_port = None
 
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
-        self.__notified_on_disconnect = False
+        self.notified_on_disconnect = False
 
         # function for creating threads used by the connection
         self.create_thread_fc = default_create_thread
@@ -129,6 +130,7 @@ class BaseTransport(stomp.listener.Publisher):
         with self.__connect_wait_condition:
             self.connected = connected
             if connected:
+                self.disconnecting = False
                 self.__connect_wait_condition.notify()
 
     def set_receipt(self, receipt_id, value):
@@ -216,7 +218,7 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(True)
 
         elif frame_type == "disconnected":
-            self.__notified_on_disconnect = True
+            self.notified_on_disconnect = True
             self.set_connected(False)
 
         with self.__listeners_change_condition:
@@ -357,11 +359,11 @@ class BaseTransport(stomp.listener.Publisher):
                 self.__receiver_thread_exit_condition.notifyAll()
             logging.info("Receiver loop ended")
             self.notify("receiver_loop_completed")
-            if notify_disconnected and not self.__notified_on_disconnect:
+            if notify_disconnected and not self.notified_on_disconnect:
                 self.notify("disconnected")
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notifyAll()
-            self.__notified_on_disconnect = False
+            self.notified_on_disconnect = False
 
     def __read(self):
         """
@@ -626,7 +628,8 @@ class Transport(BaseTransport):
                 logging.warning("Unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
-        self.notify("disconnected")
+        if not self.notified_on_disconnect:
+            self.notify("disconnected")
 
     def send(self, encoded_frame):
         """
