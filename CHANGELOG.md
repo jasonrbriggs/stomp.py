@@ -6,6 +6,7 @@
  * Update version number using the makefile and the poetry version command
  * Add `original_headers` access to the Frame so that you can get the original value of a header even if a listener modifies it (issue https://github.com/jasonrbriggs/stomp.py/issues/300, PR https://github.com/jasonrbriggs/stomp.py/pull/309)
  * Fix for reconnect failures (https://github.com/jasonrbriggs/stomp.py/pull/295)
+ * Fix for double disconnect notifications causing issues with reconnection
 
 
 ## Version 6.0.0 - Feb 2020
