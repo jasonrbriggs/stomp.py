@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for stomp/connect.py: 98%</title>
+    <title>Coverage for stomp/connect.py: 100%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>stomp/connect.py</b> :
-            <span class="pc_cov">98%</span>
+            <span class="pc_cov">100%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            65 statements &nbsp;
-            <span class="run shortkey_r button_toggle_run">64 run</span>
-            <span class="mis show_mis shortkey_m button_toggle_mis">1 missing</span>
+            67 statements &nbsp;
+            <span class="run shortkey_r button_toggle_run">67 run</span>
+            <span class="mis show_mis shortkey_m button_toggle_mis">0 missing</span>
             <span class="exc show_exc shortkey_x button_toggle_exc">0 excluded</span>
         </h2>
     </div>
@@ -77,7 +77,7 @@
     <p id="t24" class="run"><span class="n"><a href="#t24">24</a></span><span class="t">    <span class="key">def</span> <span class="nam">__enter__</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t25" class="run"><span class="n"><a href="#t25">25</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_receipt_id</span> <span class="op">=</span> <span class="nam">get_uuid</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t26" class="run"><span class="n"><a href="#t26">26</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_listener</span> <span class="op">=</span> <span class="nam">WaitingListener</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_receipt_id</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t27" class="run"><span class="n"><a href="#t27">27</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">'ZZZZZ-disconnect-listener'</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t27" class="run"><span class="n"><a href="#t27">27</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="str">"ZZZZZ-disconnect-listener"</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t28" class="run"><span class="n"><a href="#t28">28</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span>&nbsp;</span><span class="r"></span></p>
     <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t30" class="run"><span class="n"><a href="#t30">30</a></span><span class="t">    <span class="key">def</span> <span class="nam">__exit__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">exc_type</span><span class="op">,</span> <span class="nam">exc_val</span><span class="op">,</span> <span class="nam">exc_tb</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -119,7 +119,7 @@
     <p id="t66" class="run"><span class="n"><a href="#t66">66</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">set_ssl</span><span class="op">(</span><span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="key">def</span> <span class="nam">get_ssl</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">host_and_port</span><span class="op">=</span><span class="key">None</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t69" class="mis show_mis"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">get_ssl</span><span class="op">(</span><span class="nam">host_and_port</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="run"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">get_ssl</span><span class="op">(</span><span class="nam">host_and_port</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t70" class="pln"><span class="n"><a href="#t70">70</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t71" class="pln"><span class="n"><a href="#t71">71</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t72" class="run"><span class="n"><a href="#t72">72</a></span><span class="t"><span class="key">class</span> <span class="nam">StompConnection10</span><span class="op">(</span><span class="nam">BaseConnection</span><span class="op">,</span> <span class="nam">Protocol10</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -145,7 +145,7 @@
     <p id="t92" class="pln"><span class="n"><a href="#t92">92</a></span><span class="t">                 <span class="nam">timeout</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t93" class="pln"><span class="n"><a href="#t93">93</a></span><span class="t">                 <span class="nam">keepalive</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t94" class="pln"><span class="n"><a href="#t94">94</a></span><span class="t">                 <span class="nam">auto_decode</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t95" class="pln"><span class="n"><a href="#t95">95</a></span><span class="t">                 <span class="nam">encoding</span><span class="op">=</span><span class="str">'utf-8'</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t95" class="pln"><span class="n"><a href="#t95">95</a></span><span class="t">                 <span class="nam">encoding</span><span class="op">=</span><span class="str">"utf-8"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t96" class="pln"><span class="n"><a href="#t96">96</a></span><span class="t">                 <span class="nam">auto_content_length</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t97" class="pln"><span class="n"><a href="#t97">97</a></span><span class="t">                 <span class="nam">recv_bytes</span><span class="op">=</span><span class="num">1024</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t98" class="run"><span class="n"><a href="#t98">98</a></span><span class="t">        <span class="nam">transport</span> <span class="op">=</span> <span class="nam">Transport</span><span class="op">(</span><span class="nam">host_and_ports</span><span class="op">,</span> <span class="nam">prefer_localhost</span><span class="op">,</span> <span class="nam">try_loopback_connect</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -198,7 +198,7 @@
     <p id="t145" class="pln"><span class="n"><a href="#t145">145</a></span><span class="t">                 <span class="nam">keepalive</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t146" class="pln"><span class="n"><a href="#t146">146</a></span><span class="t">                 <span class="nam">vhost</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t147" class="pln"><span class="n"><a href="#t147">147</a></span><span class="t">                 <span class="nam">auto_decode</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t148" class="pln"><span class="n"><a href="#t148">148</a></span><span class="t">                 <span class="nam">encoding</span><span class="op">=</span><span class="str">'utf-8'</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t148" class="pln"><span class="n"><a href="#t148">148</a></span><span class="t">                 <span class="nam">encoding</span><span class="op">=</span><span class="str">"utf-8"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t149" class="pln"><span class="n"><a href="#t149">149</a></span><span class="t">                 <span class="nam">auto_content_length</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t150" class="pln"><span class="n"><a href="#t150">150</a></span><span class="t">                 <span class="nam">heart_beat_receive_scale</span><span class="op">=</span><span class="num">1.5</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t151" class="pln"><span class="n"><a href="#t151">151</a></span><span class="t">                 <span class="nam">recv_byte</span><span class="op">=</span><span class="num">1024</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -252,7 +252,7 @@
     <p id="t199" class="pln"><span class="n"><a href="#t199">199</a></span><span class="t">                 <span class="nam">keepalive</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t200" class="pln"><span class="n"><a href="#t200">200</a></span><span class="t">                 <span class="nam">vhost</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t201" class="pln"><span class="n"><a href="#t201">201</a></span><span class="t">                 <span class="nam">auto_decode</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t202" class="pln"><span class="n"><a href="#t202">202</a></span><span class="t">                 <span class="nam">encoding</span><span class="op">=</span><span class="str">'utf-8'</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t202" class="pln"><span class="n"><a href="#t202">202</a></span><span class="t">                 <span class="nam">encoding</span><span class="op">=</span><span class="str">"utf-8"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t203" class="pln"><span class="n"><a href="#t203">203</a></span><span class="t">                 <span class="nam">auto_content_length</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t204" class="pln"><span class="n"><a href="#t204">204</a></span><span class="t">                 <span class="nam">heart_beat_receive_scale</span><span class="op">=</span><span class="num">1.5</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t205" class="pln"><span class="n"><a href="#t205">205</a></span><span class="t">                 <span class="nam">recv_bytes</span><span class="op">=</span><span class="num">1024</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -260,7 +260,7 @@
     <p id="t207" class="pln"><span class="n"><a href="#t207">207</a></span><span class="t">                              <span class="nam">reconnect_sleep_initial</span><span class="op">,</span> <span class="nam">reconnect_sleep_increase</span><span class="op">,</span> <span class="nam">reconnect_sleep_jitter</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t208" class="pln"><span class="n"><a href="#t208">208</a></span><span class="t">                              <span class="nam">reconnect_sleep_max</span><span class="op">,</span> <span class="nam">reconnect_attempts_max</span><span class="op">,</span> <span class="nam">use_ssl</span><span class="op">,</span> <span class="nam">ssl_key_file</span><span class="op">,</span> <span class="nam">ssl_cert_file</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t209" class="pln"><span class="n"><a href="#t209">209</a></span><span class="t">                              <span class="nam">ssl_ca_certs</span><span class="op">,</span> <span class="nam">ssl_cert_validator</span><span class="op">,</span> <span class="nam">ssl_version</span><span class="op">,</span> <span class="nam">timeout</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t210" class="pln"><span class="n"><a href="#t210">210</a></span><span class="t">                              <span class="nam">keepalive</span><span class="op">,</span> <span class="nam">vhost</span><span class="op">,</span> <span class="nam">auto_decode</span><span class="op">,</span> <span class="nam">encoding</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t210" class="pln"><span class="n"><a href="#t210">210</a></span><span class="t">                              <span class="nam">keepalive</span><span class="op">,</span> <span class="nam">vhost</span><span class="op">,</span> <span class="nam">auto_decode</span><span class="op">,</span> <span class="nam">encoding</span><span class="op">,</span> <span class="nam">is_eol_fc</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">is_eol</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t211" class="run"><span class="n"><a href="#t211">211</a></span><span class="t">        <span class="nam">BaseConnection</span><span class="op">.</span><span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">transport</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t212" class="run"><span class="n"><a href="#t212">212</a></span><span class="t">        <span class="nam">Protocol12</span><span class="op">.</span><span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">transport</span><span class="op">,</span> <span class="nam">heartbeats</span><span class="op">,</span> <span class="nam">auto_content_length</span><span class="op">,</span> <span class="nam">heart_beat_receive_scale</span><span class="op">=</span><span class="nam">heart_beat_receive_scale</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t213" class="pln"><span class="n"><a href="#t213">213</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -279,12 +279,15 @@
     <p id="t226" class="run"><span class="n"><a href="#t226">226</a></span><span class="t">        <span class="nam">Protocol12</span><span class="op">.</span><span class="nam">disconnect</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">receipt</span><span class="op">,</span> <span class="nam">headers</span><span class="op">,</span> <span class="op">**</span><span class="nam">keyword_headers</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t227" class="run"><span class="n"><a href="#t227">227</a></span><span class="t">        <span class="key">if</span> <span class="nam">receipt</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t228" class="run"><span class="n"><a href="#t228">228</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">stop</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t229" class="pln"><span class="n"><a href="#t229">229</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t230" class="run"><span class="n"><a href="#t230">230</a></span><span class="t">    <span class="key">def</span> <span class="nam">is_eol</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">c</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t231" class="run"><span class="n"><a href="#t231">231</a></span><span class="t">        <span class="key">return</span> <span class="nam">c</span> <span class="op">==</span> <span class="str">b'\x0a'</span> <span class="key">or</span> <span class="nam">c</span> <span class="op">==</span> <span class="str">b'\x0d\x0a'</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
-            <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.0.3</a>,
-            created at 2020-01-16 22:57
+            <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
+            created at 2020-04-19 22:08
         </p>
     </div>
 </div>

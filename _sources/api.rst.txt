@@ -153,11 +153,11 @@ You can use a listener to deal with connection failures, and gracefully reconnec
         def __init__(self, conn):
             self.conn = conn
     
-        def on_error(self, headers, message):
-            print('received an error "%s"' % message)
+        def on_error(self, frame):
+            print('received an error "%s"' % frame.body)
 
-        def on_message(self, headers, message):
-            print('received a message "%s"' % message)
+        def on_message(self, frame):
+            print('received a message "%s"' % frame.body)
             for x in range(10):
                 print(x)
                 time.sleep(1)
