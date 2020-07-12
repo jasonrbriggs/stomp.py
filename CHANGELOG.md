@@ -4,9 +4,10 @@
  * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))
  * Remove heartbeat loop sleep (issue https://github.com/jasonrbriggs/stomp.py/issues/297, https://github.com/jasonrbriggs/stomp.py/pull/298)
  * Update version number using the makefile and the poetry version command
- * Add `original_headers` access to the Frame so that you can get the original value of a header even if a listener modifies it (issue https://github.com/jasonrbriggs/stomp.py/issues/300, PR https://github.com/jasonrbriggs/stomp.py/pull/309)
+ * Add `original_headers` access to the Frame so that you can get the original value of a header even if a listener modifies it (issue: https://github.com/jasonrbriggs/stomp.py/issues/300, PR https://github.com/jasonrbriggs/stomp.py/pull/309)
  * Fix for reconnect failures (https://github.com/jasonrbriggs/stomp.py/pull/295)
  * Fix for double disconnect notifications causing issues with reconnection
+ * Add 'verbose' to stomp.logging (and defaulting the value to False). Log lines which dump the stacktrace now use that variable - except for a couple of cases (set stomp.logging.verbose = True to change back to the previous behaviour)
 
 
 ## Version 6.0.0 - Feb 2020
