@@ -3,6 +3,8 @@ import logging
 DEBUG = logging.DEBUG
 INFO = logging.INFO
 
+verbose = False
+
 __logger = logging.getLogger("stomp.py")
 debug = __logger.debug
 info = __logger.info
