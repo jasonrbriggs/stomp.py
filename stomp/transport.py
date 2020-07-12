@@ -381,7 +381,7 @@ class BaseTransport(stomp.listener.Publisher):
                     logging.debug("socket read interrupted, restarting")
                     continue
             except Exception:
-                logging.debug("socket read error", exc_info=True)
+                logging.debug("socket read error", exc_info=logging.verbose)
                 c = b''
             if c is None or len(c) == 0:
                 logging.debug("nothing received, raising CCE")
@@ -520,6 +520,7 @@ class Transport(BaseTransport):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
+            logging.debug("No hosts_and_ports specified, adding default localhost")
             host_and_ports = [("localhost", 61613)]
 
         sorted_host_and_ports = []
@@ -641,7 +642,7 @@ class Transport(BaseTransport):
                     self.socket.sendall(encoded_frame)
             except Exception:
                 _, e, _ = sys.exc_info()
-                logging.error("Error sending frame", exc_info=1)
+                logging.error("Error sending frame", exc_info=True)
                 raise e
         else:
             raise exception.NotConnectedException()
@@ -792,7 +793,7 @@ class Transport(BaseTransport):
                 except socket.error:
                     self.socket = None
                     connect_count += 1
-                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=1)
+                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=logging.verbose)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
