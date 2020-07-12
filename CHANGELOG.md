@@ -1,4 +1,4 @@
-## Upcoming
+## Upcoming (6.1.0)
 
  * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
  * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))
