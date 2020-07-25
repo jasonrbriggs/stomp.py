@@ -222,7 +222,7 @@ class BaseTransport(stomp.listener.Publisher):
             self.set_connected(False)
 
         with self.__listeners_change_condition:
-            listeners = sorted(self.listeners.items())
+            listeners = self.listeners.items()
 
         for (_, listener) in listeners:
             notify_func = getattr(listener, "on_%s" % frame_type, None)
@@ -250,7 +250,7 @@ class BaseTransport(stomp.listener.Publisher):
         :param Frame frame: the Frame object to transmit
         """
         with self.__listeners_change_condition:
-            listeners = sorted(self.listeners.items())
+            listeners = self.listeners.items()
 
         for (_, listener) in listeners:
             try:
