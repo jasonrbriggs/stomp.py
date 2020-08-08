@@ -17,7 +17,7 @@
 
 ## Version 6.0.0 - Feb 2020
 
- * Update to not allow a null (None) listener when calling set_listener (minor code "smell" tidy up)
+ * Update to not allow a null (None) listener when calling set_listener
  * Change get_ssl call in connect to be consistent with transport method
  * Add a sleep to the heartbeat loop
  * Minor change to make quote-use more consistent (replace single with double in most places)
