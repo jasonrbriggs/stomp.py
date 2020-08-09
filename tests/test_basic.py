@@ -6,35 +6,45 @@ import unittest
 import pytest
 
 import stomp
+from stomp import logging
 from stomp.listener import TestListener
 from .testutils import *
 
 
 @pytest.fixture()
-def conn():
+def testlistener():
+    yield TestListener("123", print_to_log=True)
+
+
+@pytest.fixture()
+def conn(testlistener):
     conn = stomp.Connection11(get_default_host())
-    conn.set_listener("testlistener", TestListener("123", print_to_log=True))
+    conn.set_listener("testlistener", testlistener)
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn
     conn.disconnect(receipt=None)
 
 
 @pytest.fixture()
-def invalidconn():
+def invalidconn(testlistener):
     conn = stomp.Connection([("192.0.2.0", 60000)], timeout=5, reconnect_attempts_max=1)
-    conn.set_listener("testlistener", TestListener("123", print_to_log=True))
+    conn.set_listener("testlistener", testlistener)
     yield conn
 
 
 class TestBasic(object):
 
-    def test_basic(self, conn):
-        queuename = "/queue/test1-%s" % conn.get_listener("testlistener").timestamp
+    def test_subscribe_and_send(self, conn, testlistener):
+        queuename = "/queue/test1-%s" % testlistener.timestamp
         conn.subscribe(destination=queuename, id=1, ack="auto")
 
-        conn.send(body="this is a test", destination=queuename, receipt="123")
+        conn.send(body='{"val": "this is a test"}', destination=queuename, content_type="application/json", receipt="123")
 
         validate_send(conn)
+
+        (headers, body) = testlistener.get_latest_message()
+        assert "content-type" in headers
+        assert headers["content-type"] == "application/json"
 
     def test_default_to_localhost(self):
         conn = stomp.Connection()
