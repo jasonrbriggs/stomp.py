@@ -32,12 +32,12 @@ class BaseConnection(Publisher):
         self.disconnect_listener.wait_on_receipt()
         self.disconnect_listener.wait_on_disconnected()
 
-    def set_listener(self, name, lstnr):
+    def set_listener(self, name, listener):
         """
         :param str name:
-        :param ConnectionListener lstnr:
+        :param ConnectionListener listener:
         """
-        self.transport.set_listener(name, lstnr)
+        self.transport.set_listener(name, listener)
 
     def remove_listener(self, name):
         """
