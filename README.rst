@@ -65,9 +65,9 @@ Testing
 stomp.py has been perfunctorily tested on:
 
 - Pivotal `RabbitMQ`_   (`rabbitmq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_rabbitmq.py>`_)
-- Apache `ActiveMQ`_   (`activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/activemq_test.py>`_)
-- Apache ActiveMQ `Artemis`_  (`artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/artemis_test.py>`_)
-- `stompserver`_  (`stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/stompserver_test.py>`_)
+- Apache `ActiveMQ`_   (`activemq_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_activemq.py>`_)
+- Apache ActiveMQ `Artemis`_  (`artemis_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_artemis.py>`_)
+- `stompserver`_  (`stompserver_test.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_stompserver.py>`_)
 
 For testing locally, you'll need to install docker. Once installed:
 
