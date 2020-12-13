@@ -51,6 +51,7 @@ class ConnectionListener(object):
     This class should be used as a base class for objects registered
     using Connection.set_listener().
     """
+
     def on_connecting(self, host_and_port):
         """
         Called by the STOMP connection once a TCP/IP connection to the
@@ -73,6 +74,13 @@ class ConnectionListener(object):
         :param dict headers: a dictionary containing all headers sent by the server as key/value pairs.
         :param body: the frame's payload. This is usually empty for CONNECTED frames.
         """
+        pass
+
+    def on_disconnecting(self):
+        """
+        Called before a DISCONNECT frame is sent.
+        """
+        pass
 
     def on_disconnected(self):
         """
@@ -162,6 +170,7 @@ class HeartbeatListener(ConnectionListener):
         self.next_outbound_heartbeat = None
         self.heart_beat_receive_scale = heart_beat_receive_scale
         self.heartbeat_terminate_event = threading.Event()
+        self.disconnecting = False
 
     def on_connected(self, frame):
         """
@@ -172,6 +181,7 @@ class HeartbeatListener(ConnectionListener):
         :param dict headers: headers in the connection message
         :param body: the message body
         """
+        self.disconnecting = False
         if "heart-beat" in frame.headers:
             self.heartbeats = utils.calculate_heartbeats(
                 frame.headers["heart-beat"].replace(' ', '').split(','), self.heartbeats)
@@ -198,6 +208,9 @@ class HeartbeatListener(ConnectionListener):
     def on_disconnected(self):
         self.running = False
         self.heartbeat_terminate_event.set()
+
+    def on_disconnecting(self):
+        self.disconnecting = True
 
     def on_message(self, frame):
         """
@@ -278,7 +291,7 @@ class HeartbeatListener(ConnectionListener):
 
             now = monotonic()
 
-            if not self.transport.is_connected():
+            if not self.transport.is_connected() or self.disconnecting:
                 time.sleep(self.send_sleep)
                 continue
 
