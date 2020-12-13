@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 import stomp
+from stomp import logging
 from stomp.listener import TestListener
 from .testutils import *
 
@@ -21,6 +22,8 @@ class TestActiveMQ(object):
     def test_send_to_activemq(self, conn):
         conn.subscribe(destination="/queue/test", id=1, ack="auto")
 
-        conn.send(body="this is a test", destination="/queue/test", receipt="123")
+        conn.send(body="this is a test", destination="/queue/test", content_type="text/blah", receipt="123")
 
         validate_send(conn)
+
+        logging.info(conn.get_listener("testlistener").get_latest_message())
