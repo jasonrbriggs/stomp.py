@@ -276,7 +276,7 @@ class BaseTransport(stomp.listener.Publisher):
         packed_frame = pack(lines)
 
         if log.isEnabledFor(logging.DEBUG):
-            log.debug("Sending frame: %s", lines)
+            log.debug("Sending frame: %s", utils.clean_lines(lines))
         else:
             log.info("Sending frame: %r", frame.cmd or "heartbeat")
         self.send(packed_frame)
@@ -728,7 +728,7 @@ class Transport(BaseTransport):
         connect_count = 0
 
         while self.running and self.socket is None and (
-            connect_count < self.__reconnect_attempts_max or 
+            connect_count < self.__reconnect_attempts_max or
             self.__reconnect_attempts_max == -1 ):
             for host_and_port in self.__host_and_ports:
                 try:

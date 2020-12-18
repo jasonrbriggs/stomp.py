@@ -499,7 +499,7 @@ class PrintingListener(ConnectionListener):
         """
         :param Frame frame:
         """
-        print('on_send %s %s %s' % (frame.cmd, frame.headers, frame.body))
+        print('on_send %s %s %s' % (frame.cmd, utils.clean_headers(frame.headers), frame.body))
 
     def on_heartbeat(self):
         print('on_heartbeat')
