@@ -1,3 +1,8 @@
+Version 4.1.24 - Dec 2020
+
+ * Add fix for credential exposure (https://github.com/jasonrbriggs/stomp.py/pull/244#issuecomment-748048212)
+
+
 Version 4.1.23 - Jan 2020
 
  * Bug fix version of 4.1.22 fixing issue #284 (https://github.com/jasonrbriggs/stomp.py/issues/284)
