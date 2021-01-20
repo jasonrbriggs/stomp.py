@@ -29,10 +29,11 @@ A simple example of creating a listener, sending and receiving a message using l
     import stomp
     
     class MyListener(stomp.ConnectionListener):
-        def on_error(self, frame):
-            print('received an error "%s"' % frame.body)
-        def on_message(self, frame):
-            print('received a message "%s"' % frame.body)
+        def on_error(self, headers, body):
+            print('received an error "%s"' % body)
+
+        def on_message(self, headers, body):
+            print('received a message "%s"' % body)
 
     conn = stomp.Connection()
     conn.set_listener('', MyListener())
