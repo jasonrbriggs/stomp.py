@@ -110,14 +110,14 @@
 
 <dl class="method">
 <dt id="stomp.connect.BaseConnection.set_listener">
-<code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>lstnr</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.set_listener" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_listener</code><span class="sig-paren">(</span><em>name</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.BaseConnection.set_listener" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> (<em>str</em>) – </li>
-<li><strong>lstnr</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) – </li>
+<li><strong>listener</strong> (<a class="reference internal" href="#stomp.listener.ConnectionListener" title="stomp.listener.ConnectionListener"><em>ConnectionListener</em></a>) – </li>
 </ul>
 </td>
 </tr>
@@ -410,6 +410,12 @@ the connection until it has been reestablished.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="stomp.listener.ConnectionListener.on_disconnecting">
+<code class="descname">on_disconnecting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.ConnectionListener.on_disconnecting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called before a DISCONNECT frame is sent.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="stomp.listener.ConnectionListener.on_error">
 <code class="descname">on_error</code><span class="sig-paren">(</span><em>frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.ConnectionListener.on_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called by the STOMP connection when an ERROR frame is received.</p>
@@ -531,6 +537,12 @@ are not 0, we start up the heartbeat loop accordingly.</p>
 <dd><p>Called by the STOMP connection when a TCP/IP connection to the
 STOMP server has been lost.  No messages should be sent via
 the connection until it has been reestablished.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stomp.listener.HeartbeatListener.on_disconnecting">
+<code class="descname">on_disconnecting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.listener.HeartbeatListener.on_disconnecting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called before a DISCONNECT frame is sent.</p>
 </dd></dl>
 
 <dl class="method">

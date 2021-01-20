@@ -22,8 +22,8 @@
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             233 statements &nbsp;
-            <span class="run shortkey_r button_toggle_run">209 run</span>
-            <span class="mis show_mis shortkey_m button_toggle_mis">24 missing</span>
+            <span class="run shortkey_r button_toggle_run">210 run</span>
+            <span class="mis show_mis shortkey_m button_toggle_mis">23 missing</span>
             <span class="exc show_exc shortkey_x button_toggle_exc">0 excluded</span>
         </h2>
     </div>
@@ -443,7 +443,7 @@
     <p id="t390" class="run"><span class="n"><a href="#t390">390</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="nam">utils</span><span class="op">.</span><span class="nam">merge_headers</span><span class="op">(</span><span class="op">[</span><span class="nam">headers</span><span class="op">,</span> <span class="nam">keyword_headers</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t391" class="run"><span class="n"><a href="#t391">391</a></span><span class="t">        <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_DESTINATION</span><span class="op">]</span> <span class="op">=</span> <span class="nam">destination</span>&nbsp;</span><span class="r"></span></p>
     <p id="t392" class="run"><span class="n"><a href="#t392">392</a></span><span class="t">        <span class="key">if</span> <span class="nam">content_type</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t393" class="mis show_mis"><span class="n"><a href="#t393">393</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_CONTENT_TYPE</span><span class="op">]</span> <span class="op">=</span> <span class="nam">content_type</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t393" class="run"><span class="n"><a href="#t393">393</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_CONTENT_TYPE</span><span class="op">]</span> <span class="op">=</span> <span class="nam">content_type</span>&nbsp;</span><span class="r"></span></p>
     <p id="t394" class="run"><span class="n"><a href="#t394">394</a></span><span class="t">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">auto_content_length</span> <span class="key">and</span> <span class="nam">body</span> <span class="key">and</span> <span class="nam">HDR_CONTENT_LENGTH</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">headers</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t395" class="run"><span class="n"><a href="#t395">395</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_CONTENT_LENGTH</span><span class="op">]</span> <span class="op">=</span> <span class="nam">len</span><span class="op">(</span><span class="nam">body</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t396" class="run"><span class="n"><a href="#t396">396</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">send_frame</span><span class="op">(</span><span class="nam">CMD_SEND</span><span class="op">,</span> <span class="nam">headers</span><span class="op">,</span> <span class="nam">body</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -575,7 +575,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
-            created at 2020-04-19 22:08
+            created at 2020-12-18 23:32
         </p>
     </div>
 </div>

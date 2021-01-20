@@ -85,12 +85,12 @@
     <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_listener</span><span class="op">.</span><span class="nam">wait_on_receipt</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t33" class="run"><span class="n"><a href="#t33">33</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">disconnect_listener</span><span class="op">.</span><span class="nam">wait_on_disconnected</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t35" class="run"><span class="n"><a href="#t35">35</a></span><span class="t">    <span class="key">def</span> <span class="nam">set_listener</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">name</span><span class="op">,</span> <span class="nam">lstnr</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t35" class="run"><span class="n"><a href="#t35">35</a></span><span class="t">    <span class="key">def</span> <span class="nam">set_listener</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">name</span><span class="op">,</span> <span class="nam">listener</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t36" class="pln"><span class="n"><a href="#t36">36</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
     <p id="t37" class="pln"><span class="n"><a href="#t37">37</a></span><span class="t"><span class="str">        :param str name:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t38" class="pln"><span class="n"><a href="#t38">38</a></span><span class="t"><span class="str">        :param ConnectionListener lstnr:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t38" class="pln"><span class="n"><a href="#t38">38</a></span><span class="t"><span class="str">        :param ConnectionListener listener:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t39" class="pln"><span class="n"><a href="#t39">39</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t40" class="run"><span class="n"><a href="#t40">40</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="nam">name</span><span class="op">,</span> <span class="nam">lstnr</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t40" class="run"><span class="n"><a href="#t40">40</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">set_listener</span><span class="op">(</span><span class="nam">name</span><span class="op">,</span> <span class="nam">listener</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t41" class="pln"><span class="n"><a href="#t41">41</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t42" class="run"><span class="n"><a href="#t42">42</a></span><span class="t">    <span class="key">def</span> <span class="nam">remove_listener</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t43" class="pln"><span class="n"><a href="#t43">43</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
@@ -287,7 +287,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
-            created at 2020-04-19 22:08
+            created at 2020-12-18 23:32
         </p>
     </div>
 </div>
