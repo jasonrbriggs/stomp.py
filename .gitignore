@@ -55,4 +55,4 @@ debian/.debhelper
 debian/python3-stomp.py.*
 debian/files
 .pybuild
-
+venv
