@@ -94,7 +94,6 @@ class StompConnection10(BaseConnection, Protocol10):
                  auto_decode=True,
                  encoding="utf-8",
                  auto_content_length=True,
-                 recv_bytes=1024,
                  bind_host_port=None):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
@@ -149,7 +148,6 @@ class StompConnection11(BaseConnection, Protocol11):
                  encoding="utf-8",
                  auto_content_length=True,
                  heart_beat_receive_scale=1.5,
-                 recv_byte=1024,
                  bind_host_port=None):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
@@ -157,7 +155,8 @@ class StompConnection11(BaseConnection, Protocol11):
                               ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
                               keepalive, vhost, auto_decode, encoding, bind_host_port=bind_host_port)
         BaseConnection.__init__(self, transport)
-        Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
+        Protocol11.__init__(self, transport, heartbeats, auto_content_length,
+                            heart_beat_receive_scale=heart_beat_receive_scale)
 
     def connect(self, *args, **kwargs):
         self.transport.start()
@@ -204,7 +203,6 @@ class StompConnection12(BaseConnection, Protocol12):
                  encoding="utf-8",
                  auto_content_length=True,
                  heart_beat_receive_scale=1.5,
-                 recv_bytes=1024,
                  bind_host_port=None):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
@@ -212,7 +210,8 @@ class StompConnection12(BaseConnection, Protocol12):
                               ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
                               keepalive, vhost, auto_decode, encoding, bind_host_port=bind_host_port)
         BaseConnection.__init__(self, transport)
-        Protocol12.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
+        Protocol12.__init__(self, transport, heartbeats, auto_content_length,
+                            heart_beat_receive_scale=heart_beat_receive_scale)
 
     def connect(self, *args, **kwargs):
         self.transport.start()
@@ -230,5 +229,6 @@ class StompConnection12(BaseConnection, Protocol12):
         if receipt is not None:
             self.transport.stop()
 
-    def is_eol(self, c):
+    @staticmethod
+    def is_eol(c):
         return c == b'\x0a' or c == b'\x0d\x0a'

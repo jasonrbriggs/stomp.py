@@ -2,7 +2,6 @@
 """
 
 import copy
-import logging
 import os
 import re
 import socket
@@ -41,6 +40,7 @@ def decode(byte_data, encoding="utf-8"):
     Decode the byte data to a string if not None.
 
     :param bytes byte_data: the data to decode
+    :param string encoding: character encoding
 
     :rtype: str
     """
@@ -54,6 +54,7 @@ def encode(char_data, encoding="utf-8"):
     Encode the parameter as a byte string.
 
     :param char_data: the data to encode
+    :param string encoding: character encoding
 
     :rtype: bytes
     """
