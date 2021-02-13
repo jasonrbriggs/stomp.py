@@ -91,6 +91,7 @@ def join(chars=()):
 def is_eol_default(c):
     return c == b"\x0a"
 
+
 ##
 # Used to parse STOMP header lines in the format "key:value",
 #

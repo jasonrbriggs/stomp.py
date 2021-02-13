@@ -1,7 +1,6 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-import stomp.utils as utils
 from stomp.exception import ConnectFailedException
 from stomp.listener import *
 
@@ -13,7 +12,8 @@ class Protocol10(ConnectionListener):
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
 
     :param transport:
-    :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
+    :param bool auto_content_length: Whether to calculate and send the content-length header
+    automatically if it has not been set
     """
     def __init__(self, transport, auto_content_length=True):
         self.transport = transport
@@ -206,8 +206,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
     :param transport:
     :param (int,int) heartbeats:
-    :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
-    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
+    :param bool auto_content_length: Whether to calculate and send the content-length header
+    automatically if it has not been set
+    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out,
+    as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
         HeartbeatListener.__init__(self, transport, heartbeats, heart_beat_receive_scale)
@@ -377,9 +379,11 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
     def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
         """
-        Send a message to a destination in the messaging system (as per https://stomp.github.io/stomp-specification-1.2.html#SEND)
+        Send a message to a destination in the messaging system (as per
+         https://stomp.github.io/stomp-specification-1.2.html#SEND)
 
-        :param str destination: the destination (such as a message queue - for example '/queue/test' - or a message topic)
+        :param str destination: the destination (such as a message queue - for example
+        '/queue/test' - or a message topic)
         :param body: the content of the message
         :param str content_type: the MIME type of message
         :param dict headers: additional headers to send in the message frame
@@ -401,7 +405,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
         :param str destination: the topic or queue to subscribe to
         :param str id: the identifier to uniquely identify the subscription
-        :param str ack: either auto, client or client-individual (see https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE for more info)
+        :param str ack: either auto, client or client-individual
+        (see https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE for more info)
         :param dict headers: a map of any additional headers to send with the subscription
         :param keyword_headers: any additional headers to send with the subscription
         """
@@ -435,11 +440,14 @@ class Protocol12(Protocol11):
 
     :param transport:
     :param (int,int) heartbeats:
-    :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
-    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
+    :param bool auto_content_length: Whether to calculate and send the content-length header
+    automatically if it has not been set
+    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out,
+    as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
-        Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
+        Protocol11.__init__(self, transport, heartbeats, auto_content_length,
+                            heart_beat_receive_scale=heart_beat_receive_scale)
         self.version = "1.2"
 
     def _escape_headers(self, headers):

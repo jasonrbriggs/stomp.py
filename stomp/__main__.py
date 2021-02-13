@@ -40,9 +40,9 @@ from functools import partial
 from docopt import docopt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from stomp.adapter.multicast import MulticastConnection
 import stomp.colours
 import stomp.utils
+from stomp.adapter.multicast import MulticastConnection
 from stomp.connect import StompConnection10, StompConnection11, StompConnection12
 from stomp.listener import ConnectionListener, StatsListener
 
@@ -69,7 +69,8 @@ class StompCLI(Cmd, ConnectionListener):
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host="localhost", port=61613, user="", passcode="", ver="1.1", prompt="> ", verbose=True,
-                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None, stdin=sys.stdin, stdout=sys.stdout):
+                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None,
+                 stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, "Tab", stdin, stdout)
         ConnectionListener.__init__(self)
         self.__start = True
@@ -294,7 +295,7 @@ class StompCLI(Cmd, ConnectionListener):
         else:
             self.conn.send(args[0], " ".join(args[1:]), transaction=self.transaction_id)
 
-    def complete_send(self, text, line, begidx, endidx):
+    def complete_send(self, text, line):
         mline = line.split(" ")[1]
         offs = len(mline) - len(text)
         return [s[offs:] for s in self.__subscriptions if s.startswith(mline)]
@@ -378,13 +379,13 @@ class StompCLI(Cmd, ConnectionListener):
 
     def check_ack_nack(self, acknackfunc, args):
         if self.nversion >= 1.2 and len(args) < 1:
-            self.__error("Expecting: %s <ack-id>" % cmd)
+            self.__error("Expecting: %s <ack-id>" % acknackfunc)
             return None
         elif self.nversion == 1.1 and len(args) < 2:
-            self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
+            self.__error("Expecting: %s <message-id> <subscription-id>" % acknackfunc)
             return None
         elif len(args) < 1:
-            self.__error("Expecting: %s <message-id>" % cmd)
+            self.__error("Expecting: %s <message-id>" % acknackfunc)
             return None
 
         if self.nversion == 1.1:
@@ -517,11 +518,11 @@ def main():
     heartbeats = tuple(map(int, arguments["--heartbeats"].split(",")))
 
     st = StompCLI(arguments["--host"], arguments["--port"], arguments["--user"], arguments["--password"], arguments["--protocol"],
-        prompt, arguments["--verbose"], heartbeats=heartbeats,
-        use_ssl=arguments["--ssl"],
-        ssl_key_file=arguments["--ssl-key-file"],
-        ssl_cert_file=arguments["--ssl-cert-file"],
-        ssl_ca_file=arguments["--ssl-ca-file"])
+                  prompt, arguments["--verbose"], heartbeats=heartbeats,
+                  use_ssl=arguments["--ssl"],
+                  ssl_key_file=arguments["--ssl-key-file"],
+                  ssl_cert_file=arguments["--ssl-cert-file"],
+                  ssl_ca_file=arguments["--ssl-ca-file"])
 
     if arguments["--listen"] is not None:
         st.do_subscribe(arguments["--listen"])

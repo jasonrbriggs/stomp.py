@@ -27,6 +27,8 @@ class BaseConnection(Publisher):
         self.set_listener("ZZZZZ-disconnect-listener", self.disconnect_listener)
         return self
 
+    def disconnect(self, receipt=None, headers=None, **keyword_headers): pass
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.disconnect(self.disconnect_receipt_id)
         self.disconnect_listener.wait_on_receipt()

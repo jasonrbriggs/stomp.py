@@ -1,4 +1,5 @@
-"""Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual STOMP protocol
+"""Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent
+from the actual STOMP protocol
 """
 
 import errno
@@ -18,8 +19,10 @@ try:
 except (ImportError, AttributeError):
     ssl = None
 
+
     class SSLError(object):
         pass
+
 
     DEFAULT_SSL_VERSION = None
 
@@ -196,8 +199,7 @@ class BaseTransport(stomp.listener.Publisher):
         Utility function for notifying listeners of incoming and outgoing messages
 
         :param str frame_type: the type of message
-        :param dict headers: the map of headers associated with the message
-        :param body: the content of the message
+        :param Frame frame: the stomp frame
         """
         if frame_type == "receipt":
             # logic for wait-on-receipt notification
@@ -516,8 +518,7 @@ class Transport(BaseTransport):
                  encoding="utf-8",
                  recv_bytes=1024,
                  is_eol_fc=is_eol_default,
-                 bind_host_port=None
-                 ):
+                 bind_host_port=None):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
@@ -544,7 +545,8 @@ class Transport(BaseTransport):
             for host_and_port in sorted_host_and_ports:
                 if is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
-                    if not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports):
+                    if not (("127.0.0.1", port) in sorted_host_and_ports or (
+                    "localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
         #
@@ -732,15 +734,13 @@ class Transport(BaseTransport):
         connect_count = 0
 
         logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
-        while self.running and self.socket is None and (
-            connect_count < self.__reconnect_attempts_max or
-
-            self.__reconnect_attempts_max == -1 ):
+        while self.running and self.socket is None and (connect_count < self.__reconnect_attempts_max or
+                                                        self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
                     logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     if self.__bind_host_port:
-                        self.socket = socket.create_connection(host_and_port,self.__timeout, self.__bind_host_port)
+                        self.socket = socket.create_connection(host_and_port, self.__timeout, self.__bind_host_port)
                     else:
                         self.socket = socket.create_connection(host_and_port, self.__timeout)
                     self.__enable_keepalive()
@@ -799,7 +799,8 @@ class Transport(BaseTransport):
                 except socket.error:
                     self.socket = None
                     connect_count += 1
-                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=logging.verbose)
+                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
+                                    exc_info=logging.verbose)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
@@ -842,6 +843,7 @@ class Transport(BaseTransport):
                                as returned by ssl.SSLSocket.getpeercert()
         :param ssl_version: SSL protocol to use for the connection. This should be one of the PROTOCOL_x
                             constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1
+        :param password: SSL password
         """
         if not ssl:
             raise Exception("SSL connection requested, but SSL library not found")
