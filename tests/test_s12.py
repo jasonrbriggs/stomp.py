@@ -1,5 +1,3 @@
-import pytest
-
 import stomp
 from stomp import exception
 from stomp.listener import TestListener
@@ -56,7 +54,6 @@ class Test12Connect(object):
         ack_id = headers["ack"]
 
         conn.nack(ack_id)
-
 
     def test_should_send_extra_header_clientnack(self, conn, mocker):
         listener = conn.get_listener("testlistener")

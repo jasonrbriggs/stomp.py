@@ -1,8 +1,5 @@
 import logging
-import time
 from concurrent.futures import ThreadPoolExecutor
-
-import pytest
 
 import stomp
 from stomp.listener import TestListener
@@ -22,6 +19,7 @@ class ReconnectListener(TestListener):
     def __init__(self, conn):
         TestListener.__init__(self, "123", True)
         self.conn = conn
+
     def on_receiver_loop_ended(self, *args):
         if self.conn:
             c = self.conn

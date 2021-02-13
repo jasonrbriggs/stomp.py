@@ -2,6 +2,7 @@ import importlib
 
 import pytest
 
+
 class TestSSLFailure(object):
     @pytest.mark.run(order=-1)
     def test_ssl_failure(self, monkeypatch):
@@ -19,6 +20,6 @@ class TestSSLFailure(object):
         monkeypatch.delattr(socket, "SO_KEEPALIVE", raising=True)
         import stomp.transport as t
         importlib.reload(t)
-        assert t.LINUX_KEEPALIVE_AVAIL == False
+        assert not t.LINUX_KEEPALIVE_AVAIL
         monkeypatch.undo()
         importlib.reload(socket)

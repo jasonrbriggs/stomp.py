@@ -1,11 +1,8 @@
 import importlib
-import inspect
 import logging
 import platform
 import traceback
 import xml.dom.minidom
-
-import pytest
 
 import stomp
 from stomp.exception import *
@@ -27,8 +24,8 @@ class TransformationListener(TestListener):
             try:
                 entries = {}
                 doc = xml.dom.minidom.parseString(frame.body)
-                rootElem = doc.documentElement
-                for entryElem in rootElem.getElementsByTagName("entry"):
+                root_elem = doc.documentElement
+                for entryElem in root_elem.getElementsByTagName("entry"):
                     pair = []
                     for node in entryElem.childNodes:
                         if not isinstance(node, xml.dom.minidom.Element):
@@ -164,10 +161,10 @@ class TestMiscellaneousLogic(object):
 
     def test_heartbeatlistener(self, mocker):
         transport = mocker.MagicMock()
-        hl = HeartbeatListener(transport, (10000,20000))
+        hl = HeartbeatListener(transport, (10000, 20000))
         hl.on_connected(Frame('heartbeat', {"heart-beat": "10000,20000"}, ''))
         time.sleep(1)
-        hl.on_message
+        hl.on_message(Frame(''))
 
         # just check if there was a received heartbeat calculated
         assert hl.received_heartbeat > 0

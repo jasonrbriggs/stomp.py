@@ -1,12 +1,7 @@
 import tempfile
-import time
-import unittest
-
-import pytest
 
 from stomp.__main__ import StompCLI
 from .testutils import *
-from stomp.adapter import multicast
 
 username = get_default_user()
 password = get_default_password()

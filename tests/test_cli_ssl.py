@@ -1,8 +1,3 @@
-import time
-import unittest
-
-import pytest
-
 from stomp.__main__ import StompCLI
 from .testutils import *
 

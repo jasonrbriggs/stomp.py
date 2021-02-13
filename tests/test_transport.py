@@ -40,4 +40,3 @@ class TestTransport(object):
         stomp_transport.cleanup()
         stomp_transport.attempt_connection()
         stomp_transport.disconnect_socket()
-

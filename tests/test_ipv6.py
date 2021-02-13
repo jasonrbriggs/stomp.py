@@ -1,8 +1,3 @@
-import os
-import time
-
-import pytest
-
 import stomp
 from stomp.listener import TestListener
 from .testutils import *

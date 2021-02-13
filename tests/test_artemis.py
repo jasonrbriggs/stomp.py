@@ -1,7 +1,3 @@
-import unittest
-
-import pytest
-
 import stomp
 from stomp.listener import TestListener
 from .testutils import *
@@ -14,6 +10,7 @@ def conn():
     conn.connect(get_artemis_user(), get_artemis_password(), wait=True)
     yield conn
     conn.disconnect(receipt=None)
+
 
 @pytest.fixture()
 def conn2():
@@ -36,6 +33,7 @@ class TestArtemis(object):
     def test_prefetchsize(self, conn2):
         conn2.subscribe(destination="/queue/test2", id=2, ack="auto", headers={'consumerWindowSize': 0})
 
-        conn2.send(body="testing sending a message after subscribing with prefetch", destination="/queue/test2", receipt="456")
+        conn2.send(body="testing sending a message after subscribing with prefetch",
+                   destination="/queue/test2", receipt="456")
 
         validate_send(conn2)

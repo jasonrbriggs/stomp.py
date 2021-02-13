@@ -1,5 +1,3 @@
-import pytest
-
 import stomp
 from stomp import transport
 from stomp.listener import TestListener
@@ -13,6 +11,7 @@ ssl_cert_file = "ssl_cert_file"
 ssl_ca_certs = "ssl_ca_certs"
 ssl_cert_validator = "validator"
 ssl_version = "version"
+
 
 @pytest.fixture
 def stomp_transport():
@@ -50,11 +49,11 @@ class TestSSL(object):
 class TestSSLParams(object):
     def test_set_ssl(self, stomp_transport):
         stomp_transport.set_ssl([host1],
-                               ssl_key_file,
-                               ssl_cert_file,
-                               ssl_ca_certs,
-                               ssl_cert_validator,
-                               ssl_version)
+                                ssl_key_file,
+                                ssl_cert_file,
+                                ssl_ca_certs,
+                                ssl_cert_validator,
+                                ssl_version)
         assert stomp_transport._Transport__ssl_params[host1]["key_file"] == ssl_key_file
         assert stomp_transport._Transport__ssl_params[host1]["cert_file"] == ssl_cert_file
         assert stomp_transport._Transport__ssl_params[host1]["ca_certs"] == ssl_ca_certs

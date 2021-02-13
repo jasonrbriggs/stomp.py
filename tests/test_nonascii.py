@@ -1,9 +1,6 @@
 # -*- coding: UTF-8 -*-
 
 import filecmp
-import time
-
-import pytest
 
 import stomp
 from stomp.listener import *

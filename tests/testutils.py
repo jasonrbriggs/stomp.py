@@ -65,7 +65,6 @@ def get_ipv6_host():
     return [(get_environ("IPV6_HOST") or host, int(get_environ("IPV6_PORT") or port))]
 
 
-
 def get_default_ssl_host():
     host = config.get("default", "host")
     port = config.get("default", "ssl_port")
