@@ -21,7 +21,7 @@ class Protocol10(ConnectionListener):
         transport.set_listener("protocol-listener", self)
         self.version = "1.0"
 
-    def send_frame(self, cmd, headers=None, body=''):
+    def send_frame(self, cmd, headers=None, body=""):
         """
         Encode and send a stomp frame
         through the underlying transport.
@@ -227,7 +227,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
                 pass
             headers[key] = val
 
-    def send_frame(self, cmd, headers=None, body=''):
+    def send_frame(self, cmd, headers=None, body=""):
         """
         Encode and send a stomp frame
         through the underlying transport:

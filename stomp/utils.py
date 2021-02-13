@@ -16,7 +16,7 @@ from stomp.constants import *
 # preferred targets.
 LOCALHOST_NAMES = ["localhost", "127.0.0.1"]
 
-NULL = b'\x00'
+NULL = b"\x00"
 
 if not os.environ.get("STOMP_SKIP_HOSTNAME_SCAN"):
     try:
@@ -74,7 +74,7 @@ def pack(pieces=()):
 
     :rtype: bytes
     """
-    return b''.join(pieces)
+    return b"".join(pieces)
 
 
 def join(chars=()):
@@ -85,11 +85,11 @@ def join(chars=()):
 
     :rtype: str
     """
-    return b''.join(chars).decode()
+    return b"".join(chars).decode()
 
 
 def is_eol_default(c):
-    return c == b'\x0a'
+    return c == b"\x0a"
 
 ##
 # Used to parse STOMP header lines in the format "key:value",
@@ -145,10 +145,10 @@ def is_localhost(host_and_port):
 
 
 _HEADER_ESCAPES = {
-    '\r': '\\r',
-    '\n': '\\n',
-    ':': '\\c',
-    '\\': '\\\\',
+    "\r": "\\r",
+    "\n": "\\n",
+    ":": "\\c",
+    "\\": "\\\\",
 }
 _HEADER_UNESCAPES = dict((value, key) for (key, value) in _HEADER_ESCAPES.items())
 
@@ -176,10 +176,10 @@ def parse_headers(lines, offset=0):
         header_match = HEADER_LINE_RE.match(header_line)
         if header_match:
             key = header_match.group("key")
-            key = re.sub(r'\\.', _unescape_header, key)
+            key = re.sub(r"\\.", _unescape_header, key)
             if key not in headers:
                 value = header_match.group("value")
-                value = re.sub(r'\\.', _unescape_header, value)
+                value = re.sub(r"\\.", _unescape_header, value)
                 headers[key] = value
     return headers
 
@@ -263,9 +263,9 @@ def calculate_heartbeats(shb, chb):
     (cx, cy) = chb
     x = 0
     y = 0
-    if cx != 0 and sy != '0':
+    if cx != 0 and sy != "0":
         x = max(cx, int(sy))
-    if cy != 0 and sx != '0':
+    if cy != 0 and sx != "0":
         y = max(cy, int(sx))
     return x, y
 

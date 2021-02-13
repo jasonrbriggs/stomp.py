@@ -55,7 +55,7 @@ class BaseTransport(stomp.listener.Publisher):
     __content_length_re = re.compile(b"^content-length[:]\\s*(?P<value>[0-9]+)", re.MULTILINE)
 
     def __init__(self, auto_decode=True, encoding="utf-8", is_eol_fc=is_eol_default):
-        self.__recvbuf = b''
+        self.__recvbuf = b""
         self.listeners = {}
         self.running = False
         self.blocking = None
@@ -347,7 +347,7 @@ class BaseTransport(stomp.listener.Publisher):
                         #
                         # Clear out any half-received messages after losing connection
                         #
-                        self.__recvbuf = b''
+                        self.__recvbuf = b""
                         self.running = False
                         notify_disconnected = True
                     break
@@ -382,7 +382,7 @@ class BaseTransport(stomp.listener.Publisher):
                     continue
             except Exception:
                 logging.debug("socket read error", exc_info=logging.verbose)
-                c = b''
+                c = b""
             if c is None or len(c) == 0:
                 logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
@@ -396,7 +396,7 @@ class BaseTransport(stomp.listener.Publisher):
                 fastbuf.close()
                 return [c]
             fastbuf.write(c)
-            if b'\x00' in c:
+            if b"\x00" in c:
                 #
                 # Possible end of frame
                 #
@@ -407,7 +407,7 @@ class BaseTransport(stomp.listener.Publisher):
 
         if self.__recvbuf and self.running:
             while True:
-                pos = self.__recvbuf.find(b'\x00')
+                pos = self.__recvbuf.find(b"\x00")
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]

@@ -184,7 +184,7 @@ class HeartbeatListener(ConnectionListener):
         self.disconnecting = False
         if "heart-beat" in frame.headers:
             self.heartbeats = utils.calculate_heartbeats(
-                frame.headers["heart-beat"].replace(' ', '').split(','), self.heartbeats)
+                frame.headers["heart-beat"].replace(" ", "").split(","), self.heartbeats)
             logging.debug("Heartbeats calculated %s", str(self.heartbeats))
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
