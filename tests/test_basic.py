@@ -203,6 +203,15 @@ class TestBasic(object):
         assert "special-3" in headers
         assert "test with newline \n" == headers["special-3"]
 
+    def test_host_bind_port(self):
+        conn = stomp.Connection(bind_host_port=("localhost", next_free_port()))
+        listener = TestListener("981", print_to_log=True)
+        queuename = "/queue/testbind-%s" % listener.timestamp
+        conn.set_listener("testlistener", listener)
+        conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
+        conn.send(body="this is a test using local bind port", destination=queuename, receipt="981")
+        conn.disconnect(receipt=None)
+
 
 class TestConnectionErrors(object):
     def test_connect_wait_error(self):

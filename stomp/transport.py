@@ -64,7 +64,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.disconnecting = False
         self.__receipts = {}
         self.current_host_and_port = None
-
+        self.bind_host_port = None
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
         self.notified_on_disconnect = False
@@ -515,7 +515,8 @@ class Transport(BaseTransport):
                  auto_decode=True,
                  encoding="utf-8",
                  recv_bytes=1024,
-                 is_eol_fc=is_eol_default
+                 is_eol_fc=is_eol_default,
+                 bind_host_port=None
                  ):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
@@ -552,6 +553,7 @@ class Transport(BaseTransport):
         self.__host_and_ports = []
         self.__host_and_ports.extend(loopback_host_and_ports)
         self.__host_and_ports.extend(sorted_host_and_ports)
+        self.__bind_host_port = bind_host_port
 
         self.__reconnect_sleep_initial = reconnect_sleep_initial
         self.__reconnect_sleep_increase = reconnect_sleep_increase
@@ -732,11 +734,15 @@ class Transport(BaseTransport):
         logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
         while self.running and self.socket is None and (
             connect_count < self.__reconnect_attempts_max or
+
             self.__reconnect_attempts_max == -1 ):
             for host_and_port in self.__host_and_ports:
                 try:
                     logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
-                    self.socket = socket.create_connection(host_and_port, self.__timeout)
+                    if self.__bind_host_port:
+                        self.socket = socket.create_connection(host_and_port,self.__timeout, self.__bind_host_port)
+                    else:
+                        self.socket = socket.create_connection(host_and_port, self.__timeout)
                     self.__enable_keepalive()
                     need_ssl = self.__need_ssl(host_and_port)
 
