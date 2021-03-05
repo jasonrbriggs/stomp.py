@@ -4,13 +4,14 @@ MAINTAINER Jason R Briggs <jasonrbriggs@gmail.com>
 
 EXPOSE 8484
 
-RUN apt update
-RUN apt install -y rabbitmq-server
-RUN apt install -y stompserver
-RUN apt install -y activemq
-RUN apt install -y vim
-RUN apt install -y haproxy
-RUN apt install -y rsyslog
+RUN apt update && apt install -y \
+    activemq \
+    haproxy \
+    haproxy \
+    rabbitmq-server \
+    stompserver \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
 
 # rabbitmq setup
 RUN rabbitmq-plugins enable rabbitmq_stomp
