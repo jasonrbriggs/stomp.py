@@ -236,7 +236,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param dict headers: a map of headers to include in the frame
         :param body: the content of the message
         """
-        if cmd != CMD_CONNECT:
+        if cmd not in [CMD_CONNECT, CMD_STOMP]:
             if headers is None:
                 headers = {}
             self._escape_headers(headers)
@@ -306,7 +306,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_COMMIT, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None,
+                with_connect_command=False, **keyword_headers):
         """
         Start a connection.
 
@@ -314,9 +315,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param str passcode: the password used to authenticate with
         :param bool wait: if True, wait for the connection to be established/acknowledged
         :param dict headers: a map of any additional headers the broker requires
+        :param with_connect_command: if True, use CONNECT command instead of STOMP
         :param keyword_headers: any additional headers the broker requires
         """
-        cmd = CMD_STOMP
+        cmd = CMD_CONNECT if with_connect_command else CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
 
@@ -487,7 +489,8 @@ class Protocol12(Protocol11):
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_NACK, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None,
+                with_connect_command=False, **keyword_headers):
         """
         Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
 
@@ -495,9 +498,10 @@ class Protocol12(Protocol11):
         :param str passcode: optionally specify the user password
         :param bool wait: wait for the connection to complete before returning
         :param dict headers: a map of any additional headers to send with the subscription
+        :param with_connect_command: if True, use CONNECT command instead of STOMP
         :param keyword_headers: any additional headers to send with the subscription
         """
-        cmd = CMD_STOMP
+        cmd = CMD_CONNECT if with_connect_command else CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
         headers[HDR_HOST] = self.transport.current_host_and_port[0]
