@@ -3,6 +3,13 @@
  * TBC
 
 
+## Version 6.1.1 - Apr 2021
+
+ * Add host bind port patch (https://github.com/jasonrbriggs/stomp.py/issues/331)
+ * Tidy up based on pycharm suggestions
+ * Change quotes to be consistent (" rather than ')
+
+
 ## Version 6.1.0 - Jul 2020
 
  * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
