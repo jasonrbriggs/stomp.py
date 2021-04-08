@@ -1,16 +1,29 @@
-## Upcoming
+## Version 7.0.0 - Apr 2021
 
- * TBC
+(from v6.1.1):
+ * Add host bind port patch (https://github.com/jasonrbriggs/stomp.py/issues/331)
+ * Tidy up based on pycharm suggestions
+ * Change quotes to be consistent (" rather than ')
 
+(from v6.1.0):
+ * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
+ * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))
+ * Remove heartbeat loop sleep (issue https://github.com/jasonrbriggs/stomp.py/issues/297, https://github.com/jasonrbriggs/stomp.py/pull/298)
+ * Update version number using the makefile and the poetry version command
+ * Add `original_headers` access to the Frame so that you can get the original value of a header even if a listener modifies it (issue: https://github.com/jasonrbriggs/stomp.py/issues/300, PR https://github.com/jasonrbriggs/stomp.py/pull/309)
+ * Fix for reconnect failures (https://github.com/jasonrbriggs/stomp.py/pull/295)
+ * Fix for double disconnect notifications causing issues with reconnection
+ * Add 'verbose' to stomp.logging (and defaulting the value to False). Log lines which dump the stacktrace now use that variable - except for a couple of cases (set stomp.logging.verbose = True to change back to the previous behaviour)
+ 
 
-## Version 6.1.1 - Apr 2021
+## Version 6.1.1 - Apr 2021 [YANKED]
 
  * Add host bind port patch (https://github.com/jasonrbriggs/stomp.py/issues/331)
  * Tidy up based on pycharm suggestions
  * Change quotes to be consistent (" rather than ')
 
 
-## Version 6.1.0 - Jul 2020
+## Version 6.1.0 - Jul 2020 [YANKED]
 
  * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
  * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))
