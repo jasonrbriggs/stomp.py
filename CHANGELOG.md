@@ -1,3 +1,8 @@
+## Upcoming
+
+ * Add support for backwards compatible CONNECT in 1.1 and 1.2 protocols (https://github.com/jasonrbriggs/stomp.py/pull/348)
+
+
 ## Version 7.0.0 - Apr 2021
 
 (from v6.1.1):
