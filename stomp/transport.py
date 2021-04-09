@@ -768,9 +768,11 @@ class Transport(BaseTransport):
                             if cert_validation is None or cert_validation == ssl.CERT_NONE:
                                 tls_context.check_hostname = False
                             tls_context.verify_mode = cert_validation
+                            logging.info("Wrapping SSL socket")
                             self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
                         else:
                             # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
+                            logging.info("Wrapping SSL socket (old style)")
                             self.socket = ssl.wrap_socket(
                                 self.socket,
                                 keyfile=ssl_params["key_file"],
