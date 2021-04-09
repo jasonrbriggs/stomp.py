@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using the API &#8212; Stomp 6.1.0 documentation</title>
+    <title>Using the API &#8212; Stomp 7.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -62,7 +62,7 @@
 <blockquote>
 <div><dl class="class">
 <dt id="stomp.connect.StompConnection12">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>recv_bytes=1024</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>bind_host_port=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
 See <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 </dd></dl>
@@ -101,22 +101,23 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <div><dl class="method">
 <dt id="stomp.protocol.Protocol12.send">
 <code class="descclassname">Protocol12.</code><code class="descname">send</code><span class="sig-paren">(</span><em>destination</em>, <em>body</em>, <em>content_type=None</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send a message to a destination in the messaging system (as per <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SEND">https://stomp.github.io/stomp-specification-1.2.html#SEND</a>)</p>
+<dd><dl class="docutils">
+<dt>Send a message to a destination in the messaging system (as per</dt>
+<dd><a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SEND">https://stomp.github.io/stomp-specification-1.2.html#SEND</a>)</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) – the destination (such as a message queue - for example ‘/queue/test’ - or a message topic)</li>
-<li><strong>body</strong> – the content of the message</li>
-<li><strong>content_type</strong> (<em>str</em>) – the MIME type of message</li>
-<li><strong>headers</strong> (<em>dict</em>) – additional headers to send in the message frame</li>
-<li><strong>keyword_headers</strong> – any additional headers the broker requires</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>destination</strong> (<em>str</em>) – the destination (such as a message queue - for example</td>
 </tr>
 </tbody>
 </table>
+<p>‘/queue/test’ - or a message topic)
+:param body: the content of the message
+:param str content_type: the MIME type of message
+:param dict headers: additional headers to send in the message frame
+:param keyword_headers: any additional headers the broker requires</p>
 </dd></dl>
 
 </div></blockquote>
@@ -150,14 +151,15 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>destination</strong> (<em>str</em>) – the topic or queue to subscribe to</li>
 <li><strong>id</strong> (<em>str</em>) – the identifier to uniquely identify the subscription</li>
-<li><strong>ack</strong> (<em>str</em>) – either auto, client or client-individual (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a> for more info)</li>
-<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
-<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
+<li><strong>ack</strong> (<em>str</em>) – either auto, client or client-individual</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<p>(see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a> for more info)
+:param dict headers: a map of any additional headers to send with the subscription
+:param keyword_headers: any additional headers to send with the subscription</p>
 </dd></dl>
 
 </div></blockquote>
