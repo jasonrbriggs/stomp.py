@@ -2,6 +2,7 @@
 from the actual STOMP protocol
 """
 
+import datetime
 import errno
 import math
 import random
@@ -15,14 +16,12 @@ try:
     import ssl
     from ssl import SSLError
 
-    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLSv1
+    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS
 except (ImportError, AttributeError):
     ssl = None
 
-
     class SSLError(object):
         pass
-
 
     DEFAULT_SSL_VERSION = None
 
@@ -34,10 +33,28 @@ try:
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
 
+try:
+    import OpenSSL
+except ImportError:
+    OpenSSL = None
+
+
 import stomp.exception as exception
 import stomp.listener
 from stomp.utils import *
 from stomp import logging
+
+
+def check_ssl_certificate(host_and_port):
+    if OpenSSL:
+        host, port = host_and_port
+        cert = ssl.get_server_certificate((host, port))
+        x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
+        dt = datetime.datetime.strptime(x509.get_notAfter().decode().replace('Z',''), "%Y%m%d%H%M%S")
+        valid_cert = dt > datetime.datetime.now()
+        if not valid_cert:
+            logging.info("SSL certificate for %s:%s expired on %s", host, port, dt)
+        assert valid_cert
 
 
 class BaseTransport(stomp.listener.Publisher):
@@ -747,15 +764,14 @@ class Transport(BaseTransport):
                     need_ssl = self.__need_ssl(host_and_port)
 
                     if need_ssl:  # wrap socket
+                        check_ssl_certificate(host_and_port)
                         ssl_params = self.get_ssl(host_and_port)
+                        tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
                         if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
+                            tls_context.load_verify_locations(ssl_params["ca_certs"])
                         else:
                             cert_validation = ssl.CERT_NONE
-                        try:
-                            tls_context = ssl.create_default_context(cafile=ssl_params["ca_certs"])
-                        except AttributeError:
-                            tls_context = None
                         if tls_context:
                             # Wrap the socket for TLS
                             certfile = ssl_params["cert_file"]
@@ -798,7 +814,7 @@ class Transport(BaseTransport):
                     self.current_host_and_port = host_and_port
                     logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
-                except socket.error:
+                except (OSError, AssertionError):
                     self.socket = None
                     connect_count += 1
                     logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
