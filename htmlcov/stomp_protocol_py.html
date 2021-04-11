@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for stomp/protocol.py: 90%</title>
+    <title>Coverage for stomp/protocol.py: 84%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="jquery.hotkeys.js"></script>
@@ -17,13 +17,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>stomp/protocol.py</b> :
-            <span class="pc_cov">90%</span>
+            <span class="pc_cov">84%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             232 statements &nbsp;
-            <span class="run shortkey_r button_toggle_run">209 run</span>
-            <span class="mis show_mis shortkey_m button_toggle_mis">23 missing</span>
+            <span class="run shortkey_r button_toggle_run">196 run</span>
+            <span class="mis show_mis shortkey_m button_toggle_mis">36 missing</span>
             <span class="exc show_exc shortkey_x button_toggle_exc">0 excluded</span>
         </h2>
     </div>
@@ -404,8 +404,8 @@
     <p id="t351" class="pln"><span class="n"><a href="#t351">351</a></span><span class="t"><span class="str">        :param keyword_headers: any additional headers the broker requires</span>&nbsp;</span><span class="r"></span></p>
     <p id="t352" class="pln"><span class="n"><a href="#t352">352</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
     <p id="t353" class="run"><span class="n"><a href="#t353">353</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">self</span><span class="op">.</span><span class="nam">transport</span><span class="op">.</span><span class="nam">is_connected</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t354" class="run"><span class="n"><a href="#t354">354</a></span><span class="t">            <span class="nam">logging</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="str">"Not sending disconnect, already disconnected"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t355" class="run"><span class="n"><a href="#t355">355</a></span><span class="t">            <span class="key">return</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t354" class="mis show_mis"><span class="n"><a href="#t354">354</a></span><span class="t">            <span class="nam">logging</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="str">"Not sending disconnect, already disconnected"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t355" class="mis show_mis"><span class="n"><a href="#t355">355</a></span><span class="t">            <span class="key">return</span>&nbsp;</span><span class="r"></span></p>
     <p id="t356" class="run"><span class="n"><a href="#t356">356</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="nam">utils</span><span class="op">.</span><span class="nam">merge_headers</span><span class="op">(</span><span class="op">[</span><span class="nam">headers</span><span class="op">,</span> <span class="nam">keyword_headers</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t357" class="run"><span class="n"><a href="#t357">357</a></span><span class="t">        <span class="nam">rec</span> <span class="op">=</span> <span class="nam">receipt</span> <span class="key">or</span> <span class="nam">utils</span><span class="op">.</span><span class="nam">get_uuid</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t358" class="run"><span class="n"><a href="#t358">358</a></span><span class="t">        <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_RECEIPT</span><span class="op">]</span> <span class="op">=</span> <span class="nam">rec</span>&nbsp;</span><span class="r"></span></p>
@@ -524,13 +524,13 @@
     <p id="t471" class="pln"><span class="n"><a href="#t471">471</a></span><span class="t"><span class="str">        :param str transaction: include the acknowledgement in the specified transaction</span>&nbsp;</span><span class="r"></span></p>
     <p id="t472" class="pln"><span class="n"><a href="#t472">472</a></span><span class="t"><span class="str">        :param str receipt: the receipt id</span>&nbsp;</span><span class="r"></span></p>
     <p id="t473" class="pln"><span class="n"><a href="#t473">473</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t474" class="run"><span class="n"><a href="#t474">474</a></span><span class="t">        <span class="key">assert</span> <span class="nam">id</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">,</span> <span class="str">"'id' is required"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t475" class="run"><span class="n"><a href="#t475">475</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="op">{</span><span class="nam">HDR_ID</span><span class="op">:</span> <span class="nam">id</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t476" class="run"><span class="n"><a href="#t476">476</a></span><span class="t">        <span class="key">if</span> <span class="nam">transaction</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t474" class="mis show_mis"><span class="n"><a href="#t474">474</a></span><span class="t">        <span class="key">assert</span> <span class="nam">id</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">,</span> <span class="str">"'id' is required"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t475" class="mis show_mis"><span class="n"><a href="#t475">475</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="op">{</span><span class="nam">HDR_ID</span><span class="op">:</span> <span class="nam">id</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t476" class="mis show_mis"><span class="n"><a href="#t476">476</a></span><span class="t">        <span class="key">if</span> <span class="nam">transaction</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t477" class="mis show_mis"><span class="n"><a href="#t477">477</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_TRANSACTION</span><span class="op">]</span> <span class="op">=</span> <span class="nam">transaction</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t478" class="run"><span class="n"><a href="#t478">478</a></span><span class="t">        <span class="key">if</span> <span class="nam">receipt</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t478" class="mis show_mis"><span class="n"><a href="#t478">478</a></span><span class="t">        <span class="key">if</span> <span class="nam">receipt</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t479" class="mis show_mis"><span class="n"><a href="#t479">479</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_RECEIPT</span><span class="op">]</span> <span class="op">=</span> <span class="nam">receipt</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t480" class="run"><span class="n"><a href="#t480">480</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">send_frame</span><span class="op">(</span><span class="nam">CMD_ACK</span><span class="op">,</span> <span class="nam">headers</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t480" class="mis show_mis"><span class="n"><a href="#t480">480</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">send_frame</span><span class="op">(</span><span class="nam">CMD_ACK</span><span class="op">,</span> <span class="nam">headers</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t481" class="pln"><span class="n"><a href="#t481">481</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t482" class="run"><span class="n"><a href="#t482">482</a></span><span class="t">    <span class="key">def</span> <span class="nam">nack</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">id</span><span class="op">,</span> <span class="nam">transaction</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">receipt</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="op">**</span><span class="nam">keyword_headers</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t483" class="pln"><span class="n"><a href="#t483">483</a></span><span class="t">        <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
@@ -541,14 +541,14 @@
     <p id="t488" class="pln"><span class="n"><a href="#t488">488</a></span><span class="t"><span class="str">        :param str receipt: the receipt id</span>&nbsp;</span><span class="r"></span></p>
     <p id="t489" class="pln"><span class="n"><a href="#t489">489</a></span><span class="t"><span class="str">        :param keyword_headers: any additional headers to send with the nack command</span>&nbsp;</span><span class="r"></span></p>
     <p id="t490" class="pln"><span class="n"><a href="#t490">490</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t491" class="run"><span class="n"><a href="#t491">491</a></span><span class="t">        <span class="key">assert</span> <span class="nam">id</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">,</span> <span class="str">"'id' is required"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t492" class="run"><span class="n"><a href="#t492">492</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="op">{</span><span class="nam">HDR_ID</span><span class="op">:</span> <span class="nam">id</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t493" class="run"><span class="n"><a href="#t493">493</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="nam">utils</span><span class="op">.</span><span class="nam">merge_headers</span><span class="op">(</span><span class="op">[</span><span class="nam">headers</span><span class="op">,</span> <span class="nam">keyword_headers</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t494" class="run"><span class="n"><a href="#t494">494</a></span><span class="t">        <span class="key">if</span> <span class="nam">transaction</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t491" class="mis show_mis"><span class="n"><a href="#t491">491</a></span><span class="t">        <span class="key">assert</span> <span class="nam">id</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">,</span> <span class="str">"'id' is required"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t492" class="mis show_mis"><span class="n"><a href="#t492">492</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="op">{</span><span class="nam">HDR_ID</span><span class="op">:</span> <span class="nam">id</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t493" class="mis show_mis"><span class="n"><a href="#t493">493</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="nam">utils</span><span class="op">.</span><span class="nam">merge_headers</span><span class="op">(</span><span class="op">[</span><span class="nam">headers</span><span class="op">,</span> <span class="nam">keyword_headers</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t494" class="mis show_mis"><span class="n"><a href="#t494">494</a></span><span class="t">        <span class="key">if</span> <span class="nam">transaction</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t495" class="mis show_mis"><span class="n"><a href="#t495">495</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_TRANSACTION</span><span class="op">]</span> <span class="op">=</span> <span class="nam">transaction</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t496" class="run"><span class="n"><a href="#t496">496</a></span><span class="t">        <span class="key">if</span> <span class="nam">receipt</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t496" class="mis show_mis"><span class="n"><a href="#t496">496</a></span><span class="t">        <span class="key">if</span> <span class="nam">receipt</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t497" class="mis show_mis"><span class="n"><a href="#t497">497</a></span><span class="t">            <span class="nam">headers</span><span class="op">[</span><span class="nam">HDR_RECEIPT</span><span class="op">]</span> <span class="op">=</span> <span class="nam">receipt</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t498" class="run"><span class="n"><a href="#t498">498</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">send_frame</span><span class="op">(</span><span class="nam">CMD_NACK</span><span class="op">,</span> <span class="nam">headers</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t498" class="mis show_mis"><span class="n"><a href="#t498">498</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">send_frame</span><span class="op">(</span><span class="nam">CMD_NACK</span><span class="op">,</span> <span class="nam">headers</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t499" class="pln"><span class="n"><a href="#t499">499</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t500" class="run"><span class="n"><a href="#t500">500</a></span><span class="t">    <span class="key">def</span> <span class="nam">connect</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">username</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">passcode</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="nam">wait</span><span class="op">=</span><span class="key">False</span><span class="op">,</span> <span class="nam">headers</span><span class="op">=</span><span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t501" class="pln"><span class="n"><a href="#t501">501</a></span><span class="t">                <span class="nam">with_connect_command</span><span class="op">=</span><span class="key">False</span><span class="op">,</span> <span class="op">**</span><span class="nam">keyword_headers</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -587,7 +587,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
-            created at 2021-04-11 10:16
+            created at 2021-04-11 14:16
         </p>
     </div>
 </div>
