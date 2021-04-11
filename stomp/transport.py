@@ -47,6 +47,9 @@ from stomp import logging
 
 
 def check_ssl_certificate(host_and_port):
+    '''
+    Check the expiry date of the certificate presented by the host/port.
+    '''
     if OpenSSL:
         host, port = host_and_port
         cert = ssl.get_server_certificate((host, port))

@@ -3,8 +3,8 @@ Protocol versions 1.0, 1.1 and 1.2 are supported.
 
 See the GITHUB project page for more information.
 
-Author: Jason R Briggs
-License: http://www.apache.org/licenses/LICENSE-2.0
+Author: Jason R Briggs |br|
+License: http://www.apache.org/licenses/LICENSE-2.0 |br|
 Project Page: https://github.com/jasonrbriggs/stomp.py
 
 """
