@@ -497,12 +497,6 @@ class Transport(BaseTransport):
         an extra 0%-10% (randomly determined) of the delay
         calculated using the previous three parameters.
     :param int reconnect_attempts_max: maximum attempts to reconnect (Can also be used for infinite attempts : `-1`)
-    :param bool use_ssl: deprecated, see :py:meth:`set_ssl`
-    :param ssl_cert_file: deprecated, see :py:meth:`set_ssl`
-    :param ssl_key_file: deprecated, see :py:meth:`set_ssl`
-    :param ssl_ca_certs: deprecated, see :py:meth:`set_ssl`
-    :param ssl_cert_validator: deprecated, see :py:meth:`set_ssl`
-    :param ssl_version: deprecated, see :py:meth:`set_ssl`
     :param timeout: the timeout value to use when connecting the stomp socket
     :param keepalive: some operating systems support sending the occasional heart
         beat packets to detect when a connection fails.  This
@@ -525,12 +519,6 @@ class Transport(BaseTransport):
                  reconnect_sleep_jitter=0.1,
                  reconnect_sleep_max=60.0,
                  reconnect_attempts_max=3,
-                 use_ssl=False,
-                 ssl_key_file=None,
-                 ssl_cert_file=None,
-                 ssl_ca_certs=None,
-                 ssl_cert_validator=None,
-                 ssl_version=None,
                  timeout=None,
                  keepalive=None,
                  vhost=None,
@@ -590,15 +578,6 @@ class Transport(BaseTransport):
 
         # setup SSL
         self.__ssl_params = {}
-        if use_ssl:
-            warnings.warn("Deprecated: use set_ssl instead", DeprecationWarning)
-            self.set_ssl(host_and_ports,
-                         ssl_key_file,
-                         ssl_cert_file,
-                         ssl_ca_certs,
-                         ssl_cert_validator,
-                         ssl_version)
-
         self.__keepalive = keepalive
         self.vhost = vhost
         self.__recv_bytes = recv_bytes
@@ -707,10 +686,12 @@ class Transport(BaseTransport):
                 return False
             return True
 
-        if not self.__keepalive:
+        ka = self.__keepalive
+
+        if not ka:
             return
 
-        if self.__keepalive is True:
+        if ka is True:
             ka_sig = "auto"
             ka_args = ()
         else:

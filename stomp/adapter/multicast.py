@@ -20,8 +20,7 @@ class MulticastTransport(Transport):
     Transport over multicast connections rather than using a broker.
     """
     def __init__(self, encoding):
-        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False,
-                           DEFAULT_SSL_VERSION, None, None, None, encoding)
+        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, None, None, None, False, encoding)
         self.subscriptions = {}
         self.current_host_and_port = (MCAST_GRP, MCAST_PORT)
 
@@ -94,10 +93,7 @@ class MulticastTransport(Transport):
 
 
 class MulticastConnection(BaseConnection, Protocol12):
-    def __init__(self, wait_on_receipt=False, encoding="utf-8"):
-        """
-        :param bool wait_on_receipt: deprecated, ignored
-        """
+    def __init__(self, encoding="utf-8"):
         self.transport = MulticastTransport(encoding)
         self.transport.set_listener("mcast-listener", self)
         self.transactions = {}

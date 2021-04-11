@@ -85,12 +85,6 @@ class StompConnection10(BaseConnection, Protocol10):
                  reconnect_sleep_jitter=0.1,
                  reconnect_sleep_max=60.0,
                  reconnect_attempts_max=3,
-                 use_ssl=False,
-                 ssl_key_file=None,
-                 ssl_cert_file=None,
-                 ssl_ca_certs=None,
-                 ssl_cert_validator=None,
-                 ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  keepalive=None,
                  auto_decode=True,
@@ -99,8 +93,7 @@ class StompConnection10(BaseConnection, Protocol10):
                  bind_host_port=None):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
-                              reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
-                              ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
+                              reconnect_sleep_max, reconnect_attempts_max, timeout,
                               keepalive, None, auto_decode, encoding, bind_host_port=bind_host_port)
         BaseConnection.__init__(self, transport)
         Protocol10.__init__(self, transport, auto_content_length)
@@ -136,12 +129,6 @@ class StompConnection11(BaseConnection, Protocol11):
                  reconnect_sleep_jitter=0.1,
                  reconnect_sleep_max=60.0,
                  reconnect_attempts_max=3,
-                 use_ssl=False,
-                 ssl_key_file=None,
-                 ssl_cert_file=None,
-                 ssl_ca_certs=None,
-                 ssl_cert_validator=None,
-                 ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  heartbeats=(0, 0),
                  keepalive=None,
@@ -153,8 +140,7 @@ class StompConnection11(BaseConnection, Protocol11):
                  bind_host_port=None):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
-                              reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
-                              ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
+                              reconnect_sleep_max, reconnect_attempts_max, timeout,
                               keepalive, vhost, auto_decode, encoding, bind_host_port=bind_host_port)
         BaseConnection.__init__(self, transport)
         Protocol11.__init__(self, transport, heartbeats, auto_content_length,
@@ -191,12 +177,6 @@ class StompConnection12(BaseConnection, Protocol12):
                  reconnect_sleep_jitter=0.1,
                  reconnect_sleep_max=60.0,
                  reconnect_attempts_max=3,
-                 use_ssl=False,
-                 ssl_key_file=None,
-                 ssl_cert_file=None,
-                 ssl_ca_certs=None,
-                 ssl_cert_validator=None,
-                 ssl_version=DEFAULT_SSL_VERSION,
                  timeout=None,
                  heartbeats=(0, 0),
                  keepalive=None,
@@ -208,8 +188,7 @@ class StompConnection12(BaseConnection, Protocol12):
                  bind_host_port=None):
         transport = Transport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
-                              reconnect_sleep_max, reconnect_attempts_max, use_ssl, ssl_key_file, ssl_cert_file,
-                              ssl_ca_certs, ssl_cert_validator, ssl_version, timeout,
+                              reconnect_sleep_max, reconnect_attempts_max, timeout,
                               keepalive, vhost, auto_decode, encoding, bind_host_port=bind_host_port)
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats, auto_content_length,
