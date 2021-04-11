@@ -17,12 +17,19 @@ RUN rabbitmq-plugins enable rabbitmq_stomp
 RUN echo "stomp.listeners.tcp.1 = 172.17.0.2:61613" > /etc/rabbitmq/rabbitmq.conf
 RUN echo "loopback_users = none" >> /etc/rabbitmq/rabbitmq.conf
 
+COPY tmp/broker.ks /
+COPY tmp/broker.ts /
+COPY tmp/expiredbroker.ks /
+
 # activemq setup
 RUN ln -s /etc/activemq/instances-available/main/ /etc/activemq/instances-enabled/
-RUN sed -i 's/<\/transportConnectors>/<transportConnector name="stomp" uri="stomp:\/\/0.0.0.0:62613"\/><transportConnector name="stomp+ssl" uri="stomp+ssl:\/\/0.0.0.0:62614"\/><\/transportConnectors>/g' /etc/activemq/instances-enabled/main/activemq.xml
-RUN keytool -genkey -alias broker -keyalg RSA -keystore broker.ks -storepass changeit -dname "CN=test, OU=test, O=test, L=test, S=test, C=GB"
-RUN keytool -export -alias broker -keystore broker.ks -file broker_cert -storepass changeit
-ENV ACTIVEMQ_SSL_OPTS="-Djavax.net.ssl.keyStore=/broker.ks -Djavax.net.ssl.keyStorePassword=changeit"
+RUN cp -R /etc/activemq/instances-available/main/ /etc/activemq/instances-available/expiredbroker
+RUN ln -s /etc/activemq/instances-available/expiredbroker /etc/activemq/instances-enabled/
+
+COPY activemq-main.xml /etc/activemq/instances-enabled/main/activemq.xml
+COPY activemq-expiredbroker.xml etc/activemq/instances-enabled/expiredbroker/activemq.xml
+
+ENV ACTIVEMQ_SSL_OPTS="-Djavax.net.ssl.keyStore=/broker.ks -Djavax.net.ssl.keyStorePassword=changeit -Djavax.net.ssl.trustStore=/broker.ts -Djavax.net.ssl.trustStorePassword=changeit"
 
 # stompserver setup
 RUN sed -i 's/port: .*/port: 63613/g' /etc/stompserver/stompserver.conf
@@ -48,6 +55,7 @@ RUN sed -i 's/acceptor name="stomp">tcp:\/\/0.0.0.0:61613/acceptor name="stomp">
 EXPOSE 61613/tcp
 EXPOSE 62613/tcp
 EXPOSE 62614/tcp
+EXPOSE 62619/tcp
 EXPOSE 63613/tcp
 EXPOSE 64613/tcp
 

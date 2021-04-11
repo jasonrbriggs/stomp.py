@@ -5,7 +5,7 @@ from .testutils import *
 username = get_default_user()
 password = get_default_password()
 
-(sslhost, sslport) = get_default_ssl_host()[0]
+(sslhost, sslport) = get_ssl_host()[0]
 
 
 class TestSSLCLI(object):
