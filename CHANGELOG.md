@@ -5,6 +5,7 @@
  * Check SSL certificate for expiry if PyOpenSSL is installed
  * Remove deprecated constructor params (use_ssl, and other ssl params)
  * Minor cleanup (remove debian packaging config, since it didn't work any more)
+ * Add log_to_stdout method to force command line logging to stdout (useful for testing)
 
 
 ## Version 7.0.0 - Apr 2021
