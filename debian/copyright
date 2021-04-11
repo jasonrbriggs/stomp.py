@@ -1,9 +1,0 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: stomp.py
-Upstream-Contact: Jason R Briggs <jasonrbriggs@gmail.com>
-Source: https://github.com/jasonrbriggs/stomp.py
-
-Files: *
-Copyright: 2009-2016 Jason R Briggs <jasonrbriggs@gmail.com>
-License: Apache-2.0
- See /usr/share/common-licenses/Apache-2.0
