@@ -62,7 +62,7 @@
 <blockquote>
 <div><dl class="class">
 <dt id="stomp.connect.StompConnection12">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLSv1: 3&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>bind_host_port=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>use_ssl=False</em>, <em>ssl_key_file=None</em>, <em>ssl_cert_file=None</em>, <em>ssl_ca_certs=None</em>, <em>ssl_cert_validator=None</em>, <em>ssl_version=&lt;_SSLMethod.PROTOCOL_TLS: 2&gt;</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>bind_host_port=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
 See <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 </dd></dl>
@@ -72,7 +72,7 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <blockquote>
 <div><dl class="method">
 <dt id="stomp.protocol.Protocol12.connect">
-<code class="descclassname">Protocol12.</code><code class="descname">connect</code><span class="sig-paren">(</span><em>username=None</em>, <em>passcode=None</em>, <em>wait=False</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.connect" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Protocol12.</code><code class="descname">connect</code><span class="sig-paren">(</span><em>username=None</em>, <em>passcode=None</em>, <em>wait=False</em>, <em>headers=None</em>, <em>with_connect_command=False</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -83,6 +83,7 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <li><strong>passcode</strong> (<em>str</em>) – optionally specify the user password</li>
 <li><strong>wait</strong> (<em>bool</em>) – wait for the connection to complete before returning</li>
 <li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
+<li><strong>with_connect_command</strong> – if True, use CONNECT command instead of STOMP</li>
 <li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
 </ul>
 </td>
