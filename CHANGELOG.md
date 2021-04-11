@@ -3,6 +3,7 @@
  * Add support for backwards compatible CONNECT in 1.1 and 1.2 protocols (https://github.com/jasonrbriggs/stomp.py/pull/348)
  * Flip DEFAULT_SSL_VERSION to use ssl.PROTOCOL_TLS rather than ssl.PROTOCOL_TLSv1
  * Check SSL certificate for expiry if PyOpenSSL is installed
+ * Minor cleanup (remove debian packaging config, since it didn't work any more)
 
 
 ## Version 7.0.0 - Apr 2021
