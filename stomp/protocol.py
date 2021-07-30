@@ -1,7 +1,6 @@
 """Provides the 1.0, 1.1 and 1.2 protocol classes.
 """
 
-import stomp.utils as utils
 from stomp.exception import ConnectFailedException
 from stomp.listener import *
 
@@ -13,7 +12,8 @@ class Protocol10(ConnectionListener):
     Most users should not instantiate the protocol directly. See :py:mod:`stomp.connect` for connection classes.
 
     :param transport:
-    :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
+    :param bool auto_content_length: Whether to calculate and send the content-length header
+    automatically if it has not been set
     """
     def __init__(self, transport, auto_content_length=True):
         self.transport = transport
@@ -21,7 +21,7 @@ class Protocol10(ConnectionListener):
         transport.set_listener("protocol-listener", self)
         self.version = "1.0"
 
-    def send_frame(self, cmd, headers=None, body=''):
+    def send_frame(self, cmd, headers=None, body=""):
         """
         Encode and send a stomp frame
         through the underlying transport.
@@ -206,8 +206,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
     :param transport:
     :param (int,int) heartbeats:
-    :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
-    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
+    :param bool auto_content_length: Whether to calculate and send the content-length header
+    automatically if it has not been set
+    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out,
+    as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
         HeartbeatListener.__init__(self, transport, heartbeats, heart_beat_receive_scale)
@@ -227,7 +229,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
                 pass
             headers[key] = val
 
-    def send_frame(self, cmd, headers=None, body=''):
+    def send_frame(self, cmd, headers=None, body=""):
         """
         Encode and send a stomp frame
         through the underlying transport:
@@ -236,7 +238,7 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param dict headers: a map of headers to include in the frame
         :param body: the content of the message
         """
-        if cmd != CMD_CONNECT:
+        if cmd not in [CMD_CONNECT, CMD_STOMP]:
             if headers is None:
                 headers = {}
             self._escape_headers(headers)
@@ -306,7 +308,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         headers[HDR_TRANSACTION] = transaction
         self.send_frame(CMD_COMMIT, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None,
+                with_connect_command=False, **keyword_headers):
         """
         Start a connection.
 
@@ -314,9 +317,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         :param str passcode: the password used to authenticate with
         :param bool wait: if True, wait for the connection to be established/acknowledged
         :param dict headers: a map of any additional headers the broker requires
+        :param with_connect_command: if True, use CONNECT command instead of STOMP
         :param keyword_headers: any additional headers the broker requires
         """
-        cmd = CMD_STOMP
+        cmd = CMD_CONNECT if with_connect_command else CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
 
@@ -377,9 +381,11 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
     def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
         """
-        Send a message to a destination in the messaging system (as per https://stomp.github.io/stomp-specification-1.2.html#SEND)
+        Send a message to a destination in the messaging system (as per
+         https://stomp.github.io/stomp-specification-1.2.html#SEND)
 
-        :param str destination: the destination (such as a message queue - for example '/queue/test' - or a message topic)
+        :param str destination: the destination (such as a message queue - for example
+        '/queue/test' - or a message topic)
         :param body: the content of the message
         :param str content_type: the MIME type of message
         :param dict headers: additional headers to send in the message frame
@@ -401,7 +407,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
         :param str destination: the topic or queue to subscribe to
         :param str id: the identifier to uniquely identify the subscription
-        :param str ack: either auto, client or client-individual (see https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE for more info)
+        :param str ack: either auto, client or client-individual
+        (see https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE for more info)
         :param dict headers: a map of any additional headers to send with the subscription
         :param keyword_headers: any additional headers to send with the subscription
         """
@@ -435,11 +442,14 @@ class Protocol12(Protocol11):
 
     :param transport:
     :param (int,int) heartbeats:
-    :param bool auto_content_length: Whether to calculate and send the content-length header automatically if it has not been set
-    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out, as a scale factor of receive time
+    :param bool auto_content_length: Whether to calculate and send the content-length header
+    automatically if it has not been set
+    :param float heart_beat_receive_scale: how long to wait for a heartbeat before timing out,
+    as a scale factor of receive time
     """
     def __init__(self, transport, heartbeats=(0, 0), auto_content_length=True, heart_beat_receive_scale=1.5):
-        Protocol11.__init__(self, transport, heartbeats, auto_content_length, heart_beat_receive_scale=heart_beat_receive_scale)
+        Protocol11.__init__(self, transport, heartbeats, auto_content_length,
+                            heart_beat_receive_scale=heart_beat_receive_scale)
         self.version = "1.2"
 
     def _escape_headers(self, headers):
@@ -487,7 +497,8 @@ class Protocol12(Protocol11):
             headers[HDR_RECEIPT] = receipt
         self.send_frame(CMD_NACK, headers)
 
-    def connect(self, username=None, passcode=None, wait=False, headers=None, **keyword_headers):
+    def connect(self, username=None, passcode=None, wait=False, headers=None,
+                with_connect_command=False, **keyword_headers):
         """
         Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.
 
@@ -495,9 +506,10 @@ class Protocol12(Protocol11):
         :param str passcode: optionally specify the user password
         :param bool wait: wait for the connection to complete before returning
         :param dict headers: a map of any additional headers to send with the subscription
+        :param with_connect_command: if True, use CONNECT command instead of STOMP
         :param keyword_headers: any additional headers to send with the subscription
         """
-        cmd = CMD_STOMP
+        cmd = CMD_CONNECT if with_connect_command else CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
         headers[HDR_HOST] = self.transport.current_host_and_port[0]

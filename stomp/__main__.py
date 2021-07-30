@@ -40,9 +40,9 @@ from functools import partial
 from docopt import docopt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from stomp.adapter.multicast import MulticastConnection
 import stomp.colours
 import stomp.utils
+from stomp.adapter.multicast import MulticastConnection
 from stomp.connect import StompConnection10, StompConnection11, StompConnection12
 from stomp.listener import ConnectionListener, StatsListener
 
@@ -68,9 +68,10 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See :py:class:`stomp.connect.StompConnection11`
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host='localhost', port=61613, user='', passcode='', ver='1.1', prompt='> ', verbose=True,
-                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None, stdin=sys.stdin, stdout=sys.stdout):
-        Cmd.__init__(self, 'Tab', stdin, stdout)
+    def __init__(self, host="localhost", port=61613, user="", passcode="", ver="1.1", prompt="> ", verbose=True,
+                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None,
+                 stdin=sys.stdin, stdout=sys.stdout):
+        Cmd.__init__(self, "Tab", stdin, stdout)
         ConnectionListener.__init__(self)
         self.__start = True
         self.prompt = prompt
@@ -90,7 +91,7 @@ class StompCLI(Cmd, ConnectionListener):
             raise RuntimeError("Unknown version")
         if use_ssl:
             self.conn.set_ssl([(host, port)], key_file=ssl_key_file, cert_file=ssl_cert_file, ca_certs=ssl_ca_file)
-        self.conn.set_listener('', self)
+        self.conn.set_listener("", self)
         self.conn.connect(self.user, self.passcode, wait=True)
         self.transaction_id = None
         self.version = ver
@@ -117,11 +118,11 @@ class StompCLI(Cmd, ConnectionListener):
                 self.__sysout("message-id: %s" % frame.headers["message-id"])
             if "subscription" in frame.headers:
                 self.__sysout("subscription: %s" % frame.headers["subscription"])
-        if self.prompt != '':
-            self.__sysout('')
+        if self.prompt != "":
+            self.__sysout("")
         self.__sysout(frame.body)
         if not self.__start:
-            self.__sysout(self.prompt, end='')
+            self.__sysout(self.prompt, end="")
         else:
             self.__start = False
         self.stdout.flush()
@@ -154,14 +155,14 @@ class StompCLI(Cmd, ConnectionListener):
         Special case: if the header 'filename' is present, the content is written out
         as a file
         """
-        self.__sysout('')
+        self.__sysout("")
         if "filename" in frame.headers:
             content = base64.b64decode(frame.body.encode())
             if os.path.exists(frame.headers["filename"]):
                 fname = "%s.%s" % (frame.headers["filename"], int(time.time()))
             else:
                 fname = frame.headers["filename"]
-            with open(fname, 'wb') as f:
+            with open(fname, "wb") as f:
                 f.write(content)
             frame.body = "Saved file: %s" % fname
         self.__print_async("MESSAGE", frame)
@@ -210,11 +211,11 @@ class StompCLI(Cmd, ConnectionListener):
             "optional": oparams.rstrip()
         }
 
-        if rparams.rstrip() != '':
+        if rparams.rstrip() != "":
             rparams = '''%(hl)sRequired Parameters:%(nc)s%(required)s\n\n''' % m
             m["required"] = rparams
 
-        if oparams.rstrip() != '':
+        if oparams.rstrip() != "":
             oparams = '''%(hl)sOptional Parameters:%(nc)s%(optional)s\n\n''' % m
             m["optional"] = oparams
 
@@ -290,12 +291,12 @@ class StompCLI(Cmd, ConnectionListener):
         if len(args) < 2:
             self.__error("Expecting: send <destination> <message>")
         elif not self.transaction_id:
-            self.conn.send(args[0], ' '.join(args[1:]))
+            self.conn.send(args[0], " ".join(args[1:]))
         else:
-            self.conn.send(args[0], ' '.join(args[1:]), transaction=self.transaction_id)
+            self.conn.send(args[0], " ".join(args[1:]), transaction=self.transaction_id)
 
-    def complete_send(self, text, line, begidx, endidx):
-        mline = line.split(' ')[1]
+    def complete_send(self, text, line):
+        mline = line.split(" ")[1]
         offs = len(mline) - len(text)
         return [s[offs:] for s in self.__subscriptions if s.startswith(mline)]
     complete_unsubscribe = complete_send
@@ -313,9 +314,9 @@ class StompCLI(Cmd, ConnectionListener):
         if len(args) < 2:
             self.__error("Expecting: sendrec <destination> <message>")
         elif not self.transaction_id:
-            self.conn.send(args[0], ' '.join(args[1:]), receipt=receipt_id)
+            self.conn.send(args[0], " ".join(args[1:]), receipt=receipt_id)
         else:
-            self.conn.send(args[0], ' '.join(args[1:]), transaction=self.transaction_id, receipt=receipt_id)
+            self.conn.send(args[0], " ".join(args[1:]), transaction=self.transaction_id, receipt=receipt_id)
 
     def help_sendrec(self):
         self.help("sendrec <destination> <message>",
@@ -327,7 +328,7 @@ class StompCLI(Cmd, ConnectionListener):
         if len(args) < 3:
             self.__error("Expecting: sendreply <destination> <correlation-id> <message>")
         else:
-            self.conn.send(args[0], "%s\n" % ' '.join(args[2:]), headers={"correlation-id": args[1]})
+            self.conn.send(args[0], "%s\n" % " ".join(args[2:]), headers={"correlation-id": args[1]})
 
     def help_sendreply(self):
         self.help("sendreply <destination> <correlation-id> <message>",
@@ -349,11 +350,11 @@ class StompCLI(Cmd, ConnectionListener):
                     self.__error("File %s does not exist" % args[2])
                     return
                 self.__sysout("Loading %s" % args[2])
-                with open(args[2], mode='rb') as jf:
+                with open(args[2], mode="rb") as jf:
                     headers = json.load(jf)
                     self.__sysout("Using headers %s" % str(headers))
 
-            with open(args[1], mode='rb') as f:
+            with open(args[1], mode="rb") as f:
                 s = f.read()
             msg = base64.b64encode(s).decode()
             if not self.transaction_id:
@@ -378,13 +379,13 @@ class StompCLI(Cmd, ConnectionListener):
 
     def check_ack_nack(self, acknackfunc, args):
         if self.nversion >= 1.2 and len(args) < 1:
-            self.__error("Expecting: %s <ack-id>" % cmd)
+            self.__error("Expecting: %s <ack-id>" % acknackfunc)
             return None
         elif self.nversion == 1.1 and len(args) < 2:
-            self.__error("Expecting: %s <message-id> <subscription-id>" % cmd)
+            self.__error("Expecting: %s <message-id> <subscription-id>" % acknackfunc)
             return None
         elif len(args) < 1:
-            self.__error("Expecting: %s <message-id>" % cmd)
+            self.__error("Expecting: %s <message-id>" % acknackfunc)
             return None
 
         if self.nversion == 1.1:
@@ -506,9 +507,9 @@ def main():
     arguments = docopt(__doc__, version=version_string)
 
     if arguments["--listen"] is not None:
-        prompt = ''
+        prompt = ""
     else:
-        prompt = '> '
+        prompt = "> "
 
     if not heartbeat_pattern.match(arguments["--heartbeats"]):
         print("Invalid heartbeats, expecting cx,cy")
@@ -517,11 +518,11 @@ def main():
     heartbeats = tuple(map(int, arguments["--heartbeats"].split(",")))
 
     st = StompCLI(arguments["--host"], arguments["--port"], arguments["--user"], arguments["--password"], arguments["--protocol"],
-        prompt, arguments["--verbose"], heartbeats=heartbeats,
-        use_ssl=arguments["--ssl"],
-        ssl_key_file=arguments["--ssl-key-file"],
-        ssl_cert_file=arguments["--ssl-cert-file"],
-        ssl_ca_file=arguments["--ssl-ca-file"])
+                  prompt, arguments["--verbose"], heartbeats=heartbeats,
+                  use_ssl=arguments["--ssl"],
+                  ssl_key_file=arguments["--ssl-key-file"],
+                  ssl_cert_file=arguments["--ssl-cert-file"],
+                  ssl_ca_file=arguments["--ssl-ca-file"])
 
     if arguments["--listen"] is not None:
         st.do_subscribe(arguments["--listen"])

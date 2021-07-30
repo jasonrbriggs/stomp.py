@@ -25,15 +25,15 @@ A simple example of creating a listener, sending and receiving a message using l
 
     import time
     import sys
-    
-    import stomp
-    
-    class MyListener(stomp.ConnectionListener):
-        def on_error(self, headers, body):
-            print('received an error "%s"' % body)
 
-        def on_message(self, headers, body):
-            print('received a message "%s"' % body)
+    import stomp
+
+    class MyListener(stomp.ConnectionListener):
+        def on_error(self, frame):
+            print('received an error "%s"' % frame.body)
+
+        def on_message(self, frame):
+            print('received a message "%s"' % frame.body)
 
     conn = stomp.Connection()
     conn.set_listener('', MyListener())
@@ -59,20 +59,20 @@ Assuming stomp.py is installed (using pip) in the site-packages directory (e.g. 
 .. code-block:: shell
 
     $ stomp -H localhost -P 61613
-        
+
 After a successful connection, you can type commands such as:
 
 .. code-block:: shell
 
     subscribe /queue/test
     send /queue/test hello world
-    
+
 If you need to pass a username and password to the client:
 
 .. code-block:: shell
 
     $ stomp -H localhost -P 61613 -U admin -W password
-    
+
 Type help for more information once you're running the command-line interface, or run the following to see the list of startup arguments:
 
 .. code-block:: shell

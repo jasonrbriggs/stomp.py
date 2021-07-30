@@ -20,8 +20,7 @@ class MulticastTransport(Transport):
     Transport over multicast connections rather than using a broker.
     """
     def __init__(self, encoding):
-        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, False, None, None, None, None, False,
-                           DEFAULT_SSL_VERSION, None, None, None, encoding)
+        Transport.__init__(self, [], False, False, 0.0, 0.0, 0.0, 0.0, 0, None, None, None, False, encoding)
         self.subscriptions = {}
         self.current_host_and_port = (MCAST_GRP, MCAST_PORT)
 
@@ -35,7 +34,7 @@ class MulticastTransport(Transport):
         self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        self.receiver_socket.bind(('', MCAST_PORT))
+        self.receiver_socket.bind(("", MCAST_PORT))
         mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
         self.receiver_socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
@@ -94,10 +93,7 @@ class MulticastTransport(Transport):
 
 
 class MulticastConnection(BaseConnection, Protocol12):
-    def __init__(self, wait_on_receipt=False, encoding="utf-8"):
-        """
-        :param bool wait_on_receipt: deprecated, ignored
-        """
+    def __init__(self, encoding="utf-8"):
         self.transport = MulticastTransport(encoding)
         self.transport.set_listener("mcast-listener", self)
         self.transactions = {}
@@ -140,7 +136,7 @@ class MulticastConnection(BaseConnection, Protocol12):
         Protocol12.disconnect(self, receipt, headers, **keyword_headers)
         self.transport.stop()
 
-    def send_frame(self, cmd, headers=None, body=''):
+    def send_frame(self, cmd, headers=None, body=""):
         """
         :param str cmd:
         :param dict headers:

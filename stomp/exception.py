@@ -1,6 +1,7 @@
 """Errors thrown by stomp.py connections.
 """
 
+
 class StompException(Exception):
     """
     Common exception class. All specific stomp.py exceptions are subclasses

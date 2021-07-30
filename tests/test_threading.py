@@ -9,12 +9,8 @@ must be wedged in their send() calls.
 
 """
 
-import os
 from queue import Empty, Full, Queue
-import time
 from time import monotonic
-
-import pytest
 
 import stomp
 from .testutils import *
@@ -31,8 +27,7 @@ class MQ(object):
 
     def send(self, topic, msg, persistent="true", retry=False):
         self.conn.send(destination="/topic/%s" % topic, body=msg,
-                             persistent=persistent)
-
+                       persistent=persistent)
 
 
 def get_mq():
@@ -95,8 +90,7 @@ class TestThreading(object):
                 while 1:
                     # print "%s sending %s" % (i, counter)
                     try:
-                        get_mq().send("testclientwedge",
-                                "Message %s:%s" % (i, counter))
+                        get_mq().send("testclientwedge", "Message %s:%s" % (i, counter))
                     except:
                         error.put(sys.exc_info())
                         # thread will die
@@ -129,8 +123,8 @@ class TestThreading(object):
                     self.q.put(1, False)
                     time.sleep(1.0)
                 except Full:
-                    assert False, "Failed: 'request' queue filled up"
                     logging.info("passed")
+                    assert False, "Failed: 'request' queue filled up"
 
             self.shutdown()
         else:

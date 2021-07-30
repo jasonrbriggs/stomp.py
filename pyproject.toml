@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stomp.py"
-version = "6.1.0"
+version = "7.0.0"
 description = "Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol"
 authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
 license = "Apache-2.0"
@@ -21,6 +21,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.6"
 docopt = "^0.6.2"
+PyOpenSSL = {version = "^20.0.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

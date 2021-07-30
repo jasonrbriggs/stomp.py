@@ -1,9 +1,39 @@
-## Upcoming
+## Upcoming (8.0.0)
 
- * TBC
+ * Add support for backwards compatible CONNECT in 1.1 and 1.2 protocols (https://github.com/jasonrbriggs/stomp.py/pull/348)
+ * Flip DEFAULT_SSL_VERSION to use ssl.PROTOCOL_TLS rather than ssl.PROTOCOL_TLSv1
+ * Check SSL certificate for expiry if PyOpenSSL is installed
+ * Remove deprecated constructor params (use_ssl, and other ssl params)
+ * Minor cleanup (remove debian packaging config, since it didn't work any more)
+ * Add log_to_stdout method to force command line logging to stdout (useful for testing)
 
 
-## Version 6.1.0 - Jul 2020
+## Version 7.0.0 - Apr 2021
+
+(from v6.1.1):
+ * Add host bind port patch (https://github.com/jasonrbriggs/stomp.py/issues/331)
+ * Tidy up based on pycharm suggestions
+ * Change quotes to be consistent (" rather than ')
+
+(from v6.1.0):
+ * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
+ * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))
+ * Remove heartbeat loop sleep (issue https://github.com/jasonrbriggs/stomp.py/issues/297, https://github.com/jasonrbriggs/stomp.py/pull/298)
+ * Update version number using the makefile and the poetry version command
+ * Add `original_headers` access to the Frame so that you can get the original value of a header even if a listener modifies it (issue: https://github.com/jasonrbriggs/stomp.py/issues/300, PR https://github.com/jasonrbriggs/stomp.py/pull/309)
+ * Fix for reconnect failures (https://github.com/jasonrbriggs/stomp.py/pull/295)
+ * Fix for double disconnect notifications causing issues with reconnection
+ * Add 'verbose' to stomp.logging (and defaulting the value to False). Log lines which dump the stacktrace now use that variable - except for a couple of cases (set stomp.logging.verbose = True to change back to the previous behaviour)
+ 
+
+## Version 6.1.1 - Apr 2021 [YANKED]
+
+ * Add host bind port patch (https://github.com/jasonrbriggs/stomp.py/issues/331)
+ * Tidy up based on pycharm suggestions
+ * Change quotes to be consistent (" rather than ')
+
+
+## Version 6.1.0 - Jul 2020 [YANKED]
 
  * Remove traceback logging (https://github.com/jasonrbriggs/stomp.py/pull/290)
  * Add support for \r\n EOL handling (as per [stomp protocol v1.2](http://stomp.github.io/stomp-specification-1.2.html#Augmented_BNF))

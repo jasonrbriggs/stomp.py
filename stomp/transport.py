@@ -1,6 +1,8 @@
-"""Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent from the actual STOMP protocol
+"""Provides the underlying transport functionality (for stomp message transmission) - (mostly) independent
+from the actual STOMP protocol
 """
 
+import datetime
 import errno
 import math
 import random
@@ -11,30 +13,52 @@ from io import BytesIO
 from time import monotonic
 
 try:
-    import ssl
-    from ssl import SSLError
-
-    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLSv1
-except (ImportError, AttributeError):
-    ssl = None
-
-    class SSLError(object):
-        pass
-
-    DEFAULT_SSL_VERSION = None
-
-try:
-    from socket import SOL_SOCKET, SO_KEEPALIVE
-    from socket import SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
-
+    from socket import SOL_SOCKET, SO_KEEPALIVE, SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
     LINUX_KEEPALIVE_AVAIL = True
 except ImportError:
     LINUX_KEEPALIVE_AVAIL = False
+
+try:
+    from socket import IPPROTO_TCP
+    MAC_KEEPALIVE_AVAIL = True
+except ImportError:
+    MAC_KEEPALIVE_AVAIL = False
+
+try:
+    import ssl
+    from ssl import SSLError
+    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS
+except (ImportError, AttributeError):
+    ssl = None
+    class SSLError(object):
+        pass
+    DEFAULT_SSL_VERSION = None
+
+try:
+    import OpenSSL
+except ImportError:
+    OpenSSL = None
+
 
 import stomp.exception as exception
 import stomp.listener
 from stomp.utils import *
 from stomp import logging
+
+
+def check_ssl_certificate(host_and_port):
+    '''
+    Check the expiry date of the certificate presented by the host/port.
+    '''
+    if OpenSSL:
+        host, port = host_and_port
+        cert = ssl.get_server_certificate((host, port))
+        x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
+        dt = datetime.datetime.strptime(x509.get_notAfter().decode().replace('Z',''), "%Y%m%d%H%M%S")
+        valid_cert = dt > datetime.datetime.now()
+        if not valid_cert:
+            logging.info("SSL certificate for %s:%s expired on %s", host, port, dt)
+        assert valid_cert
 
 
 class BaseTransport(stomp.listener.Publisher):
@@ -55,7 +79,7 @@ class BaseTransport(stomp.listener.Publisher):
     __content_length_re = re.compile(b"^content-length[:]\\s*(?P<value>[0-9]+)", re.MULTILINE)
 
     def __init__(self, auto_decode=True, encoding="utf-8", is_eol_fc=is_eol_default):
-        self.__recvbuf = b''
+        self.__recvbuf = b""
         self.listeners = {}
         self.running = False
         self.blocking = None
@@ -64,7 +88,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.disconnecting = False
         self.__receipts = {}
         self.current_host_and_port = None
-
+        self.bind_host_port = None
         # flag used when we receive the disconnect receipt
         self.__disconnect_receipt = None
         self.notified_on_disconnect = False
@@ -196,8 +220,7 @@ class BaseTransport(stomp.listener.Publisher):
         Utility function for notifying listeners of incoming and outgoing messages
 
         :param str frame_type: the type of message
-        :param dict headers: the map of headers associated with the message
-        :param body: the content of the message
+        :param Frame frame: the stomp frame
         """
         if frame_type == "receipt":
             # logic for wait-on-receipt notification
@@ -347,7 +370,7 @@ class BaseTransport(stomp.listener.Publisher):
                         #
                         # Clear out any half-received messages after losing connection
                         #
-                        self.__recvbuf = b''
+                        self.__recvbuf = b""
                         self.running = False
                         notify_disconnected = True
                     break
@@ -382,7 +405,7 @@ class BaseTransport(stomp.listener.Publisher):
                     continue
             except Exception:
                 logging.debug("socket read error", exc_info=logging.verbose)
-                c = b''
+                c = b""
             if c is None or len(c) == 0:
                 logging.debug("nothing received, raising CCE")
                 raise exception.ConnectionClosedException()
@@ -396,7 +419,7 @@ class BaseTransport(stomp.listener.Publisher):
                 fastbuf.close()
                 return [c]
             fastbuf.write(c)
-            if b'\x00' in c:
+            if b"\x00" in c:
                 #
                 # Possible end of frame
                 #
@@ -407,7 +430,7 @@ class BaseTransport(stomp.listener.Publisher):
 
         if self.__recvbuf and self.running:
             while True:
-                pos = self.__recvbuf.find(b'\x00')
+                pos = self.__recvbuf.find(b"\x00")
 
                 if pos >= 0:
                     frame = self.__recvbuf[0:pos]
@@ -477,19 +500,15 @@ class Transport(BaseTransport):
         an extra 0%-10% (randomly determined) of the delay
         calculated using the previous three parameters.
     :param int reconnect_attempts_max: maximum attempts to reconnect (Can also be used for infinite attempts : `-1`)
-    :param bool use_ssl: deprecated, see :py:meth:`set_ssl`
-    :param ssl_cert_file: deprecated, see :py:meth:`set_ssl`
-    :param ssl_key_file: deprecated, see :py:meth:`set_ssl`
-    :param ssl_ca_certs: deprecated, see :py:meth:`set_ssl`
-    :param ssl_cert_validator: deprecated, see :py:meth:`set_ssl`
-    :param ssl_version: deprecated, see :py:meth:`set_ssl`
     :param timeout: the timeout value to use when connecting the stomp socket
     :param keepalive: some operating systems support sending the occasional heart
         beat packets to detect when a connection fails.  This
         parameter can either be set set to a boolean to turn on the
         default keepalive options for your OS, or as a tuple of
         values, which also enables keepalive packets, but specifies
-        options specific to your OS implementation
+        options specific to your OS implementation.
+        For linux, supply ("linux", ka_idle, ka_intvl, ka_cnt)
+        For macos, supply ("mac", ka_intvl)
     :param str vhost: specify a virtual hostname to provide in the 'host' header of the connection
     :param int recv_bytes: the number of bytes to use when calling recv
     """
@@ -503,20 +522,14 @@ class Transport(BaseTransport):
                  reconnect_sleep_jitter=0.1,
                  reconnect_sleep_max=60.0,
                  reconnect_attempts_max=3,
-                 use_ssl=False,
-                 ssl_key_file=None,
-                 ssl_cert_file=None,
-                 ssl_ca_certs=None,
-                 ssl_cert_validator=None,
-                 ssl_version=None,
                  timeout=None,
                  keepalive=None,
                  vhost=None,
                  auto_decode=True,
                  encoding="utf-8",
                  recv_bytes=1024,
-                 is_eol_fc=is_eol_default
-                 ):
+                 is_eol_fc=is_eol_default,
+                 bind_host_port=None):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
@@ -543,7 +556,8 @@ class Transport(BaseTransport):
             for host_and_port in sorted_host_and_ports:
                 if is_localhost(host_and_port) == 1:
                     port = host_and_port[1]
-                    if not (("127.0.0.1", port) in sorted_host_and_ports or ("localhost", port) in sorted_host_and_ports):
+                    if not (("127.0.0.1", port) in sorted_host_and_ports or (
+                    "localhost", port) in sorted_host_and_ports):
                         loopback_host_and_ports.append(("127.0.0.1", port))
 
         #
@@ -552,6 +566,7 @@ class Transport(BaseTransport):
         self.__host_and_ports = []
         self.__host_and_ports.extend(loopback_host_and_ports)
         self.__host_and_ports.extend(sorted_host_and_ports)
+        self.__bind_host_port = bind_host_port
 
         self.__reconnect_sleep_initial = reconnect_sleep_initial
         self.__reconnect_sleep_increase = reconnect_sleep_increase
@@ -566,15 +581,6 @@ class Transport(BaseTransport):
 
         # setup SSL
         self.__ssl_params = {}
-        if use_ssl:
-            warnings.warn("Deprecated: use set_ssl instead", DeprecationWarning)
-            self.set_ssl(host_and_ports,
-                         ssl_key_file,
-                         ssl_cert_file,
-                         ssl_ca_certs,
-                         ssl_cert_validator,
-                         ssl_version)
-
         self.__keepalive = keepalive
         self.vhost = vhost
         self.__recv_bytes = recv_bytes
@@ -704,6 +710,10 @@ class Transport(BaseTransport):
                 ka_sig = "linux"
                 ka_args = None
                 logging.info("keepalive: autodetected linux-style support")
+            elif MAC_KEEPALIVE_AVAIL:
+                ka_sig = "mac"
+                ka_args = None
+                logging.info("keepalive: autodetected mac-style support")
             else:
                 logging.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
@@ -713,11 +723,19 @@ class Transport(BaseTransport):
             if ka_args is None:
                 logging.info("keepalive: using system defaults")
                 ka_args = (None, None, None)
-            lka_idle, lka_intvl, lka_cnt = ka_args
+            ka_idle, ka_intvl, ka_cnt = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
-                try_setsockopt(self.socket, "idle time", SOL_TCP, TCP_KEEPIDLE, lka_idle)
-                try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, lka_intvl)
-                try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, lka_cnt)
+                try_setsockopt(self.socket, "idle time", SOL_TCP, TCP_KEEPIDLE, ka_idle)
+                try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
+                try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
+        elif ka_sig == "mac":
+            logging.info("keepalive: activating mac-style support")
+            if ka_args is None:
+                logging.info("keepalive: using system defaults")
+                ka_args = (3,)
+            ka_intvl = ka_args
+            if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
+                try_setsockopt(self.socket, socket.IPPROTO_TCP, 0x10, ka_intvl)
         else:
             logging.error("keepalive: implementation %r not recognized or not supported", ka_sig)
 
@@ -730,26 +748,27 @@ class Transport(BaseTransport):
         connect_count = 0
 
         logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
-        while self.running and self.socket is None and (
-            connect_count < self.__reconnect_attempts_max or
-            self.__reconnect_attempts_max == -1 ):
+        while self.running and self.socket is None and (connect_count < self.__reconnect_attempts_max or
+                                                        self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
                     logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
-                    self.socket = socket.create_connection(host_and_port, self.__timeout)
+                    if self.__bind_host_port:
+                        self.socket = socket.create_connection(host_and_port, self.__timeout, self.__bind_host_port)
+                    else:
+                        self.socket = socket.create_connection(host_and_port, self.__timeout)
                     self.__enable_keepalive()
                     need_ssl = self.__need_ssl(host_and_port)
 
                     if need_ssl:  # wrap socket
+                        check_ssl_certificate(host_and_port)
                         ssl_params = self.get_ssl(host_and_port)
+                        tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
                         if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
+                            tls_context.load_verify_locations(ssl_params["ca_certs"])
                         else:
                             cert_validation = ssl.CERT_NONE
-                        try:
-                            tls_context = ssl.create_default_context(cafile=ssl_params["ca_certs"])
-                        except AttributeError:
-                            tls_context = None
                         if tls_context:
                             # Wrap the socket for TLS
                             certfile = ssl_params["cert_file"]
@@ -762,9 +781,11 @@ class Transport(BaseTransport):
                             if cert_validation is None or cert_validation == ssl.CERT_NONE:
                                 tls_context.check_hostname = False
                             tls_context.verify_mode = cert_validation
+                            logging.info("Wrapping SSL socket")
                             self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
                         else:
                             # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
+                            logging.info("Wrapping SSL socket (old style)")
                             self.socket = ssl.wrap_socket(
                                 self.socket,
                                 keyfile=ssl_params["key_file"],
@@ -790,10 +811,11 @@ class Transport(BaseTransport):
                     self.current_host_and_port = host_and_port
                     logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
-                except socket.error:
+                except (OSError, AssertionError):
                     self.socket = None
                     connect_count += 1
-                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1], exc_info=logging.verbose)
+                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
+                                    exc_info=logging.verbose)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
@@ -836,6 +858,7 @@ class Transport(BaseTransport):
                                as returned by ssl.SSLSocket.getpeercert()
         :param ssl_version: SSL protocol to use for the connection. This should be one of the PROTOCOL_x
                             constants provided by the ssl module. The default is ssl.PROTOCOL_TLSv1
+        :param password: SSL password
         """
         if not ssl:
             raise Exception("SSL connection requested, but SSL library not found")

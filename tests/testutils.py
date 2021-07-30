@@ -65,11 +65,16 @@ def get_ipv6_host():
     return [(get_environ("IPV6_HOST") or host, int(get_environ("IPV6_PORT") or port))]
 
 
-
-def get_default_ssl_host():
+def get_ssl_host():
     host = config.get("default", "host")
     port = config.get("default", "ssl_port")
     return [(get_environ("STD_HOST") or host, int(get_environ("STD_SSL_PORT") or port))]
+
+
+def get_expired_ssl_host():
+    host = config.get("default", "host")
+    port = config.get("default", "ssl_expired_port")
+    return [(get_environ("STD_HOST") or host, int(get_environ("STD_SSL_EXPIRED_PORT") or port))]
 
 
 def get_sni_ssl_host():
@@ -231,3 +236,16 @@ def is_inside_travis():
         logging.info("Not running test inside travis")
         return True
     return False
+
+
+# snaffled from stackoverflow: https://codereview.stackexchange.com/questions/216037/python-scanner-for-the-first-free-port-in-a-range
+def next_free_port(port=1024, max_port=65535):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    while port <= max_port:
+        try:
+            sock.bind(("", port))
+            sock.close()
+            return port
+        except OSError:
+            port += 1
+    raise IOError("no free ports")

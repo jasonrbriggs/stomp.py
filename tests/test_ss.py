@@ -1,7 +1,3 @@
-import time
-
-import pytest
-
 import stomp
 from stomp.listener import *
 from .testutils import *
@@ -30,7 +26,6 @@ heart-beat:1000,1000
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()
-
 
     def test_disconnect(self, server):
         server.add_frame('''CONNECTED
@@ -112,7 +107,7 @@ heart-beat:1000,1000
 \x00''' + "\n\n\n")
         expected_heartbeat_count = 0
 
-        conn = stomp.Connection([("127.0.0.1", 60000)], heartbeats=(1000,1000))
+        conn = stomp.Connection([("127.0.0.1", 60000)], heartbeats=(1000, 1000))
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
         conn.connect()

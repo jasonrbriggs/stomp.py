@@ -1,7 +1,3 @@
-import time
-
-import pytest
-
 import stomp
 from stomp.listener import *
 from .testutils import *
@@ -15,6 +11,7 @@ def conn():
     conn.connect(get_default_user(), get_default_password(), wait=True)
     yield conn
     conn.disconnect(receipt=None)
+
 
 class Test10Connect(object):
 

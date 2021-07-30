@@ -1,9 +1,3 @@
-import signal
-import time
-from time import monotonic
-
-import pytest
-
 import stomp
 from stomp.listener import TestListener
 from .testutils import *
@@ -22,10 +16,12 @@ class TestContext(object):
         conn.send(body="this is a test", destination=queuename, receipt="123")
         listener.wait_for_message()
 
-    def after_test_message(self, conn):
+    @staticmethod
+    def after_test_message(conn):
         conn.remove_listener("testlistener")
 
-    def check_asserts(self, conn):
+    @staticmethod
+    def check_asserts(conn):
         listener = conn.get_listener("testlistener")
         assert listener.connections == 1, "should have received 1 connection acknowledgement"
         assert listener.disconnects >= 1, "should have received 1 disconnect"
@@ -47,4 +43,3 @@ class TestContext(object):
             self.send_test_message(conn)
         self.check_asserts(conn)
         self.after_test_message(conn)
-

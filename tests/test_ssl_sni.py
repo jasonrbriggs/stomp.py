@@ -1,5 +1,3 @@
-import pytest
-
 import stomp
 from stomp.listener import TestListener
 from .testutils import *

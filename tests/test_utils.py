@@ -122,7 +122,8 @@ class TestUtils(object):
 
     # just for coverage
     def test_get_errno(self):
-        class ErrObj(object): pass
+        class ErrObj(object):
+            pass
 
         o = ErrObj()
         o.args = ["a"]

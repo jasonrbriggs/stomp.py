@@ -1,7 +1,3 @@
-import time
-
-import pytest
-
 import stomp
 from stomp.listener import *
 from .testutils import *
@@ -80,36 +76,36 @@ heart-beat:1000,1000
 
         assert listener.heartbeat_timeouts >= 1, "should have received a heartbeat timeout"
 
-        def testheartbeat_shutdown(self):
-            server = TestStompServer("127.0.0.1", 60000)
-            server.start()
-            conn = None
-            try:
-                server.add_frame('''CONNECTED
-    version:1.1
-    session:1
-    server:test
-    heart-beat:1000,1000
+    def testheartbeat_shutdown(self):
+        server = StubStompServer("127.0.0.1", 60000)
+        server.start()
+        conn = None
+        try:
+            server.add_frame('''CONNECTED
+version:1.1
+session:1
+server:test
+heart-beat:1000,1000
 
-    \x00''')
+\x00''')
 
-                conn = stomp.Connection([("127.0.0.1", 60000)], heartbeats=(10000, 10000))
-                listener = TestListener(print_to_log=True)
-                conn.set_listener('', listener)
-                conn.connect()
+            conn = stomp.Connection([("127.0.0.1", 60000)], heartbeats=(10000, 10000))
+            listener = TestListener(print_to_log=True)
+            conn.set_listener('', listener)
+            conn.connect()
 
-                start_time = time.time()
+            start_time = time.time()
+            time.sleep(0.5)
+            # shutdown connection
+            server.stop()
+            while conn.heartbeat_thread is not None:
                 time.sleep(0.5)
-                # shutdown connection
-                server.stop()
-                while conn.heartbeat_thread is not None:
-                    time.sleep(0.5)
-                end_time = time.time()
+            end_time = time.time()
 
-                server.running = False
-            except Exception:
-                _, e, _ = sys.exc_info()
-                logging.error("Error: %s", e)
+            server.running = False
+        except Exception:
+            _, e, _ = sys.exc_info()
+            logging.error("Error: %s", e)
 
-            assert end_time - start_time <= 2, "should stop immediately and not after heartbeat timeout"
-            assert conn.heartbeat_thread is None, "heartbeat thread should have finished"
+        assert end_time - start_time <= 2, "should stop immediately and not after heartbeat timeout"
+        assert conn.heartbeat_thread is None, "heartbeat thread should have finished"

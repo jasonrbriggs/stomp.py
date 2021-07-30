@@ -1,9 +1,4 @@
-import unittest
-
-import pytest
-
 import stomp
-from stomp import logging
 from stomp.listener import TestListener
 from .testutils import *
 

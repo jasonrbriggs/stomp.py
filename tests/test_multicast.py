@@ -1,10 +1,5 @@
-import time
-
-import pytest
-
 from stomp.adapter.multicast import MulticastConnection
 from stomp.listener import TestListener
-from stomp.utils import get_uuid
 from .testutils import *
 
 

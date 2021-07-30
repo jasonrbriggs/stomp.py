@@ -1,12 +1,7 @@
 import signal
-import time
 from time import monotonic
-import unittest
-
-import pytest
 
 import stomp
-from stomp import logging
 from stomp.listener import TestListener
 from .testutils import *
 
@@ -38,7 +33,8 @@ class TestBasic(object):
         queuename = "/queue/test1-%s" % testlistener.timestamp
         conn.subscribe(destination=queuename, id=1, ack="auto")
 
-        conn.send(body='{"val": "this is a test"}', destination=queuename, content_type="application/json", receipt="123")
+        conn.send(body='{"val": "this is a test"}', destination=queuename,
+                  content_type="application/json", receipt="123")
 
         validate_send(conn)
 
@@ -101,8 +97,8 @@ class TestBasic(object):
         assert listener.errors == 0, "should not have received any errors"
 
     def test_timeout(self, invalidconn):
+        ms = monotonic()
         try:
-            ms = monotonic()
             invalidconn.connect("test", "test")
             pytest.fail("shouldn't happen")
         except stomp.exception.ConnectFailedException:
@@ -160,7 +156,6 @@ class TestBasic(object):
 
     def test_clientnack(self, conn):
         timestamp = time.strftime("%Y%m%d%H%M%S")
-        timestamp = time.strftime("%Y%m%d%H%M%S")
         queuename = "/queue/testclientnack-%s" % timestamp
         conn.subscribe(destination=queuename, id=1, ack="client")
 
@@ -203,6 +198,15 @@ class TestBasic(object):
         assert "special-3" in headers
         assert "test with newline \n" == headers["special-3"]
 
+    def test_host_bind_port(self):
+        conn = stomp.Connection(bind_host_port=("localhost", next_free_port()))
+        listener = TestListener("981", print_to_log=True)
+        queuename = "/queue/testbind-%s" % listener.timestamp
+        conn.set_listener("testlistener", listener)
+        conn.connect(get_rabbitmq_user(), get_rabbitmq_password(), wait=True)
+        conn.send(body="this is a test using local bind port", destination=queuename, receipt="981")
+        conn.disconnect(receipt=None)
+
 
 class TestConnectionErrors(object):
     def test_connect_wait_error(self):
@@ -220,4 +224,3 @@ class TestConnectionErrors(object):
             assert not conn.is_connected(), "Should not be connected"
         except:
             pytest.fail("Shouldn't happen")
-
