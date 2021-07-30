@@ -7,7 +7,6 @@ EXPOSE 8484
 RUN apt update && apt install -y \
     activemq \
     haproxy \
-    haproxy \
     rabbitmq-server \
     stompserver \
     vim \
