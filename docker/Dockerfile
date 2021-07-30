@@ -8,6 +8,7 @@ RUN apt update && apt install -y \
     activemq \
     haproxy \
     rabbitmq-server \
+    rsyslog \
     stompserver \
     vim \
     && rm -rf /var/lib/apt/lists/*
