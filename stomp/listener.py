@@ -275,7 +275,7 @@ class HeartbeatListener(ConnectionListener):
                 t = self.received_heartbeat + self.receive_sleep - now
                 if t > 0:
                     next_events.append(t)
-            sleep_time = min(next_events)
+            sleep_time = min(next_events) if next_events else 0
             if sleep_time > 0:
                 terminate = self.heartbeat_terminate_event.wait(sleep_time)
                 if terminate:
