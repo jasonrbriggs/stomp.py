@@ -239,9 +239,8 @@ class HeartbeatListener(ConnectionListener):
 
         :param Frame frame: the Frame object
         """
-        if frame.cmd == CMD_CONNECT or frame.cmd == CMD_STOMP:
-            if self.heartbeats != (0, 0):
-                frame.headers[HDR_HEARTBEAT] = "%s,%s" % self.heartbeats
+        if frame.cmd in [CMD_CONNECT, CMD_STOMP] and self.heartbeats != (0, 0):
+            frame.headers[HDR_HEARTBEAT] = "%s,%s" % self.heartbeats
         if self.next_outbound_heartbeat is not None:
             self.next_outbound_heartbeat = monotonic() + self.send_sleep
 
