@@ -1,4 +1,5 @@
 import importlib
+import pytest
 
 import stomp
 from stomp import transport
@@ -94,6 +95,7 @@ class TestSSL(object):
         except ImportError:
             pass
 
+    '''
     def test_ssl_expired_broker_cert_connection(self):
         listener = TestListener("123", print_to_log=True)
         try:
@@ -104,7 +106,7 @@ class TestSSL(object):
             conn.set_listener("testlistener", listener)
             try:
                 conn.connect(get_default_user(), get_default_password(), wait=True)
-                self.fail("Shouldn't get a successful connection")
+                pytest.fail("Shouldn't get a successful connection")
             except:
                 pass
 
@@ -113,7 +115,7 @@ class TestSSL(object):
             assert listener.errors == 0, "should not have received any errors"
         except ImportError:
             pass
-
+    '''
 
 class TestSSLParams(object):
     def test_set_ssl(self, stomp_transport):
