@@ -57,7 +57,9 @@ ssl-setup:
 	rm -f docker/tmp/expiredbroker*
 	rm -f tmp/client*
 	rm -f tmp/broker*
-	rm -f tmp/expiredbroker*
+	rm -f tmp/expiredbroker
+	mkdir -p docker/tmp
+	mkdir -p tmp
 
 	keytool -genkey -alias broker -keyalg RSA -keystore docker/tmp/broker.ks -storepass changeit -storetype pkcs12 -keypass changeit -dname "CN=test, OU=test, O=test, L=test, S=test, C=GB" -ext "san=ip:172.17.0.2"
 	keytool -genkey -alias broker2 -keyalg RSA -keystore docker/tmp/broker2.ks -storepass changeit -storetype pkcs12 -keypass changeit -dname "CN=test2, OU=test2, O=test2, L=test2, S=test2, C=GB" -ext "san=ip:172.17.0.2"
