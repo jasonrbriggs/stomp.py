@@ -49,7 +49,7 @@ class TestThreading(object):
         for i in range(0, self.clients):
             t = threading.Thread(name="client %s" % i,
                                  target=self.make_sender(i))
-            t.setDaemon(1)
+            t.daemon = True
             self.threads.append(t)
 
     def shutdown(self):
