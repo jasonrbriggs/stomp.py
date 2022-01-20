@@ -123,8 +123,8 @@ class TestNoResponseConnectionKill(object):
 
     def test_noresponse(self, miscserver, timeout_thread):
         try:
-            conn = stomp.Connection([("127.0.0.1", 60000)], heartbeats=(1000, 1000))
-            listener = TestListener(print_to_log=True)
+            conn , listener  = stomp.Connection([('127.0.0.1', 60000)], heartbeats=(1000, 1000)), 
+                                TestListener(print_to_log=True)
             conn.set_listener("testlistener", listener)
             timeout_thread.start()
             conn.connect(wait=True)
