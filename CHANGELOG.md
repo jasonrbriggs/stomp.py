@@ -6,6 +6,10 @@
  * Remove deprecated constructor params (use_ssl, and other ssl params)
  * Minor cleanup (remove debian packaging config, since it didn't work any more)
  * Add log_to_stdout method to force command line logging to stdout (useful for testing)
+ * Various updates for docker testing
+ * Add mac keepalive functionality
+ * Minor update to daemon attribute (https://github.com/jasonrbriggs/stomp.py/pull/361)
+ * Fix issue with heartbeat listener disconnecting the socket (https://github.com/jasonrbriggs/stomp.py/issues/219 - https://github.com/jasonrbriggs/stomp.py/pull/369)
 
 
 ## Version 7.0.0 - Apr 2021
