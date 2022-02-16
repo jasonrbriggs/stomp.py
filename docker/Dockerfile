@@ -11,6 +11,7 @@ RUN apt update && apt install -y \
     rsyslog \
     stompserver \
     vim \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # rabbitmq setup
