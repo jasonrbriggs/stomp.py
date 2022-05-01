@@ -28,16 +28,12 @@ try:
     import ssl
     from ssl import SSLError
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS
+    from cryptography import x509
 except (ImportError, AttributeError):
     ssl = None
     class SSLError(object):
         pass
     DEFAULT_SSL_VERSION = None
-
-try:
-    import OpenSSL
-except ImportError:
-    OpenSSL = None
 
 
 import stomp.exception as exception
@@ -50,12 +46,11 @@ def check_ssl_certificate(host_and_port):
     '''
     Check the expiry date of the certificate presented by the host/port.
     '''
-    if OpenSSL:
+    if ssl:
         host, port = host_and_port
         cert = ssl.get_server_certificate((host, port))
-        x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
-        dt = datetime.datetime.strptime(x509.get_notAfter().decode().replace('Z',''), "%Y%m%d%H%M%S")
-        valid_cert = dt > datetime.datetime.now()
+        x509_cert = x509.load_pem_x509_certificate(cert.encode())
+        valid_cert = x509_cert.not_valid_after > datetime.datetime.now()
         if not valid_cert:
             logging.info("SSL certificate for %s:%s expired on %s", host, port, dt)
         assert valid_cert
