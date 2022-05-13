@@ -756,8 +756,9 @@ class Transport(BaseTransport):
                     need_ssl = self.__need_ssl(host_and_port)
 
                     if need_ssl:  # wrap socket
-                        check_ssl_certificate(host_and_port)
                         ssl_params = self.get_ssl(host_and_port)
+                        if 'cert_file' not in ssl_params:  # only do server check if there's no client certificate
+                            check_ssl_certificate(host_and_port)
                         tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
                         if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
