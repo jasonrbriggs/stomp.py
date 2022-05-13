@@ -4,6 +4,9 @@ MAINTAINER Jason R Briggs <jasonrbriggs@gmail.com>
 
 EXPOSE 8484
 
+ARG ARTEMIS_VERSION
+ENV ARTEMIS_VERSION $ARTEMIS_VERSION
+
 RUN apt update && apt install -y \
     activemq \
     haproxy \
@@ -50,7 +53,7 @@ COPY haproxy.sh /
 # activemq artemis
 COPY tmp/activemq-artemis-bin.tar.gz /
 RUN tar -xvzf activemq-artemis-bin.tar.gz
-RUN apache-artemis-2.20.0/bin/artemis create testbroker --user testuser --password password --allow-anonymous --no-amqp-acceptor --no-hornetq-acceptor --default-port 61619
+RUN apache-artemis-${ARTEMIS_VERSION}/bin/artemis create testbroker --user testuser --password password --allow-anonymous --no-amqp-acceptor --no-hornetq-acceptor --default-port 61619
 RUN sed -i 's/acceptor name="stomp">tcp:\/\/0.0.0.0:61613/acceptor name="stomp">tcp:\/\/0.0.0.0:61615/g' testbroker/etc/broker.xml
 
 # expose ports
