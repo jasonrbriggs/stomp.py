@@ -68,9 +68,9 @@ stomp.py has been perfunctorily tested on:
 For testing locally, you'll need to install docker. Once installed:
 
 #. Add test domain names to your hosts file like so: 
-        172.17.0.2  my.example.com
-        172.17.0.2  my.example.org
-        172.17.0.2  my.example.net
+      |  172.17.0.2  my.example.com
+      |  172.17.0.2  my.example.org
+      |  172.17.0.2  my.example.net
 #. Install dependencies:
         poetry install
 #. Install optional dependencies (if testing with ssl)
