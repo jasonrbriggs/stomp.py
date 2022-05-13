@@ -5,6 +5,7 @@ PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0]
 PLATFORM := $(shell uname)
 VERSION :=$(shell poetry version | sed 's/stomp.py\s*//g' | sed 's/\./, /g')
 SHELL=/bin/bash
+ARTEMIS_VERSION=2.22.0
 
 all: test install
 
@@ -35,10 +36,7 @@ testsingle:
 
 
 clean:
-ifeq ($(PLATFORM),Linux)
-	$(MAKE) -f $(CURDIR)/debian/rules clean
-endif
-	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/
+	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/ docker/tmp
 	find . -name '*.pyc' -delete
 
 
@@ -49,7 +47,7 @@ release: updateversion
 
 docker/tmp/activemq-artemis-bin.tar.gz:
 	mkdir -p docker/tmp
-	wget http://www.apache.org/dist/activemq/activemq-artemis/2.20.0/apache-artemis-2.20.0-bin.tar.gz -O docker/tmp/activemq-artemis-bin.tar.gz
+	wget http://www.apache.org/dist/activemq/activemq-artemis/${ARTEMIS_VERSION}/apache-artemis-${ARTEMIS_VERSION}-bin.tar.gz -O docker/tmp/activemq-artemis-bin.tar.gz
 
 
 ssl-setup:
@@ -74,7 +72,7 @@ ssl-setup:
 
 
 docker-image: docker/tmp/activemq-artemis-bin.tar.gz ssl-setup
-	docker build -t stomppy docker/
+	docker build --build-arg ARTEMIS_VERSION=${ARTEMIS_VERSION} -t stomppy docker/
 
 
 run-docker:
