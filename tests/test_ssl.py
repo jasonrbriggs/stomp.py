@@ -15,6 +15,8 @@ ssl_cert_file = "ssl_cert_file"
 ssl_ca_certs = "ssl_ca_certs"
 ssl_cert_validator = "ssl_cert_validator"
 ssl_version = "version"
+# Necessary to see the root cause of SSL errors
+logging.log_to_stdout(verbose_logging=True)
 
 
 @pytest.fixture
@@ -95,14 +97,13 @@ class TestSSL(object):
         except ImportError:
             pass
 
-    '''
     def test_ssl_expired_broker_cert_connection(self):
         listener = TestListener("123", print_to_log=True)
         try:
             import ssl
             queuename = "/queue/testsslexpired-%s" % listener.timestamp
             conn = stomp.Connection(get_expired_ssl_host())
-            conn.set_ssl(get_expired_ssl_host())
+            conn.set_ssl(get_expired_ssl_host(), ca_certs='tmp/expiredbroker.pem')
             conn.set_listener("testlistener", listener)
             try:
                 conn.connect(get_default_user(), get_default_password(), wait=True)
@@ -115,7 +116,6 @@ class TestSSL(object):
             assert listener.errors == 0, "should not have received any errors"
         except ImportError:
             pass
-    '''
 
 class TestSSLParams(object):
     def test_set_ssl(self, stomp_transport):

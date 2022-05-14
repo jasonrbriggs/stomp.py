@@ -21,7 +21,6 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.6"
 docopt = "^0.6.2"
-cryptography = {version = "^37.0.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 pytest = ">=5.2"
@@ -29,9 +28,6 @@ pytest-cov = ">=2.8.1"
 pytest-mock = ">=2.0.0"
 pytest-html = ">=2.0.1"
 pytest-ordering = ">=0.6"
-
-[tool.poetry.extras]
-cryptography = ["cryptography"]
 
 [tool.poetry.scripts]
 stomp = "stomp.__main__:main"

@@ -28,7 +28,6 @@ try:
     import ssl
     from ssl import SSLError
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS
-    from cryptography import x509
 except (ImportError, AttributeError):
     ssl = None
     class SSLError(object):
@@ -40,20 +39,6 @@ import stomp.exception as exception
 import stomp.listener
 from stomp.utils import *
 from stomp import logging
-
-
-def check_ssl_certificate(host_and_port):
-    '''
-    Check the expiry date of the certificate presented by the host/port.
-    '''
-    if ssl:
-        host, port = host_and_port
-        cert = ssl.get_server_certificate((host, port))
-        x509_cert = x509.load_pem_x509_certificate(cert.encode())
-        valid_cert = x509_cert.not_valid_after > datetime.datetime.now()
-        if not valid_cert:
-            logging.info("SSL certificate for %s:%s expired on %s", host, port, dt)
-        assert valid_cert
 
 
 class BaseTransport(stomp.listener.Publisher):
@@ -757,8 +742,6 @@ class Transport(BaseTransport):
 
                     if need_ssl:  # wrap socket
                         ssl_params = self.get_ssl(host_and_port)
-                        if 'cert_file' not in ssl_params:  # only do server check if there's no client certificate
-                            check_ssl_certificate(host_and_port)
                         tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
                         if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
