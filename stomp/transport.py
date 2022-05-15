@@ -27,7 +27,7 @@ except ImportError:
 try:
     import ssl
     from ssl import SSLError
-    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS
+    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS_CLIENT
 except (ImportError, AttributeError):
     ssl = None
     class SSLError(object):

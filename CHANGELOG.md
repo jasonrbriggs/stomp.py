@@ -1,3 +1,9 @@
+## Version 8.0.2 - May 2022
+
+ * Remove ssl expiration check as per PR: https://github.com/jasonrbriggs/stomp.py/pull/380
+ * Change deprecated PROTOCOL_TLS to PROTOCOL_TLS_CLIENT
+ 
+
 ## Version 8.0.1 - May 2022
 
  * Change code to use cryptography lib rather than PyOpenSSL (which is not recommended for use any more - discussed here: https://github.com/jasonrbriggs/stomp.py/issues/378)
