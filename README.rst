@@ -73,8 +73,6 @@ For testing locally, you'll need to install docker. Once installed:
       |  172.17.0.2  my.example.net
 #. Install dependencies:
         poetry install
-#. Install optional dependencies (if testing with ssl)
-        poetry install -E cryptography
 #. Create the docker image:
         make docker-image
 #. Run the container:
