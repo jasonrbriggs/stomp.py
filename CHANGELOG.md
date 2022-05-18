@@ -2,6 +2,7 @@
 
  * Remove ssl expiration check as per PR: https://github.com/jasonrbriggs/stomp.py/pull/380
  * Change deprecated PROTOCOL_TLS to PROTOCOL_TLS_CLIENT
+ * Mock dns responses for testing: https://github.com/jasonrbriggs/stomp.py/pull/383/
  
 
 ## Version 8.0.1 - May 2022
