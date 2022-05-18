@@ -6,6 +6,7 @@ PLATFORM := $(shell uname)
 VERSION :=$(shell poetry version | sed 's/stomp.py\s*//g' | sed 's/\./, /g')
 SHELL=/bin/bash
 ARTEMIS_VERSION=2.22.0
+TEST_CMD := $(shell podman network exists stomptest &> /dev/null && echo "podman unshare --rootless-netns poetry" || echo "poetry")
 
 all: test install
 
@@ -28,11 +29,11 @@ install: updateversion test
 
 
 test:
-	poetry run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html
+	$(TEST_CMD) run pytest tests/ --cov=stomp --log-cli-level=DEBUG -v -ra --full-trace --cov-report=html:../stomppy-docs/htmlcov/ --html=tmp/report.html
 
 
 testsingle:
-	poetry run pytest tests/${TEST} --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/${TEST} --log-cli-level=DEBUG -v -ra --full-trace
 
 
 clean:
@@ -91,3 +92,27 @@ remove-docker:
 
 
 docker: remove-docker docker-image run-docker
+
+
+podman-image: docker/tmp/activemq-artemis-bin.tar.gz ssl-setup
+	podman build --build-arg ARTEMIS_VERSION=${ARTEMIS_VERSION} -t stomppy docker/
+
+
+run-podman:
+	podman network create --subnet 172.17.0.0/24 --ipv6 stomptest
+	podman run --network stomptest:ip=172.17.0.2 --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy
+	podman ps
+	podman exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
+	podman exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
+	podman exec -it stomppy /bin/sh -c "/etc/init.d/rabbitmq-server start"
+	podman exec -it stomppy /bin/sh -c "start-stop-daemon --start --background --exec /usr/sbin/haproxy -- -f /etc/haproxy/haproxy.cfg"
+	podman exec -it stomppy /bin/sh -c "testbroker/bin/artemis-service start"
+
+
+remove-podman:
+	podman stop -i stomppy
+	podman rm -vi stomppy
+	podman network exists stomptest && podman network rm stomptest || :
+
+
+podman: remove-podman podman-image run-podman

@@ -2,6 +2,7 @@
 
 from configparser import RawConfigParser
 import json
+import os
 import sys
 import time
 from subprocess import run, PIPE
@@ -53,6 +54,10 @@ def get_default_password():
 def get_ipv6_host():
     if config.has_option("ipv6", "host"):
         host = config.get("ipv6", "host")
+    elif os.environ.get('CONTAINERS_RUNROOT'):
+        # Running under "podman unshare"
+        result = run(["podman", "inspect", "stomppy", "-f", "{{.NetworkSettings.Networks.stomptest.GlobalIPv6Address}}"], stdout=PIPE)
+        host = result.stdout.decode("utf-8").strip()
     else:
         result = run(["docker", "ps", "-f", "name=stomppy", "--format", "{{.ID}}"], stdout=PIPE)
         container_id = result.stdout.decode("utf-8").rstrip()
