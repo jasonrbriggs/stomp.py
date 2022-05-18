@@ -1,3 +1,4 @@
+import socket
 import stomp
 from stomp.listener import TestListener
 from .testutils import *
@@ -9,17 +10,16 @@ class TestSNIMQSend(object):
 
     - Start the docker container
 
-    - Add a couple fully qualified hostnames to your /etc/hosts
-        # SNI test hosts
-        172.17.0.2 my.example.com
-        172.17.0.2 my.example.org
-
     Connections with SNI to "my.example.com" will be routed to the STOMP server on port 62613.
     Connections without SNI won't be routed.
 
     """
 
-    def testconnect(self):
+    def testconnect(self, monkeypatch):
+        def getaddrinfo_fake(host, port, *args, **kw):
+            """Always return the IP address of the container."""
+            return [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('172.17.0.2', port))]
+        monkeypatch.setattr(socket, "getaddrinfo", getaddrinfo_fake)
         if not is_inside_travis():
             logging.info("Running ipv6 test")
             receipt_id = str(uuid.uuid4())

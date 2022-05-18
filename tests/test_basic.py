@@ -1,4 +1,5 @@
 import signal
+import socket
 from time import monotonic
 
 import stomp
@@ -27,6 +28,19 @@ def invalidconn(testlistener):
     yield conn
 
 
+@pytest.fixture()
+def ipv4only(monkeypatch):
+    """
+    Filter DNS requests to return only IPv4 results. This is useful to avoid long timeouts
+    when tests attempt to connect to the IPv6 address, but the service is only listening
+    on the IPv4 address.
+    """
+    real_getaddrinfo = socket.getaddrinfo
+    def getaddrinfo_ipv4(*args, **kw):
+        return [a for a in real_getaddrinfo(*args, **kw) if a[0] == socket.AF_INET]
+    monkeypatch.setattr(socket, "getaddrinfo", getaddrinfo_ipv4)
+
+
 class TestBasic(object):
 
     def test_subscribe_and_send(self, conn, testlistener):
@@ -42,7 +56,7 @@ class TestBasic(object):
         assert "content-type" in headers
         assert headers["content-type"] == "application/json"
 
-    def test_default_to_localhost(self):
+    def test_default_to_localhost(self, ipv4only):
         conn = stomp.Connection()
         listener = TestListener("123", print_to_log=True)
         queuename = "/queue/test1-%s" % listener.timestamp
@@ -198,7 +212,7 @@ class TestBasic(object):
         assert "special-3" in headers
         assert "test with newline \n" == headers["special-3"]
 
-    def test_host_bind_port(self):
+    def test_host_bind_port(self, ipv4only):
         conn = stomp.Connection(bind_host_port=("localhost", next_free_port()))
         listener = TestListener("981", print_to_log=True)
         queuename = "/queue/testbind-%s" % listener.timestamp

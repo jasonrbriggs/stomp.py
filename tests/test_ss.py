@@ -25,7 +25,7 @@ heart-beat:1000,1000
         conn = stomp.Connection([("192.0.2.0", 10000), ("127.0.0.1", 60000)], timeout=1, prefer_localhost=False)
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
-        conn.connect()
+        conn.connect(wait=True)
 
     def test_disconnect(self, server):
         server.add_frame('''CONNECTED

@@ -159,7 +159,7 @@ class StubStompServer(object):
             del self.frames[0]
             return rtn
         else:
-            return ''
+            return None
 
     def add_frame(self, frame):
         self.frames.append(frame)
