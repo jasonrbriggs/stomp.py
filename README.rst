@@ -69,8 +69,6 @@ For testing locally, you'll need to install docker. Once installed:
 
 #. Install dependencies:
         poetry install
-#. Install optional dependencies (if testing with ssl)
-        poetry install -E cryptography
 #. Create the docker image:
         make docker-image
 #. Run the container:
