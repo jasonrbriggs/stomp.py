@@ -168,6 +168,8 @@ class TestMiscellaneousLogic(object):
 
         # just check if there was a received heartbeat calculated
         assert hl.received_heartbeat > 0
+        # Shut down the heartbeat thread so it doesn't go into a busy loop
+        hl.on_disconnected()
 
     def test_original_headers(self, conn2):
         listener = conn2.get_listener("testlistener")
