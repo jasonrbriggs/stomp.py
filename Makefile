@@ -99,7 +99,7 @@ podman-image: docker/tmp/activemq-artemis-bin.tar.gz ssl-setup
 
 
 run-podman:
-	podman network create --subnet 172.17.0.0/24 --ipv6 stomptest
+	podman network create --ipv6 --subnet 172.17.0.0/24 --subnet fddf:aaaa:bbbb:cccc::/64 stomptest
 	podman run --network stomptest:ip=172.17.0.2 --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy
 	podman ps
 	podman exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
