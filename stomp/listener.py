@@ -8,8 +8,8 @@ from time import monotonic
 
 import stomp.exception as exception
 import stomp.utils as utils
-from stomp.constants import *
 from stomp import logging
+from stomp.constants import *
 
 
 class Publisher(object):
@@ -155,8 +155,8 @@ class HeartbeatListener(ConnectionListener):
     """
     Listener used to handle STOMP heartbeating.
     """
+
     def __init__(self, transport, heartbeats, heart_beat_receive_scale=1.5):
-        self.running = False
         self.transport = transport
         self.heartbeats = heartbeats
         self.received_heartbeat = None
@@ -191,15 +191,13 @@ class HeartbeatListener(ConnectionListener):
                 # Give grace of receiving the first heartbeat
                 self.received_heartbeat = monotonic() + self.receive_sleep
 
-                self.running = True
                 if self.heartbeat_thread is None:
                     self.heartbeat_thread = utils.default_create_thread(
                         self.__heartbeat_loop)
                     self.heartbeat_thread.name = "StompHeartbeat%s" % \
-                        getattr(self.heartbeat_thread, "name", "Thread")
+                                                 getattr(self.heartbeat_thread, "name", "Thread")
 
     def on_disconnected(self):
-        self.running = False
         self.heartbeat_terminate_event.set()
 
     def on_disconnecting(self):
@@ -259,12 +257,14 @@ class HeartbeatListener(ConnectionListener):
         logging.info("Starting heartbeat loop")
         now = monotonic()
 
+        self.heartbeat_terminate_event = threading.Event()
+
         # Setup the initial due time for the outbound heartbeat
         if self.send_sleep != 0:
             self.next_outbound_heartbeat = now + self.send_sleep
             logging.debug("Calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
 
-        while self.running:
+        while True:
             now = monotonic()
 
             next_events = []
@@ -309,7 +309,6 @@ class HeartbeatListener(ConnectionListener):
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
         self.heartbeat_thread = None
-        self.heartbeat_terminate_event.clear()
         if self.heartbeats != (0, 0):
             # don't bother logging this if heartbeats weren't setup to start with
             logging.info("Heartbeat loop ended")
@@ -319,6 +318,7 @@ class WaitingListener(ConnectionListener):
     """
     A listener which waits for a specific receipt to arrive.
     """
+
     def __init__(self, receipt):
         """
         :param str receipt:
@@ -367,6 +367,7 @@ class StatsListener(ConnectionListener):
     """
     A connection listener for recording statistics on messages sent and received.
     """
+
     def __init__(self):
         # The number of errors received
         self.errors = 0
@@ -520,6 +521,7 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
     """
     Implementation of StatsListener and WaitingListener. Useful for testing.
     """
+
     def __init__(self, receipt=None, print_to_log=False):
         """
         :param str receipt:
