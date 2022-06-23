@@ -340,6 +340,9 @@ class WaitingListener(ConnectionListener):
                 self.received = True
                 self.receipt_condition.notify()
 
+    def on_connected(self, frame):
+        self.disconnected = False
+
     def on_disconnected(self):
         with self.disconnect_condition:
             self.disconnected = True
