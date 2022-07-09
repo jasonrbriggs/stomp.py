@@ -65,23 +65,29 @@ stomp.py has been perfunctorily tested on:
 - Apache ActiveMQ `Artemis`_  (`test_artemis.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_artemis.py>`_)
 - `stompserver`_  (`test_stompserver.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_stompserver.py>`_)
 
-For testing locally, you'll need to install docker. Once installed:
+For testing locally, you'll need to install docker (or `podman`_). Once installed:
 
 #. Install dependencies:
-        poetry install
-#. Create the docker image:
-        make docker-image
+        ``poetry install``
+#. Create the docker (or podman) image:
+        ``make docker-image`` (or ``make podman-image``)
 #. Run the container:
-        make run-docker
+        ``make run-docker`` (or ``make run-podman``)
 #. Run stomp.py unit tests:
-        make test
+        ``make test``
 #. Cleanup the container afterwards if you don't need it any more:
-        make remove-docker
+        ``make remove-docker`` (or ``make remove-podman``)
 
 If you want to connect to the test services locally (other than from the included tests), you'll want to add test domain names to your hosts file like so:
       |  172.17.0.2  my.example.com
       |  172.17.0.2  my.example.org
       |  172.17.0.2  my.example.net
+
+If you're using `podman`_ and you want to access services via their private IP addresses, you'll want to run your commands with::
+
+  podman unshare --rootless-netns <command>
+
+so that <command> has access to the private container network. Service ports are also exposed to the host and can be accessed directly.
 
 
 .. _`STOMP`: http://stomp.github.io
@@ -110,3 +116,5 @@ If you want to connect to the test services locally (other than from the include
 .. _`buy me a coffee`: https://www.paypal.me/jasonrbriggs
 
 .. _`semantic versioning`: https://semver.org/
+
+.. _`podman`: https://podman.io/
