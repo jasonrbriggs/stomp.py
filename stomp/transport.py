@@ -64,6 +64,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.__recvbuf = b""
         self.listeners = {}
         self.running = False
+        self.receiving = True
         self.blocking = None
         self.connected = False
         self.connection_error = False
@@ -119,7 +120,7 @@ class BaseTransport(stomp.listener.Publisher):
         Begin stop of the connection. Stops reading new messages but keep thread to finish ack/nack of messages.
         """
         # emit stop reading new messages
-        self.running = False
+        self.receiving = False
 
     def stop(self):
         """
@@ -357,6 +358,14 @@ class BaseTransport(stomp.listener.Publisher):
             while self.__receipts.get(receipt_id):
                 self.__receipt_wait_condition.wait(wait_time)
 
+    def __wait_finish_processing_received_messages(self):
+        # wait to finish process messages in progress
+        with self.__receiver_thread_sending_condition:
+            while not self.__receiver_thread_sent:
+                self.__receiver_thread_sending_condition.wait()
+
+        self.stop()
+
     def __receiver_loop(self):
         """
         Main loop listening for incoming data.
@@ -366,7 +375,7 @@ class BaseTransport(stomp.listener.Publisher):
         try:
             while self.running:
                 try:
-                    while self.running:
+                    while self.running and self.receiving:
                         frames = self.__read()
 
                         for frame in frames:
@@ -380,14 +389,8 @@ class BaseTransport(stomp.listener.Publisher):
                                 f.body = decode(f.body)
                             self.process_frame(f, frame)
 
-                    # wait to finish process messages in progress
-                    with self.__receiver_thread_sending_condition:
-                        while not self.__receiver_thread_sent:
-                            self.__receiver_thread_sending_condition.wait()
-
-                    with self.__receiver_thread_exit_condition:
-                        while not self.__receiver_thread_exited and self.is_connected():
-                            self.__receiver_thread_exit_condition.wait()
+                    if self.running and not self.receiving:
+                        self.__wait_finish_processing_received_messages()
 
                 except exception.ConnectionClosedException:
                     if self.running:
