@@ -21,6 +21,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.6"
 docopt = "^0.6.2"
+websocket-client = "^1.2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=5.2"

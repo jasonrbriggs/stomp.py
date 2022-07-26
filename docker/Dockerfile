@@ -19,6 +19,7 @@ RUN apt update && apt install -y \
 
 # rabbitmq setup
 RUN rabbitmq-plugins enable rabbitmq_stomp
+RUN rabbitmq-plugins enable rabbitmq_web_stomp
 RUN echo "stomp.listeners.tcp.1 = 172.17.0.2:61613" > /etc/rabbitmq/rabbitmq.conf
 RUN echo "loopback_users = none" >> /etc/rabbitmq/rabbitmq.conf
 
@@ -63,5 +64,7 @@ EXPOSE 62614/tcp
 EXPOSE 62619/tcp
 EXPOSE 63613/tcp
 EXPOSE 64613/tcp
+EXPOSE 15674/tcp
+
 
 ENTRYPOINT /bin/bash

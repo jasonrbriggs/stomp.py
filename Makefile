@@ -5,7 +5,7 @@ PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0]
 PLATFORM := $(shell uname)
 VERSION :=$(shell poetry version | sed 's/stomp.py\s*//g' | sed 's/\./, /g')
 SHELL=/bin/bash
-ARTEMIS_VERSION=2.22.0
+ARTEMIS_VERSION=2.23.1
 TEST_CMD := $(shell podman network exists stomptest &> /dev/null && echo "podman unshare --rootless-netns poetry" || echo "poetry")
 
 all: test install
@@ -48,7 +48,7 @@ release: updateversion
 
 docker/tmp/activemq-artemis-bin.tar.gz:
 	mkdir -p docker/tmp
-	wget http://www.apache.org/dist/activemq/activemq-artemis/${ARTEMIS_VERSION}/apache-artemis-${ARTEMIS_VERSION}-bin.tar.gz -O docker/tmp/activemq-artemis-bin.tar.gz
+	wget http://www.apache.org/dist/activemq/activemq-artemis/${ARTEMIS_VERSION}/apache-artemis-${ARTEMIS_VERSION}-bin.tar.gz -O $@ || rm $@
 
 
 ssl-setup:
@@ -77,7 +77,7 @@ docker-image: docker/tmp/activemq-artemis-bin.tar.gz ssl-setup
 
 
 run-docker:
-	docker run --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy
+	docker run --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 -p 15674:15674 --name stomppy -it stomppy
 	docker ps
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
 	docker exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
@@ -100,7 +100,7 @@ podman-image: docker/tmp/activemq-artemis-bin.tar.gz ssl-setup
 
 run-podman:
 	podman network create --ipv6 --subnet 172.17.0.0/24 --subnet fddf:aaaa:bbbb:cccc::/64 stomptest
-	podman run --network stomptest:ip=172.17.0.2 --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 --name stomppy -it stomppy
+	podman run --network stomptest:ip=172.17.0.2 --add-host="my.example.com:127.0.0.1" --add-host="my.example.org:127.0.0.1" --add-host="my.example.net:127.0.0.1" -d -p 61613:61613 -p 62613:62613 -p 62614:62614 -p 63613:63613 -p 64613:64613 -p 15674:15674 --name stomppy -it stomppy
 	podman ps
 	podman exec -it stomppy /bin/sh -c "/etc/init.d/activemq start"
 	podman exec -it stomppy /bin/sh -c "/etc/init.d/stompserver start"
