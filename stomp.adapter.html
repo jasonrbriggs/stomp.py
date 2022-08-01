@@ -1,23 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>stomp.adapter package &#8212; Stomp 7.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>stomp.adapter package &#8212; Stomp 8.0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -27,192 +28,165 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="stomp-adapter-package">
-<h1>stomp.adapter package<a class="headerlink" href="#stomp-adapter-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-stomp.adapter.multicast">
-<span id="stomp-adapter-multicast-module"></span><h2>stomp.adapter.multicast module<a class="headerlink" href="#module-stomp.adapter.multicast" title="Permalink to this headline">¶</a></h2>
+  <section id="stomp-adapter-package">
+<h1>stomp.adapter package<a class="headerlink" href="#stomp-adapter-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-stomp.adapter.multicast">
+<span id="stomp-adapter-multicast-module"></span><h2>stomp.adapter.multicast module<a class="headerlink" href="#module-stomp.adapter.multicast" title="Permalink to this heading">¶</a></h2>
 <p>Multicast transport for stomp.py.</p>
 <p>Obviously not a typical message broker, but convenient if you don’t have a broker, but still want to use stomp.py
 methods.</p>
-<dl class="class">
-<dt id="stomp.adapter.multicast.MulticastConnection">
-<em class="property">class </em><code class="descclassname">stomp.adapter.multicast.</code><code class="descname">MulticastConnection</code><span class="sig-paren">(</span><em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.connect.BaseConnection</span></code></a>, <a class="reference internal" href="stomp.html#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.protocol.Protocol12</span></code></a></p>
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastConnection.connect">
-<code class="descname">connect</code><span class="sig-paren">(</span><em>username=None</em>, <em>passcode=None</em>, <em>wait=False</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.connect" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) – </li>
-<li><strong>passcode</strong> (<em>str</em>) – </li>
-<li><strong>wait</strong> (<em>bool</em>) – </li>
-<li><strong>headers</strong> (<em>dict</em>) – </li>
-<li><strong>keyword_headers</strong> – </li>
+<dl class="py class">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stomp.adapter.multicast.</span></span><span class="sig-name descname"><span class="pre">MulticastConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.connect.BaseConnection" title="stomp.connect.BaseConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConnection</span></code></a>, <a class="reference internal" href="stomp.html#stomp.protocol.Protocol12" title="stomp.protocol.Protocol12"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol12</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastConnection.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passcode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.connect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<em>str</em>) – </p></li>
+<li><p><strong>passcode</strong> (<em>str</em>) – </p></li>
+<li><p><strong>wait</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>keyword_headers</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastConnection.disconnect">
-<code class="descname">disconnect</code><span class="sig-paren">(</span><em>receipt=None</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.disconnect" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>receipt</strong> (<em>str</em>) – </li>
-<li><strong>headers</strong> (<em>dict</em>) – </li>
-<li><strong>keyword_headers</strong> – </li>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastConnection.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">receipt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>receipt</strong> (<em>str</em>) – </p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>keyword_headers</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastConnection.send_frame">
-<code class="descname">send_frame</code><span class="sig-paren">(</span><em>cmd</em>, <em>headers=None</em>, <em>body=''</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.send_frame" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cmd</strong> (<em>str</em>) – </li>
-<li><strong>headers</strong> (<em>dict</em>) – </li>
-<li><strong>body</strong> – </li>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastConnection.send_frame">
+<span class="sig-name descname"><span class="pre">send_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.send_frame" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmd</strong> (<em>str</em>) – </p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>body</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastConnection.subscribe">
-<code class="descname">subscribe</code><span class="sig-paren">(</span><em>destination</em>, <em>id</em>, <em>ack='auto'</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.subscribe" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) – </li>
-<li><strong>id</strong> (<em>str</em>) – </li>
-<li><strong>ack</strong> (<em>str</em>) – </li>
-<li><strong>headers</strong> (<em>dict</em>) – </li>
-<li><strong>keyword_headers</strong> – </li>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastConnection.subscribe">
+<span class="sig-name descname"><span class="pre">subscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.subscribe" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<em>str</em>) – </p></li>
+<li><p><strong>id</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ack</strong> (<em>str</em>) – </p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>keyword_headers</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastConnection.unsubscribe">
-<code class="descname">unsubscribe</code><span class="sig-paren">(</span><em>id</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.unsubscribe" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<em>str</em>) – </li>
-<li><strong>headers</strong> (<em>dict</em>) – </li>
-<li><strong>keyword_headers</strong> – </li>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastConnection.unsubscribe">
+<span class="sig-name descname"><span class="pre">unsubscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastConnection.unsubscribe" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – </p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>keyword_headers</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="stomp.adapter.multicast.MulticastTransport">
-<em class="property">class </em><code class="descclassname">stomp.adapter.multicast.</code><code class="descname">MulticastTransport</code><span class="sig-paren">(</span><em>encoding</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastTransport">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stomp.adapter.multicast.</span></span><span class="sig-name descname"><span class="pre">MulticastTransport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a></p>
 <p>Transport over multicast connections rather than using a broker.</p>
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastTransport.attempt_connection">
-<code class="descname">attempt_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.attempt_connection" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastTransport.attempt_connection">
+<span class="sig-name descname"><span class="pre">attempt_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.attempt_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Establish a multicast connection - uses 2 sockets (one for sending, the other for receiving)</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastTransport.process_frame">
-<code class="descname">process_frame</code><span class="sig-paren">(</span><em>f</em>, <em>frame_str</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.process_frame" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>f</strong> (<a class="reference internal" href="stomp.html#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – Frame object</li>
-<li><strong>frame_str</strong> (<em>bytes</em>) – Raw frame content</li>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastTransport.process_frame">
+<span class="sig-name descname"><span class="pre">process_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.process_frame" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<a class="reference internal" href="stomp.html#stomp.utils.Frame" title="stomp.utils.Frame"><em>Frame</em></a>) – Frame object</p></li>
+<li><p><strong>frame_str</strong> (<em>bytes</em>) – Raw frame content</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastTransport.receive">
-<code class="descname">receive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.receive" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastTransport.receive">
+<span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.receive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive 1024 bytes from the multicast receiver socket.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bytes</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastTransport.send">
-<code class="descname">send</code><span class="sig-paren">(</span><em>encoded_frame</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.send" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastTransport.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoded_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send an encoded frame through the mcast socket.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoded_frame</strong> (<em>bytes</em>) – </td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>encoded_frame</strong> (<em>bytes</em>) – </p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="stomp.adapter.multicast.MulticastTransport.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.stop" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="stomp.adapter.multicast.MulticastTransport.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stomp.adapter.multicast.MulticastTransport.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop the connection. Performs a clean shutdown by waiting for the
 receiver thread to exit.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-stomp.adapter">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stomp.adapter" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-stomp.adapter">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stomp.adapter" title="Permalink to this heading">¶</a></h2>
 <p>Non-standard adapters.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -243,17 +217,23 @@ receiver thread to exit.</p>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -262,8 +242,8 @@ receiver thread to exit.</p>
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/stomp.adapter.rst.txt"

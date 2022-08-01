@@ -1,25 +1,26 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using the API &#8212; Stomp 7.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Using the API &#8212; Stomp 8.0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Using the Command-line client application" href="commandline.html" />
     <link rel="prev" title="Introduction to Stomp.py" href="intro.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -29,12 +30,14 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="using-the-api">
-<h1>Using the API<a class="headerlink" href="#using-the-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="establishing-a-connection">
-<h2>Establishing a connection<a class="headerlink" href="#establishing-a-connection" title="Permalink to this headline">¶</a></h2>
+  <section id="using-the-api">
+<h1>Using the API<a class="headerlink" href="#using-the-api" title="Permalink to this heading">¶</a></h1>
+<section id="establishing-a-connection">
+<h2>Establishing a connection<a class="headerlink" href="#establishing-a-connection" title="Permalink to this heading">¶</a></h2>
 <p>The simplest way to establish a connection, assuming the message broker is running on the local machine, is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">stomp</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">stomp</span><span class="o">.</span><span class="n">Connection</span><span class="p">([(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">62613</span><span class="p">)])</span>
@@ -60,9 +63,9 @@
 </div>
 <p>There are a number of other parameters for initialising the connection (looking at the StompConnection12 class):</p>
 <blockquote>
-<div><dl class="class">
-<dt id="stomp.connect.StompConnection12">
-<em class="property">class </em><code class="descclassname">stomp.connect.</code><code class="descname">StompConnection12</code><span class="sig-paren">(</span><em>host_and_ports=None</em>, <em>prefer_localhost=True</em>, <em>try_loopback_connect=True</em>, <em>reconnect_sleep_initial=0.1</em>, <em>reconnect_sleep_increase=0.5</em>, <em>reconnect_sleep_jitter=0.1</em>, <em>reconnect_sleep_max=60.0</em>, <em>reconnect_attempts_max=3</em>, <em>timeout=None</em>, <em>heartbeats=(0</em>, <em>0)</em>, <em>keepalive=None</em>, <em>vhost=None</em>, <em>auto_decode=True</em>, <em>encoding='utf-8'</em>, <em>auto_content_length=True</em>, <em>heart_beat_receive_scale=1.5</em>, <em>bind_host_port=None</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
+<div><dl class="py class">
+<dt class="sig sig-object py" id="stomp.connect.StompConnection12">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stomp.connect.</span></span><span class="sig-name descname"><span class="pre">StompConnection12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host_and_ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer_localhost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">try_loopback_connect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reconnect_sleep_initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reconnect_sleep_increase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reconnect_sleep_jitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reconnect_sleep_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reconnect_attempts_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heartbeats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepalive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vhost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_decode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_content_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heart_beat_receive_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_host_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.connect.StompConnection12" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
 See <a class="reference internal" href="stomp.html#stomp.transport.Transport" title="stomp.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">stomp.transport.Transport</span></code></a> for details on the initialisation parameters.</p>
 </dd></dl>
@@ -70,50 +73,43 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 </div></blockquote>
 <p>The final step is to call the <code class="docutils literal notranslate"><span class="pre">connect</span></code> method (corresponding to the <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#CONNECT_or_STOMP_Frame">CONNECT frame</a>):</p>
 <blockquote>
-<div><dl class="method">
-<dt id="stomp.protocol.Protocol12.connect">
-<code class="descclassname">Protocol12.</code><code class="descname">connect</code><span class="sig-paren">(</span><em>username=None</em>, <em>passcode=None</em>, <em>wait=False</em>, <em>headers=None</em>, <em>with_connect_command=False</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.connect" title="Permalink to this definition">¶</a></dt>
+<div><dl class="py method">
+<dt class="sig sig-object py" id="stomp.protocol.Protocol12.connect">
+<span class="sig-prename descclassname"><span class="pre">Protocol12.</span></span><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passcode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_connect_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a STOMP CONNECT frame. Differs from 1.0 and 1.1 versions in that the HOST header is enforced.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>username</strong> (<em>str</em>) – optionally specify the login user</li>
-<li><strong>passcode</strong> (<em>str</em>) – optionally specify the user password</li>
-<li><strong>wait</strong> (<em>bool</em>) – wait for the connection to complete before returning</li>
-<li><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</li>
-<li><strong>with_connect_command</strong> – if True, use CONNECT command instead of STOMP</li>
-<li><strong>keyword_headers</strong> – any additional headers to send with the subscription</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> (<em>str</em>) – optionally specify the login user</p></li>
+<li><p><strong>passcode</strong> (<em>str</em>) – optionally specify the user password</p></li>
+<li><p><strong>wait</strong> (<em>bool</em>) – wait for the connection to complete before returning</p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – a map of any additional headers to send with the subscription</p></li>
+<li><p><strong>with_connect_command</strong> – if True, use CONNECT command instead of STOMP</p></li>
+<li><p><strong>keyword_headers</strong> – any additional headers to send with the subscription</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div></blockquote>
 <p>Note that connect also allows for a map (dict) of headers to be provided, and will merge these with any additional named parameters to build the headers for the <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#STOMP_Frames">STOMP frame</a>, allowing for non-standard headers to be transmitted to the broker.</p>
-</div>
-<div class="section" id="sending-and-receiving-messages">
-<h2>Sending and receiving messages<a class="headerlink" href="#sending-and-receiving-messages" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="sending-and-receiving-messages">
+<h2>Sending and receiving messages<a class="headerlink" href="#sending-and-receiving-messages" title="Permalink to this heading">¶</a></h2>
 <p>Once the connection is established, you can send messages using the <code class="docutils literal notranslate"><span class="pre">send</span></code> method:</p>
 <blockquote>
-<div><dl class="method">
-<dt id="stomp.protocol.Protocol12.send">
-<code class="descclassname">Protocol12.</code><code class="descname">send</code><span class="sig-paren">(</span><em>destination</em>, <em>body</em>, <em>content_type=None</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.send" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Send a message to a destination in the messaging system (as per</dt>
-<dd><a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SEND">https://stomp.github.io/stomp-specification-1.2.html#SEND</a>)</dd>
+<div><dl class="py method">
+<dt class="sig sig-object py" id="stomp.protocol.Protocol12.send">
+<span class="sig-prename descclassname"><span class="pre">Protocol12.</span></span><span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.send" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Send a message to a destination in the messaging system (as per</dt><dd><p><a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SEND">https://stomp.github.io/stomp-specification-1.2.html#SEND</a>)</p>
+</dd>
 </dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>destination</strong> (<em>str</em>) – the destination (such as a message queue - for example</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>destination</strong> (<em>str</em>) – the destination (such as a message queue - for example</p>
+</dd>
+</dl>
 <p>‘/queue/test’ - or a message topic)
 :param body: the content of the message
 :param str content_type: the MIME type of message
@@ -123,7 +119,7 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 
 </div></blockquote>
 <p>To receive messages back from the messaging system, you need to setup some sort of listener on your connection, and then subscribe to the destination (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">STOMP subscribe</a>). Listeners are simply a subclass which implements the methods in the ConnectionListener class (see <a class="reference external" href="stomp.html#module-stomp.listener">this page</a> for more detail). Stomp provides a few implementations of listeners, but the simplest is <code class="docutils literal notranslate"><span class="pre">PrintingListener</span></code> which just prints all interactions between the client and server. A simple example of this in action is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stomp</span> <span class="k">import</span> <span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stomp</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Connection</span><span class="p">([(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">62613</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">set_listener</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">PrintingListener</span><span class="p">())</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -141,23 +137,19 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <p>You can see the responses from the message system in the <code class="docutils literal notranslate"><span class="pre">on_connected</span></code>, and <code class="docutils literal notranslate"><span class="pre">on_message</span></code> output. The stomp frames sent to the server can be seen in each <code class="docutils literal notranslate"><span class="pre">on_send</span></code> output (an initial STOMP connect frame, SUBSCRIBE and then SEND).</p>
 <p>In the case of the subscribe method, as of STOMP 1.1, the <code class="docutils literal notranslate"><span class="pre">id</span></code> parameter is required (if connecting with STOMP 1.0, only the destination is required):</p>
 <blockquote>
-<div><dl class="method">
-<dt id="stomp.protocol.Protocol12.subscribe">
-<code class="descclassname">Protocol12.</code><code class="descname">subscribe</code><span class="sig-paren">(</span><em>destination</em>, <em>id</em>, <em>ack='auto'</em>, <em>headers=None</em>, <em>**keyword_headers</em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.subscribe" title="Permalink to this definition">¶</a></dt>
+<div><dl class="py method">
+<dt class="sig sig-object py" id="stomp.protocol.Protocol12.subscribe">
+<span class="sig-prename descclassname"><span class="pre">Protocol12.</span></span><span class="sig-name descname"><span class="pre">subscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyword_headers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stomp.protocol.Protocol12.subscribe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subscribe to a destination</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>destination</strong> (<em>str</em>) – the topic or queue to subscribe to</li>
-<li><strong>id</strong> (<em>str</em>) – the identifier to uniquely identify the subscription</li>
-<li><strong>ack</strong> (<em>str</em>) – either auto, client or client-individual</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<em>str</em>) – the topic or queue to subscribe to</p></li>
+<li><p><strong>id</strong> (<em>str</em>) – the identifier to uniquely identify the subscription</p></li>
+<li><p><strong>ack</strong> (<em>str</em>) – either auto, client or client-individual</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p>(see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE">https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE</a> for more info)
 :param dict headers: a map of any additional headers to send with the subscription
 :param keyword_headers: any additional headers to send with the subscription</p>
@@ -174,9 +166,9 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="acks-and-nacks">
-<h2>Acks and Nacks<a class="headerlink" href="#acks-and-nacks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="acks-and-nacks">
+<h2>Acks and Nacks<a class="headerlink" href="#acks-and-nacks" title="Permalink to this heading">¶</a></h2>
 <p>Acknowledgements are a way to tell the message server that a message was either consumed, or not. Assume a collection of clients on a server listening on a queue, and a message which requires significant processing. One of the clients receives the message, checks resource usage on the server and decides to send a nack as a consequence. The message server could, at that point, decide to send to a failover server for processing (that’s a possible use, anyway).</p>
 <p>Use the client or client-individual acknowledgement parameter (see <a class="reference external" href="https://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header">here</a> for a description) with the subscription, in order to use acks and nacks. Afterwards, you use the message and subscription ids to ack or nack the message:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ack</span><span class="o">=</span><span class="s1">&#39;client&#39;</span><span class="p">)</span>
@@ -189,9 +181,9 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">nack</span><span class="p">(</span><span class="s1">&#39;mybroker-14ab2&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="transactions">
-<h2>Transactions<a class="headerlink" href="#transactions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="transactions">
+<h2>Transactions<a class="headerlink" href="#transactions" title="Permalink to this heading">¶</a></h2>
 <p>The STOMP protocol provides a way to transmit messages to a broker inside a transaction, which are held on the server until the transaction is either committed - at which point they’re sent - or aborted - where the messages are discarded.</p>
 <p>Begin a transaction using the <code class="docutils literal notranslate"><span class="pre">begin</span></code> method, which returns the transaction id you then use when sending messages (you can also generate your own transaction id and pass that as a parameter to <code class="docutils literal notranslate"><span class="pre">begin</span></code>):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -207,16 +199,16 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 </pre></div>
 </div>
 <p>Abort a transaction (and discard the sent messages using <code class="docutils literal notranslate"><span class="pre">abort</span></code>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">txid</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="s1">&#39;test4&#39;</span><span class="p">,</span> <span class="n">transaction</span><span class="o">=</span><span class="n">txid</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="s1">&#39;test5&#39;</span><span class="p">,</span> <span class="n">transaction</span><span class="o">=</span><span class="n">txid</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">abort</span><span class="p">(</span><span class="n">txid</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="disconnect">
-<h2>Disconnect<a class="headerlink" href="#disconnect" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="disconnect">
+<h2>Disconnect<a class="headerlink" href="#disconnect" title="Permalink to this heading">¶</a></h2>
 <p>Stomp.py supports graceful shutdown/disconnections through a receipt parameter (automatically generated if you don’t provide it). The connection is only dropped when the server sends back a response to that receipt:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 <span class="go">on_send DISCONNECT {&#39;receipt&#39;: &#39;825a5cd6-9e3c-4a72-8051-72348a94f5ce&#39;}</span>
@@ -224,16 +216,16 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <span class="go">on_disconnected</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dealing-with-disconnects">
-<h2>Dealing with disconnects<a class="headerlink" href="#dealing-with-disconnects" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="dealing-with-disconnects">
+<h2>Dealing with disconnects<a class="headerlink" href="#dealing-with-disconnects" title="Permalink to this heading">¶</a></h2>
 <p>You can use a listener to deal with connection failures, and gracefully reconnect.  Consider the below ‘server’ code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">stomp</span>
 
 <span class="k">def</span> <span class="nf">connect_and_subscribe</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
-    <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">conn</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ack</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MyListener</span><span class="p">(</span><span class="n">stomp</span><span class="o">.</span><span class="n">ConnectionListener</span><span class="p">):</span>
@@ -241,17 +233,17 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
         <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span>
 
     <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;received an error &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">frame</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;received an error &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">frame</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;received a message &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">frame</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;received a message &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">frame</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;processed message&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;processed message&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">on_disconnected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;disconnected&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;disconnected&#39;</span><span class="p">)</span>
         <span class="n">connect_and_subscribe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">)</span>
 
 <span class="n">conn</span> <span class="o">=</span> <span class="n">stomp</span><span class="o">.</span><span class="n">Connection</span><span class="p">([(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">62613</span><span class="p">)],</span> <span class="n">heartbeats</span><span class="o">=</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">))</span>
@@ -264,15 +256,16 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 <p>The listener in this code has an, arguably broken, message handler (on_message) which takes longer to process than the heartbeat time of 4 seconds (4000); resulting in a heartbeat timeout when a message is received, and a subsequent disconnect. The on_disconnected method then reconnects and continues processing. You can test the results of this by running the above code, and sending a message using the following ‘client’:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">stomp</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">stomp</span><span class="o">.</span><span class="n">Connection</span><span class="p">([(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">62613</span><span class="p">)])</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;/queue/test&#39;</span><span class="p">,</span> <span class="s1">&#39;test message&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -313,17 +306,23 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -332,8 +331,8 @@ See <a class="reference internal" href="stomp.html#stomp.transport.Transport" ti
       &copy;2015, Jason R Briggs.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/api.rst.txt"
