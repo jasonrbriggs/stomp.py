@@ -113,8 +113,6 @@ so that <command> has access to the private container network. Service ports are
 .. _`RabbitMQ`: http://www.rabbitmq.com
 .. _`stompserver`: http://stompserver.rubyforge.org
 
-.. _`buy me a coffee`: https://www.paypal.me/jasonrbriggs
-
 .. _`semantic versioning`: https://semver.org/
 
 .. _`podman`: https://podman.io/
