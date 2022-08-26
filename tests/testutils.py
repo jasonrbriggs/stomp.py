@@ -94,6 +94,12 @@ def get_rabbitmq_host():
     return [(get_environ("RABBITMQ_HOST") or host, int(get_environ("RABBITMQ_PORT") or port))]
 
 
+def get_rabbitmq_ws_host():
+    host = config.get("rabbitmq_ws", "host")
+    port = config.get("rabbitmq_ws", "port")
+    return [(get_environ("RABBITMQ_WS_HOST") or host, int(get_environ("RABBITMQ_WS_PORT") or port))]
+
+
 def get_rabbitmq_user():
     user = config.get("rabbitmq", "user")
     return get_environ("RABBITMQ_USER") or user
