@@ -6,7 +6,7 @@ Usage: stomp [options]
 Options:
   --version                    Show the version number and exit
   -h, --help                   Show this help message and exit
-  -H <host>, --host=<port>     Hostname or IP address to connect to. [default: localhost]
+  -H <host>, --host=<host>     Hostname or IP address to connect to. [default: localhost]
   -P <port>, --port=<port>     Port providing stomp protocol connections. [default: 61613]
   -U <user>, --user=<user>     Username for the connection
   -W <password>, --password=<password>
