@@ -150,14 +150,18 @@ class StompConnection11(BaseConnection, Protocol11):
         self.transport.start()
         Protocol11.connect(self, *args, **kwargs)
 
-    def disconnect(self, receipt=None, headers=None, **keyword_headers):
+    def disconnect(self, receipt=None, headers=None, wait=False, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
 
         :param str receipt: the receipt to use with the disconnect
         :param dict headers: a map of any additional headers to send with the disconnection
+        :param bool wait: wait for the started messages to finish ack/nack before disconnection
         :param keyword_headers: any additional headers to send with the disconnection
         """
+        if wait:
+            self.transport.begin_stop()
+
         Protocol11.disconnect(self, receipt, headers, **keyword_headers)
         if receipt is not None:
             self.transport.stop()

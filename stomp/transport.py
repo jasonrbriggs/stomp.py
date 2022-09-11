@@ -59,9 +59,12 @@ class BaseTransport(stomp.listener.Publisher):
     __content_length_re = re.compile(b"^content-length[:]\\s*(?P<value>[0-9]+)", re.MULTILINE)
 
     def __init__(self, auto_decode=True, encoding="utf-8", is_eol_fc=is_eol_default):
+        self.__receiver_thread_sending_condition = threading.Condition()
+        self.__receiver_thread_sent = True
         self.__recvbuf = b""
         self.listeners = {}
         self.running = False
+        self.receiving = True
         self.blocking = None
         self.connected = False
         self.connection_error = False
@@ -79,7 +82,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.__listeners_change_condition = threading.Condition()
         self.__receiver_thread_exit_condition = threading.Condition()
         self.__receiver_thread_exited = False
-        self.__send_wait_condition = threading.Condition()
+        self.__receipt_wait_condition = threading.Condition()
         self.__connect_wait_condition = threading.Condition()
         self.__auto_decode = auto_decode
         self.__encoding = encoding
@@ -111,6 +114,13 @@ class BaseTransport(stomp.listener.Publisher):
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
         logging.info("Created thread %s using func %s", receiver_thread, self.create_thread_fc)
         self.notify("connecting")
+
+    def begin_stop(self):
+        """
+        Begin stop of the connection. Stops reading new messages but keep thread to finish ack/nack of messages.
+        """
+        # emit stop reading new messages
+        self.receiving = False
 
     def stop(self):
         """
@@ -206,9 +216,9 @@ class BaseTransport(stomp.listener.Publisher):
             # logic for wait-on-receipt notification
             receipt = frame.headers["receipt-id"]
             receipt_value = self.__receipts.get(receipt)
-            with self.__send_wait_condition:
+            with self.__receipt_wait_condition:
                 self.set_receipt(receipt, None)
-                self.__send_wait_condition.notify()
+                self.__receipt_wait_condition.notifyAll()
 
             if receipt_value == CMD_DISCONNECT:
                 self.set_connected(False)
@@ -232,7 +242,7 @@ class BaseTransport(stomp.listener.Publisher):
             if not notify_func:
                 logging.debug("listener %s has no method on_%s", listener, frame_type)
                 continue
-            if frame_type in ("heartbeat", "disconnected"):
+            if frame_type in ("disconnecting", "heartbeat", "disconnected"):
                 notify_func()
                 continue
             if frame_type == "connecting":
@@ -252,26 +262,36 @@ class BaseTransport(stomp.listener.Publisher):
 
         :param Frame frame: the Frame object to transmit
         """
-        with self.__listeners_change_condition:
-            listeners = sorted(self.listeners.items())
+        with self.__receiver_thread_sending_condition:
+            self.__receiver_thread_sent = False
+            self.__receiver_thread_sending_condition.notify_all()
 
-        for (_, listener) in listeners:
-            try:
-                listener.on_send(frame)
-            except AttributeError:
-                continue
+        try:
+            with self.__listeners_change_condition:
+                listeners = sorted(self.listeners.items())
 
-        if frame.cmd == CMD_DISCONNECT and HDR_RECEIPT in frame.headers:
-            self.__disconnect_receipt = frame.headers[HDR_RECEIPT]
+            for (_, listener) in listeners:
+                try:
+                    listener.on_send(frame)
+                except AttributeError:
+                    continue
 
-        lines = convert_frame(frame)
-        packed_frame = pack(lines)
+            if frame.cmd == CMD_DISCONNECT and HDR_RECEIPT in frame.headers:
+                self.__disconnect_receipt = frame.headers[HDR_RECEIPT]
 
-        if logging.isEnabledFor(logging.DEBUG):
-            logging.debug("Sending frame: %s", clean_lines(lines))
-        else:
-            logging.info("Sending frame: %r", frame.cmd or "heartbeat")
-        self.send(packed_frame)
+            lines = convert_frame(frame)
+            packed_frame = pack(lines)
+
+            if logging.isEnabledFor(logging.DEBUG):
+                logging.debug("Sending frame: %s", clean_lines(lines))
+            else:
+                logging.info("Sending frame: %r", frame.cmd or "heartbeat")
+            self.send(packed_frame)
+
+        finally:
+            with self.__receiver_thread_sending_condition:
+                self.__receiver_thread_sent = True
+                self.__receiver_thread_sending_condition.notify_all()
 
     def send(self, encoded_frame):
         """
@@ -323,6 +343,29 @@ class BaseTransport(stomp.listener.Publisher):
         if not self.running or not self.is_connected():
             raise exception.ConnectFailedException()
 
+    def wait_for_receipt(self, receipt_id, timeout=None):
+        """
+        Wait until we've received a receipt from the server.
+
+        :param str receipt_id: the receipt_id
+        :param float timeout: how long to wait, in seconds
+        """
+        if timeout is not None:
+            wait_time = timeout / 10.0
+        else:
+            wait_time = None
+        with self.__receipt_wait_condition:
+            while self.__receipts.get(receipt_id):
+                self.__receipt_wait_condition.wait(wait_time)
+
+    def __wait_finish_processing_received_messages(self):
+        # wait to finish process messages in progress
+        with self.__receiver_thread_sending_condition:
+            while not self.__receiver_thread_sent:
+                self.__receiver_thread_sending_condition.wait()
+
+        self.stop()
+
     def __receiver_loop(self):
         """
         Main loop listening for incoming data.
@@ -332,7 +375,7 @@ class BaseTransport(stomp.listener.Publisher):
         try:
             while self.running:
                 try:
-                    while self.running:
+                    while self.running and self.receiving:
                         frames = self.__read()
 
                         for frame in frames:
@@ -345,6 +388,10 @@ class BaseTransport(stomp.listener.Publisher):
                             if self.__auto_decode:
                                 f.body = decode(f.body)
                             self.process_frame(f, frame)
+
+                    if self.running and not self.receiving:
+                        self.__wait_finish_processing_received_messages()
+
                 except exception.ConnectionClosedException:
                     if self.running:
                         #
