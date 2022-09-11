@@ -659,7 +659,7 @@ class Transport(BaseTransport):
         self.socket = None
 
     def __enable_keepalive(self):
-        def try_setsockopt(sock, name, fam, opt, val):
+        def try_setsockopt(sock, name, fam, opt, val=None):
             if val is None:
                 return True  # no value to set always works
             try:
