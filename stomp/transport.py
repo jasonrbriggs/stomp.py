@@ -110,7 +110,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.running = True
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        logging.info("Created thread %s using func %s", receiver_thread, self.create_thread_fc)
+        logging.debug("Created thread %s using func %s", receiver_thread, self.create_thread_fc)
         self.notify("connecting")
 
     def stop(self):
@@ -190,8 +190,6 @@ class BaseTransport(stomp.listener.Publisher):
                 self.notify("before_message", f)
             if logging.isEnabledFor(logging.DEBUG):
                 logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
-            else:
-                logging.info("Received frame: %r, len(body)=%r", f.cmd, length(f.body))
             self.notify(frame_type, f)
         else:
             logging.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
@@ -270,8 +268,6 @@ class BaseTransport(stomp.listener.Publisher):
 
         if logging.isEnabledFor(logging.DEBUG):
             logging.debug("Sending frame: %s", clean_lines(lines))
-        else:
-            logging.info("Sending frame: %r", frame.cmd or "heartbeat")
         self.send(packed_frame)
 
     def send(self, encoded_frame):
@@ -328,7 +324,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Main loop listening for incoming data.
         """
-        logging.info("Starting receiver loop (%s)", threading.current_thread())
+        logging.debug("Starting receiver loop (%s)", threading.current_thread())
         notify_disconnected = True
         try:
             while self.running:
@@ -361,7 +357,7 @@ class BaseTransport(stomp.listener.Publisher):
             with self.__receiver_thread_exit_condition:
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notify_all()
-            logging.info("Receiver loop ended")
+            logging.debug("Receiver loop ended")
             self.notify("receiver_loop_completed")
             if notify_disconnected and not self.notified_on_disconnect:
                 self.notify("disconnected")
@@ -664,7 +660,7 @@ class Transport(BaseTransport):
                 return True  # no value to set always works
             try:
                 sock.setsockopt(fam, opt, val)
-                logging.info("keepalive: set %r option to %r on socket", name, val)
+                logging.debug("keepalive: set %r option to %r on socket", name, val)
             except:
                 logging.error("keepalive: unable to set %r option to %r on socket", name, val)
                 return False
@@ -690,19 +686,19 @@ class Transport(BaseTransport):
             if LINUX_KEEPALIVE_AVAIL:
                 ka_sig = "linux"
                 ka_args = None
-                logging.info("keepalive: autodetected linux-style support")
+                logging.debug("keepalive: autodetected linux-style support")
             elif MAC_KEEPALIVE_AVAIL:
                 ka_sig = "mac"
                 ka_args = None
-                logging.info("keepalive: autodetected mac-style support")
+                logging.debug("keepalive: autodetected mac-style support")
             else:
                 logging.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
 
         if ka_sig == "linux":
-            logging.info("keepalive: activating linux-style support")
+            logging.debug("keepalive: activating linux-style support")
             if ka_args is None:
-                logging.info("keepalive: using system defaults")
+                logging.debug("keepalive: using system defaults")
                 ka_args = (None, None, None)
             ka_idle, ka_intvl, ka_cnt = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
@@ -710,9 +706,9 @@ class Transport(BaseTransport):
                 try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
                 try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
         elif ka_sig == "mac":
-            logging.info("keepalive: activating mac-style support")
+            logging.debug("keepalive: activating mac-style support")
             if ka_args is None:
-                logging.info("keepalive: using system defaults")
+                logging.debug("keepalive: using system defaults")
                 ka_args = (3,)
             ka_intvl = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
@@ -728,12 +724,12 @@ class Transport(BaseTransport):
         sleep_exp = 1
         connect_count = 0
 
-        logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
+        logging.debug("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
         while self.running and self.socket is None and (connect_count < self.__reconnect_attempts_max or
                                                         self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
-                    logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.debug("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     if self.__bind_host_port:
                         self.socket = socket.create_connection(host_and_port, self.__timeout, self.__bind_host_port)
                     else:
@@ -761,11 +757,11 @@ class Transport(BaseTransport):
                             if cert_validation is None or cert_validation == ssl.CERT_NONE:
                                 tls_context.check_hostname = False
                             tls_context.verify_mode = cert_validation
-                            logging.info("Wrapping SSL socket")
+                            logging.debug("Wrapping SSL socket")
                             self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
                         else:
                             # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
-                            logging.info("Wrapping SSL socket (old style)")
+                            logging.debug("Wrapping SSL socket (old style)")
                             self.socket = ssl.wrap_socket(
                                 self.socket,
                                 keyfile=ssl_params["key_file"],
@@ -789,7 +785,7 @@ class Transport(BaseTransport):
                             raise SSLError("Server certificate validation failed: %s", errmsg)
 
                     self.current_host_and_port = host_and_port
-                    logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.debug("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except (OSError, AssertionError):
                     self.socket = None
@@ -1089,7 +1085,7 @@ class WSTransport(BaseTransport):
                 return True  # no value to set always works
             try:
                 sock.setsockopt(fam, opt, val)
-                logging.info("keepalive: set %r option to %r on socket", name, val)
+                logging.debug("keepalive: set %r option to %r on socket", name, val)
             except:
                 logging.error("keepalive: unable to set %r option to %r on socket", name, val)
                 return False
@@ -1115,19 +1111,19 @@ class WSTransport(BaseTransport):
             if LINUX_KEEPALIVE_AVAIL:
                 ka_sig = "linux"
                 ka_args = None
-                logging.info("keepalive: autodetected linux-style support")
+                logging.debug("keepalive: autodetected linux-style support")
             elif MAC_KEEPALIVE_AVAIL:
                 ka_sig = "mac"
                 ka_args = None
-                logging.info("keepalive: autodetected mac-style support")
+                logging.debug("keepalive: autodetected mac-style support")
             else:
                 logging.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
 
         if ka_sig == "linux":
-            logging.info("keepalive: activating linux-style support")
+            logging.debug("keepalive: activating linux-style support")
             if ka_args is None:
-                logging.info("keepalive: using system defaults")
+                logging.debug("keepalive: using system defaults")
                 ka_args = (None, None, None)
             ka_idle, ka_intvl, ka_cnt = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
@@ -1135,9 +1131,9 @@ class WSTransport(BaseTransport):
                 try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
                 try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
         elif ka_sig == "mac":
-            logging.info("keepalive: activating mac-style support")
+            logging.debug("keepalive: activating mac-style support")
             if ka_args is None:
-                logging.info("keepalive: using system defaults")
+                logging.debug("keepalive: using system defaults")
                 ka_args = (3,)
             ka_intvl = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
@@ -1153,12 +1149,12 @@ class WSTransport(BaseTransport):
         sleep_exp = 1
         connect_count = 0
 
-        logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
+        logging.debug("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
         while self.running and self.socket is None and (connect_count < self.__reconnect_attempts_max or
                                                         self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
-                    logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.debug("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     #websocket.enableTrace(True)
                     self.current_host_and_port = host_and_port
                     path = "/"
@@ -1178,7 +1174,7 @@ class WSTransport(BaseTransport):
                         header=self.header,
                         sslopt=self.get_ssl()
                     )
-                    logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.debug("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except (OSError, AssertionError) as exc:
                     self.socket = None
