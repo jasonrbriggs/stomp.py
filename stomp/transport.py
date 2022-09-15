@@ -2,13 +2,11 @@
 from the actual STOMP protocol
 """
 
-import datetime
 import errno
 import math
 import random
 import sys
 import time
-import warnings
 from io import BytesIO
 from time import monotonic
 

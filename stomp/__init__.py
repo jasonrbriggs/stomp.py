@@ -33,7 +33,7 @@ StompConnection11 = Connection11
 #
 Connection12 = connect.StompConnection12
 StompConnection12 = Connection12
-WSConnection = adapter.websocket.WSStompConnection
+WSConnection = adapter.ws.WSStompConnection
 WSStompConnection = WSConnection
 
 ##

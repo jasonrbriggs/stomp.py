@@ -1,11 +1,39 @@
+import errno
 import logging
-
+import math
+import random
+import sys
+import time
+from time import monotonic
 import websocket
+
+try:
+    from socket import SOL_SOCKET, SO_KEEPALIVE, SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
+    LINUX_KEEPALIVE_AVAIL = True
+except ImportError:
+    LINUX_KEEPALIVE_AVAIL = False
+
+try:
+    import ssl
+    from ssl import SSLError
+    DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS_CLIENT
+except (ImportError, AttributeError):
+    ssl = None
+    class SSLError(object):
+        pass
+    DEFAULT_SSL_VERSION = None
+
+try:
+    from socket import IPPROTO_TCP
+    MAC_KEEPALIVE_AVAIL = True
+except ImportError:
+    MAC_KEEPALIVE_AVAIL = False
 
 from stomp.transport import BaseTransport, DEFAULT_SSL_VERSION
 from stomp.utils import *
 from stomp.connect import BaseConnection, StompConnection12
 from stomp.protocol import Protocol12
+from stomp.exception import *
 
 
 class WSTransport(BaseTransport):
@@ -191,7 +219,7 @@ class WSTransport(BaseTransport):
                 logging.error("Error sending frame", exc_info=True)
                 raise e
         else:
-            raise exception.NotConnectedException()
+            raise NotConnectedException()
 
     def receive(self):
         """
@@ -203,7 +231,7 @@ class WSTransport(BaseTransport):
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
                 logging.debug("socket read interrupted, restarting")
-                raise exception.InterruptedException()
+                raise InterruptedException()
             if self.is_connected():
                 raise
 
@@ -334,7 +362,7 @@ class WSTransport(BaseTransport):
                     sleep_exp += 1
 
         if not self.socket:
-            raise exception.ConnectFailedException()
+            raise ConnectFailedException()
 
     def set_ssl(self,
                 for_hosts=[],

@@ -2,4 +2,4 @@
 """
 
 import stomp.adapter.multicast
-import stomp.adapter.websocket
+import stomp.adapter.ws
