@@ -213,39 +213,3 @@ class StompConnection12(BaseConnection, Protocol12):
     @staticmethod
     def is_eol(c):
         return c == b"\x0a" or c == b"\x0d\x0a"
-
-
-class StompConnection12WS(StompConnection12):
-    """
-    Represents a 1.2 connection (comprising transport plus 1.2 protocol class).
-    See :py:class:`stomp.transport.Transport` for details on the initialisation parameters.
-    """
-    def __init__(self,
-                 host_and_ports=None,
-                 prefer_localhost=True,
-                 try_loopback_connect=True,
-                 reconnect_sleep_initial=0.1,
-                 reconnect_sleep_increase=0.5,
-                 reconnect_sleep_jitter=0.1,
-                 reconnect_sleep_max=60.0,
-                 reconnect_attempts_max=3,
-                 timeout=None,
-                 heartbeats=(0, 0),
-                 keepalive=None,
-                 vhost=None,
-                 auto_decode=True,
-                 encoding="utf-8",
-                 auto_content_length=True,
-                 heart_beat_receive_scale=1.5,
-                 bind_host_port=None,
-                 ws=None,
-                 ws_path=None,
-                 header=None):
-        transport = WSTransport(host_and_ports, prefer_localhost, try_loopback_connect,
-                              reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
-                              reconnect_sleep_max, reconnect_attempts_max, timeout,
-                              keepalive, vhost, auto_decode, encoding, bind_host_port=bind_host_port,
-                              header=header, ws_path=ws_path)
-        BaseConnection.__init__(self, transport)
-        Protocol12.__init__(self, transport, heartbeats, auto_content_length,
-                            heart_beat_receive_scale=heart_beat_receive_scale)
