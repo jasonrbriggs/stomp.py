@@ -70,7 +70,7 @@ heart-beat:1000,1000
             server.running = False
         except Exception:
             _, e, _ = sys.exc_info()
-            logging.error("Error: %s", e)
+            logging.error("error: %s", e)
         finally:
             server.stop()
 
@@ -105,7 +105,7 @@ heart-beat:1000,1000
             server.running = False
         except Exception:
             _, e, _ = sys.exc_info()
-            logging.error("Error: %s", e)
+            logging.error("error: %s", e)
 
         assert end_time - start_time <= 2, "should stop immediately and not after heartbeat timeout"
         assert conn.heartbeat_thread is None, "heartbeat thread should have finished"

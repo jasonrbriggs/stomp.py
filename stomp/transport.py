@@ -107,7 +107,7 @@ class BaseTransport(stomp.listener.Publisher):
         self.running = True
         self.attempt_connection()
         receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        logging.debug("Created thread %s using func %s", receiver_thread, self.create_thread_fc)
+        logging.debug("created thread %s using func %s", receiver_thread, self.create_thread_fc)
         self.notify("connecting")
 
     def stop(self):
@@ -186,10 +186,10 @@ class BaseTransport(stomp.listener.Publisher):
             if frame_type == "message":
                 self.notify("before_message", f)
             if logging.isEnabledFor(logging.DEBUG):
-                logging.debug("Received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
+                logging.debug("received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             self.notify(frame_type, f)
         else:
-            logging.warning("Unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
+            logging.warning("unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
 
     def notify(self, frame_type, frame=None):
         """
@@ -264,7 +264,7 @@ class BaseTransport(stomp.listener.Publisher):
         packed_frame = pack(lines)
 
         if logging.isEnabledFor(logging.DEBUG):
-            logging.debug("Sending frame: %s", clean_lines(lines))
+            logging.debug("sending frame: %s", clean_lines(lines))
         self.send(packed_frame)
 
     def send(self, encoded_frame):
@@ -321,7 +321,7 @@ class BaseTransport(stomp.listener.Publisher):
         """
         Main loop listening for incoming data.
         """
-        logging.debug("Starting receiver loop (%s)", threading.current_thread())
+        logging.debug("starting receiver loop (%s)", threading.current_thread())
         notify_disconnected = True
         try:
             while self.running:
@@ -354,7 +354,7 @@ class BaseTransport(stomp.listener.Publisher):
             with self.__receiver_thread_exit_condition:
                 self.__receiver_thread_exited = True
                 self.__receiver_thread_exit_condition.notify_all()
-            logging.debug("Receiver loop ended")
+            logging.debug("receiver loop ended")
             self.notify("receiver_loop_completed")
             if notify_disconnected and not self.notified_on_disconnect:
                 self.notify("disconnected")
@@ -507,7 +507,7 @@ class Transport(BaseTransport):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
-            logging.debug("No hosts_and_ports specified, adding default localhost")
+            logging.debug("no hosts_and_ports specified, adding default localhost")
             host_and_ports = [("localhost", 61613)]
 
         sorted_host_and_ports = []
@@ -596,7 +596,7 @@ class Transport(BaseTransport):
                     _, e, _ = sys.exc_info()
                     # ignore when socket already closed
                     if get_errno(e) != errno.ENOTCONN:
-                        logging.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+                        logging.warning("unable to issue SHUT_RDWR on socket because of error '%s'", e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
@@ -606,7 +606,7 @@ class Transport(BaseTransport):
                 self.socket.close()
             except socket.error:
                 _, e, _ = sys.exc_info()
-                logging.warning("Unable to close socket because of error '%s'", e)
+                logging.warning("unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
         if not self.notified_on_disconnect:
@@ -622,7 +622,7 @@ class Transport(BaseTransport):
                     self.socket.sendall(encoded_frame)
             except Exception:
                 _, e, _ = sys.exc_info()
-                logging.error("Error sending frame", exc_info=True)
+                logging.error("error sending frame", exc_info=True)
                 raise e
         else:
             raise exception.NotConnectedException()
@@ -726,7 +726,7 @@ class Transport(BaseTransport):
                                                         self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
-                    logging.debug("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.debug("attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     if self.__bind_host_port:
                         self.socket = socket.create_connection(host_and_port, self.__timeout, self.__bind_host_port)
                     else:
@@ -754,11 +754,11 @@ class Transport(BaseTransport):
                             if cert_validation is None or cert_validation == ssl.CERT_NONE:
                                 tls_context.check_hostname = False
                             tls_context.verify_mode = cert_validation
-                            logging.debug("Wrapping SSL socket")
+                            logging.debug("wrapping SSL socket")
                             self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
                         else:
                             # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
-                            logging.debug("Wrapping SSL socket (old style)")
+                            logging.debug("wrapping SSL socket (old style)")
                             self.socket = ssl.wrap_socket(
                                 self.socket,
                                 keyfile=ssl_params["key_file"],
@@ -782,12 +782,12 @@ class Transport(BaseTransport):
                             raise SSLError("Server certificate validation failed: %s", errmsg)
 
                     self.current_host_and_port = host_and_port
-                    logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except (OSError, AssertionError):
                     self.socket = None
                     connect_count += 1
-                    logging.warning("Could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
+                    logging.warning("could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
                                     exc_info=logging.verbose)
 
             if self.socket is None:
@@ -796,7 +796,7 @@ class Transport(BaseTransport):
                                        * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
                                   * (1.0 + random.random() * self.__reconnect_sleep_jitter))
                 sleep_end = monotonic() + sleep_duration
-                logging.debug("Sleeping for %.1f seconds before attempting reconnect", sleep_duration)
+                logging.debug("sleeping for %.1f seconds before attempting reconnect", sleep_duration)
                 while self.running and monotonic() < sleep_end:
                     time.sleep(0.2)
 

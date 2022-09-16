@@ -99,7 +99,7 @@ class WSTransport(BaseTransport):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
-            logging.debug("No hosts_and_ports specified, adding default localhost")
+            logging.debug("no hosts_and_ports specified, adding default localhost")
             host_and_ports = [("localhost", 61613)]
 
         sorted_host_and_ports = []
@@ -200,7 +200,7 @@ class WSTransport(BaseTransport):
                 self.socket.close()
             except socket.error:
                 _, e, _ = sys.exc_info()
-                logging.warning("Unable to close socket because of error '%s'", e)
+                logging.warning("unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
         if not self.notified_on_disconnect:
@@ -216,7 +216,7 @@ class WSTransport(BaseTransport):
                     self.socket.send(encoded_frame)
             except Exception:
                 _, e, _ = sys.exc_info()
-                logging.error("Error sending frame", exc_info=True)
+                logging.error("error sending frame", exc_info=True)
                 raise e
         else:
             raise NotConnectedException()
@@ -320,7 +320,7 @@ class WSTransport(BaseTransport):
                                                         self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
-                    logging.info("Attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.info("attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     #websocket.enableTrace(True)
                     self.current_host_and_port = host_and_port
                     path = "/"
@@ -340,7 +340,7 @@ class WSTransport(BaseTransport):
                         header=self.header,
                         sslopt=self.get_ssl()
                     )
-                    logging.info("Established connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    logging.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except (OSError, AssertionError) as exc:
                     self.socket = None
@@ -354,7 +354,7 @@ class WSTransport(BaseTransport):
                                        * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
                                   * (1.0 + random.random() * self.__reconnect_sleep_jitter))
                 sleep_end = monotonic() + sleep_duration
-                logging.debug("Sleeping for %.1f seconds before attempting reconnect", sleep_duration)
+                logging.debug("sleeping for %.1f seconds before attempting reconnect", sleep_duration)
                 while self.running and monotonic() < sleep_end:
                     time.sleep(0.2)
 

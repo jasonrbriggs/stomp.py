@@ -136,7 +136,7 @@ class StubStompServer(object):
         self.frames = []
 
     def start(self):
-        logging.info("Starting stomp server")
+        logging.info("starting stomp server")
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((self.host, self.port))
@@ -146,10 +146,10 @@ class StubStompServer(object):
         thread.daemon = True
         thread.start()
         self.stopped = False
-        logging.info("Stomp server started")
+        logging.info("stomp server started")
 
     def stop(self):
-        logging.info("Stopping test server")
+        logging.info("stopping test server")
         if self.conn:
             try:
                 self.conn.shutdown(socket.SHUT_WR)
@@ -162,7 +162,7 @@ class StubStompServer(object):
         self.conn = None
         self.s = None
         self.stopped = True
-        logging.info("Connection stopped")
+        logging.info("connection stopped")
 
     def get_next_frame(self):
         if len(self.frames) > 0:
@@ -184,7 +184,7 @@ class StubStompServer(object):
                 if self.conn is None:
                     break
                 if frame is not None:
-                    logging.info("Stompserver sending frame %s", frame)
+                    logging.info("stompserver sending frame %s", frame)
                     self.conn.send(encode(frame))
             except Exception:
                 _, e, _ = sys.exc_info()
@@ -196,7 +196,7 @@ class StubStompServer(object):
         except:
             pass
         self.stopped = True
-        logging.info("Run loop completed")
+        logging.info("run loop completed")
 
 
 class StubStdin(object):
@@ -244,7 +244,7 @@ def validate_send(conn, connections=1, messages=1, errors=0):
 
 def is_inside_travis():
     if os.environ.get("TRAVIS", "false") == "true":
-        logging.info("Not running test inside travis")
+        logging.info("not running test inside travis")
         return True
     return False
 
