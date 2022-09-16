@@ -256,7 +256,7 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        logging.info("Starting heartbeat loop")
+        logging.debug("Starting heartbeat loop")
         now = monotonic()
 
         # Setup the initial due time for the outbound heartbeat
@@ -312,7 +312,7 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeat_terminate_event.clear()
         if self.heartbeats != (0, 0):
             # don't bother logging this if heartbeats weren't setup to start with
-            logging.info("Heartbeat loop ended")
+            logging.debug("Heartbeat loop ended")
 
 
 class WaitingListener(ConnectionListener):
