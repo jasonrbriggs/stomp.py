@@ -33,8 +33,8 @@ StompConnection11 = Connection11
 #
 Connection12 = connect.StompConnection12
 StompConnection12 = Connection12
-Connection12WS = connect.StompConnection12WS
-StompConnection12WS = Connection12WS
+WSConnection = adapter.ws.WSStompConnection
+WSStompConnection = WSConnection
 
 ##
 # Default connection alias (STOMP 1.1).

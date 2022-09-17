@@ -6,7 +6,7 @@ import time
 
 @pytest.fixture()
 def conn():
-    conn = stomp.Connection12WS(get_rabbitmq_ws_host(), vhost="/", ws_path="/ws", header={})
+    conn = stomp.WSConnection(get_rabbitmq_ws_host(), vhost="/", ws_path="/ws", header={})
     listener = TestListener("123", print_to_log=True)
     listener2 = WaitingListener("456")
     conn.set_listener("123", listener)

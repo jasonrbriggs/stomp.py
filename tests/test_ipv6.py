@@ -20,7 +20,7 @@ def conn():
 class TestIP6(object):
     def test_ipv6_send(self, conn):
         if not is_inside_travis():
-            logging.info("Running ipv6 test")
+            logging.info("running ipv6 test")
             timestamp = time.strftime("%Y%m%d%H%M%S")
             queuename = "/queue/testipv6-%s" % timestamp
             conn.subscribe(destination=queuename, id=1, ack="auto")

@@ -178,7 +178,7 @@ class HeartbeatListener(ConnectionListener):
         if "heart-beat" in frame.headers:
             self.heartbeats = utils.calculate_heartbeats(
                 frame.headers["heart-beat"].replace(" ", "").split(","), self.heartbeats)
-            logging.debug("Heartbeats calculated %s", str(self.heartbeats))
+            logging.debug("heartbeats calculated %s", str(self.heartbeats))
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
@@ -186,7 +186,7 @@ class HeartbeatListener(ConnectionListener):
                 # set a different heart-beat-receive-scale when creating the connection to override that
                 self.receive_sleep = (self.heartbeats[1] / 1000) * self.heart_beat_receive_scale
 
-                logging.debug("Set receive_sleep to %s, send_sleep to %s", self.receive_sleep, self.send_sleep)
+                logging.debug("set receive_sleep to %s, send_sleep to %s", self.receive_sleep, self.send_sleep)
 
                 # Give grace of receiving the first heartbeat
                 self.received_heartbeat = monotonic() + self.receive_sleep
@@ -256,13 +256,13 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        logging.debug("Starting heartbeat loop")
+        logging.debug("starting heartbeat loop")
         now = monotonic()
 
         # Setup the initial due time for the outbound heartbeat
         if self.send_sleep != 0:
             self.next_outbound_heartbeat = now + self.send_sleep
-            logging.debug("Calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
+            logging.debug("calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
 
         while self.running:
             now = monotonic()
@@ -287,21 +287,21 @@ class HeartbeatListener(ConnectionListener):
                 continue
 
             if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
-                logging.debug("Sending a heartbeat message at %s", now)
+                logging.debug("sending a heartbeat message at %s", now)
                 try:
                     self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
-                    logging.debug("Lost connection, unable to send heartbeat")
+                    logging.debug("lost connection, unable to send heartbeat")
                 except Exception:
                     _, e, _ = sys.exc_info()
-                    logging.debug("Unable to send heartbeat, due to: %s", e)
+                    logging.debug("unable to send heartbeat, due to: %s", e)
 
             if self.receive_sleep != 0:
                 diff_receive = now - self.received_heartbeat
 
                 if diff_receive > self.receive_sleep:
                     # heartbeat timeout
-                    logging.warning("Heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
+                    logging.warning("heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
                                     diff_receive, now, self.received_heartbeat)
                     self.transport.set_connected(False)
                     self.transport.disconnect_socket()
@@ -312,7 +312,7 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeat_terminate_event.clear()
         if self.heartbeats != (0, 0):
             # don't bother logging this if heartbeats weren't setup to start with
-            logging.debug("Heartbeat loop ended")
+            logging.debug("heartbeat loop ended")
 
 
 class WaitingListener(ConnectionListener):

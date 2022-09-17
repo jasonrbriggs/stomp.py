@@ -130,7 +130,7 @@ class TestNoResponseConnectionKill(object):
             conn.connect(wait=True)
             pytest.fail("Shouldn't happen")
         except ConnectFailedException:
-            logging.info("Received connect failed - test success")
+            logging.info("received connect failed - test success")
         except Exception as e:
             logging.error(e)
             pytest.fail("Shouldn't happen, error %s" % e)
