@@ -5,6 +5,8 @@
  * Mock dns responses for testing: https://github.com/jasonrbriggs/stomp.py/pull/383/
  * Support for connection over websocket: https://github.com/jasonrbriggs/stomp.py/pull/395
  * Add default arg for try_setsockopt (https://github.com/jasonrbriggs/stomp.py/issues/391)
+ * Updating log levels (https://github.com/jasonrbriggs/stomp.py/pull/401)
+ * General tidy up of log messages
  
 
 ## Version 8.0.1 - May 2022
