@@ -1,8 +1,8 @@
 import stomp
 from stomp.listener import TestListener
+from stomp import logging
 from .testutils import *
 
-import logging
 
 
 @pytest.fixture()

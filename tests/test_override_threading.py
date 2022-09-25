@@ -1,9 +1,9 @@
-import logging
 from concurrent.futures import ThreadPoolExecutor
 
 import stomp
 from stomp.listener import TestListener
 from .testutils import *
+from stomp import logging
 
 
 executor = ThreadPoolExecutor()

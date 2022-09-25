@@ -1,5 +1,4 @@
 import importlib
-import logging
 import platform
 import traceback
 import xml.dom.minidom
@@ -7,6 +6,7 @@ import xml.dom.minidom
 import stomp
 from stomp.exception import *
 from stomp.listener import *
+from stomp import logging
 from .testutils import *
 
 

@@ -141,8 +141,7 @@ def is_localhost(host_and_port):
     (host, _) = host_and_port
     if host in LOCALHOST_NAMES:
         return 1
-    else:
-        return 2
+    return 2
 
 
 _HEADER_ESCAPES = {

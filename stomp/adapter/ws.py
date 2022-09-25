@@ -1,5 +1,4 @@
 import errno
-import logging
 import math
 import random
 import sys
@@ -34,6 +33,7 @@ from stomp.utils import *
 from stomp.connect import BaseConnection, StompConnection12
 from stomp.protocol import Protocol12
 from stomp.exception import *
+from stomp import logging
 
 
 class WSTransport(BaseTransport):
