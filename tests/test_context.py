@@ -32,11 +32,11 @@ class TestContext(object):
         self.check_asserts(conn)
         self.after_test_message(conn)
 
-    def test_with_context_stomp10(self):
-        with stomp.Connection10(get_default_host()) as conn:
-            self.send_test_message(conn)
-        self.check_asserts(conn)
-        self.after_test_message(conn)
+    #def test_with_context_stomp10(self):
+    #    with stomp.Connection10(get_default_host()) as conn:
+    #        self.send_test_message(conn)
+    #    self.check_asserts(conn)
+    #    self.after_test_message(conn)
 
     def test_with_context_stomp12(self):
         with stomp.Connection12(get_default_host()) as conn:

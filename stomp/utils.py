@@ -1,6 +1,6 @@
 """General utility functions.
 """
-
+import asyncio
 import copy
 import os
 import re
@@ -162,6 +162,19 @@ def _unescape_header(matchobj):
     return unescaped
 
 
+def _escape_headers(headers):
+    """
+    :param dict(str,str) headers:
+    """
+    for key, val in headers.items():
+        try:
+            val = val.replace("\\", "\\\\").replace("\n", "\\n").replace(":", "\\c").replace("\r", "\\r")
+        except:
+            pass
+        headers[key] = val
+    return headers
+
+
 def parse_headers(lines, offset=0):
     """
     Parse the headers in a STOMP response
@@ -184,7 +197,7 @@ def parse_headers(lines, offset=0):
     return headers
 
 
-def parse_frame(frame):
+def parse_frame(frame, auto_decode=True, encoding="utf-8"):
     """
     Parse a STOMP frame into a Frame object.
 
@@ -203,6 +216,8 @@ def parse_frame(frame):
     preamble_lines = LINE_END_RE.split(preamble)
     preamble_len = len(preamble_lines)
     body = frame[body_start:]
+    if auto_decode:
+        body = decode(body, encoding)
 
     # Skip any leading newlines
     first_line = 0
@@ -246,6 +261,7 @@ def clean_headers(headers):
 
 # lines: lines returned from a call to convert_frames
 def clean_lines(lines):
+    lines = list(filter(lambda l: l != b'', [l.rstrip() for l in lines]))
     return re.sub(PASSCODE_RE, "passcode:********", str(lines))
 
 
@@ -270,7 +286,7 @@ def calculate_heartbeats(shb, chb):
     return x, y
 
 
-def convert_frame(frame):
+def convert_frame(frame, encoding="utf-8"):
     """
     Convert a frame to a list of lines separated by newlines.
 
@@ -282,7 +298,7 @@ def convert_frame(frame):
 
     body = None
     if frame.body:
-        body = encode(frame.body)
+        body = encode(frame.body, encoding)
 
         if HDR_CONTENT_LENGTH in frame.headers:
             frame.headers[HDR_CONTENT_LENGTH] = len(body)
@@ -290,7 +306,8 @@ def convert_frame(frame):
     if frame.cmd:
         lines.append(encode(frame.cmd))
         lines.append(ENC_NEWLINE)
-    for key, vals in sorted(frame.headers.items()):
+
+    for key, vals in sorted(_escape_headers(frame.headers).items()):
         if vals is None:
             continue
         if type(vals) != tuple:
@@ -352,5 +369,9 @@ def get_errno(e):
     except AttributeError:
         return e.args[0]
 
+
+def async_run(func, *args):
+    print(func, *args)
+    asyncio.run(func(*args))
 
 HEARTBEAT_FRAME = Frame("heartbeat")

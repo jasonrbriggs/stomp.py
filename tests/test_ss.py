@@ -93,7 +93,7 @@ heart-beat:1000,1000
             for x in range(n):
                 if x == 0:
                     logging.debug("pump sending %s frames" % n)
-                conn.transport.send(b"\n")
+                conn.protocol.transmit(Frame())
                 time.sleep(0.01)
 
         # Trailing optional EOLs in a frame

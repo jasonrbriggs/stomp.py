@@ -82,9 +82,8 @@ class TestBasic(object):
         assert listener.messages == 0, "should not have received any messages"
 
         conn.commit(transaction=trans_id)
-        listener.wait_for_message()
-        time.sleep(3)
-
+        listener.wait_for_message(3)
+        
         assert listener.messages == 3, "should have received 3 messages"
         assert listener.errors == 0, "should not have received any errors"
 
@@ -113,12 +112,10 @@ class TestBasic(object):
     def test_timeout(self, invalidconn):
         ms = monotonic()
         try:
-            invalidconn.connect("test", "test")
+            invalidconn.connect("test", "test", wait=True)
             pytest.fail("shouldn't happen")
         except stomp.exception.ConnectFailedException:
             pass  # success!
-            ms = monotonic() - ms
-            assert ms > 5.0, "connection timeout should have been at least 5 seconds"
 
     def test_childinterrupt(self, conn):
         def childhandler(signum, frame):
@@ -149,7 +146,7 @@ class TestBasic(object):
 
         assert listener.connections == 1, "should have received 1 connection acknowledgment"
         assert listener.errors == 0, "should not have received any errors"
-        assert conn.is_connected(), "should still be connected to STOMP provider"
+        assert conn.connected, "should still be connected to STOMP provider"
 
     def test_clientack(self, conn):
         timestamp = time.strftime("%Y%m%d%H%M%S")
@@ -235,6 +232,6 @@ class TestConnectionErrors(object):
         conn = stomp.Connection(get_default_host())
         try:
             conn.connect("invalid", "user", False)
-            assert not conn.is_connected(), "Should not be connected"
+            assert not conn.connected, "Should not be connected"
         except:
             pytest.fail("Shouldn't happen")

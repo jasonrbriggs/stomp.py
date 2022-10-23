@@ -16,8 +16,6 @@ config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), "setup.ini"))
 
 header_re = re.compile(r"[^:]+:.*")
-test_text_for_utf8 = "марко"
-test_text_for_utf16 = "ǰ捁楴敶免"
 
 
 def get_environ(name):

@@ -28,6 +28,8 @@ class TestRabbitMQSend(object):
         conn.disconnect(receipt="456")
         listener2.wait_on_receipt()
 
+        listener2.wait_on_disconnected()
+
         assert listener.connections == 1, "should have received 1 connection acknowledgement"
         assert listener.messages == 1, "should have received 1 message"
         assert listener.errors == 0, "should not have received any errors"
