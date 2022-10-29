@@ -35,6 +35,25 @@ test:
 testsingle:
 	$(TEST_CMD) run pytest tests/${TEST} --log-cli-level=DEBUG -v -ra --full-trace
 
+exptests:
+	$(TEST_CMD) run pytest tests/test_activemq.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_artemis.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_basic.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_cli.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_cli_ssl.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_context.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_ipv6.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_misc.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_multicast.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_nonascii.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_rabbitmq.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_s11.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_s12.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_ss.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_ssl.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_ssl_sni.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_stompserver.py --log-cli-level=DEBUG -v -ra --full-trace
+	#$(TEST_CMD) run pytest tests/test_utils.py --log-cli-level=DEBUG -v -ra --full-trace
 
 clean:
 	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/ docker/tmp

@@ -2,7 +2,6 @@ import importlib
 import pytest
 
 import stomp
-from stomp import transport
 from stomp.listener import TestListener
 from stomp import logging
 from .testutils import *
@@ -19,10 +18,10 @@ ssl_version = "version"
 logging.log_to_stdout(verbose_logging=True)
 
 
-@pytest.fixture
-def stomp_transport():
-    t = transport.Transport(host_and_ports=[host1, host2])
-    yield t
+#@pytest.fixture
+#def stomp_transport():
+#    t = transport.Transport(host_and_ports=[host1, host2])
+#    yield t
 
 
 class TestSSL(object):
@@ -31,8 +30,7 @@ class TestSSL(object):
         try:
             import ssl
             queuename = "/queue/testssl-%s" % listener.timestamp
-            conn = stomp.Connection(get_ssl_host())
-            #conn.set_ssl(get_ssl_host())
+            conn = stomp.Connection(get_ssl_host(), timeout=5)
             conn.set_ssl(get_ssl_host())
             conn.set_listener("testlistener", listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)
@@ -82,7 +80,7 @@ class TestSSL(object):
         try:
             import ssl
             queuename = "/queue/testsslclient-%s" % listener.timestamp
-            conn = stomp.Connection(get_ssl_host())
+            conn = stomp.Connection(get_ssl_host(), timeout=5)
             conn.set_ssl(get_ssl_host(), key_file='tmp/client.key', cert_file='tmp/client.pem', ca_certs='tmp/broker2.pem')
             conn.set_listener("testlistener", listener)
             try:
@@ -117,40 +115,15 @@ class TestSSL(object):
         except ImportError:
             pass
 
-class TestSSLParams(object):
-    def test_set_ssl(self, stomp_transport):
-        stomp_transport.set_ssl([host1],
-                                ssl_key_file,
-                                ssl_cert_file,
-                                ssl_ca_certs,
-                                ssl_cert_validator,
-                                ssl_version)
-        assert stomp_transport._Transport__ssl_params[host1]["key_file"] == ssl_key_file
-        assert stomp_transport._Transport__ssl_params[host1]["cert_file"] == ssl_cert_file
-        assert stomp_transport._Transport__ssl_params[host1]["ca_certs"] == ssl_ca_certs
-        assert stomp_transport._Transport__ssl_params[host1]["cert_validator"] == ssl_cert_validator
-        assert stomp_transport._Transport__ssl_params[host1]["ssl_version"] == ssl_version
-
-    def test_init_ssl_params(self):
-        trans = transport.Transport(host_and_ports=[host1, host2])
-        trans.set_ssl([host1, host2], ssl_key_file, ssl_cert_file, ssl_ca_certs, ssl_cert_validator, ssl_version)
-
-        for host_port in [host1, host2]:
-            assert trans._Transport__ssl_params[host_port]["key_file"] == ssl_key_file
-            assert trans._Transport__ssl_params[host_port]["cert_file"] == ssl_cert_file
-            assert trans._Transport__ssl_params[host_port]["ca_certs"] == ssl_ca_certs
-            assert trans._Transport__ssl_params[host_port]["cert_validator"] == ssl_cert_validator
-            assert trans._Transport__ssl_params[host_port]["ssl_version"] == ssl_version
-
 
 class TestSSLFailure(object):
     @pytest.mark.run(order=-1)
     def test_ssl_failure(self, monkeypatch):
         import ssl
         monkeypatch.delattr(ssl, "PROTOCOL_TLS_CLIENT", raising=True)
-        import stomp.transport as t
-        importlib.reload(t)
-        assert t.DEFAULT_SSL_VERSION is None
+        import stomp.connect as c
+        importlib.reload(c)
+        assert c.DEFAULT_SSL_VERSION is None
         monkeypatch.undo()
         importlib.reload(ssl)
 
@@ -159,8 +132,8 @@ class TestSSLFailure(object):
         import socket
         monkeypatch.delattr(socket, "SOL_TCP", raising=True)
         monkeypatch.delattr(socket, "SO_KEEPALIVE", raising=True)
-        import stomp.transport as t
-        importlib.reload(t)
-        assert not t.LINUX_KEEPALIVE_AVAIL
+        import stomp.connect as c
+        importlib.reload(c)
+        assert not c.LINUX_KEEPALIVE_AVAIL
         monkeypatch.undo()
         importlib.reload(socket)

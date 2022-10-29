@@ -236,7 +236,7 @@ def parse_frame(frame, auto_decode=True, encoding="utf-8"):
     return Frame(cmd, headers, body)
 
 
-def merge_headers(header_map_list):
+def merge_headers(*header_map_list):
     """
     Helper function for combining multiple header maps into one.
 

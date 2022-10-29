@@ -35,7 +35,7 @@ class Listener():
     def notify(self, cmd, frame):
         if cmd is None:
             cmd = HEARTBEAT
-        notify_func = getattr(self, "on_%s" % cmd.lower(), None)
+        notify_func = getattr(self, f"on_{cmd.lower()}", None)
         if notify_func is not None:
             notify_func(frame)
 
@@ -192,7 +192,6 @@ class HeartbeatListener(Listener):
                         getattr(self.heartbeat_thread, "name", "Thread")
 
     def on_disconnected(self, frame):
-        Listener.on_disconnected(self, frame)
         self.heartbeat_terminate_event.set()
 
     def on_disconnecting(self, frame):
@@ -232,10 +231,7 @@ class HeartbeatListener(Listener):
 
         :param Frame frame: the Frame object
         """
-        if frame.cmd in [CMD_CONNECT, CMD_STOMP] and self.heartbeats != (0, 0):
-            frame.headers[HDR_HEARTBEAT] = "%s,%s" % self.heartbeats
-        if self.next_outbound_heartbeat is not None:
-            self.next_outbound_heartbeat = monotonic() + self.send_sleep
+        self.__update_heartbeat()
 
     def __update_heartbeat(self):
         # Honour any grace that has been already included
@@ -281,7 +277,8 @@ class HeartbeatListener(Listener):
                 continue
 
             if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
-                logging.debug("sending a heartbeat message at %s", now)
+                self.next_outbound_heartbeat = monotonic() + self.send_sleep
+                logging.debug("sending a heartbeat message at %s (next outbound %s - sleep = %s)", now, self.next_outbound_heartbeat, self.send_sleep)
                 try:
                     self.protocol.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
@@ -435,7 +432,7 @@ class StatsListener(Listener):
         """
         self.heartbeat_count += 1
 
-    def __str__(self):
+    def get_stats(self):
         """
         Return a string containing the current statistics (messages sent and received,
         errors, etc)
@@ -507,6 +504,7 @@ class PrintingListener(Listener):
         :param Frame frame: the stomp frame
         """
         self.__print(f"on_send {frame.cmd} {utils.clean_headers(frame.headers)} {frame.body}")
+
     def on_heartbeat(self):
         self.__print("on_heartbeat")
 
@@ -527,6 +525,8 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         self.messages_received = 0
         self.heartbeat_condition = threading.Condition()
         self.heartbeat_received = False
+        self.disconnected_condition = threading.Condition()
+        self.disconnected = False
         self.timestamp = time.strftime("%Y%m%d%H%M%S")
 
     def wait_for_message(self, count=1):
@@ -539,9 +539,9 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         return self.message_list[-1]
 
     def wait_for_heartbeat(self):
-        with self.heartbeat_condition:
-            while not self.heartbeat_received:
-                self.heartbeat_condition.wait()
+        with self.heartbeat_condition, self.disconnected_condition:
+            while not self.heartbeat_received and not self.disconnected:
+                self.heartbeat_condition.wait(2)
             self.heartbeat_received = False
 
     def on_connecting(self, host_and_port):
@@ -558,6 +558,9 @@ class TestListener(StatsListener, WaitingListener, PrintingListener):
         StatsListener.on_disconnected(self, frame)
         PrintingListener.on_disconnected(self, frame)
         WaitingListener.on_disconnected(self, frame)
+        with self.disconnected_condition:
+            self.disconnected = True
+            self.disconnected_condition.notify_all()
 
     def on_heartbeat_timeout(self, frame):
         StatsListener.on_heartbeat_timeout(self, frame)

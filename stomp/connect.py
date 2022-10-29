@@ -15,6 +15,18 @@ import time
 from time import monotonic
 
 try:
+    from socket import SOL_SOCKET, SO_KEEPALIVE, SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
+    LINUX_KEEPALIVE_AVAIL = True
+except ImportError:
+    LINUX_KEEPALIVE_AVAIL = False
+
+try:
+    from socket import IPPROTO_TCP
+    MAC_KEEPALIVE_AVAIL = True
+except ImportError:
+    MAC_KEEPALIVE_AVAIL = False
+
+try:
     import ssl
     from ssl import SSLError
     DEFAULT_SSL_VERSION = ssl.PROTOCOL_TLS_CLIENT
@@ -34,7 +46,7 @@ from stomp import logging
 class StompProtocol(asyncio.Protocol):
     def __init__(self, listeners, on_con_lost, auto_decode, encoding):
         self.listeners = listeners
-        self.on_con_lost = on_con_lost
+        self.__on_con_lost = on_con_lost
         self.transport = None
         self.__auto_decode = auto_decode
         self.__encoding = encoding
@@ -59,19 +71,21 @@ class StompProtocol(asyncio.Protocol):
             self.handle_frame(frame)
 
     def transmit(self, frame):
-        if self.transport is not None:
+        if self.transport is not None and not self.__on_con_lost.done():
             lines = convert_frame(frame, self.__encoding)
             packed_frame = pack(lines)
             self.transport.write(packed_frame + b"\x00")
             if logging.isEnabledFor(logging.DEBUG):
                 logging.debug("sending frame: %s", clean_lines(lines))
             self.handle_frame(frame)
+        else:
+            raise exception.NotConnectedException()
 
     def connection_lost(self, exc):
         logging.debug("server closed the connection (%s)", exc)
         self.transport = None
-        if not self.on_con_lost.done():
-            self.on_con_lost.set_result(True)
+        if not self.__on_con_lost.done():
+            self.__on_con_lost.set_result(True)
             self.handle_frame(Frame(DISCONNECTED))
 
 
@@ -173,8 +187,7 @@ class BaseConnection(Listener):
                 ssl_version=DEFAULT_SSL_VERSION,
                 password=None):
         """
-        Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
-        exception if the SSL module can't be found.
+        Sets up SSL configuration for the given hosts. This ensures the connection uses an SSLContext.
 
         :param for_hosts: a list of tuples describing hosts this SSL configuration should be applied to
         :param cert_file: the path to a X509 certificate
@@ -230,7 +243,7 @@ class BaseConnection(Listener):
         elif receipt_id in self.__receipts:
             del self.__receipts[receipt_id]
 
-    def __enable_keepalive(self):
+    def __enable_keepalive(self, sock):
         def try_setsockopt(sock, name, fam, opt, val=None):
             if val is None:
                 return True  # no value to set always works
@@ -277,20 +290,26 @@ class BaseConnection(Listener):
                 logging.debug("keepalive: using system defaults")
                 ka_args = (None, None, None)
             ka_idle, ka_intvl, ka_cnt = ka_args
-            if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
-                try_setsockopt(self.socket, "idle time", SOL_TCP, TCP_KEEPIDLE, ka_idle)
-                try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
-                try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
+            if try_setsockopt(sock, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
+                try_setsockopt(sock, "idle time", SOL_TCP, TCP_KEEPIDLE, ka_idle)
+                try_setsockopt(sock, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
+                try_setsockopt(sock, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
         elif ka_sig == "mac":
             logging.debug("keepalive: activating mac-style support")
             if ka_args is None:
                 logging.debug("keepalive: using system defaults")
                 ka_args = (3,)
             ka_intvl = ka_args
-            if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
-                try_setsockopt(self.socket, socket.IPPROTO_TCP, 0x10, ka_intvl)
+            if try_setsockopt(sock, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
+                try_setsockopt(sock, socket.IPPROTO_TCP, 0x10, ka_intvl)
         else:
             logging.error("keepalive: implementation %r not recognized or not supported", ka_sig)
+
+    def __fail_connection(self):
+        self.connected = False
+        self.connection_failed = True
+        with self.__connect_wait_condition:
+            self.__connect_wait_condition.notify_all()
 
     def __attempt_connection(self):
         """
@@ -306,7 +325,7 @@ class BaseConnection(Listener):
         sock = None
         logging.debug("attempt reconnection (%s)", connect_count)
         while sock is None and (connect_count < self.__reconnect_attempts_max or
-                                                    self.__reconnect_attempts_max == -1):
+                                self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
                     logging.debug("attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
@@ -314,61 +333,17 @@ class BaseConnection(Listener):
                         sock = socket.create_connection(host_and_port, self.__timeout, self.__bind_host_port)
                     else:
                         sock = socket.create_connection(host_and_port, self.__timeout)
-                    self.__enable_keepalive()
-                    need_ssl = self.__need_ssl(host_and_port)
-
-                    if need_ssl:  # wrap socket
-                        ssl_params = self.get_ssl(host_and_port)
-                        tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
-                        if ssl_params["ca_certs"]:
-                            cert_validation = ssl.CERT_REQUIRED
-                            tls_context.load_verify_locations(ssl_params["ca_certs"])
-                        else:
-                            cert_validation = ssl.CERT_NONE
-                        if tls_context:
-                            # Wrap the socket for TLS
-                            certfile = ssl_params["cert_file"]
-                            keyfile = ssl_params["key_file"]
-                            password = ssl_params.get("password")
-                            if certfile and not keyfile:
-                                keyfile = certfile
-                            if certfile:
-                                tls_context.load_cert_chain(certfile, keyfile, password)
-                            if cert_validation is None or cert_validation == ssl.CERT_NONE:
-                                tls_context.check_hostname = False
-                            tls_context.verify_mode = cert_validation
-                            logging.debug("wrapping SSL socket")
-                            self.socket = tls_context.wrap_socket(self.socket, server_hostname=host_and_port[0])
-                        else:
-                            # Old-style wrap_socket where we don't have a modern SSLContext (so no SNI)
-                            logging.debug("wrapping SSL socket (old style)")
-                            sock = ssl.wrap_socket(
-                                self.socket,
-                                keyfile=ssl_params["key_file"],
-                                certfile=ssl_params["cert_file"],
-                                cert_reqs=cert_validation,
-                                ca_certs=ssl_params["ca_certs"],
-                                ssl_version=ssl_params["ssl_version"])
-
+                    self.__enable_keepalive(sock)
+                    
                     sock.settimeout(self.__timeout)
 
                     if self.blocking is not None:
                         sock.setblocking(self.blocking)
 
-                    #
-                    # Validate server cert
-                    #
-                    if need_ssl and ssl_params["cert_validator"]:
-                        cert = sock.getpeercert()
-                        (ok, errmsg) = ssl_params["cert_validator"](cert, host_and_port[0])
-                        if not ok:
-                            raise SSLError("Server certificate validation failed: %s", errmsg)
-
                     self.current_host_and_port = host_and_port
                     logging.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except (OSError, AssertionError):
-                    self.socket = None
                     connect_count += 1
                     logging.warning("could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
                                     exc_info=logging.verbose)
@@ -387,10 +362,7 @@ class BaseConnection(Listener):
                     sleep_exp += 1
 
         if not sock:
-            self.connected = False
-            self.connection_failed = True
-            with self.__connect_wait_condition:
-                self.__connect_wait_condition.notify_all()
+            self.__fail_connection()
         return sock
 
     def close(self):
@@ -398,6 +370,7 @@ class BaseConnection(Listener):
 
     async def __main(self, username=None, passcode=None, headers=None, keyword_headers={}):
         loop = asyncio.get_running_loop()
+        #loop.set_debug(True)
 
         on_con_lost = loop.create_future()
 
@@ -409,9 +382,46 @@ class BaseConnection(Listener):
         sock = self.__attempt_connection()
         if not sock:
             return
-        transport, protocol = await loop.create_connection(lambda: self.protocol, sock=sock)
 
-        headers = merge_headers([headers, keyword_headers])
+        if self.__need_ssl(self.current_host_and_port):
+            ssl_params = self.get_ssl(self.current_host_and_port)
+            tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
+            if ssl_params["ca_certs"]:
+                cert_validation = ssl.CERT_REQUIRED
+                tls_context.load_verify_locations(ssl_params["ca_certs"])
+            else:
+                cert_validation = ssl.CERT_NONE
+
+            certfile = ssl_params["cert_file"]
+            keyfile = ssl_params["key_file"]
+            password = ssl_params.get("password")
+            if certfile and not keyfile:
+                keyfile = certfile
+            if certfile:
+                tls_context.load_cert_chain(certfile, keyfile, password)
+            if cert_validation is None or cert_validation == ssl.CERT_NONE:
+                tls_context.check_hostname = False
+            tls_context.verify_mode = cert_validation
+            server_hostname = self.current_host_and_port[0]
+            ssl_handshake_timeout = self.__timeout
+        else:
+            tls_context = None
+            server_hostname = None
+            ssl_handshake_timeout = None
+
+        try:
+            transport, protocol = await loop.create_connection(lambda: self.protocol, sock=sock, ssl=tls_context, server_hostname=server_hostname, ssl_handshake_timeout=ssl_handshake_timeout)
+        except:
+            self.__fail_connection()
+            return
+
+        #if need_ssl and ssl_params["cert_validator"]:
+        #    cert = sock.getpeercert()
+        #    (ok, errmsg) = ssl_params["cert_validator"](cert, host_and_port[0])
+        #    if not ok:
+        #        raise SSLError("Server certificate validation failed: %s", errmsg)
+
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_ACCEPT_VERSION] = self.version
 
         if username is not None:
@@ -456,6 +466,12 @@ class BaseConnection(Listener):
         with self.__connect_wait_condition:
             Listener.on_connected(self, frame)
             self.__connect_wait_condition.notify_all()
+
+    def on_error(self, frame):
+        if not self.connected:
+            with self.__connect_wait_condition:
+                self.connection_failed = True
+                self.__connect_wait_condition.notify_all()
 
     def set_listener(self, name, listener):
         self.listeners[name] = listener
@@ -513,7 +529,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         :param keyword_headers: any additional headers the broker requires
         """
         assert transaction is not None, "'transaction' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_TRANSACTION] = transaction
         self.protocol.transmit(Frame(CMD_ABORT, headers))
 
@@ -547,7 +563,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         :return: the transaction id
         :rtype: str
         """
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         if not transaction:
             transaction = get_uuid()
         headers[HDR_TRANSACTION] = transaction
@@ -563,9 +579,17 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         :param keyword_headers: any additional headers the broker requires
         """
         assert transaction is not None, "'transaction' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_TRANSACTION] = transaction
         self.protocol.transmit(Frame(CMD_COMMIT, headers))
+
+    def connect(self, username=None, passcode=None, wait=False, headers=None,
+                with_connect_command=False, **keyword_headers):
+        default_headers = {}
+        if self.heartbeats != (0, 0):
+            default_headers['heart-beat'] = '%s,%s' % self.heartbeats
+        headers = merge_headers(default_headers, headers, keyword_headers)
+        BaseConnection.connect(self, username, passcode, wait, headers, with_connect_command, **keyword_headers)
 
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
@@ -580,7 +604,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         if not self.connected:
             logging.debug("not sending disconnect, already disconnected")
             return
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         rec = receipt or get_uuid()
         headers[HDR_RECEIPT] = rec
         self.set_receipt(rec, CMD_DISCONNECT)
@@ -599,7 +623,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         assert id is not None, "'id' is required"
         assert subscription is not None, "'subscription' is required"
         headers = {HDR_MESSAGE_ID: id, HDR_SUBSCRIPTION: subscription}
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         if receipt:
@@ -620,7 +644,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         """
         assert destination is not None, "'destination' is required"
         assert body is not None, "'body' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_DESTINATION] = destination
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
@@ -641,7 +665,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         """
         assert destination is not None, "'destination' is required"
         assert id is not None, "'id' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_DESTINATION] = destination
         headers[HDR_ID] = id
         headers[HDR_ACK] = ack
@@ -656,7 +680,7 @@ class StompConnection11(BaseConnection, HeartbeatListener):
         :param keyword_headers: any additional headers to send with the subscription
         """
         assert id is not None, "'id' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_ID] = id
         self.protocol.transmit(Frame(CMD_UNSUBSCRIBE, headers))
 
@@ -717,12 +741,12 @@ class StompConnection12(StompConnection11):
         """
         assert id is not None, "'id' is required"
         headers = {HDR_ID: id}
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         if transaction:
             headers[HDR_TRANSACTION] = transaction
         if receipt:
             headers[HDR_RECEIPT] = receipt
-        elf.protocol.transmit(Frame(CMD_NACK, headers))
+        self.protocol.transmit(Frame(CMD_NACK, headers))
 
     def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
         """
@@ -736,7 +760,7 @@ class StompConnection12(StompConnection11):
         """
         assert destination is not None, "'destination' is required"
         assert body is not None, "'body' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_DESTINATION] = destination
         if content_type:
             headers[HDR_CONTENT_TYPE] = content_type
@@ -757,7 +781,7 @@ class StompConnection12(StompConnection11):
         """
         assert destination is not None, "'destination' is required"
         assert id is not None, "'id' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_DESTINATION] = destination
         headers[HDR_ID] = id
         headers[HDR_ACK] = ack
@@ -772,7 +796,7 @@ class StompConnection12(StompConnection11):
         :param keyword_headers: any additional headers to send with the subscription
         """
         assert id is not None, "'id' is required"
-        headers = merge_headers([headers, keyword_headers])
+        headers = merge_headers(headers, keyword_headers)
         headers[HDR_ID] = id
         self.protocol.transmit(Frame(CMD_UNSUBSCRIBE, headers))
 

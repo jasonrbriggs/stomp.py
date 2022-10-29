@@ -4,7 +4,6 @@ from .testutils import *
 import time
 
 class Test11Send(object):
-    """
     def test11(self):
         conn = stomp.Connection(get_default_host())
         tl = TestListener("123", print_to_log=False)
@@ -52,7 +51,7 @@ class Test11Send(object):
         assert listener.messages >= 1, "should have received 1 message, was %s" % listener.messages
         assert listener.errors == 0, "should not have received any errors, was %s" % listener.errors
         assert listener.heartbeat_timeouts == 0, "should not have received a heartbeat timeout, was %s" % listener.heartbeat_timeouts
-    """
+
     def testheartbeat_timeout(self):
         server = StubStompServer("127.0.0.1", 60000)
         server.start()
@@ -72,18 +71,16 @@ heart-beat:1000,1000
 
             time.sleep(5)
 
-            logging.info("@>>>>>>>>>>>>>>>>>TIMEOUTS %s", listener.heartbeat_timeouts)
-
             server.running = False
         except Exception:
             _, e, _ = sys.exc_info()
+            print(e)
             logging.error("error: %s", e)
         finally:
             server.stop()
 
-        logging.debug(">>>>> %s", listener.heartbeat_timeouts)
         assert listener.heartbeat_timeouts >= 1, "should have received a heartbeat timeout"
-    """
+
     def testheartbeat_shutdown(self):
         server = StubStompServer("127.0.0.1", 60000)
         server.start()
@@ -117,4 +114,3 @@ heart-beat:1000,1000
 
         assert end_time - start_time <= 2, "should stop immediately and not after heartbeat timeout"
         assert conn.heartbeat_thread is None, "heartbeat thread should have finished"
-"""

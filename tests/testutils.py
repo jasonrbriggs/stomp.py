@@ -132,6 +132,7 @@ class StubStompServer(object):
         self.host = host
         self.port = port
         self.frames = []
+        self.conn = None
 
     def start(self):
         logging.info("starting stomp server")

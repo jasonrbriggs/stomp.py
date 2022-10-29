@@ -68,10 +68,11 @@ class Test12Connect(object):
 
         ack_id = headers["ack"]
 
-        wrapped_send_frame = mocker.patch.object(conn, "send_frame", wraps=conn.send_frame)
+        wrapped_transmit = mocker.patch.object(conn.protocol, "transmit", wraps=conn.protocol.transmit)
         conn.nack(ack_id, requeue="false")
         expected_headers = {HDR_ID: ack_id.replace(':', '\\c'), "requeue": "false"}
-        wrapped_send_frame.assert_called_with(CMD_NACK, expected_headers)
+        assert wrapped_transmit.call_args[0][0].headers['requeue'] == "false"
+        assert wrapped_transmit.call_args[0][0].headers[HDR_ID] == ack_id.replace(':', '\\c') 
 
     def test_timeout(self):
         server = StubStompServer("127.0.0.1", 60000)
@@ -81,7 +82,7 @@ class Test12Connect(object):
             server.add_frame('''ERROR
 message: connection failed\x00''')
 
-            conn = stomp.Connection12([("127.0.0.1", 60000)])
+            conn = stomp.Connection12([("127.0.0.1", 60000)], timeout=2)
             listener = TestListener(print_to_log=True)
             conn.set_listener('', listener)
             try:
@@ -126,10 +127,10 @@ message: connection failed\x00''')
         listener = conn.get_listener("testlistener")
         queuename = "/queue/testspecialchars12-%s" % listener.timestamp
         conn = stomp.Connection12(get_default_host(), vhost=get_default_vhost(), auto_content_length=False)
-        conn.transport = mocker.Mock()
+        conn.protocol = mocker.Mock()
 
         conn.send(body="test", destination=queuename, receipt="123")
 
-        args, kwargs = conn.transport.transmit.call_args
+        args, kwargs = conn.protocol.transmit.call_args
         frame = args[0]
         assert "content-length" not in frame.headers
