@@ -9,6 +9,7 @@ import threading
 import uuid
 
 from stomp.constants import *
+from stomp import logging
 
 # List of all host names (unqualified, fully-qualified, and IP
 # addresses) that refer to the local host (both loopback interface
@@ -232,7 +233,6 @@ def parse_frame(frame, auto_decode=True, encoding="utf-8"):
 
     # Put headers into a key/value map
     headers = parse_headers(preamble_lines, first_line + 1)
-
     return Frame(cmd, headers, body)
 
 

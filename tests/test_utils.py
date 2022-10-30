@@ -4,6 +4,7 @@ import pytest
 
 import stomp
 from stomp.utils import *
+from stomp import logging
 
 
 class TestUtils(object):
@@ -56,15 +57,12 @@ class TestUtils(object):
         assert (0, 0) == calculate_heartbeats(shb, chb)
 
     def test_parse_frame(self):
-        # oddball/broken
-        f = parse_frame(b"FOO")
-        assert str(f) == str(Frame("FOO", body=b''))
         # empty body
         f = parse_frame(b"RECEIPT\nreceipt-id:message-12345\n\n")
-        assert str(f) == str(Frame("RECEIPT", {"receipt-id": "message-12345"}, b''))
+        assert str(f) == str(Frame("RECEIPT", {"receipt-id": "message-12345"}, ''))
         # no headers
         f = parse_frame(b"ERROR\n\n")
-        assert str(f) == str(Frame("ERROR", body=b''))
+        assert str(f) == str(Frame("ERROR", body=''))
         # regular, different linefeeds
         for lf in b"\n", b"\r\n":
             f = parse_frame(
@@ -73,7 +71,7 @@ class TestUtils(object):
                 lf +
                 b"hello world!"
             )
-            assert str(f) == str(Frame("MESSAGE", {"content-type": "text/plain"}, b"hello world!"))
+            assert str(f) == str(Frame("MESSAGE", {"content-type": "text/plain"}, "hello world!"))
 
     def test_clean_default_headers(self):
         Frame('test').headers["foo"] = "bar"

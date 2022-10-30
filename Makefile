@@ -53,7 +53,7 @@ exptests:
 	$(TEST_CMD) run pytest tests/test_ssl.py --log-cli-level=DEBUG -v -ra --full-trace
 	$(TEST_CMD) run pytest tests/test_ssl_sni.py --log-cli-level=DEBUG -v -ra --full-trace
 	#$(TEST_CMD) run pytest tests/test_stompserver.py --log-cli-level=DEBUG -v -ra --full-trace
-	#$(TEST_CMD) run pytest tests/test_utils.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_utils.py --log-cli-level=DEBUG -v -ra --full-trace
 
 clean:
 	rm -rf build/ MANIFEST dist/ *.egg-info/ tmp/ docker/tmp
