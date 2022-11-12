@@ -151,9 +151,6 @@ class BaseConnection(Listener):
         self.__reconnect_attempts_max = reconnect_attempts_max
         self.__timeout = timeout
 
-        self.heartbeats = heartbeats
-
-        self.timeout = timeout
         self.__connect_wait_condition = threading.Condition()
         self.connected = False
         self.connection_failed = False
@@ -443,8 +440,8 @@ class BaseConnection(Listener):
 
         :param float timeout: how long to wait, in seconds
         """
-        if self.timeout is not None:
-            wait_time = self.timeout / 10.0
+        if self.__timeout is not None:
+            wait_time = self.__timeout / 10.0
         else:
             wait_time = None
         with self.__connect_wait_condition:
@@ -491,6 +488,166 @@ class BaseConnection(Listener):
         :param str name:
         """
         del self.listeners[name]
+
+
+class StompConnection10(BaseConnection):
+    def __init__(self,
+                 host_and_ports=None,
+                 prefer_localhost=True,
+                 try_loopback_connect=True,
+                 reconnect_sleep_initial=0.1,
+                 reconnect_sleep_increase=0.5,
+                 reconnect_sleep_jitter=0.1,
+                 reconnect_sleep_max=60.0,
+                 reconnect_attempts_max=3,
+                 timeout=None,
+                 keepalive=None,
+                 vhost=None,
+                 auto_decode=True,
+                 encoding="utf-8",
+                 auto_content_length=True,
+                 heart_beat_receive_scale=1.5,
+                 bind_host_port=None):
+        BaseConnection.__init__(self, host_and_ports, prefer_localhost, try_loopback_connect, reconnect_sleep_initial,
+                                reconnect_sleep_increase, reconnect_sleep_jitter, reconnect_sleep_max, reconnect_attempts_max,
+                                timeout, None, keepalive, vhost, auto_decode, encoding, auto_content_length,
+                                heart_beat_receive_scale, bind_host_port)
+        self.version = '1.0'
+        self.connect_command = CMD_CONNECT
+
+    def abort(self, transaction, headers=None, **keyword_headers):
+        """
+        Abort a transaction.
+        :param str transaction: the identifier of the transaction
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
+        assert transaction is not None, "'transaction' is required"
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_TRANSACTION] = transaction
+        self.protocol.transmit(Frame(CMD_ABORT, headers))
+
+    def ack(self, id, transaction=None, receipt=None):
+        """
+        Acknowledge 'consumption' of a message by id.
+        :param str id: identifier of the message
+        :param str transaction: include the acknowledgement in the specified transaction
+        :param str receipt: the receipt id
+        """
+        assert id is not None, "'id' is required"
+        headers = {HDR_MESSAGE_ID: id}
+        if transaction:
+            headers[HDR_TRANSACTION] = transaction
+        if receipt:
+            headers[HDR_RECEIPT] = receipt
+        self.protocol.transmit(Frame(CMD_ACK, headers))
+
+    def begin(self, transaction=None, headers=None, **keyword_headers):
+        """
+        Begin a transaction.
+        :param str transaction: the identifier for the transaction (optional - if not specified
+            a unique transaction id will be generated)
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        :return: the transaction id
+        :rtype: str
+        """
+        headers = utils.merge_headers([headers, keyword_headers])
+        if not transaction:
+            transaction = utils.get_uuid()
+        headers[HDR_TRANSACTION] = transaction
+        self.protocol.transmit(Frame(CMD_BEGIN, headers))
+        return transaction
+
+    def commit(self, transaction=None, headers=None, **keyword_headers):
+        """
+        Commit a transaction.
+        :param str transaction: the identifier for the transaction
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
+        assert transaction is not None, "'transaction' is required"
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_TRANSACTION] = transaction
+        self.protocol.transmit(Frame(CMD_COMMIT, headers))
+
+    def connect(self, username=None, passcode=None, wait=False, headers=None,
+                with_connect_command=False, **keyword_headers):
+        default_headers = {}
+        headers = merge_headers(default_headers, headers, keyword_headers)
+        BaseConnection.connect(self, username, passcode, wait, headers, with_connect_command, **keyword_headers)
+
+    def disconnect(self, receipt=None, headers=None, **keyword_headers):
+        """
+        Disconnect from the server.
+        :param str receipt: the receipt to use (once the server acknowledges that receipt, we're
+            officially disconnected; optional - if not specified a unique receipt id will
+            be generated)
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
+        if not self.transport.is_connected():
+            logging.debug("not sending disconnect, already disconnected")
+            return
+        headers = utils.merge_headers([headers, keyword_headers])
+        rec = receipt or utils.get_uuid()
+        headers[HDR_RECEIPT] = rec
+        self.set_receipt(rec, CMD_DISCONNECT)
+        self.protocol.transmit(Frame(CMD_DISCONNECT, headers))
+
+    def send(self, destination, body, content_type=None, headers=None, **keyword_headers):
+        """
+        Send a message to a destination.
+        :param str destination: the destination of the message (e.g. queue or topic name)
+        :param body: the content of the message
+        :param str content_type: the content type of the message
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
+        assert destination is not None, "'destination' is required"
+        assert body is not None, "'body' is required"
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_DESTINATION] = destination
+        if content_type:
+            headers[HDR_CONTENT_TYPE] = content_type
+        if self.auto_content_length and body and HDR_CONTENT_LENGTH not in headers:
+            headers[HDR_CONTENT_LENGTH] = len(body)
+        self.protocol.transmit(Frame(CMD_SEND, headers, body))
+
+    def subscribe(self, destination, id=None, ack="auto", headers=None, **keyword_headers):
+        """
+        Subscribe to a destination.
+        :param str destination: the topic or queue to subscribe to
+        :param str id: a unique id to represent the subscription
+        :param str ack: acknowledgement mode, either auto, client, or client-individual
+            (see http://stomp.github.io/stomp-specification-1.2.html#SUBSCRIBE_ack_Header)
+            for more information
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
+        assert destination is not None, "'destination' is required"
+        headers = utils.merge_headers([headers, keyword_headers])
+        headers[HDR_DESTINATION] = destination
+        if id:
+            headers[HDR_ID] = id
+        headers[HDR_ACK] = ack
+        self.protocol.transmit(Frame(CMD_SUBSCRIBE, headers))
+
+    def unsubscribe(self, destination=None, id=None, headers=None, **keyword_headers):
+        """
+        Unsubscribe from a destination by either id or the destination name.
+        :param str destination: the name of the topic or queue to unsubscribe from
+        :param str id: the unique identifier of the topic or queue to unsubscribe from
+        :param dict headers: a map of any additional headers the broker requires
+        :param keyword_headers: any additional headers the broker requires
+        """
+        assert id is not None or destination is not None, "'id' or 'destination' is required"
+        headers = utils.merge_headers([headers, keyword_headers])
+        if id:
+            headers[HDR_ID] = id
+        if destination:
+            headers[HDR_DESTINATION] = destination
+        self.protocol.transmit(Frame(CMD_UNSUBSCRIBE, headers))
 
 
 class StompConnection11(BaseConnection, HeartbeatListener):
