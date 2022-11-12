@@ -41,7 +41,7 @@ exptests:
 	$(TEST_CMD) run pytest tests/test_basic.py --log-cli-level=DEBUG -v -ra --full-trace
 	#$(TEST_CMD) run pytest tests/test_cli.py --log-cli-level=DEBUG -v -ra --full-trace
 	#$(TEST_CMD) run pytest tests/test_cli_ssl.py --log-cli-level=DEBUG -v -ra --full-trace
-	#$(TEST_CMD) run pytest tests/test_context.py --log-cli-level=DEBUG -v -ra --full-trace
+	$(TEST_CMD) run pytest tests/test_context.py --log-cli-level=DEBUG -v -ra --full-trace
 	$(TEST_CMD) run pytest tests/test_ipv6.py --log-cli-level=DEBUG -v -ra --full-trace
 	$(TEST_CMD) run pytest tests/test_misc.py --log-cli-level=DEBUG -v -ra --full-trace
 	#$(TEST_CMD) run pytest tests/test_multicast.py --log-cli-level=DEBUG -v -ra --full-trace
