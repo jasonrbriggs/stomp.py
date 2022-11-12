@@ -21,5 +21,6 @@ __version__ = (9, 0, 0)
 # Default connection alias (STOMP 1.1).
 #
 Connection = connect.StompConnection11
+Connection10 = connect.StompConnection10
 Connection11 = connect.StompConnection11
 Connection12 = connect.StompConnection12
