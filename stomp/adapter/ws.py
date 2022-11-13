@@ -170,27 +170,13 @@ class WSTransport(BaseTransport):
         """
         self.running = False
         if self.socket is not None:
-            if self.__need_ssl():
-                #
-                # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL
-                # shutdown
-                #
-                try:
-                    self.socket = self.socket.unwrap()
-                except Exception:
-                    #
-                    # unwrap seems flaky on Win with the back-ported ssl mod, so catch any exception and log it
-                    #
-                    _, e, _ = sys.exc_info()
-                    logging.warning(e)
-            elif hasattr(socket, "SHUT_RDWR"):
-                try:
-                    self.socket.shutdown(socket.SHUT_RDWR)
-                except socket.error:
-                    _, e, _ = sys.exc_info()
-                    # ignore when socket already closed
-                    if get_errno(e) != errno.ENOTCONN:
-                        logging.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+            try:
+                self.socket.shutdown()
+            except socket.error:
+                _, e, _ = sys.exc_info()
+                # ignore when socket already closed
+                if get_errno(e) != errno.ENOTCONN:
+                    logging.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
