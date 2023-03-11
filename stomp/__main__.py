@@ -49,8 +49,6 @@ from stomp.listener import ConnectionListener, StatsListener
 sys.path.append(".")
 import stomp
 
-version_string = "%s.%s.%s" % stomp.__version__
-
 heartbeat_pattern = re.compile(r"[0-9]+,[0-9]+")
 
 
@@ -370,7 +368,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_version(self, args):
         self.__sysout("%s%s [Protocol version %s]%s" %
-                      (stomp.colours.BOLD, version_string, self.conn.version, stomp.colours.NO_COLOUR))
+                      (stomp.colours.BOLD, stomp.version, self.conn.version, stomp.colours.NO_COLOUR))
     do_ver = do_version
 
     def help_version(self):

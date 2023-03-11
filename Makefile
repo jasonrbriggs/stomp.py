@@ -18,10 +18,6 @@ docs:
 	cd docs && make html
 
 
-updateversion:
-	sed -i "s/__version__\s*=.*/__version__ = \($(VERSION)\)/g" stomp/__init__.py
-
-
 install: updateversion test
 	poetry update
 	poetry build
