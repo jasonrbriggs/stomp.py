@@ -502,7 +502,7 @@ def do_nothing_loop():
 
 
 def main():
-    arguments = docopt(__doc__, version=version_string)
+    arguments = docopt(__doc__, version=stomp.__version__)
 
     if arguments["--listen"] is not None:
         prompt = ""
