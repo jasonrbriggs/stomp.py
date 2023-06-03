@@ -326,6 +326,8 @@ class Protocol11(HeartbeatListener, ConnectionListener):
 
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
+        else:
+            headers[HDR_HOST] = "/"
 
         if username is not None:
             headers[HDR_LOGIN] = username
@@ -516,6 +518,8 @@ class Protocol12(Protocol11):
 
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
+        else:
+            headers[HDR_HOST] = "/"
 
         if username is not None:
             headers[HDR_LOGIN] = username
