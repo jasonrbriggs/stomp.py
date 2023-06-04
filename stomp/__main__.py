@@ -11,6 +11,7 @@ Options:
   -U <user>, --user=<user>     Username for the connection
   -W <password>, --password=<password>
                                Password for the connection
+  --vhost <vhost>              STOMP host header [default /].
   -F <filename>, --file=<filename>
                                File containing commands to be executed, instead of
                                prompting from the command prompt.
@@ -66,7 +67,7 @@ class StompCLI(Cmd, ConnectionListener):
     A command line interface to the stomp.py client.  See :py:class:`stomp.connect.StompConnection11`
     for more information on establishing a connection to a stomp server.
     """
-    def __init__(self, host="localhost", port=61613, user="", passcode="", ver="1.1", prompt="> ", verbose=True,
+    def __init__(self, host="localhost", port=61613, user="", passcode="", vhost=None, ver="1.1", prompt="> ", verbose=True,
                  heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None,
                  stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, "Tab", stdin, stdout)
@@ -80,9 +81,9 @@ class StompCLI(Cmd, ConnectionListener):
         if ver == "1.0":
             self.conn = StompConnection10([(host, port)])
         elif ver == "1.1":
-            self.conn = StompConnection11([(host, port)], heartbeats=heartbeats)
+            self.conn = StompConnection11([(host, port)], vhost=vhost, heartbeats=heartbeats)
         elif ver == "1.2":
-            self.conn = StompConnection12([(host, port)], heartbeats=heartbeats)
+            self.conn = StompConnection12([(host, port)], vhost=vhost, heartbeats=heartbeats)
         elif ver == "multicast":
             self.conn = MulticastConnection()
         else:
@@ -515,7 +516,7 @@ def main():
 
     heartbeats = tuple(map(int, arguments["--heartbeats"].split(",")))
 
-    st = StompCLI(arguments["--host"], arguments["--port"], arguments["--user"], arguments["--password"], arguments["--protocol"],
+    st = StompCLI(arguments["--host"], arguments["--port"], arguments["--user"], arguments["--password"], arguments["--vhost"], arguments["--protocol"],
                   prompt, arguments["--verbose"], heartbeats=heartbeats,
                   use_ssl=arguments["--ssl"],
                   ssl_key_file=arguments["--ssl-key-file"],
