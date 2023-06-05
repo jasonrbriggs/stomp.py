@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:11
 
 MAINTAINER Jason R Briggs <jasonrbriggs@gmail.com>
 
