@@ -212,7 +212,8 @@ class WSTransport(BaseTransport):
         :rtype: bytes
         """
         try:
-            return self.socket.recv().encode()
+            ret = self.socket.recv()
+            return ret.encode() if type(ret) == str else ret
         except socket.error:
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
