@@ -323,11 +323,10 @@ class Protocol11(HeartbeatListener, ConnectionListener):
         cmd = CMD_CONNECT if with_connect_command else CMD_STOMP
         headers = utils.merge_headers([headers, keyword_headers])
         headers[HDR_ACCEPT_VERSION] = self.version
+        headers[HDR_HOST] = self.transport.current_host_and_port[0]
 
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
-        else:
-            headers[HDR_HOST] = "/"
 
         if username is not None:
             headers[HDR_LOGIN] = username
@@ -518,8 +517,6 @@ class Protocol12(Protocol11):
 
         if self.transport.vhost:
             headers[HDR_HOST] = self.transport.vhost
-        else:
-            headers[HDR_HOST] = "/"
 
         if username is not None:
             headers[HDR_LOGIN] = username
