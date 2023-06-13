@@ -61,7 +61,7 @@ author = 'Jason R Briggs'
 # built documents.
 #
 # The short X.Y version.
-version = '.'.join(map(str, stomp.__version__))
+version = stomp.__version__
 # The full version, including alpha/beta/rc tags.
 release = version + ''
 
