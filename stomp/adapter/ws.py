@@ -324,12 +324,13 @@ class WSTransport(BaseTransport):
                         scheme = "ws"
                     self.socket = websocket.create_connection(
                         f"{scheme}://{host_and_port[0]}:{host_and_port[1]}{path}",
+                        timeout=self.__timeout,
                         header=self.header,
                         sslopt=self.get_ssl()
                     )
                     logging.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
-                except (OSError, AssertionError) as exc:
+                except (OSError, AssertionError, websocket._exceptions.WebSocketException) as exc:
                     self.socket = None
                     connect_count += 1
                     logging.warning("Could not connect to host %s, port %s: %s", host_and_port[0], host_and_port[1],
