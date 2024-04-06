@@ -1,3 +1,11 @@
+## Version 8.1.1 - Apr 2024
+
+ * Change version from tuple to string
+ * Docker file updates to fix vulnerabilities
+ * Exception handling fix for websocket connections
+ * Fix to use the defined timeout during the websocket connection
+
+
 ## Version 8.1.0 - Oct 2022
 
  * Remove ssl expiration check as per PR: https://github.com/jasonrbriggs/stomp.py/pull/380
