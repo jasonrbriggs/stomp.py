@@ -75,6 +75,7 @@ class WSTransport(BaseTransport):
         For macos, supply ("mac", ka_intvl)
     :param str vhost: specify a virtual hostname to provide in the 'host' header of the connection
     :param int recv_bytes: the number of bytes to use when calling recv
+    :param bool binary_mode: if true, then send binary data frames (opcode 0x2) rather than text data frames (opcode 0x1)
     """
 
     def __init__(self,
@@ -95,7 +96,8 @@ class WSTransport(BaseTransport):
                  is_eol_fc=is_eol_default,
                  bind_host_port=None,
                  ws_path=None,
-                 header=None):
+                 header=None,
+                 binary_mode=False):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
@@ -140,6 +142,7 @@ class WSTransport(BaseTransport):
         self.__reconnect_sleep_max = reconnect_sleep_max
         self.__reconnect_attempts_max = reconnect_attempts_max
         self.__timeout = timeout
+        self.__binary_mode = binary_mode
 
         self.socket = None
         self.__socket_semaphore = threading.BoundedSemaphore(1)
@@ -199,7 +202,12 @@ class WSTransport(BaseTransport):
         if self.socket is not None:
             try:
                 with self.__socket_semaphore:
-                    self.socket.send(encoded_frame)
+                    if self.__binary_mode:
+                        opcode = websocket.ABNF.OPCODE_BINARY
+                    else:
+                        opcode = websocket.ABNF.OPCODE_TEXT
+
+                    self.socket.send(encoded_frame, opcode)
             except Exception:
                 _, e, _ = sys.exc_info()
                 logging.error("error sending frame", exc_info=True)
@@ -212,8 +220,8 @@ class WSTransport(BaseTransport):
         :rtype: bytes
         """
         try:
-            ret = self.socket.recv()
-            return ret.encode() if type(ret) == str else ret
+            opcode, data = self.socket.recv_data()
+            return data
         except socket.error:
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
@@ -438,12 +446,13 @@ class WSStompConnection(StompConnection12):
                  bind_host_port=None,
                  ws=None,
                  ws_path=None,
-                 header=None):
+                 header=None,
+                 binary_mode=False):
         transport = WSTransport(host_and_ports, prefer_localhost, try_loopback_connect,
                               reconnect_sleep_initial, reconnect_sleep_increase, reconnect_sleep_jitter,
                               reconnect_sleep_max, reconnect_attempts_max, timeout,
                               keepalive, vhost, auto_decode, encoding, bind_host_port=bind_host_port,
-                              header=header, ws_path=ws_path)
+                              header=header, ws_path=ws_path, binary_mode=binary_mode)
         BaseConnection.__init__(self, transport)
         Protocol12.__init__(self, transport, heartbeats, auto_content_length,
                             heart_beat_receive_scale=heart_beat_receive_scale)
