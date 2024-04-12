@@ -381,7 +381,7 @@ class BaseTransport(stomp.listener.Publisher):
                 logging.debug("socket read error", exc_info=logging.verbose)
                 c = b""
             if c is None or len(c) == 0:
-                logging.debug("nothing received, raising CCE")
+                logging.debug("nothing received, raising ConnectionClosedException")
                 raise exception.ConnectionClosedException()
             if self.__is_eol(c) and not self.__recvbuf and not fastbuf.tell():
                 #
