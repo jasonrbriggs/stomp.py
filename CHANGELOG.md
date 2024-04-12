@@ -1,3 +1,9 @@
+## Version 8.1.2 - Apr 2024
+
+ * New binary_mode param on WS connections (https://github.com/jasonrbriggs/stomp.py/pull/419)
+ * Correct WSTransport.receive output (https://github.com/jasonrbriggs/stomp.py/pull/422)
+
+
 ## Version 8.1.1 - Apr 2024
 
  * Change version from tuple to string
