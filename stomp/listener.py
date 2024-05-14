@@ -264,7 +264,7 @@ class HeartbeatListener(ConnectionListener):
             self.next_outbound_heartbeat = now + self.send_sleep
             logging.debug("calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
 
-        while self.running:
+        while not self.heartbeat_terminate_event.is_set():
             now = monotonic()
 
             next_events = []
