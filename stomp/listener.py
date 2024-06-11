@@ -193,6 +193,7 @@ class HeartbeatListener(ConnectionListener):
 
                 self.running = True
                 if self.heartbeat_thread is None:
+                    self.heartbeat_terminate_event.clear()
                     self.heartbeat_thread = utils.default_create_thread(
                         self.__heartbeat_loop)
                     self.heartbeat_thread.name = "StompHeartbeat%s" % \
@@ -264,7 +265,7 @@ class HeartbeatListener(ConnectionListener):
             self.next_outbound_heartbeat = now + self.send_sleep
             logging.debug("calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
 
-        while self.running:
+        while not self.heartbeat_terminate_event.is_set():
             now = monotonic()
 
             next_events = []
@@ -309,7 +310,6 @@ class HeartbeatListener(ConnectionListener):
                     for listener in self.transport.listeners.values():
                         listener.on_heartbeat_timeout()
         self.heartbeat_thread = None
-        self.heartbeat_terminate_event.clear()
         if self.heartbeats != (0, 0):
             # don't bother logging this if heartbeats weren't setup to start with
             logging.debug("heartbeat loop ended")
