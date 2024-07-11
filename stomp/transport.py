@@ -73,6 +73,7 @@ class BaseTransport(stomp.listener.Publisher):
 
         # function for creating threads used by the connection
         self.create_thread_fc = default_create_thread
+        self.receiver_thread = None
 
         self.__listeners_change_condition = threading.Condition()
         self.__receiver_thread_exit_condition = threading.Condition()
@@ -106,8 +107,8 @@ class BaseTransport(stomp.listener.Publisher):
         """
         self.running = True
         self.attempt_connection()
-        receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        logging.debug("created thread %s using func %s", receiver_thread, self.create_thread_fc)
+        self.receiver_thread = self.create_thread_fc(self.__receiver_loop)
+        logging.debug("created thread %s using func %s", self.receiver_thread, self.create_thread_fc)
         self.notify("connecting")
 
     def stop(self):
