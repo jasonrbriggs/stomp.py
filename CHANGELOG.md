@@ -7,6 +7,7 @@
  * Exception handling fix for websocket connections
  * Fix to use the defined timeout during the websocket connection
  * Update exception to report when file doesn't exist (https://github.com/jasonrbriggs/stomp.py/pull/438)
+ * Make the receiver thread part of the transport class (https://github.com/jasonrbriggs/stomp.py/pull/435)
 
 
 ## Version 8.1.2 - Apr 2024 [YANKED]
