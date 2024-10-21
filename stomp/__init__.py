@@ -14,7 +14,7 @@ import stomp.connect as connect
 import stomp.listener as listener
 import stomp.logging as logging
 
-__version__ = "8.1.1"
+__version__ = "8.2.0"
 
 ##
 # Alias for STOMP 1.0 connections.
@@ -58,3 +58,9 @@ WaitingListener = listener.WaitingListener
 ##
 # Access to the printing listener
 PrintingListener = listener.PrintingListener
+
+def tuple_version():
+    global __version__
+    if type(__version__) != tuple:
+        import re
+        __version__ = tuple([int(x) for x in re.sub("[^0-9.]", "", __version__).split(".")])

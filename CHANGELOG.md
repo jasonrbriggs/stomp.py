@@ -1,15 +1,21 @@
-## Version 8.1.2 - Apr 2024
+## Version 8.2.0 - Apr 2024
 
  * New binary_mode param on WS connections (https://github.com/jasonrbriggs/stomp.py/pull/419)
  * Correct WSTransport.receive output (https://github.com/jasonrbriggs/stomp.py/pull/422)
-
-
-## Version 8.1.1 - Apr 2024
-
- * Change version from tuple to string
+ * Change version from tuple to string, add tuple version function to get back to the old value
  * Docker file updates to fix vulnerabilities
  * Exception handling fix for websocket connections
  * Fix to use the defined timeout during the websocket connection
+
+
+## Version 8.1.2 - Apr 2024 [YANKED]
+
+Yanked because there are more than just bug fixes in this release so the version number was wrong. Replaced with 8.2.0.
+
+
+## Version 8.1.1 - Apr 2024 [YANKED]
+
+Yanked because there are more than just bug fixes in this release so the version number was wrong. Replaced with 8.2.0.
 
 
 ## Version 8.1.0 - Oct 2022
