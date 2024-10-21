@@ -784,6 +784,12 @@ class Transport(BaseTransport):
                     self.current_host_and_port = host_and_port
                     logging.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
+
+                except FileNotFoundError as err:
+                    logging.error("Could not find file %s", err.filename)
+                    self.socket = None
+                    break
+
                 except (OSError, AssertionError):
                     self.socket = None
                     connect_count += 1
