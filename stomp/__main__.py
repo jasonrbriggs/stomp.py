@@ -368,7 +368,7 @@ class StompCLI(Cmd, ConnectionListener):
 
     def do_version(self, args):
         self.__sysout("%s%s [Protocol version %s]%s" %
-                      (stomp.colours.BOLD, stomp.version, self.conn.version, stomp.colours.NO_COLOUR))
+                      (stomp.colours.BOLD, stomp.__version__, self.conn.version, stomp.colours.NO_COLOUR))
     do_ver = do_version
 
     def help_version(self):
