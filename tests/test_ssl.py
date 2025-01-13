@@ -117,6 +117,30 @@ class TestSSL(object):
         except ImportError:
             pass
 
+    def test_ssl_connection_non_default_ssl_version(self):
+        """
+        Tests that when setting the ssl_version in the ssl config, this option
+        makes it all the way to the initialized ssl configuration on the socket
+        """
+        listener = TestListener("123", print_to_log=True)
+        try:
+            import ssl
+            conn = stomp.Connection(get_ssl_host())
+
+            # Ensure that we set a non-default ssl version
+            ssl_config = get_ssl_host()
+            assert len(ssl_config) == 1
+            if stomp.transport.DEFAULT_SSL_VERSION != ssl.PROTOCOL_TLSv1_2:
+                ssl_version = ssl.PROTOCOL_TLSv1_2
+            else:
+                ssl_version = ssl.PROTOCOL_TLSv1_1
+            conn.set_ssl(get_ssl_host(), ssl_version=ssl_version)
+            conn.set_listener("testlistener", listener)
+            conn.connect(get_default_user(), get_default_password(), wait=True)
+            assert conn.transport.socket._sslobj.context.protocol == ssl_version
+        except ImportError:
+            pass
+
 class TestSSLParams(object):
     def test_set_ssl(self, stomp_transport):
         stomp_transport.set_ssl([host1],

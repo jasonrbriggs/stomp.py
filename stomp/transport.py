@@ -737,7 +737,7 @@ class Transport(BaseTransport):
 
                     if need_ssl:  # wrap socket
                         ssl_params = self.get_ssl(host_and_port)
-                        tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
+                        tls_context = ssl.SSLContext(ssl_params["ssl_version"])
                         if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
                             tls_context.load_verify_locations(ssl_params["ca_certs"])

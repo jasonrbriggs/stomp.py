@@ -5,7 +5,7 @@ PYTHON_VERSION_MAJOR:=$(shell $(PYTHON) -c "import sys;print(sys.version_info[0]
 PLATFORM := $(shell uname)
 VERSION :=$(shell poetry version | sed 's/stomp.py\s*//g' | sed 's/\./, /g')
 SHELL=/bin/bash
-ARTEMIS_VERSION=2.26.0
+ARTEMIS_VERSION=2.38.0
 TEST_CMD := $(shell podman network exists stomptest &> /dev/null && echo "podman unshare --rootless-netns poetry" || echo "poetry")
 
 all: test install
