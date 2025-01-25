@@ -6,7 +6,7 @@ stomp.py
     :target: https://badge.fury.io/py/stomp.py
     :alt: PyPI version
 
-"stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ_, Artemis_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.  NOTE: Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
+"stomp.py" is a Python client library for accessing messaging servers (such as `ActiveMQ Classic`_, `ActiveMQ Artemis`_ or RabbitMQ_) using the STOMP_ protocol (`STOMP v1.0`_, `STOMP v1.1`_ and `STOMP v1.2`_). It can also be run as a standalone, command-line client for testing.  NOTE: Stomp.py has officially ended support for Python2.x. See `python3statement.org`_ for more information. 
 
 .. contents:: \ 
     :depth: 1
@@ -59,8 +59,8 @@ Testing
 stomp.py has been perfunctorily tested on:
 
 - Pivotal `RabbitMQ`_   (`test_rabbitmq.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_rabbitmq.py>`_)
-- Apache `ActiveMQ`_   (`test_activemq.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_activemq.py>`_)
-- Apache ActiveMQ `Artemis`_  (`test_artemis.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_artemis.py>`_)
+- Apache `ActiveMQ Classic`_   (`test_activemq.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_activemq.py>`_)
+- Apache `ActiveMQ Artemis`_  (`test_artemis.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_artemis.py>`_)
 - `stompserver`_  (`test_stompserver.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_stompserver.py>`_)
 
 For testing locally, you'll need to install docker (or `podman`_). Once installed:
@@ -106,8 +106,8 @@ so that <command> has access to the private container network. Service ports are
 .. _`3.1.7 on PyPi`: https://pypi.org/project/stomp.py/3.1.7/
 .. _`3.1.7 on GitHub`: https://github.com/jasonrbriggs/stomp.py/tree/stomppy-3series
 
-.. _`ActiveMQ`:  http://activemq.apache.org/
-.. _`Artemis`: https://activemq.apache.org/components/artemis/
+.. _`ActiveMQ Classic`:  http://activemq.apache.org/components/classic
+.. _`ActiveMQ Artemis`: https://activemq.apache.org/components/artemis/
 .. _`RabbitMQ`: http://www.rabbitmq.com
 .. _`stompserver`: http://stompserver.rubyforge.org
 
