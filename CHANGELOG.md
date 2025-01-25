@@ -1,3 +1,8 @@
+## Version x.x.x - Pending
+
+* Update to docopt-ng (as per issue https://github.com/jasonrbriggs/stomp.py/issues/442)
+
+
 ## Version 8.2.0 - Oct 2024
 
  * New binary_mode param on WS connections (https://github.com/jasonrbriggs/stomp.py/pull/419)

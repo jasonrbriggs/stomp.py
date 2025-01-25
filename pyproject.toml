@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stomp.py"
-version = "8.2.0"
+version = "8.2.1"
 description = "Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the protocol"
 authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
 license = "Apache-2.0"
@@ -20,10 +20,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-docopt = "^0.6.2"
+docopt-ng = "^0.9.0"
 websocket-client = "^1.2.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
 pytest-cov = ">=4.0.0"
 pytest-mock = ">=3.10.0"
