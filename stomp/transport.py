@@ -58,6 +58,8 @@ class BaseTransport(stomp.listener.Publisher):
 
     def __init__(self, auto_decode=True, encoding="utf-8", is_eol_fc=is_eol_default):
         self.__recvbuf = b""
+        self.__content_length = None # If less than 0, no content length exists
+        self.__headers_end = None
         self.listeners = {}
         self.running = False
         self.blocking = None
@@ -186,8 +188,8 @@ class BaseTransport(stomp.listener.Publisher):
         if frame_type in ["connected", "message", "receipt", "error", "heartbeat"]:
             if frame_type == "message":
                 self.notify("before_message", f)
-            if logging.isEnabledFor(logging.DEBUG):
-                logging.debug("received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
+            #if logging.isEnabledFor(logging.DEBUG):
+                #logging.debug("received frame: %r, headers=%r, body=%r", f.cmd, f.headers, f.body)
             self.notify(frame_type, f)
         else:
             logging.warning("unknown response frame type: '%s' (frame length was %d)", frame_type, length(frame_str))
@@ -371,6 +373,7 @@ class BaseTransport(stomp.listener.Publisher):
         :rtype: list(bytes)
         """
         fastbuf = BytesIO()
+
         while self.running:
             try:
                 try:
@@ -381,69 +384,85 @@ class BaseTransport(stomp.listener.Publisher):
             except Exception:
                 logging.debug("socket read error", exc_info=logging.verbose)
                 c = b""
+
             if c is None or len(c) == 0:
-                logging.debug("nothing received, raising ConnectionClosedException")
-                raise exception.ConnectionClosedException()
+                if not fastbuf.tell() and not self.__recvbuf:
+                    logging.debug("nothing received, raising ConnectionClosedException")
+                    raise exception.ConnectionClosedException()
+                break  # we might already have partial frame, proceed to parsing
+
             if self.__is_eol(c) and not self.__recvbuf and not fastbuf.tell():
-                #
-                # EOL to an empty receive buffer: treat as heartbeat.
-                # Note that this may misdetect an optional EOL at end of frame as heartbeat in case the
-                # previous receive() got a complete frame whose NUL at end of frame happened to be the
-                # last byte of that read. But that should be harmless in practice.
-                #
                 fastbuf.close()
                 return [c]
+
             fastbuf.write(c)
-            if b"\x00" in c:
-                #
-                # Possible end of frame
-                #
-                break
+
+            if self.__content_length is None:
+                # Try to detect end of headers
+                preamble_match = PREAMBLE_END_RE.search(fastbuf.getvalue())
+                if preamble_match:
+                    self.__headers_end = preamble_match.end()
+                    cl_match = BaseTransport.__content_length_re.search(fastbuf.getvalue()[:preamble_match.start()])
+                    if cl_match:
+                        self.__content_length = int(cl_match.group("value"))
+                    else:
+                        self.__content_length = -1
+
+            if self.__content_length is not None:
+                if self.__content_length >= 0:
+                    if len(fastbuf.getvalue()) >= self.__headers_end + self.__content_length:
+                        break  # full frame is in
+                else:
+                    # no content-length — rely on null terminator
+                    if b'\x00' in fastbuf.getvalue():
+                        break
+        
         self.__recvbuf += fastbuf.getvalue()
         fastbuf.close()
         result = []
 
         if self.__recvbuf and self.running:
             while True:
-                pos = self.__recvbuf.find(b"\x00")
+                # CASE 1: content-length present
+                if self.__content_length is not None and self.__content_length >= 0 and self.__headers_end is not None:
+                    frame_size = self.__headers_end + self.__content_length
+                    if len(self.__recvbuf) < frame_size:
+                        logging.debug(f"there is not enough data -> recvbuf: {len(self.__recvbuf)}, frame_size: {frame_size}")
+                        break
+                    frame = self.__recvbuf[:frame_size]
+                    result.append(frame)
 
-                if pos >= 0:
-                    frame = self.__recvbuf[0:pos]
-                    preamble_end_match = PREAMBLE_END_RE.search(frame)
-                    if preamble_end_match:
-                        preamble_end = preamble_end_match.start()
-                        content_length_match = BaseTransport.__content_length_re.search(frame[0:preamble_end])
-                        if content_length_match:
-                            content_length = int(content_length_match.group("value"))
-                            content_offset = preamble_end_match.end()
-                            frame_size = content_offset + content_length
-                            if frame_size > len(frame):
-                                #
-                                # Frame contains NUL bytes, need to read more
-                                #
-                                if frame_size < len(self.__recvbuf):
-                                    pos = frame_size
-                                    frame = self.__recvbuf[0:pos]
-                                else:
-                                    #
-                                    # Haven't read enough data yet, exit loop and wait for more to arrive
-                                    #
-                                    break
+                    while frame_size < len(self.__recvbuf):
+                        if self.__is_eol(self.__recvbuf[frame_size:frame_size + 1]):
+                            frame_size += 1
+                        elif self.__is_eol(self.__recvbuf[frame_size:frame_size + 2]):
+                            frame_size += 2
+                        else:
+                            break
+                    
+                    self.__recvbuf = self.__recvbuf[frame_size:]
+                    self.__content_length = None
+                    self.__headers_end = None
+                else:
+                    # CASE 2: no content-length - fallback to null byte logic
+                    pos = self.__recvbuf.find(b"\x00")
+                    if pos < 0:
+                        break  # no complete frame yet
+                    frame = self.__recvbuf[:pos]
                     result.append(frame)
                     pos += 1
-                    #
-                    # Ignore optional EOLs at end of frame
-                    #
-                    while 1:
+
+                    while pos < len(self.__recvbuf):
                         if self.__is_eol(self.__recvbuf[pos:pos + 1]):
                             pos += 1
                         elif self.__is_eol(self.__recvbuf[pos:pos + 2]):
                             pos += 2
                         else:
                             break
+                    
                     self.__recvbuf = self.__recvbuf[pos:]
-                else:
-                    break
+                    self.__content_length = None
+                    self.__headers_end = None
         return result
 
 
@@ -737,7 +756,7 @@ class Transport(BaseTransport):
 
                     if need_ssl:  # wrap socket
                         ssl_params = self.get_ssl(host_and_port)
-                        tls_context = ssl.SSLContext(ssl_params["ssl_version"])
+                        tls_context = ssl.SSLContext(DEFAULT_SSL_VERSION)
                         if ssl_params["ca_certs"]:
                             cert_validation = ssl.CERT_REQUIRED
                             tls_context.load_verify_locations(ssl_params["ca_certs"])
