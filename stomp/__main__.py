@@ -25,6 +25,7 @@ Options:
   --ssl-key-file=<key-file>    ssl key file
   --ssl-cert-file=<cert-file>  ssl cert file
   --ssl-ca-file=<ca-file>      ssl ca certs file
+  --ssl-insecure               disable cert validation
 
 """
 
@@ -67,7 +68,7 @@ class StompCLI(Cmd, ConnectionListener):
     for more information on establishing a connection to a stomp server.
     """
     def __init__(self, host="localhost", port=61613, user="", passcode="", ver="1.1", prompt="> ", verbose=True,
-                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None,
+                 heartbeats=(0, 0), use_ssl=False, ssl_key_file=None, ssl_cert_file=None, ssl_ca_file=None, ssl_insecure=False,
                  stdin=sys.stdin, stdout=sys.stdout):
         Cmd.__init__(self, "Tab", stdin, stdout)
         ConnectionListener.__init__(self)
@@ -88,7 +89,7 @@ class StompCLI(Cmd, ConnectionListener):
         else:
             raise RuntimeError("Unknown version")
         if use_ssl:
-            self.conn.set_ssl([(host, port)], key_file=ssl_key_file, cert_file=ssl_cert_file, ca_certs=ssl_ca_file)
+            self.conn.set_ssl([(host, port)], key_file=ssl_key_file, cert_file=ssl_cert_file, ca_certs=ssl_ca_file, verify=not ssl_insecure)
         self.conn.set_listener("", self)
         self.conn.connect(self.user, self.passcode, wait=True)
         self.transaction_id = None
@@ -520,7 +521,8 @@ def main():
                   use_ssl=arguments["--ssl"],
                   ssl_key_file=arguments["--ssl-key-file"],
                   ssl_cert_file=arguments["--ssl-cert-file"],
-                  ssl_ca_file=arguments["--ssl-ca-file"])
+                  ssl_ca_file=arguments["--ssl-ca-file"],
+                  ssl_insecure=arguments["--ssl-insecure"])
 
     if arguments["--listen"] is not None:
         st.do_subscribe(arguments["--listen"])

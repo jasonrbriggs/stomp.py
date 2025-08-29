@@ -15,7 +15,7 @@ class TestSSLCLI(object):
         teststdout = StubStdout(self)
         teststdout.expect("CONNECTED")
 
-        cli = StompCLI(sslhost, sslport, username, password, "1.0", use_ssl=True, stdin=teststdin, stdout=teststdout)
+        cli = StompCLI(sslhost, sslport, username, password, "1.0", use_ssl=True, ssl_insecure=True, stdin=teststdin, stdout=teststdout)
 
         time.sleep(3)
 

@@ -739,8 +739,11 @@ class Transport(BaseTransport):
                         ssl_params = self.get_ssl(host_and_port)
                         tls_context = ssl.SSLContext(ssl_params["ssl_version"])
                         if ssl_params["ca_certs"]:
-                            cert_validation = ssl.CERT_REQUIRED
                             tls_context.load_verify_locations(ssl_params["ca_certs"])
+                        else:
+                            tls_context.load_default_certs()
+                        if ssl_params["verify"]:
+                            cert_validation = ssl.CERT_REQUIRED
                         else:
                             cert_validation = ssl.CERT_NONE
                         if tls_context:
@@ -820,7 +823,8 @@ class Transport(BaseTransport):
                 ca_certs=None,
                 cert_validator=None,
                 ssl_version=DEFAULT_SSL_VERSION,
-                password=None):
+                password=None,
+                verify=True):
         """
         Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
         exception if the SSL module can't be found.
@@ -848,6 +852,7 @@ class Transport(BaseTransport):
                                                 cert_file=cert_file,
                                                 ca_certs=ca_certs,
                                                 cert_validator=cert_validator,
+                                                verify=verify,
                                                 ssl_version=ssl_version,
                                                 password=password)
 

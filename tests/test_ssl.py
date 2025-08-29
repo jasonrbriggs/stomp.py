@@ -33,7 +33,7 @@ class TestSSL(object):
             queuename = "/queue/testssl-%s" % listener.timestamp
             conn = stomp.Connection(get_ssl_host())
             #conn.set_ssl(get_ssl_host())
-            conn.set_ssl(get_ssl_host())
+            conn.set_ssl(get_ssl_host(), verify=False)
             conn.set_listener("testlistener", listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)
             conn.subscribe(destination=queuename, id=1, ack="auto")
@@ -134,7 +134,7 @@ class TestSSL(object):
                 ssl_version = ssl.PROTOCOL_TLSv1_2
             else:
                 ssl_version = ssl.PROTOCOL_TLSv1_1
-            conn.set_ssl(get_ssl_host(), ssl_version=ssl_version)
+            conn.set_ssl(get_ssl_host(), ssl_version=ssl_version, verify=False)
             conn.set_listener("testlistener", listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)
             assert conn.transport.socket._sslobj.context.protocol == ssl_version
