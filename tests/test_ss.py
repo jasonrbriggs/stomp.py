@@ -21,7 +21,7 @@ server:test
 heart-beat:1000,1000
 
 \x00''')
-        stomp.logging.verbose = True
+        stomp.log.verbose = True
         conn = stomp.Connection([("192.0.2.0", 10000), ("127.0.0.1", 60000)], timeout=1, prefer_localhost=False)
         listener = TestListener(print_to_log=True)
         conn.set_listener('', listener)
@@ -61,7 +61,7 @@ heart-beat:1000,1000
             _, e, _ = sys.exc_info()
             if e.__class__ == AssertionError:
                 pytest.fail(str(e))
-            logging.debug("stopping conn after expected exception %s", e)
+            log.debug("stopping conn after expected exception %s", e)
             # lost connection, now restart the server
             try:
                 conn.disconnect(receipt=None)
@@ -92,7 +92,7 @@ heart-beat:1000,1000
             # pump; test server gives us one frame per received something
             for x in range(n):
                 if x == 0:
-                    logging.debug("pump sending %s frames" % n)
+                    log.debug("pump sending %s frames" % n)
                 conn.transport.send(b"\n")
                 time.sleep(0.01)
 
@@ -112,7 +112,7 @@ heart-beat:1000,1000
         conn.set_listener('', listener)
         conn.connect()
 
-        logging.info("test parsing (1) expected hb count is %s", expected_heartbeat_count)
+        log.info("test parsing (1) expected hb count is %s", expected_heartbeat_count)
         assert expected_heartbeat_count == listener.heartbeat_count, "(1) expected hb count %s, was %s" % (expected_heartbeat_count, listener.heartbeat_count)
 
         # No trailing EOLs, separate heartbeat
@@ -129,7 +129,7 @@ content-type:text/plain
 
         pump(2)
 
-        logging.info("test parsing (2) expected hb count is %s", expected_heartbeat_count)
+        log.info("test parsing (2) expected hb count is %s", expected_heartbeat_count)
 
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
@@ -147,7 +147,7 @@ content-type:text/plain
 
         pump(3)
 
-        logging.info("test parsing (3) expected hb count is %s", expected_heartbeat_count)
+        log.info("test parsing (3) expected hb count is %s", expected_heartbeat_count)
 
         listener.wait_for_heartbeat()
         listener.wait_for_message()
@@ -166,7 +166,7 @@ content-type:text/plain
 
         pump(len(message_frame) + 2)
 
-        logging.info("test parsing (4) expected hb count is %s", expected_heartbeat_count)
+        log.info("test parsing (4) expected hb count is %s", expected_heartbeat_count)
 
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()
@@ -192,7 +192,7 @@ content-length:%s
 
         pump(len(message_frame) + 3)
 
-        logging.info("test parsing (5) expected hb count is %s", expected_heartbeat_count)
+        log.info("test parsing (5) expected hb count is %s", expected_heartbeat_count)
 
         listener.wait_for_heartbeat()
         headers, body = listener.get_latest_message()

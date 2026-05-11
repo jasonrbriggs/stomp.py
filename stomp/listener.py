@@ -9,7 +9,7 @@ from time import monotonic
 import stomp.exception as exception
 import stomp.utils as utils
 from stomp.constants import *
-from stomp import logging
+from stomp import log
 
 
 class Publisher(object):
@@ -178,7 +178,7 @@ class HeartbeatListener(ConnectionListener):
         if "heart-beat" in frame.headers:
             self.heartbeats = utils.calculate_heartbeats(
                 frame.headers["heart-beat"].replace(" ", "").split(","), self.heartbeats)
-            logging.debug("heartbeats calculated %s", str(self.heartbeats))
+            log.debug("heartbeats calculated %s", str(self.heartbeats))
             if self.heartbeats != (0, 0):
                 self.send_sleep = self.heartbeats[0] / 1000
 
@@ -186,7 +186,7 @@ class HeartbeatListener(ConnectionListener):
                 # set a different heart-beat-receive-scale when creating the connection to override that
                 self.receive_sleep = (self.heartbeats[1] / 1000) * self.heart_beat_receive_scale
 
-                logging.debug("set receive_sleep to %s, send_sleep to %s", self.receive_sleep, self.send_sleep)
+                log.debug("set receive_sleep to %s, send_sleep to %s", self.receive_sleep, self.send_sleep)
 
                 # Give grace of receiving the first heartbeat
                 self.received_heartbeat = monotonic() + self.receive_sleep
@@ -257,13 +257,13 @@ class HeartbeatListener(ConnectionListener):
         """
         Main loop for sending (and monitoring received) heartbeats.
         """
-        logging.debug("starting heartbeat loop")
+        log.debug("starting heartbeat loop")
         now = monotonic()
 
         # Setup the initial due time for the outbound heartbeat
         if self.send_sleep != 0:
             self.next_outbound_heartbeat = now + self.send_sleep
-            logging.debug("calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
+            log.debug("calculated next outbound heartbeat as %s", self.next_outbound_heartbeat)
 
         while not self.heartbeat_terminate_event.is_set():
             now = monotonic()
@@ -288,21 +288,21 @@ class HeartbeatListener(ConnectionListener):
                 continue
 
             if self.send_sleep != 0 and now > self.next_outbound_heartbeat:
-                logging.debug("sending a heartbeat message at %s", now)
+                log.debug("sending a heartbeat message at %s", now)
                 try:
                     self.transport.transmit(utils.Frame(None, {}, None))
                 except exception.NotConnectedException:
-                    logging.debug("lost connection, unable to send heartbeat")
+                    log.debug("lost connection, unable to send heartbeat")
                 except Exception:
                     _, e, _ = sys.exc_info()
-                    logging.debug("unable to send heartbeat, due to: %s", e)
+                    log.debug("unable to send heartbeat, due to: %s", e)
 
             if self.receive_sleep != 0:
                 diff_receive = now - self.received_heartbeat
 
                 if diff_receive > self.receive_sleep:
                     # heartbeat timeout
-                    logging.warning("heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
+                    log.warning("heartbeat timeout: diff_receive=%s, time=%s, lastrec=%s",
                                     diff_receive, now, self.received_heartbeat)
                     self.transport.set_connected(False)
                     self.transport.disconnect_socket()
@@ -312,7 +312,7 @@ class HeartbeatListener(ConnectionListener):
         self.heartbeat_thread = None
         if self.heartbeats != (0, 0):
             # don't bother logging this if heartbeats weren't setup to start with
-            logging.debug("heartbeat loop ended")
+            log.debug("heartbeat loop ended")
 
 
 class WaitingListener(ConnectionListener):
@@ -388,7 +388,7 @@ class StatsListener(ConnectionListener):
         Increment the disconnect count. See :py:meth:`ConnectionListener.on_disconnected`
         """
         self.disconnects += 1
-        logging.info("disconnected (x %s)", self.disconnects)
+        log.info("disconnected (x %s)", self.disconnects)
 
     def on_error(self, frame):
         """
@@ -396,10 +396,10 @@ class StatsListener(ConnectionListener):
 
         :param Frame frame: the stomp frame
         """
-        if logging.isEnabledFor(logging.DEBUG):
-            logging.debug("received an error %s [%s]", frame.body, frame.headers)
+        if log.isEnabledFor(log.DEBUG):
+            log.debug("received an error %s [%s]", frame.body, frame.headers)
         else:
-            logging.info("received an error %s", frame.body)
+            log.info("received an error %s", frame.body)
         self.errors += 1
 
     def on_connecting(self, host_and_port):
@@ -408,7 +408,7 @@ class StatsListener(ConnectionListener):
 
         :param (str,int) host_and_port: the host and port as a tuple
         """
-        logging.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
+        log.info("connecting %s %s (x %s)", host_and_port[0], host_and_port[1], self.connections)
         self.connections += 1
 
     def on_message(self, frame):
@@ -431,7 +431,7 @@ class StatsListener(ConnectionListener):
         """
         Increment the heartbeat timeout. See :py:meth:`ConnectionListener.on_heartbeat_timeout`
         """
-        logging.debug("received heartbeat timeout")
+        log.debug("received heartbeat timeout")
         self.heartbeat_timeouts += 1
 
     def on_heartbeat(self):
@@ -460,7 +460,7 @@ class PrintingListener(ConnectionListener):
 
     def __print(self, msg, *args):
         if self.print_to_log:
-            logging.info(msg, *args)
+            log.info(msg, *args)
         else:
             print(msg % args)
 

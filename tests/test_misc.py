@@ -6,7 +6,7 @@ import xml.dom.minidom
 import stomp
 from stomp.exception import *
 from stomp.listener import *
-from stomp import logging
+from stomp import log
 from .testutils import *
 
 
@@ -74,7 +74,7 @@ def conn2():
 
 def timeout_server(svr):
     time.sleep(3)
-    logging.info("Stopping server %s" % svr)
+    log.info("Stopping server %s" % svr)
     svr.running = False
     svr.stop()
 
@@ -130,9 +130,9 @@ class TestNoResponseConnectionKill(object):
             conn.connect(wait=True)
             pytest.fail("Shouldn't happen")
         except ConnectFailedException:
-            logging.info("received connect failed - test success")
+            log.info("received connect failed - test success")
         except Exception as e:
-            logging.error(e)
+            log.error(e)
             pytest.fail("Shouldn't happen, error %s" % e)
 
 

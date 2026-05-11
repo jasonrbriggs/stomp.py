@@ -123,9 +123,9 @@ class TestThreading(object):
                     self.q.put(1, False)
                     time.sleep(1.0)
                 except Full:
-                    logging.info("passed")
+                    log.info("passed")
                     assert False, "Failed: 'request' queue filled up"
 
             self.shutdown()
         else:
-            logging.info("TEST_THREADS_DONT_WEDGE property is not set - not running threading test")
+            log.info("TEST_THREADS_DONT_WEDGE property is not set - not running threading test")

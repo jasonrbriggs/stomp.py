@@ -33,7 +33,7 @@ from stomp.utils import *
 from stomp.connect import BaseConnection, StompConnection12
 from stomp.protocol import Protocol12
 from stomp.exception import *
-from stomp import logging
+from stomp import log
 
 
 class WSTransport(BaseTransport):
@@ -101,7 +101,7 @@ class WSTransport(BaseTransport):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
 
         if host_and_ports is None:
-            logging.debug("no hosts_and_ports specified, adding default localhost")
+            log.debug("no hosts_and_ports specified, adding default localhost")
             host_and_ports = [("localhost", 61613)]
 
         sorted_host_and_ports = []
@@ -179,7 +179,7 @@ class WSTransport(BaseTransport):
                 _, e, _ = sys.exc_info()
                 # ignore when socket already closed
                 if get_errno(e) != errno.ENOTCONN:
-                    logging.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
+                    log.warning("Unable to issue SHUT_RDWR on socket because of error '%s'", e)
 
         #
         # split this into a separate check, because sometimes the socket is nulled between shutdown and this call
@@ -189,7 +189,7 @@ class WSTransport(BaseTransport):
                 self.socket.close()
             except socket.error:
                 _, e, _ = sys.exc_info()
-                logging.warning("unable to close socket because of error '%s'", e)
+                log.warning("unable to close socket because of error '%s'", e)
         self.current_host_and_port = None
         self.socket = None
         if not self.notified_on_disconnect:
@@ -210,7 +210,7 @@ class WSTransport(BaseTransport):
                     self.socket.send(encoded_frame, opcode)
             except Exception:
                 _, e, _ = sys.exc_info()
-                logging.error("error sending frame", exc_info=True)
+                log.error("error sending frame", exc_info=True)
                 raise e
         else:
             raise NotConnectedException()
@@ -225,7 +225,7 @@ class WSTransport(BaseTransport):
         except socket.error:
             _, e, _ = sys.exc_info()
             if get_errno(e) in (errno.EAGAIN, errno.EINTR):
-                logging.debug("socket read interrupted, restarting")
+                log.debug("socket read interrupted, restarting")
                 raise InterruptedException()
             if self.is_connected():
                 raise
@@ -246,9 +246,9 @@ class WSTransport(BaseTransport):
                 return True  # no value to set always works
             try:
                 sock.setsockopt(fam, opt, val)
-                logging.info("keepalive: set %r option to %r on socket", name, val)
+                log.info("keepalive: set %r option to %r on socket", name, val)
             except:
-                logging.error("keepalive: unable to set %r option to %r on socket", name, val)
+                log.error("keepalive: unable to set %r option to %r on socket", name, val)
                 return False
             return True
 
@@ -265,26 +265,26 @@ class WSTransport(BaseTransport):
                 ka_sig = ka[0]
                 ka_args = ka[1:]
             except Exception:
-                logging.error("keepalive: bad specification %r", ka)
+                log.error("keepalive: bad specification %r", ka)
                 return
 
         if ka_sig == "auto":
             if LINUX_KEEPALIVE_AVAIL:
                 ka_sig = "linux"
                 ka_args = None
-                logging.info("keepalive: autodetected linux-style support")
+                log.info("keepalive: autodetected linux-style support")
             elif MAC_KEEPALIVE_AVAIL:
                 ka_sig = "mac"
                 ka_args = None
-                logging.info("keepalive: autodetected mac-style support")
+                log.info("keepalive: autodetected mac-style support")
             else:
-                logging.error("keepalive: unable to detect any implementation, DISABLED!")
+                log.error("keepalive: unable to detect any implementation, DISABLED!")
                 return
 
         if ka_sig == "linux":
-            logging.info("keepalive: activating linux-style support")
+            log.info("keepalive: activating linux-style support")
             if ka_args is None:
-                logging.info("keepalive: using system defaults")
+                log.info("keepalive: using system defaults")
                 ka_args = (None, None, None)
             ka_idle, ka_intvl, ka_cnt = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
@@ -292,15 +292,15 @@ class WSTransport(BaseTransport):
                 try_setsockopt(self.socket, "interval", SOL_TCP, TCP_KEEPINTVL, ka_intvl)
                 try_setsockopt(self.socket, "count", SOL_TCP, TCP_KEEPCNT, ka_cnt)
         elif ka_sig == "mac":
-            logging.info("keepalive: activating mac-style support")
+            log.info("keepalive: activating mac-style support")
             if ka_args is None:
-                logging.info("keepalive: using system defaults")
+                log.info("keepalive: using system defaults")
                 ka_args = (3,)
             ka_intvl = ka_args
             if try_setsockopt(self.socket, "enable", SOL_SOCKET, SO_KEEPALIVE, 1):
                 try_setsockopt(self.socket, socket.IPPROTO_TCP, 0x10, ka_intvl)
         else:
-            logging.error("keepalive: implementation %r not recognized or not supported", ka_sig)
+            log.error("keepalive: implementation %r not recognized or not supported", ka_sig)
 
     def attempt_connection(self):
         """
@@ -310,12 +310,12 @@ class WSTransport(BaseTransport):
         sleep_exp = 1
         connect_count = 0
 
-        logging.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
+        log.info("attempt reconnection (%s, %s, %s)", self.running, self.socket, connect_count)
         while self.running and self.socket is None and (connect_count < self.__reconnect_attempts_max or
                                                         self.__reconnect_attempts_max == -1):
             for host_and_port in self.__host_and_ports:
                 try:
-                    logging.info("attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    log.info("attempting connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     #websocket.enableTrace(True)
                     self.current_host_and_port = host_and_port
                     path = "/"
@@ -336,13 +336,13 @@ class WSTransport(BaseTransport):
                         header=self.header,
                         sslopt=self.get_ssl()
                     )
-                    logging.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
+                    log.info("established connection to host %s, port %s", host_and_port[0], host_and_port[1])
                     break
                 except (OSError, AssertionError, websocket._exceptions.WebSocketException) as exc:
                     self.socket = None
                     connect_count += 1
-                    logging.warning("Could not connect to host %s, port %s: %s", host_and_port[0], host_and_port[1],
-                                    str(exc), exc_info=logging.verbose)
+                    log.warning("Could not connect to host %s, port %s: %s", host_and_port[0], host_and_port[1],
+                                    str(exc), exc_info=log.verbose)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
@@ -350,7 +350,7 @@ class WSTransport(BaseTransport):
                                        * math.pow(1.0 + self.__reconnect_sleep_increase, sleep_exp)))
                                   * (1.0 + random.random() * self.__reconnect_sleep_jitter))
                 sleep_end = monotonic() + sleep_duration
-                logging.debug("sleeping for %.1f seconds before attempting reconnect", sleep_duration)
+                log.debug("sleeping for %.1f seconds before attempting reconnect", sleep_duration)
                 while self.running and monotonic() < sleep_end:
                     time.sleep(0.2)
 

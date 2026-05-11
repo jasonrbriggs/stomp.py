@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 import stomp
 from stomp.listener import TestListener
 from .testutils import *
-from stomp import logging
+from stomp import log
 
 
 executor = ThreadPoolExecutor()
@@ -51,11 +51,11 @@ class TestThreadingOverride(object):
 
         validate_send(conn, 1, 1, 0)
 
-        logging.info("first disconnect")
+        log.info("first disconnect")
         conn.disconnect(receipt="112233")
 
-        logging.info("reconnecting")
+        log.info("reconnecting")
         conn.connect(get_default_user(), get_default_password(), wait=True)
 
-        logging.info("second disconnect")
+        log.info("second disconnect")
         conn.disconnect()

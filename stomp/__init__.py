@@ -12,7 +12,7 @@ Project Page: https://github.com/jasonrbriggs/stomp.py
 import stomp.adapter as adapter
 import stomp.connect as connect
 import stomp.listener as listener
-import stomp.logging as logging
+import stomp.log as log
 
 __version__ = "8.3.0"
 

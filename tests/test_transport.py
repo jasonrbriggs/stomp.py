@@ -1,7 +1,7 @@
 import pytest
 
 import stomp
-from stomp import logging
+from stomp import log
 
 
 @pytest.fixture
@@ -20,7 +20,7 @@ class TestTransport(object):
         stomp_transport.process_frame(fr, None)
 
     def test_process_frame_empty_body(self, stomp_transport):
-        logging.setLevel(logging.INFO)
+        log.setLevel(log.INFO)
         fr = stomp.utils.Frame("error", {}, None)
         stomp_transport.process_frame(fr, None)
 
@@ -29,7 +29,7 @@ class TestTransport(object):
         stomp_transport.process_frame(fr, None)
 
     def test_process_frame(self, stomp_transport):
-        logging.setLevel(logging.INFO)
+        log.setLevel(log.INFO)
         fr = stomp.utils.Frame("error", {}, "test message")
         stomp_transport.process_frame(fr, None)
 

@@ -10,7 +10,7 @@ from subprocess import run, PIPE
 import pytest
 
 from stomp.utils import *
-from stomp import logging
+from stomp import log
 
 config = RawConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), "setup.ini"))
@@ -136,7 +136,7 @@ class StubStompServer(object):
         self.frames = []
 
     def start(self):
-        logging.info("starting stomp server")
+        log.info("starting stomp server")
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((self.host, self.port))
@@ -146,10 +146,10 @@ class StubStompServer(object):
         thread.daemon = True
         thread.start()
         self.stopped = False
-        logging.info("stomp server started")
+        log.info("stomp server started")
 
     def stop(self):
-        logging.info("stopping test server")
+        log.info("stopping test server")
         if self.conn:
             try:
                 self.conn.shutdown(socket.SHUT_WR)
@@ -162,7 +162,7 @@ class StubStompServer(object):
         self.conn = None
         self.s = None
         self.stopped = True
-        logging.info("connection stopped")
+        log.info("connection stopped")
 
     def get_next_frame(self):
         if len(self.frames) > 0:
@@ -184,11 +184,11 @@ class StubStompServer(object):
                 if self.conn is None:
                     break
                 if frame is not None:
-                    logging.info("stompserver sending frame %s", frame)
+                    log.info("stompserver sending frame %s", frame)
                     self.conn.send(encode(frame))
             except Exception:
                 _, e, _ = sys.exc_info()
-                logging.debug(e)
+                log.debug(e)
                 break
             time.sleep(0.1)
         try:
@@ -196,7 +196,7 @@ class StubStompServer(object):
         except:
             pass
         self.stopped = True
-        logging.info("run loop completed")
+        log.info("run loop completed")
 
 
 class StubStdin(object):
@@ -244,7 +244,7 @@ def validate_send(conn, connections=1, messages=1, errors=0):
 
 def is_inside_travis():
     if os.environ.get("TRAVIS", "false") == "true":
-        logging.info("not running test inside travis")
+        log.info("not running test inside travis")
         return True
     return False
 

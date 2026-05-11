@@ -21,7 +21,7 @@ class TestSNIMQSend(object):
             return [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('172.20.0.2', port))]
         monkeypatch.setattr(socket, "getaddrinfo", getaddrinfo_fake)
         if not is_inside_travis():
-            logging.info("running ipv6 test")
+            log.info("running ipv6 test")
             receipt_id = str(uuid.uuid4())
             conn = stomp.Connection11(get_sni_ssl_host())
             conn.set_ssl(get_sni_ssl_host(), verify=False)
@@ -30,7 +30,7 @@ class TestSNIMQSend(object):
             conn.connect(get_default_user(), get_default_password(), wait=True)
             conn.subscribe(destination="/queue/test", id=1, ack="auto")
 
-            logging.info("sending message with receipt %s" % receipt_id)
+            log.info("sending message with receipt %s" % receipt_id)
             conn.send(body="this is a test", destination="/queue/test", receipt=receipt_id)
 
             listener.wait_for_message()

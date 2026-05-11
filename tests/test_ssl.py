@@ -4,7 +4,7 @@ import pytest
 import stomp
 from stomp import transport
 from stomp.listener import TestListener
-from stomp import logging
+from stomp import log
 from .testutils import *
 
 
@@ -16,7 +16,7 @@ ssl_ca_certs = "ssl_ca_certs"
 ssl_cert_validator = "ssl_cert_validator"
 ssl_version = "version"
 # Necessary to see the root cause of SSL errors
-logging.log_to_stdout(verbose_logging=True)
+log.log_to_stdout(verbose_logging=True)
 
 
 @pytest.fixture

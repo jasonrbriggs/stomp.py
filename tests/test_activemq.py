@@ -21,4 +21,4 @@ class TestActiveMQ(object):
 
         validate_send(conn)
 
-        logging.info(conn.get_listener("testlistener").get_latest_message())
+        log.info(conn.get_listener("testlistener").get_latest_message())
