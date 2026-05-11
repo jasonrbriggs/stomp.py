@@ -20,7 +20,7 @@ RUN apt update && apt install -y \
 # rabbitmq setup
 RUN rabbitmq-plugins enable rabbitmq_stomp
 RUN rabbitmq-plugins enable rabbitmq_web_stomp
-RUN echo "stomp.listeners.tcp.1 = 172.17.0.2:61613" > /etc/rabbitmq/rabbitmq.conf
+RUN echo "stomp.listeners.tcp.1 = 172.20.0.2:61613" > /etc/rabbitmq/rabbitmq.conf
 RUN echo "loopback_users = none" >> /etc/rabbitmq/rabbitmq.conf
 
 COPY tmp/broker.ks /
@@ -39,7 +39,7 @@ ENV ACTIVEMQ_SSL_OPTS="-Djavax.net.ssl.keyStore=/broker.ks -Djavax.net.ssl.keySt
 
 # stompserver setup
 RUN sed -i 's/port: .*/port: 63613/g' /etc/stompserver/stompserver.conf
-RUN sed -i 's/host: .*/host: 172.17.0.2/g' /etc/stompserver/stompserver.conf
+RUN sed -i 's/host: .*/host: 172.20.0.2/g' /etc/stompserver/stompserver.conf
 
 # ssl setup
 RUN openssl req -x509 -newkey rsa:2048 -keyout tmp/key1.pem -out tmp/cert1.pem -days 365 -nodes -subj "/CN=my.example.org"

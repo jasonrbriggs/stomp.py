@@ -18,7 +18,7 @@ class TestSNIMQSend(object):
     def testconnect(self, monkeypatch):
         def getaddrinfo_fake(host, port, *args, **kw):
             """Always return the IP address of the container."""
-            return [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('172.17.0.2', port))]
+            return [(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, '', ('172.20.0.2', port))]
         monkeypatch.setattr(socket, "getaddrinfo", getaddrinfo_fake)
         if not is_inside_travis():
             logging.info("running ipv6 test")
