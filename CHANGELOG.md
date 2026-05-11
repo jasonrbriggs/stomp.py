@@ -1,4 +1,4 @@
-## Version 8.3.0 - Pending
+## Version 8.3.0 - May 2026
 
 * Update to docopt-ng (as per issue https://github.com/jasonrbriggs/stomp.py/issues/442)
 * Pass ssl version from ssl_params (https://github.com/jasonrbriggs/stomp.py/pull/440)
