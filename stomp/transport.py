@@ -887,11 +887,11 @@ class Transport(BaseTransport):
                     self.socket = None
                     break
 
-                except (OSError, AssertionError):
+                except (OSError, AssertionError) as err:
                     self.socket = None
                     connect_count += 1
-                    logging.warning("could not connect to host %s, port %s", host_and_port[0], host_and_port[1],
-                                    exc_info=logging.verbose)
+                    logging.warning("could not connect to host %s, port %s: %s", host_and_port[0], host_and_port[1],
+                                    err, exc_info=logging.verbose)
 
             if self.socket is None:
                 sleep_duration = (min(self.__reconnect_sleep_max,
