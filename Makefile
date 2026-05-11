@@ -44,7 +44,7 @@ release: updateversion
 
 docker/tmp/activemq-artemis-bin.tar.gz:
 	mkdir -p docker/tmp
-	wget http://www.apache.org/dist/activemq/activemq-artemis/${ARTEMIS_VERSION}/apache-artemis-${ARTEMIS_VERSION}-bin.tar.gz -O $@ || rm $@
+	wget https://archive.apache.org/dist/activemq/activemq-artemis/${ARTEMIS_VERSION}/apache-artemis-${ARTEMIS_VERSION}-bin.tar.gz -O $@ || rm $@
 
 
 ssl-setup:

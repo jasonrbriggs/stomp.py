@@ -7,8 +7,10 @@ import math
 import random
 import sys
 import time
+import selectors
 from io import BytesIO
 from time import monotonic
+from collections import deque
 
 try:
     from socket import SOL_SOCKET, SO_KEEPALIVE, SOL_TCP, TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT
@@ -60,7 +62,9 @@ class BaseTransport(stomp.listener.Publisher):
         self.__recvbuf = b""
         self.listeners = {}
         self.running = False
-        self.blocking = None
+        self.blocking = True # Flips to False for TLS connections
+        self.send_queue = None
+        self.sel = None
         self.connected = False
         self.connection_error = False
         self.disconnecting = False
@@ -73,11 +77,11 @@ class BaseTransport(stomp.listener.Publisher):
 
         # function for creating threads used by the connection
         self.create_thread_fc = default_create_thread
-        self.receiver_thread = None
+        self.io_thread = None
 
         self.__listeners_change_condition = threading.Condition()
-        self.__receiver_thread_exit_condition = threading.Condition()
-        self.__receiver_thread_exited = False
+        self.__io_thread_exit_condition = threading.Condition()
+        self.__io_thread_exited = False
         self.__send_wait_condition = threading.Condition()
         self.__connect_wait_condition = threading.Condition()
         self.__auto_decode = auto_decode
@@ -87,7 +91,7 @@ class BaseTransport(stomp.listener.Publisher):
     def override_threading(self, create_thread_fc):
         """
         Override for thread creation. Use an alternate threading library by
-        setting this to a function with a single argument (which is the receiver loop callback).
+        setting this to a function with a single argument (which is the io loop callback).
         The thread which is returned should be started (ready to run)
 
         :param function create_thread_fc: single argument function for creating a thread
@@ -107,18 +111,18 @@ class BaseTransport(stomp.listener.Publisher):
         """
         self.running = True
         self.attempt_connection()
-        self.receiver_thread = self.create_thread_fc(self.__receiver_loop)
-        logging.debug("created thread %s using func %s", self.receiver_thread, self.create_thread_fc)
+        self.io_thread = self.create_thread_fc(self.__io_loop)
+        logging.debug("created thread %s using func %s", self.io_thread, self.create_thread_fc)
         self.notify("connecting")
 
     def stop(self):
         """
         Stop the connection. Performs a clean shutdown by waiting for the
-        receiver thread to exit.
+        io thread to exit.
         """
-        with self.__receiver_thread_exit_condition:
-            while not self.__receiver_thread_exited and self.is_connected():
-                self.__receiver_thread_exit_condition.wait()
+        with self.__io_thread_exit_condition:
+            while not self.__io_thread_exited and self.is_connected():
+                self.__io_thread_exit_condition.wait()
 
     def is_connected(self):
         """
@@ -266,7 +270,12 @@ class BaseTransport(stomp.listener.Publisher):
 
         if logging.isEnabledFor(logging.DEBUG):
             logging.debug("sending frame: %s", clean_lines(lines))
-        self.send(packed_frame)
+
+        if not self.blocking:
+            # Let the io thread write to the socket
+            self.send_queue.put(packed_frame)
+        else:
+            self.send(packed_frame)
 
     def send(self, encoded_frame):
         """
@@ -318,28 +327,62 @@ class BaseTransport(stomp.listener.Publisher):
         if not self.running or not self.is_connected():
             raise exception.ConnectFailedException()
 
-    def __receiver_loop(self):
+    def __io_loop(self):
         """
-        Main loop listening for incoming data.
+        Main loop listening for incoming data. For non-blocking sockets the
+        loop is also responsible for writing to the socket.
         """
-        logging.debug("starting receiver loop (%s)", threading.current_thread())
+        logging.debug("starting io loop (%s)", threading.current_thread())
         notify_disconnected = True
+        outgoing = deque()
         try:
             while self.running:
                 try:
                     while self.running:
-                        frames = self.__read()
-
-                        for frame in frames:
-                            if self.__is_eol(frame):
-                                f = HEARTBEAT_FRAME
-                            else:
-                                f = parse_frame(frame)
-                            if f is None:
-                                continue
-                            if self.__auto_decode:
-                                f.body = decode(f.body)
-                            self.process_frame(f, frame)
+                        # Always attempt to read, even for non-blocking
+                        # sockets. The TLS socket might have pending incoming
+                        # application data even if the underlying TCP socket
+                        # has no pending data.
+                        self.__read_frames()
+                        if not self.blocking:
+                            for key, mask in self.sel.select():
+                                if key.fileobj == self.socket:
+                                    if mask & selectors.EVENT_READ:
+                                        self.__read_frames()
+                                    if mask & selectors.EVENT_WRITE:
+                                        if outgoing:
+                                            # Send the first chunk
+                                            buf = outgoing[0]
+                                            try:
+                                                # Don't use sendall(), may end
+                                                # up in socket buffer deadlock
+                                                # scenario if the server is
+                                                # blocked because the client's
+                                                # receive buffer is full  
+                                                sent = self.socket.send(buf)
+                                            except ssl.SSLWantReadError:
+                                                continue
+                                            except ssl.SSLWantWriteError:
+                                                continue
+                                            if sent < len(buf):
+                                                # Only part of the chunk was sent
+                                                outgoing[0] = buf[sent:]
+                                            else:
+                                                # Whole chunk sent
+                                                outgoing.popleft()
+                                        if not outgoing:
+                                            # Nothing more to send, stop writing
+                                            self.sel.modify(self.socket, selectors.EVENT_READ)
+                                            # Start checking the send queue again
+                                            self.sel.modify(self.send_queue, selectors.EVENT_READ)
+                                elif key.fileobj == self.send_queue and mask & selectors.EVENT_READ:
+                                    encoded_frame = self.send_queue.get()
+                                    outgoing.append(encoded_frame)
+                                    # Now we have data to write to the socket
+                                    self.sel.modify(self.socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
+                                    # Stop checking the send queue in order to
+                                    # not buffer too many messages
+                                    self.sel.modify(self.send_queue, 0)
                 except exception.ConnectionClosedException:
                     if self.running:
                         #
@@ -349,19 +392,39 @@ class BaseTransport(stomp.listener.Publisher):
                         self.running = False
                         notify_disconnected = True
                     break
+                except Exception:
+                    _, e, _ = sys.exc_info()
+                    logging.warning(e)
                 finally:
                     self.cleanup()
+        except Exception:
+            _, e, _ = sys.exc_info()
+            logging.warning(e)
         finally:
-            with self.__receiver_thread_exit_condition:
-                self.__receiver_thread_exited = True
-                self.__receiver_thread_exit_condition.notify_all()
-            logging.debug("receiver loop ended")
+            with self.__io_thread_exit_condition:
+                self.__io_thread_exited = True
+                self.__io_thread_exit_condition.notify_all()
+            logging.debug("io loop ended")
             self.notify("receiver_loop_completed")
             if notify_disconnected and not self.notified_on_disconnect:
                 self.notify("disconnected")
             with self.__connect_wait_condition:
                 self.__connect_wait_condition.notify_all()
             self.notified_on_disconnect = False
+
+    def __read_frames(self):
+        frames = self.__read()
+
+        for frame in frames:
+            if self.__is_eol(frame):
+                f = HEARTBEAT_FRAME
+            else:
+                f = parse_frame(frame)
+            if f is None:
+                continue
+            if self.__auto_decode:
+                f.body = decode(f.body)
+            self.process_frame(f, frame)
 
     def __read(self):
         """
@@ -375,6 +438,10 @@ class BaseTransport(stomp.listener.Publisher):
             try:
                 try:
                     c = self.receive()
+                except ssl.SSLWantReadError:
+                    break
+                except ssl.SSLWantWriteError:
+                    break
                 except exception.InterruptedException:
                     logging.debug("socket read interrupted, restarting")
                     continue
@@ -382,6 +449,10 @@ class BaseTransport(stomp.listener.Publisher):
                 logging.debug("socket read error", exc_info=logging.verbose)
                 c = b""
             if c is None or len(c) == 0:
+                if not self.blocking:
+                    # recv() for TLS sockets can return None while the
+                    # connection is still open.
+                    break
                 logging.debug("nothing received, raising ConnectionClosedException")
                 raise exception.ConnectionClosedException()
             if self.__is_eol(c) and not self.__recvbuf and not fastbuf.tell():
@@ -502,7 +573,7 @@ class Transport(BaseTransport):
                  vhost=None,
                  auto_decode=True,
                  encoding="utf-8",
-                 recv_bytes=1024,
+                 recv_bytes=16384,
                  is_eol_fc=is_eol_default,
                  bind_host_port=None):
         BaseTransport.__init__(self, auto_decode, encoding, is_eol_fc)
@@ -577,7 +648,15 @@ class Transport(BaseTransport):
         """
         self.running = False
         if self.socket is not None:
+            if not self.blocking:
+                self.shutdown_queue()
             if self.__need_ssl():
+                # Do the SSL shutdown handshake in blocking mode
+                self.blocking = True
+                try:
+                    self.socket.setblocking(self.blocking)
+                except Exception:
+                    pass
                 #
                 # Even though we don't want to use the socket, unwrap is the only API method which does a proper SSL
                 # shutdown
@@ -646,11 +725,21 @@ class Transport(BaseTransport):
         """
         Close the socket and clear the current host and port details.
         """
+        if not self.blocking:
+            self.shutdown_queue()
         try:
             self.socket.close()
         except:
             pass  # ignore errors when attempting to close socket
         self.socket = None
+
+    def shutdown_queue(self):
+        self.blocking = True
+        self.sel.unregister(self.socket)
+        self.sel.unregister(self.send_queue)
+        self.sel = None
+        self.send_queue.shutdown()
+        self.send_queue = None
 
     def __enable_keepalive(self):
         def try_setsockopt(sock, name, fam, opt, val=None):
@@ -739,8 +828,11 @@ class Transport(BaseTransport):
                         ssl_params = self.get_ssl(host_and_port)
                         tls_context = ssl.SSLContext(ssl_params["ssl_version"])
                         if ssl_params["ca_certs"]:
-                            cert_validation = ssl.CERT_REQUIRED
                             tls_context.load_verify_locations(ssl_params["ca_certs"])
+                        else:
+                            tls_context.load_default_certs()
+                        if ssl_params["verify"]:
+                            cert_validation = ssl.CERT_REQUIRED
                         else:
                             cert_validation = ssl.CERT_NONE
                         if tls_context:
@@ -767,11 +859,15 @@ class Transport(BaseTransport):
                                 cert_reqs=cert_validation,
                                 ca_certs=ssl_params["ca_certs"],
                                 ssl_version=ssl_params["ssl_version"])
+                        # Handshake is done. Switch to non-blocking mode.
+                        self.send_queue = PollableQueue()
+                        self.sel = selectors.DefaultSelector()
+                        self.sel.register(self.send_queue, selectors.EVENT_READ)
+                        self.sel.register(self.socket, selectors.EVENT_READ)
+                        self.blocking = False
 
                     self.socket.settimeout(self.__timeout)
-
-                    if self.blocking is not None:
-                        self.socket.setblocking(self.blocking)
+                    self.socket.setblocking(self.blocking)
 
                     #
                     # Validate server cert
@@ -820,7 +916,8 @@ class Transport(BaseTransport):
                 ca_certs=None,
                 cert_validator=None,
                 ssl_version=DEFAULT_SSL_VERSION,
-                password=None):
+                password=None,
+                verify=True):
         """
         Sets up SSL configuration for the given hosts. This ensures socket is wrapped in a SSL connection, raising an
         exception if the SSL module can't be found.
@@ -848,6 +945,7 @@ class Transport(BaseTransport):
                                                 cert_file=cert_file,
                                                 ca_certs=ca_certs,
                                                 cert_validator=cert_validator,
+                                                verify=verify,
                                                 ssl_version=ssl_version,
                                                 password=password)
 

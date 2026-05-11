@@ -24,7 +24,7 @@ class TestSNIMQSend(object):
             logging.info("running ipv6 test")
             receipt_id = str(uuid.uuid4())
             conn = stomp.Connection11(get_sni_ssl_host())
-            conn.set_ssl(get_sni_ssl_host())
+            conn.set_ssl(get_sni_ssl_host(), verify=False)
             listener = TestListener(receipt_id, print_to_log=True)
             conn.set_listener('', listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)

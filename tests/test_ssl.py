@@ -33,7 +33,7 @@ class TestSSL(object):
             queuename = "/queue/testssl-%s" % listener.timestamp
             conn = stomp.Connection(get_ssl_host())
             #conn.set_ssl(get_ssl_host())
-            conn.set_ssl(get_ssl_host())
+            conn.set_ssl(get_ssl_host(), verify=False)
             conn.set_listener("testlistener", listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)
             conn.subscribe(destination=queuename, id=1, ack="auto")
@@ -51,6 +51,41 @@ class TestSSL(object):
             assert listener.errors == 0, "should not have received any errors"
         except ImportError:
             pass
+
+
+    def test_ssl_stress(self):
+        listener = TestListener()
+        try:
+            import ssl
+            destination = "/topic/testssl-%s" % listener.timestamp
+            conn = stomp.Connection(get_ssl_host())
+            conn.set_ssl(get_ssl_host(), verify=False)
+            conn.set_listener("testlistener", listener)
+            conn.connect(get_default_user(), get_default_password(), wait=True)
+            conn.subscribe(destination=destination, id=1, ack="auto")
+
+            small = 100
+            for i in range(small):
+                conn.send(body="small message", destination=destination, receipt="small%d" % i)
+
+            large = 100
+            for i in range(small):
+                body = "large message" + "." * (64*1024)
+                conn.send(body=body, destination=destination, receipt="large%d" % i)
+
+            t0 = time.time()
+            while listener.messages < small+large:
+                time.sleep(0.5)
+                assert time.time()-t0 < 30, "timeout"
+
+            conn.disconnect(receipt="goodbye")
+
+            assert listener.connections == 1, "should have received 1 connection acknowledgement"
+            assert listener.messages == small+large, "should have received all messages"
+            assert listener.errors == 0, "should not have received any errors"
+        except ImportError:
+            pass
+
 
     def test_ssl_client_cert_connection(self):
         listener = TestListener("123", print_to_log=True)
@@ -134,7 +169,7 @@ class TestSSL(object):
                 ssl_version = ssl.PROTOCOL_TLSv1_2
             else:
                 ssl_version = ssl.PROTOCOL_TLSv1_1
-            conn.set_ssl(get_ssl_host(), ssl_version=ssl_version)
+            conn.set_ssl(get_ssl_host(), ssl_version=ssl_version, verify=False)
             conn.set_listener("testlistener", listener)
             conn.connect(get_default_user(), get_default_password(), wait=True)
             assert conn.transport.socket._sslobj.context.protocol == ssl_version

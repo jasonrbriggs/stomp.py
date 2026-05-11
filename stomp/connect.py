@@ -105,6 +105,7 @@ class StompConnection10(BaseConnection, Protocol10):
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
+        Provide a receipt in order to drain the send queue before returning.
 
         :param str receipt: the receipt to use with the disconnect
         :param dict headers: a map of any additional headers to send with the disconnection
@@ -153,6 +154,7 @@ class StompConnection11(BaseConnection, Protocol11):
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
+        Provide a receipt in order to drain the send queue before returning.
 
         :param str receipt: the receipt to use with the disconnect
         :param dict headers: a map of any additional headers to send with the disconnection
@@ -201,6 +203,7 @@ class StompConnection12(BaseConnection, Protocol12):
     def disconnect(self, receipt=None, headers=None, **keyword_headers):
         """
         Call the protocol disconnection, and then stop the transport itself.
+        Provide a receipt in order to drain the send queue before returning.
 
         :param str receipt: the receipt to use with the disconnect
         :param dict headers: a map of any additional headers to send with the disconnection
