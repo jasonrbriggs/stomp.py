@@ -64,9 +64,9 @@ For testing locally, you'll need to install docker (or [podman](https://podman.i
 
 If you want to connect to the test services locally (other than from the included tests), you'll want to add test domain names to your hosts file like so:
 
-> 172.17.0.2  my.example.com
-> 172.17.0.2  my.example.org
-> 172.17.0.2  my.example.net
+> 172.17.0.2  my.example.com  
+> 172.17.0.2  my.example.org  
+> 172.17.0.2  my.example.net  
 
 If you're using `podman` and you want to access services via their private IP addresses, you'll want to run your commands with::
 
