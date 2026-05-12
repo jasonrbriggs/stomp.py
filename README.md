@@ -1,6 +1,6 @@
 ## stomp.py
 
-(![PyPI version](https://badge.fury.io/py/stomp.py.svg)[https://badge.fury.io/py/stomp.py])
+[![PyPI version](https://badge.fury.io/py/stomp.py.svg)](https://badge.fury.io/py/stomp.py)
 
 "stomp.py" is a Python client library for accessing messaging servers (such as ActiveMQ Classic, ActiveMQ Artemis or RabbitMQ) using the [STOMP](http://stomp.github.io) protocol ([STOMP v1.0](http://stomp.github.io/stomp-specification-1.0.html), [STOMP v1.1](http://stomp.github.io/stomp-specification-1.1.html) and [STOMP v1.2](http://stomp.github.io/stomp-specification-1.2.html)). It can also be run as a standalone, command-line client for testing.  NOTE: Stomp.py has officially ended support for Python2.x. See [python3statement.org](http://python3statement.org/) for more information. 
 
