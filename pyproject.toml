@@ -5,8 +5,8 @@ description = "Python STOMP client, supporting versions 1.0, 1.1 and 1.2 of the 
 authors = ["Jason R Briggs <jasonrbriggs@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.rst"
-repository = "https://github.com/jasonrbriggs/stomp.py"
-documentation = "http://jasonrbriggs.github.io/stomp.py/"
+repository = "https://codeberg.org/jasonrbriggs/stomp.py"
+documentation = "https://jasonrbriggs.codeberg.page/stomp.py.pages/"
 keywords = ["stomp", "messaging", "events", "client"]
 classifiers = [
 	"Development Status :: 5 - Production/Stable",
