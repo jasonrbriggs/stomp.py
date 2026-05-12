@@ -34,8 +34,6 @@ Documentation and Resources
 - `API documentation`_ (see `stomp.github.io`_ for details on the STOMP protocol itself)
 - A basic example of using stomp.py with a message listener can be found in the `quick start`_ section of the main documentation
 - Description of the `command-line interface`_
-- `Travis`_ for continuous integration builds
-- Current `test coverage report`_
 - `PyPi stomp.py page`_
 
 The current version of stomp.py supports:
@@ -58,10 +56,10 @@ Testing
 
 stomp.py has been perfunctorily tested on:
 
-- Pivotal `RabbitMQ`_   (`test_rabbitmq.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_rabbitmq.py>`_)
-- Apache `ActiveMQ Classic`_   (`test_activemq.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_activemq.py>`_)
-- Apache `ActiveMQ Artemis`_  (`test_artemis.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_artemis.py>`_)
-- `stompserver`_  (`test_stompserver.py <https://github.com/jasonrbriggs/stomp.py/blob/dev/tests/test_stompserver.py>`_)
+- Pivotal `RabbitMQ`_   (`test_rabbitmq.py <https://codeberg.org/jasonrbriggs/stomp.py/src/branch/dev/tests/test_rabbitmq.py>`_)
+- Apache `ActiveMQ Classic`_   (`test_activemq.py <https://codeberg.org/jasonrbriggs/stomp.py/src/branch/dev/tests/test_activemq.py>`_)
+- Apache `ActiveMQ Artemis`_  (`test_artemis.py <https://codeberg.org/jasonrbriggs/stomp.py/src/branch/dev/tests/test_artemis.py>`_)
+- `stompserver`_  (`test_stompserver.py <https://codeberg.org/jasonrbriggs/stomp.py/src/branch/dev/tests/test_stompserver.py>`_)
 
 For testing locally, you'll need to install docker (or `podman`_). Once installed:
 
@@ -94,14 +92,12 @@ so that <command> has access to the private container network. Service ports are
 .. _`STOMP v1.2`: http://stomp.github.io/stomp-specification-1.2.html
 .. _`python3statement.org`: http://python3statement.org/
 
-.. _`Main documentation`: http://jasonrbriggs.github.io/stomp.py/index.html
+.. _`Main documentation`: https://jasonrbriggs.codeberg.page/stomp.py.pages/
 .. _`stomp.github.io`: http://stomp.github.io/
-.. _`quick start`: http://jasonrbriggs.github.io/stomp.py/quickstart.html
-.. _`command-line interface`: http://jasonrbriggs.github.io/stomp.py/commandline.html
+.. _`quick start`: https://jasonrbriggs.codeberg.page/stomp.py.pages/quickstart.html
+.. _`command-line interface`: https://jasonrbriggs.codeberg.page/stomp.py.pages/commandline.html
 .. _`PyPi stomp.py page`: https://pypi.org/project/stomp.py/
-.. _`API documentation`: http://jasonrbriggs.github.io/stomp.py/api.html
-.. _`test coverage report`: http://jasonrbriggs.github.io/stomp.py/htmlcov/
-.. _`Travis`: https://travis-ci.org/jasonrbriggs/stomp.py
+.. _`API documentation`: https://jasonrbriggs.codeberg.page/stomp.py.pages/api.html
 
 .. _`3.1.7 on PyPi`: https://pypi.org/project/stomp.py/3.1.7/
 .. _`3.1.7 on GitHub`: https://github.com/jasonrbriggs/stomp.py/tree/stomppy-3series

@@ -15,13 +15,13 @@ Stomp.py started as an `"itch-scratching" project <https://en.wikipedia.org/wiki
 Getting Help
 ------------
 
-View outstanding issues on the GitHub `issues list <https://github.com/jasonrbriggs/stomp.py/issues>`_, or raise a request for help (note that stomp.py is 'intermittently' supported at times).
+View outstanding issues on the `issues list <https://codeberg.org/jasonrbriggs/stomp.py/issues>`_, or raise a request for help (note that stomp.py is 'intermittently' supported at times).
 
 
 Contributors
 ------------
 
-Contributors since moving to GitHub can be found in GitHub's `Insights page <https://github.com/jasonrbriggs/stomp.py/graphs/contributors>`_.
+Contributors since moving to GitHub can be found here `Insights page <https://codeberg.org/jasonrbriggs/stomp.py/activity/contributors>`_.
 
 Prior to that, contributors to the project included:
 
