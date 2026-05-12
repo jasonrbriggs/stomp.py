@@ -14,7 +14,7 @@ import stomp.connect as connect
 import stomp.listener as listener
 import stomp.log as log
 
-__version__ = "8.3.0"
+__version__ = "9.0.0"
 
 ##
 # Alias for STOMP 1.0 connections.

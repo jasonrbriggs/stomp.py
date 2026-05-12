@@ -1,10 +1,15 @@
-## Version 8.3.0 - May 2026
+## Version 9.0.0 - May 2026
 
 * Update to docopt-ng (as per issue https://github.com/jasonrbriggs/stomp.py/issues/442)
 * Pass ssl version from ssl_params (https://github.com/jasonrbriggs/stomp.py/pull/440)
 * Use single thread for IO when using TLS (https://codeberg.org/jasonrbriggs/stomp.py/pulls/452, original github issue: https://github.com/jasonrbriggs/stomp.py/issues/450)
 * Added SSL error message from cert validation to log warning (https://codeberg.org/jasonrbriggs/stomp.py/pulls/449)
 * Rename stomp.logging to stomp.log, since python doesn't "like" overloading the logging module
+
+
+## Version 8.3.0 - May 2026 [YANKED]
+
+ * Yanked because of the change from "logging" to "log" which is obviously not backwards compatible.
 
 
 ## Version 8.2.0 - Oct 2024
