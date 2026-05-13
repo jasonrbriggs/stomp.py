@@ -18,10 +18,10 @@ docs:
 	cd docs && make html
 
 
-install: updateversion test
+install: test
 	poetry update
 	poetry build
-	poetry export -f requirements.txt --dev -o requirements.txt
+	poetry export -f requirements.txt --dev --output requirements.txt
 
 
 test:
@@ -37,7 +37,7 @@ clean:
 	find . -name '*.pyc' -delete
 
 
-release: updateversion
+release:
 	poetry build
 	poetry publish
 
