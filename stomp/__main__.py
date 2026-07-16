@@ -540,7 +540,7 @@ def main():
         try:
             while 1:
                 time.sleep(10)
-        except:
+        except Exception:
             print("\n")
     elif arguments['--file'] is not None:
         st.do_run(arguments['--file'])
