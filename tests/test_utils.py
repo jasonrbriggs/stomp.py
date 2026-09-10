@@ -112,7 +112,7 @@ class TestUtils(object):
     def test_mask_passcodes(self):
         lines = [
             "test line 1",
-            "test line with passcode: somepassword",
+            "test line with passcode:somepassword",
             "test line 3"
         ]
 

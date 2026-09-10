@@ -111,7 +111,7 @@ LINE_END_RE = re.compile("\n|\r\n")
 ##
 # Used to replace the "passcode" to be dumped in the transport log (at debug level)
 #
-PASSCODE_RE = re.compile(r"passcode:\s+[^\' ]+")
+PASSCODE_RE = re.compile(r"passcode:\s*[^\' ]+")
 
 ENC_NEWLINE = encode("\n")
 ENC_NULL = encode(NULL)
